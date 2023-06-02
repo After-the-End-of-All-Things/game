@@ -30,8 +30,8 @@
                 "input": "node_modules/ionicons/dist/ionicons/svg",
                 "output": "./svg"
               },
-              "_headers",
-              "_redirects"
+              "src/_headers",
+              "src/_redirects"
             ],
             "styles": ["src/theme/variables.scss", "src/global.scss"],
             "scripts": [],
