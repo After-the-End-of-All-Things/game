@@ -1,0 +1,41 @@
+{
+  "name": "ateoat-server",
+  "description": "ateoat server",
+  "version": "0.0.1",
+  "author": "ateoat team",
+  "private": true,
+  "scripts": {
+    "postinstall": "concurrently -n client,server \"npm run install:client\" \"npm run install:server\"",
+    "install:client": "cd client && npm install",
+    "install:server": "cd server && npm install",
+    "lint": "concurrently -n client,server \"npm run lint:client\" \"npm run lint:server\"",
+    "lint:client": "cd client && npm run lint",
+    "lint:server": "cd server && npm run lint",
+    "build": "concurrently -n client,server \"npm run build:client\" \"npm run build:server\"",
+    "build:client": "cd client && npm run build",
+    "build:server": "cd server && npm run build",
+    "start": "concurrently --kill-others -n client,server \"npm run start:client\" \"npm run start:server\"",
+    "start:client": "cd client && npm run start",
+    "start:server": "cd server && npm run start",
+    "util:buildvars": "ts-node utils/buildvars",
+    "util:blogpost:generate": "ts-node utils/blog-version-notes",
+    "util:changelog:generate": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
+    "util:changelog:generate:current": "conventional-changelog -p angular -o CHANGELOG-current.md -r 2",
+    "util:changelog:commit": "git commit CHANGELOG.md CHANGELOG-current.md -m \"Update changelog\" || true",
+    "util:dirtycheck": "ts-node utils/dirtycheck",
+    "util:version:reversion": "ts-node utils/postversion.reversion",
+    "preversion": "npm run util:dirtycheck && npm run lint && npm run build",
+    "version": "conventional-changelog -i CHANGELOG.md -s -r 0 && git add CHANGELOG.md",
+    "postversion": "npm run util:changelog:generate && npm run util:changelog:generate:current && npm run util:changelog:commit && npm run util:version:reversion && npm run push",
+    "push": "git push && git push --tags",
+    "bump:patch": "npm version patch -m \"chore(release): Patch %s\"",
+    "bump:minor": "npm version minor -m \"chore(release): Minor %s\"",
+    "bump:major": "npm version major -m \"chore(release): Major %s\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.1.0",
+    "conventional-changelog-cli": "^2.2.2",
+    "fs-extra": "^11.1.1",
+    "ts-node": "^10.9.1"
+  }
+}

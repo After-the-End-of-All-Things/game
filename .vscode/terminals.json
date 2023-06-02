@@ -1,0 +1,29 @@
+{
+  "autorun": true,
+  "autokill": true,
+  "terminals": [
+    {
+      "name": "Client",
+      "description": "Client side actions.",
+      "focus": true,
+      "command": "",
+      "cwd": "client"
+    },
+    {
+      "name": "Server",
+      "split": "Client",
+      "description": "Server side actions.",
+      "focus": true,
+      "command": "",
+      "cwd": "server"
+    },
+    {
+      "name": "Git",
+      "split": "Server",
+      "description": "Empty terminal.",
+      "focus": true,
+      "command": "",
+      "cwd": ""
+    }
+  ]
+}
