@@ -1,4 +1,4 @@
-import { HttpClientModule } from "@angular/common/http";
+import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
 import { NgModule, isDevMode } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
@@ -13,12 +13,13 @@ import { NgxsModule } from '@ngxs/store';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { ErrorInterceptor } from './error.interceptor';
 
 const Migrations: Record<any, any> = {};
 const allStores: any[] = [];
 
 export function getAuthToken() {
-  return localStorage.getItem('authToken');
+  return localStorage.getItem('token');
 }
 
 @NgModule({
@@ -31,7 +32,7 @@ export function getAuthToken() {
     JwtModule.forRoot({
       config: {
         tokenGetter: getAuthToken,
-        allowedDomains: ["ateoat.com"],
+        allowedDomains: ["localhost:3000", "ateoat.com"],
       },
     }),
     ServiceWorkerModule.register('ngsw-worker.js', {
@@ -54,7 +55,12 @@ export function getAuthToken() {
     }),
     NgxsReduxDevtoolsPluginModule.forRoot(),
   ],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
+  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    {
+       provide: HTTP_INTERCEPTORS,
+       useClass: ErrorInterceptor,
+       multi: true
+    }],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

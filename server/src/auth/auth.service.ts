@@ -47,6 +47,8 @@ export class AuthService {
     const hash = await bcrypt.hash(password, 10);
     const newUser = new User(username, discriminator, hash, email);
     await this.userService.createUser(newUser);
+
+    return { user: newUser };
   }
 
   async signIn(username: string, password: string): Promise<any> {
@@ -69,6 +71,7 @@ export class AuthService {
     };
 
     return {
+      user,
       access_token: await this.jwtService.signAsync(jwtPayload),
     };
   }

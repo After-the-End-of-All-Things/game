@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { MenuController } from '@ionic/angular';
 import { AuthService } from '../auth.service';
 
@@ -23,7 +24,10 @@ export class LoginPage implements OnInit {
     username: new FormControl('', [Validators.required, Validators.minLength(2), Validators.maxLength(20)]),
   });
 
-  constructor(public menu: MenuController, private authService: AuthService) { }
+  public loginError = '';
+  public registerError = '';
+
+  constructor(public menu: MenuController, private authService: AuthService, private router: Router) { }
 
   ngOnInit() {
     this.loginForm.controls.email.errors
@@ -40,15 +44,43 @@ export class LoginPage implements OnInit {
   }
 
   login() {
-    if(!this.loginForm.value.email || !this.loginForm.value.password) return;
+    if(!this.loginForm.value.email || !this.loginForm.value.password || !this.loginForm.valid) return;
+    this.loginError = '';
 
     this.authService.login(this.loginForm.value.email, this.loginForm.value.password)
+      .subscribe({
+        next: () => {
+          this.router.navigate(['/']);
+        },
+        error: () => {
+          this.loginError = 'Invalid email or password.';
+        }
+      });
   }
 
   register() {
-    if(!this.registerForm.value.email || !this.registerForm.value.password || !this.registerForm.value.username) return;
+    if(!this.registerForm.value.email || !this.registerForm.value.password || !this.registerForm.value.username || !this.registerForm.valid) return;
+    this.registerError = '';
 
-    this.authService.register(this.registerForm.value.email, this.registerForm.value.password, this.registerForm.value.username);
+    this.authService.register(this.registerForm.value.email, this.registerForm.value.password, this.registerForm.value.username)
+      .subscribe({
+        next: () => {
+          if(!this.registerForm.value.email || !this.registerForm.value.password) return;
+
+          this.authService.login(this.registerForm.value.email, this.registerForm.value.password)
+            .subscribe({
+              next: () => {
+                this.router.navigate(['/']);
+              },
+              error: (err) => {
+                this.registerError = err.error.message;
+              }
+            });
+        },
+        error: (err) => {
+          this.registerError = err.error.message;
+        }
+      });
   }
 
 }

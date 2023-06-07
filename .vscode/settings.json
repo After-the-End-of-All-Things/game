@@ -1,3 +1,10 @@
 {
-  "eslint.workingDirectories": ["client", "server"]
+  "eslint.workingDirectories": [
+    "client",
+    "server"
+  ],
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "editor.formatOnSave": true,
 }
