@@ -15,8 +15,10 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ErrorInterceptor } from './error.interceptor';
 
-const Migrations: Record<any, any> = {};
-const allStores: any[] = [];
+import * as Stores from '../stores';
+import * as Migrations from '../stores/migrations';
+
+const allStores = Object.keys(Stores).filter(x => x.includes('Store')).map(x => (Stores as Record<string, any>)[x]);
 
 export function getAuthToken() {
   return localStorage.getItem('token');
@@ -45,8 +47,7 @@ export function getAuthToken() {
       developmentMode: !isDevMode()
     }),
     NgxsLoggerPluginModule.forRoot({
-      disabled: !isDevMode(),
-      filter: action => !action.constructor.name.includes('Timer')
+      disabled: !isDevMode()
     }),
     NgxsStoragePluginModule.forRoot({
       key: allStores,
@@ -55,12 +56,14 @@ export function getAuthToken() {
     }),
     NgxsReduxDevtoolsPluginModule.forRoot(),
   ],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+  providers: [
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     {
        provide: HTTP_INTERCEPTORS,
        useClass: ErrorInterceptor,
        multi: true
-    }],
+    }
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

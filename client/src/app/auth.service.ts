@@ -1,15 +1,17 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { Store } from '@ngxs/store';
 import { interval, tap } from 'rxjs';
 import { environment } from '../environments/environment';
+import { SetUser } from '../stores/user/user.actions';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  constructor(private http: HttpClient, private jwtHelper: JwtHelperService) {
+  constructor(private store: Store, private http: HttpClient, private jwtHelper: JwtHelperService) {
     this.authIfPossible();
     this.watchToken();
   }
@@ -24,7 +26,9 @@ export class AuthService {
     const lastPassword = localStorage.getItem('lastPassword');
     if(!lastEmail || !lastPassword) return;
 
-    this.login(lastEmail, lastPassword).subscribe(() => this.updateToken());
+    this.login(lastEmail, lastPassword).subscribe(() => {
+      this.updateToken();
+    });
   }
 
   private updateToken() {
@@ -43,6 +47,8 @@ export class AuthService {
     return this.http.post(`${environment.apiUrl}/auth/login`, { email, password })
       .pipe(tap((res: any) => {
         if(!res.access_token) return;
+
+        this.store.dispatch(new SetUser(res.user));
 
         localStorage.setItem('lastEmail', email);
         localStorage.setItem('lastPassword', password);
