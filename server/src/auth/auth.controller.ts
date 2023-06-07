@@ -22,9 +22,9 @@ export class AuthController {
     if (!signInDto.username || !signInDto.password || !signInDto.email)
       throw new BadRequestException('Missing username, password or email');
 
-    if (signInDto.username.length < 3 || signInDto.username.length > 20)
+    if (signInDto.username.length < 2 || signInDto.username.length > 20)
       throw new BadRequestException(
-        'Username must be between 3 and 20 characters long',
+        'Username must be between 2 and 20 characters long',
       );
 
     if (signInDto.password.length < 8)

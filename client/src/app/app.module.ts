@@ -1,6 +1,8 @@
+import { HttpClientModule } from "@angular/common/http";
 import { NgModule, isDevMode } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
+import { JwtModule } from "@auth0/angular-jwt";
 
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
@@ -15,12 +17,23 @@ import { AppComponent } from './app.component';
 const Migrations: Record<any, any> = {};
 const allStores: any[] = [];
 
+export function getAuthToken() {
+  return localStorage.getItem('authToken');
+}
+
 @NgModule({
   declarations: [AppComponent],
   imports: [
     BrowserModule,
     IonicModule.forRoot(),
     AppRoutingModule,
+    HttpClientModule,
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: getAuthToken,
+        allowedDomains: ["ateoat.com"],
+      },
+    }),
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: !isDevMode(),
       // Register the ServiceWorker as soon as the application is stable

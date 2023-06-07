@@ -24,3 +24,18 @@
 @import "@ionic/angular/css/text-alignment.css";
 @import "@ionic/angular/css/text-transformation.css";
 @import "@ionic/angular/css/flex-utils.css";
+
+ion-content {
+  --background: url(assets/bg/splash-dark.png) no-repeat center center/cover;
+  &.bright {
+    --background: url(assets/bg/splash.png) no-repeat center center/cover;
+  }
+}
+
+.full-width {
+  width: 100%;
+}
+
+.hidden {
+  display: none;
+}

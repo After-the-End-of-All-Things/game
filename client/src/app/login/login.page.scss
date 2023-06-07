@@ -1,0 +1,31 @@
+
+ion-row {
+  justify-content: center;
+}
+
+ion-item {
+  min-height: 85px;
+}
+
+.image-container {
+  margin-top: 10vh;
+}
+
+.auth-container {
+  margin-top: 5vh;
+}
+
+.image-container, .auth-container {
+  width: 100vw;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.actions {
+  margin-top: 2em;
+  display: flex;
+  justify-content: space-between;
+}
