@@ -16,8 +16,12 @@ export class UpdateAuthTimeInterceptor implements NestInterceptor {
 
   async intercept(context: ExecutionContext, handler: CallHandler) {
     const request = context.switchToHttp().getRequest();
+    const ignoredRoutes = ['/auth/login'];
 
-    if (request.headers.authorization) {
+    if (
+      request.headers.authorization &&
+      !ignoredRoutes.includes(request.route.path)
+    ) {
       const token = request.headers.authorization.split(' ')[1];
       const decoded = await this.authService.decodeJwt(token);
       if (decoded.sub) {

@@ -7,11 +7,14 @@ import { environment } from '../../environments/environment';
 import { SetUser } from '../../stores/user/user.actions';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
-
-  constructor(private store: Store, private http: HttpClient, private jwtHelper: JwtHelperService) {
+  constructor(
+    private store: Store,
+    private http: HttpClient,
+    private jwtHelper: JwtHelperService
+  ) {
     this.authIfPossible();
     this.watchToken();
   }
@@ -24,7 +27,7 @@ export class AuthService {
   private authIfPossible() {
     const lastEmail = localStorage.getItem('lastEmail');
     const lastPassword = localStorage.getItem('lastPassword');
-    if(!lastEmail || !lastPassword) return;
+    if (!lastEmail || !lastPassword) return;
 
     this.login(lastEmail, lastPassword).subscribe(() => {
       this.updateToken();
@@ -32,11 +35,13 @@ export class AuthService {
   }
 
   private updateToken() {
-    if(!this.isAuthenticated()) return;
+    if (!this.isAuthenticated()) return;
 
-    this.http.get(`${environment.apiUrl}/auth/refresh`).subscribe((res: any) => {
-      localStorage.setItem('token', res.access_token);
-    });
+    this.http
+      .get(`${environment.apiUrl}/auth/refresh`)
+      .subscribe((res: any) => {
+        localStorage.setItem('token', res.access_token);
+      });
   }
 
   private watchToken() {
@@ -44,19 +49,26 @@ export class AuthService {
   }
 
   public login(email: string, password: string) {
-    return this.http.post(`${environment.apiUrl}/auth/login`, { email, password })
-      .pipe(tap((res: any) => {
-        if(!res.access_token) return;
+    return this.http
+      .post(`${environment.apiUrl}/auth/login`, { email, password })
+      .pipe(
+        tap((res: any) => {
+          if (!res.access_token) return;
 
-        this.store.dispatch(new SetUser(res.user));
+          this.store.dispatch(new SetUser(res.user));
 
-        localStorage.setItem('lastEmail', email);
-        localStorage.setItem('lastPassword', password);
-        localStorage.setItem('token', res.access_token);
-      }));
+          localStorage.setItem('lastEmail', email);
+          localStorage.setItem('lastPassword', password);
+          localStorage.setItem('token', res.access_token);
+        })
+      );
   }
 
   public register(email: string, password: string, username: string) {
-    return this.http.post(`${environment.apiUrl}/auth/register`, { email, password, username });
+    return this.http.post(`${environment.apiUrl}/auth/register`, {
+      email,
+      password,
+      username,
+    });
   }
 }

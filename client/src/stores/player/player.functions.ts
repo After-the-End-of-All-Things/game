@@ -7,7 +7,12 @@ export const defaultStore: () => IPlayerStore = () => ({
   player: {
     xp: 0,
     level: 1,
-    location: '',
+
+    location: {
+      current: '',
+      goingTo: '',
+      arrivesAt: 0,
+    },
 
     profile: {
       shortBio: '',
@@ -22,13 +27,16 @@ export const defaultStore: () => IPlayerStore = () => ({
       [Stat.Special]: 0,
       [Stat.Toughness]: 0,
     },
+
     cosmetics: {
       portrait: 4,
       background: 0,
     },
+
     currencies: {
       [Currency.Coins]: 0,
     },
+
     recharges: {
       [RechargeableStat.Health]: 0,
     },

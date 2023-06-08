@@ -18,11 +18,16 @@ export enum Currency {
 export interface IPlayer {
   xp: number;
   level: number;
-  location: string;
   stats: Record<Stat, number>;
   recharges: Record<RechargeableStat, number>;
 
   currencies: Record<Currency, number>;
+
+  location: {
+    current: string;
+    goingTo: string;
+    arrivesAt: number;
+  };
 
   profile: {
     shortBio: string;

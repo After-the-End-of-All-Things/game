@@ -9,12 +9,16 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
+import { UserService } from 'src/user/user.service';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt.guard';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private userService: UserService,
+  ) {}
 
   @HttpCode(HttpStatus.OK)
   @Post('register')
