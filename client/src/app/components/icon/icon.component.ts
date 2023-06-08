@@ -27,6 +27,5 @@ export class IconComponent implements OnInit {
       this.spritesheet,
       this.quality
     );
-    console.log(this.spritesheetUrl);
   }
 }

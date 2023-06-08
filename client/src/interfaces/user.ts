@@ -1,10 +1,4 @@
-
-export interface IUser {
-  createdAt: number;
-  discriminator: string;
-  email: string;
-  username: string;
-}
+import { IUser } from '../../../shared/interfaces';
 
 export interface IUserStore {
   version: number;
