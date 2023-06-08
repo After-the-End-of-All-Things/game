@@ -3,8 +3,8 @@ import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Store } from '@ngxs/store';
 import { interval, tap } from 'rxjs';
-import { environment } from '../environments/environment';
-import { SetUser } from '../stores/user/user.actions';
+import { environment } from '../../environments/environment';
+import { SetUser } from '../../stores/user/user.actions';
 
 @Injectable({
   providedIn: 'root'

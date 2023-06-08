@@ -13,10 +13,11 @@ import { NgxsModule } from '@ngxs/store';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { ErrorInterceptor } from './error.interceptor';
+import { ErrorInterceptor } from './helpers/error.interceptor';
 
 import * as Stores from '../stores';
 import * as Migrations from '../stores/migrations';
+import { SharedModule } from './shared.module';
 
 const allStores = Object.keys(Stores).filter(x => x.includes('Store')).map(x => (Stores as Record<string, any>)[x]);
 
@@ -31,6 +32,7 @@ export function getAuthToken() {
     IonicModule.forRoot(),
     AppRoutingModule,
     HttpClientModule,
+    SharedModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: getAuthToken,
