@@ -7,7 +7,7 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { random } from 'lodash';
 
-import { IHasAccessToken, IUser } from '@interfaces';
+import { IFullUser, IHasAccessToken } from '@interfaces';
 import { User } from '../user/user.schema';
 import { UserService } from '../user/user.service';
 
@@ -22,7 +22,7 @@ export class AuthService {
     username: string,
     password: string,
     email: string,
-  ): Promise<{ user: IUser }> {
+  ): Promise<IFullUser> {
     const numberOfUsers = await this.userService.numberOfUsersWithUsername(
       username,
     );
@@ -47,15 +47,15 @@ export class AuthService {
 
     const hash = await bcrypt.hash(password, 10);
     const newUser = new User(username, discriminator, hash, email);
-    await this.userService.createUser(newUser);
+    const createdUser = await this.userService.createUser(newUser);
 
-    return { user: newUser };
+    return this.userService.getAllUserInformation(createdUser._id.toString());
   }
 
   async signIn(
     username: string,
     password: string,
-  ): Promise<{ user: IUser } & IHasAccessToken> {
+  ): Promise<IFullUser | IHasAccessToken> {
     const user = await this.userService.findUserByEmail(username);
     if (!user) {
       throw new UnauthorizedException();
@@ -75,7 +75,7 @@ export class AuthService {
     };
 
     return {
-      user,
+      ...(await this.userService.getAllUserInformation(user._id.toString())),
       access_token: await this.jwtService.signAsync(jwtPayload),
     };
   }

@@ -7,7 +7,7 @@ import {
   Unique,
 } from '@mikro-orm/core';
 import { ObjectId } from '@mikro-orm/mongodb';
-import { onlineUntilExpiration } from '../utils/time';
+import { onlineUntilExpiration } from '../../utils/time';
 
 export type UserId = User['_id'];
 
@@ -23,7 +23,7 @@ export class User implements IUser {
   password: string;
 
   @Property()
-  createdAt: number;
+  createdAt: Date;
 
   @Property()
   onlineUntil: number;
@@ -48,7 +48,7 @@ export class User implements IUser {
     this.discriminator = discriminator;
     this.password = password;
     this.email = email;
-    this.createdAt = Date.now();
+    this.createdAt = new Date();
     this.onlineUntil = onlineUntilExpiration();
   }
 }

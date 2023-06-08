@@ -4,7 +4,6 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { Store } from '@ngxs/store';
 import { interval, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { SetUser } from '../../stores/user/user.actions';
 
 @Injectable({
   providedIn: 'root',
@@ -54,8 +53,6 @@ export class AuthService {
       .pipe(
         tap((res: any) => {
           if (!res.access_token) return;
-
-          this.store.dispatch(new SetUser(res.user));
 
           localStorage.setItem('lastEmail', email);
           localStorage.setItem('lastPassword', password);

@@ -11,7 +11,7 @@ export const defaultStore: () => IPlayerStore = () => ({
     location: {
       current: '',
       goingTo: '',
-      arrivesAt: 0,
+      arrivesAt: new Date(),
     },
 
     profile: {
@@ -42,8 +42,6 @@ export const defaultStore: () => IPlayerStore = () => ({
     },
   },
 });
-
-export function resetGame(ctx: StateContext<IPlayerStore>) {}
 
 export function setPlayer(
   ctx: StateContext<IPlayerStore>,

@@ -21,6 +21,9 @@
       "@interfaces": [
         "src/interfaces/index.ts",
         "../shared/interfaces/*"
+      ],
+      "@modules/*": [
+        "src/modules/*"
       ]
     }
   }

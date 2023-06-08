@@ -15,6 +15,22 @@ export enum Currency {
   Coins = "coins",
 }
 
+export interface IPlayerLocation {
+  current: string;
+  goingTo: string;
+  arrivesAt: Date;
+}
+
+export interface IPlayerProfile {
+  shortBio: string;
+  longBio: string;
+}
+
+export interface IPlayerCosmetics {
+  portrait: number;
+  background: number;
+}
+
 export interface IPlayer {
   xp: number;
   level: number;
@@ -23,19 +39,9 @@ export interface IPlayer {
 
   currencies: Record<Currency, number>;
 
-  location: {
-    current: string;
-    goingTo: string;
-    arrivesAt: number;
-  };
+  location: IPlayerLocation;
 
-  profile: {
-    shortBio: string;
-    longBio: string;
-  };
+  profile: IPlayerProfile;
 
-  cosmetics: {
-    portrait: number;
-    background: number;
-  };
+  cosmetics: IPlayerCosmetics;
 }

@@ -1,6 +1,9 @@
 import { MikroOrmModuleOptions } from '@mikro-orm/nestjs';
 import { ConfigService } from '@nestjs/config';
-import { User } from '../user/user.schema';
+import { Notification } from '../modules/notification/notification.schema';
+import { Player } from '../modules/player/player.schema';
+import { Stats } from '../modules/stats/stats.schema';
+import { User } from '../modules/user/user.schema';
 
 export const MIKRO_ORM_CONFIG = Symbol('MIKRO_ORM_CONFIG');
 
@@ -13,7 +16,7 @@ function mikroOrmConfigFactory(
   );
 
   return {
-    entities: [User],
+    entities: [User, Notification, Player, Stats],
     dbName: process.env.NODE_ENV === 'production' ? 'ateoat' : 'ateoattest',
     type: 'mongo',
     ensureIndexes: true,

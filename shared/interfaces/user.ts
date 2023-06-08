@@ -1,5 +1,5 @@
 export interface IUser {
-  createdAt: number;
+  createdAt: Date;
   discriminator: string;
   email: string;
   username: string;

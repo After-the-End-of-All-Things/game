@@ -1,8 +1,11 @@
+import { IFullUser } from '@interfaces';
 import { EntityManager, EntityRepository } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
+import { PlayerService } from '@modules/player/player.service';
+import { StatsService } from '@modules/stats/stats.service';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
-import { onlineUntilExpiration } from '../utils/time';
+import { onlineUntilExpiration } from '../../utils/time';
 import { User } from './user.schema';
 
 @Injectable()
@@ -11,6 +14,8 @@ export class UserService {
     private readonly em: EntityManager,
     @InjectRepository(User)
     private readonly users: EntityRepository<User>,
+    private readonly playerService: PlayerService,
+    private readonly statsService: StatsService,
   ) {}
 
   async createUser(user: User): Promise<User | undefined> {
@@ -55,5 +60,13 @@ export class UserService {
       { _id: new ObjectId(userId) },
       { onlineUntil: onlineUntilExpiration() },
     );
+  }
+
+  async getAllUserInformation(userId: string): Promise<IFullUser> {
+    return {
+      user: await this.findUserById(userId),
+      stats: await this.statsService.getStatsForUser(userId),
+      player: await this.playerService.getPlayerForUser(userId),
+    };
   }
 }

@@ -3,10 +3,13 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from './config/config.module';
-import { DatabaseModule } from './database/database.module';
-import { UserModule } from './user/user.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { DatabaseModule } from './modules/database/database.module';
+import { NotificationModule } from './modules/notification/notification.module';
+import { PlayerModule } from './modules/player/player.module';
+import { StatsModule } from './modules/stats/stats.module';
+import { UserModule } from './modules/user/user.module';
 import { UpdateAuthTimeInterceptor } from './utils/updatetime.interceptor';
 
 @Module({
@@ -19,6 +22,9 @@ import { UpdateAuthTimeInterceptor } from './utils/updatetime.interceptor';
       ttl: 60,
       limit: 10,
     }),
+    NotificationModule,
+    PlayerModule,
+    StatsModule,
   ],
   controllers: [AppController],
   providers: [
