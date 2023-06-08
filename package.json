@@ -5,7 +5,7 @@
   "author": "ateoat team",
   "private": true,
   "scripts": {
-    "postinstall": "npm run util:downloadssets && concurrently -n client,server \"npm run install:client\" \"npm run install:server\"",
+    "postinstall": "concurrently -n client,server \"npm run install:client\" \"npm run install:server\"",
     "install:client": "cd client && npm install",
     "install:server": "cd server && npm install",
     "lint": "concurrently -n client,server \"npm run lint:client\" \"npm run lint:server\"",
@@ -23,7 +23,6 @@
     "util:changelog:generate:current": "conventional-changelog -p angular -o CHANGELOG-current.md -r 2",
     "util:changelog:commit": "git commit CHANGELOG.md CHANGELOG-current.md -m \"Update changelog\" || true",
     "util:dirtycheck": "ts-node utils/dirtycheck",
-    "util:downloadassets": "ts-node --compilerOptions=\"{\\\"lib\\\":[\\\"dom\\\",\\\"es2021\\\"]}\" utils/download-client-assets",
     "util:version:reversion": "ts-node utils/postversion.reversion",
     "preversion": "npm run util:dirtycheck && npm run lint && npm run build",
     "version": "conventional-changelog -i CHANGELOG.md -s -r 0 && git add CHANGELOG.md",
