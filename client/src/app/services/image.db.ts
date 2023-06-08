@@ -23,7 +23,7 @@ export class ImageDB extends Dexie {
     // Define tables and indexes
     //
     this.version(1).stores({
-      images: '++id, name, quality, hash, url',
+      images: '++id, [name+quality], hash, url',
     });
 
     // Let's physically map BlobImage class to image table.

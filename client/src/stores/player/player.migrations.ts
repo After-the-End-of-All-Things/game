@@ -1,4 +1,4 @@
-import { IPlayerStore } from '../../interfaces';
+import { IPlayerStore } from '@interfaces';
 
 export const playerStoreMigrations = [
   {

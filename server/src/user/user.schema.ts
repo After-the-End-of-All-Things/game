@@ -1,3 +1,4 @@
+import { IUser } from '@interfaces';
 import {
   Entity,
   PrimaryKey,
@@ -11,7 +12,7 @@ import { onlineUntilExpiration } from '../utils/time';
 export type UserId = User['_id'];
 
 @Entity()
-export class User {
+export class User implements IUser {
   @PrimaryKey()
   _id!: ObjectId;
 

@@ -1,4 +1,4 @@
-import { IPlayer } from '../../interfaces';
+import { IPlayer } from '@interfaces';
 
 export class SetPlayer {
   static type = '[Player] Set';

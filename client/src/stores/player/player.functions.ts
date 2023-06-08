@@ -1,10 +1,5 @@
+import { Currency, IPlayerStore, RechargeableStat, Stat } from '@interfaces';
 import { StateContext } from '@ngxs/store';
-import {
-  Currency,
-  IPlayerStore,
-  RechargeableStat,
-  Stat,
-} from '../../interfaces';
 import { SetPlayer } from './player.actions';
 
 export const defaultStore: () => IPlayerStore = () => ({

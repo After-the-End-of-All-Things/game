@@ -1,4 +1,4 @@
-import { IUser } from '../../../shared/interfaces';
+import { IUser } from '@interfaces';
 
 export interface IUserStore {
   version: number;

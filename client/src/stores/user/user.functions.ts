@@ -1,5 +1,5 @@
+import { IUserStore } from '@interfaces';
 import { StateContext } from '@ngxs/store';
-import { IUserStore } from '../../interfaces';
 import { SetUser } from './user.actions';
 
 export const defaultStore: () => IUserStore = () => ({
@@ -8,12 +8,11 @@ export const defaultStore: () => IUserStore = () => ({
     createdAt: 0,
     discriminator: '',
     email: '',
-    username: ''
-  }
+    username: '',
+  },
 });
 
-export function resetGame(ctx: StateContext<IUserStore>) {
-}
+export function resetGame(ctx: StateContext<IUserStore>) {}
 
 export function setUser(ctx: StateContext<IUserStore>, { user }: SetUser) {
   ctx.patchState({ user });
