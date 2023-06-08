@@ -19,7 +19,8 @@
     "noFallthroughCasesInSwitch": false,
     "paths": {
       "@interfaces": [
-        "src/interfaces/index.ts"
+        "src/interfaces/index.ts",
+        "../shared/interfaces/*"
       ]
     }
   }
