@@ -17,9 +17,11 @@ export class StoreTextComponent {
   public displayedText = '';
 
   constructor(private store: Store) {
-    this.store.select(store => get(store, this.storeKey, this.storeKey)).pipe(takeUntilDestroyed()).subscribe((res: any) => {
-      this.displayedText = res;
-    });
+    this.store.select(store => get(store, this.storeKey, this.storeKey))
+      .pipe(takeUntilDestroyed())
+      .subscribe((res: any) => {
+        this.displayedText = res;
+      });
   }
 
 }
