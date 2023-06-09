@@ -1,0 +1,29 @@
+<div
+  class="hero-container"
+  *ngIf="{
+    user: user$ | async,
+    player: player$ | async
+  } as data"
+>
+  <div class="avatar">
+    <app-icon
+      spritesheet="portraits"
+      [sprite]="data.player?.cosmetics?.portrait || 4"
+      [scale]="1"
+    ></app-icon>
+  </div>
+
+  <div class="user-info">
+    <span class="username">
+      <app-store-text storeKey="user.user.username"></app-store-text>
+    </span>
+
+    <span class="discriminator">
+      #<app-store-text storeKey="user.user.discriminator"></app-store-text>
+    </span>
+  </div>
+
+  <div class="player-info">
+    <div class="level">Level {{ data.player?.level ?? 0 }}</div>
+  </div>
+</div>

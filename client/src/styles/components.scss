@@ -1,0 +1,19 @@
+
+.fancy-card {
+  ion-card-title {
+    display: flex;
+    justify-content: center;
+  }
+
+  ion-card-content {
+    min-height: 170px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .number {
+      font-size: 4em;
+    }
+  }
+}

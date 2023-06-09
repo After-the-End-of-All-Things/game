@@ -10,15 +10,10 @@ export class IconComponent implements OnInit {
   @Input({ required: true }) spritesheet!: string;
   @Input({ required: true }) sprite!: number;
   @Input() quality = 'medium';
+  @Input() scale = 1;
 
   public spritesheetUrl!: any;
-
-  get assetLocation() {
-    const divisor = 16;
-    const y = Math.floor(this.sprite / divisor);
-    const x = this.sprite % divisor;
-    return `-${x * 64}px -${y * 64}px`;
-  }
+  public assetLocation = '-0px -0px';
 
   constructor(private imageService: ImageService) {}
 
@@ -27,5 +22,14 @@ export class IconComponent implements OnInit {
       this.spritesheet,
       this.quality
     );
+
+    this.assetLocation = this.getSpriteLocation();
+  }
+
+  private getSpriteLocation() {
+    const divisor = 16;
+    const y = Math.floor(this.sprite / divisor);
+    const x = this.sprite % divisor;
+    return `-${x * 64}px -${y * 64}px`;
   }
 }

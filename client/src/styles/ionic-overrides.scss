@@ -1,0 +1,13 @@
+
+
+ion-content {
+  --background: url(../assets/bg/splash-dark.png) no-repeat center center/cover;
+  &.bright {
+    --background: url(../assets/bg/splash.png) no-repeat center center/cover;
+  }
+}
+
+ion-list {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}

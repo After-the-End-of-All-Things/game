@@ -1,0 +1,36 @@
+
+.hero-container {
+  min-height: 300px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  .avatar {
+    width: 128px;
+    height: 128px;
+    padding: 32px;
+
+    app-icon {
+      display: block;
+      max-width: 128px;
+      max-height: 128px;
+    }
+  }
+
+  .user-info {
+    .username {
+      font-size: 1.5rem;
+    }
+
+    .discriminator {
+      font-size: 0.75rem;
+      font-style: italic;
+    }
+  }
+
+  .player-info {
+    margin-top: 10px;
+  }
+}
