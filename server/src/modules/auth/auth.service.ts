@@ -66,7 +66,7 @@ export class AuthService {
       throw new UnauthorizedException();
     }
 
-    this.userService.updateUserOnlineTimeById(user._id.toString());
+    await this.userService.updateUserOnlineTimeById(user._id.toString());
 
     const jwtPayload = {
       sub: user._id,

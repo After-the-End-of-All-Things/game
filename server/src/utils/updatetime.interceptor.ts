@@ -25,7 +25,7 @@ export class UpdateAuthTimeInterceptor implements NestInterceptor {
       const token = request.headers.authorization.split(' ')[1];
       const decoded = await this.authService.decodeJwt(token);
       if (decoded.sub) {
-        this.userService.updateUserOnlineTimeById(decoded.sub);
+        await this.userService.updateUserOnlineTimeById(decoded.sub);
       }
     }
 
