@@ -15,7 +15,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ErrorInterceptor } from './helpers/error.interceptor';
 
-import { DataGrabberInterceptor } from 'src/app/helpers/data-grabber.interceptor';
+import { DataGrabberInterceptor } from '@helpers/data-grabber.interceptor';
 import * as Stores from '../stores';
 import * as Migrations from '../stores/migrations';
 import { AssetService } from './services/asset.service';

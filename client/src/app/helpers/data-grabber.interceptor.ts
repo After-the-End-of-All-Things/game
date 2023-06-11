@@ -6,10 +6,11 @@ import {
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Store } from '@ngxs/store';
+import { ApplyPlayerPatches, SetPlayer } from '@stores/player/player.actions';
+import { ApplyStatsPatches, SetStats } from '@stores/stats/stats.actions';
+import { ApplyUserPatches, SetUser } from '@stores/user/user.actions';
+import { isArray } from 'lodash';
 import { Observable, tap } from 'rxjs';
-import { SetPlayer } from 'src/stores/player/player.actions';
-import { SetStats } from 'src/stores/stats/stats.actions';
-import { SetUser } from 'src/stores/user/user.actions';
 
 @Injectable()
 export class DataGrabberInterceptor implements HttpInterceptor {
@@ -25,15 +26,27 @@ export class DataGrabberInterceptor implements HttpInterceptor {
         if (!body) return;
 
         if (body.user) {
-          this.store.dispatch(new SetUser(body.user));
+          if (isArray(body.user)) {
+            this.store.dispatch(new ApplyUserPatches(body.user));
+          } else {
+            this.store.dispatch(new SetUser(body.user));
+          }
         }
 
         if (body.player) {
-          this.store.dispatch(new SetPlayer(body.player));
+          if (isArray(body.player)) {
+            this.store.dispatch(new ApplyPlayerPatches(body.player));
+          } else {
+            this.store.dispatch(new SetPlayer(body.player));
+          }
         }
 
         if (body.stats) {
-          this.store.dispatch(new SetStats(body.stats));
+          if (isArray(body.stats)) {
+            this.store.dispatch(new ApplyStatsPatches(body.stats));
+          } else {
+            this.store.dispatch(new SetStats(body.stats));
+          }
         }
       })
     );

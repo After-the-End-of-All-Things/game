@@ -56,10 +56,8 @@ export class UserService {
   }
 
   async updateUserOnlineTimeById(userId: string): Promise<void> {
-    await this.users.nativeUpdate(
-      { _id: new ObjectId(userId) },
-      { onlineUntil: onlineUntilExpiration() },
-    );
+    const user = await this.findUserById(userId);
+    user.onlineUntil = onlineUntilExpiration();
   }
 
   async getAllUserInformation(userId: string): Promise<IFullUser> {

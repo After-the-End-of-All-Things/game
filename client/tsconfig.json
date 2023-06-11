@@ -27,6 +27,24 @@
       "@interfaces": [
         "src/interfaces/index.ts",
         "../shared/interfaces/*"
+      ],
+      "@stores": [
+        "src/stores/index.ts"
+      ],
+      "@stores/*": [
+        "src/stores/*"
+      ],
+      "@services/*": [
+        "src/app/services/*"
+      ],
+      "@components/*": [
+        "src/app/components/*"
+      ],
+      "@helpers/*": [
+        "src/app/helpers/*"
+      ],
+      "@environment": [
+        "src/environments/environment.ts"
       ]
     }
   },

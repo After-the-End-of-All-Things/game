@@ -5,10 +5,12 @@ import { environment } from '@environment';
 @Injectable({
   providedIn: 'root',
 })
-export class UserService {
+export class PlayerService {
   constructor(private http: HttpClient) {}
 
-  public getOnlineUsers() {
-    return this.http.get(`${environment.apiUrl}/user/online`);
+  changePortrait(portrait: number) {
+    this.http
+      .patch(`${environment.apiUrl}/player/cosmetics/portrait`, { portrait })
+      .subscribe();
   }
 }

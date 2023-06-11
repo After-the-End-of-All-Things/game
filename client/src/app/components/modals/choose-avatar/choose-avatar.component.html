@@ -1,0 +1,23 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Choose New Avatar</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="confirm()" [strong]="true">Confirm</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-row>
+    <ion-col *ngFor="let portrait of allPortraits">
+      <ion-avatar
+        (click)="selectPortrait(portrait)"
+        [class.selected]="selectedPortrait === portrait"
+        [class.disabled]="!defaultSelectablePortraits.includes(portrait)"
+      >
+        <app-icon spritesheet="portraits" [sprite]="portrait"></app-icon>
+      </ion-avatar>
+    </ion-col>
+  </ion-row>
+</ion-content>

@@ -12,6 +12,11 @@
     height: 128px;
     padding: 32px;
 
+    ion-avatar {
+      overflow: hidden;
+      cursor: pointer;
+    }
+
     app-icon {
       display: block;
       max-width: 128px;

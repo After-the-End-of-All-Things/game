@@ -18,7 +18,7 @@ export enum Currency {
 export interface IPlayerLocation {
   current: string;
   goingTo: string;
-  arrivesAt: Date;
+  arrivesAt: number;
 }
 
 export interface IPlayerProfile {

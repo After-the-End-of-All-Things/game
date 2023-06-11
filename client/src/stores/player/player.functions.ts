@@ -1,6 +1,7 @@
 import { Currency, IPlayerStore, RechargeableStat, Stat } from '@interfaces';
 import { StateContext } from '@ngxs/store';
-import { SetPlayer } from './player.actions';
+import { applyPatch } from 'fast-json-patch';
+import { ApplyPlayerPatches, SetPlayer } from './player.actions';
 
 export const defaultStore: () => IPlayerStore = () => ({
   version: 0,
@@ -11,7 +12,7 @@ export const defaultStore: () => IPlayerStore = () => ({
     location: {
       current: '',
       goingTo: '',
-      arrivesAt: new Date(),
+      arrivesAt: Date.now(),
     },
 
     profile: {
@@ -47,5 +48,16 @@ export function setPlayer(
   ctx: StateContext<IPlayerStore>,
   { player }: SetPlayer
 ) {
+  ctx.patchState({ player });
+}
+
+export function applyPlayerPatches(
+  ctx: StateContext<IPlayerStore>,
+  { patches }: ApplyPlayerPatches
+) {
+  const player = ctx.getState().player;
+
+  applyPatch(player, patches);
+
   ctx.patchState({ player });
 }

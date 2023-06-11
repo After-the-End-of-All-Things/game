@@ -55,6 +55,7 @@ export class Player implements IPlayer {
   cosmetics: IPlayerCosmetics;
 
   constructor(userId: string) {
+    this._id = new ObjectId(userId);
     this.userId = userId;
 
     this.xp = 0;
@@ -80,7 +81,7 @@ export class Player implements IPlayer {
     this.location = {
       current: 'Mork',
       goingTo: '',
-      arrivesAt: new Date(),
+      arrivesAt: Date.now(),
     };
 
     this.profile = {

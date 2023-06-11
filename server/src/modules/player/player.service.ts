@@ -1,7 +1,10 @@
-import { EntityManager, EntityRepository } from '@mikro-orm/mongodb';
+import { IPlayer } from '@interfaces';
+import { EntityManager, EntityRepository, ObjectId } from '@mikro-orm/mongodb';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { Player } from '@modules/player/player.schema';
 import { BadRequestException, Injectable } from '@nestjs/common';
+import { getPatchesAfterPropChanges } from '@utils/patches';
+import * as jsonpatch from 'fast-json-patch';
 
 @Injectable()
 export class PlayerService {
@@ -12,7 +15,7 @@ export class PlayerService {
   ) {}
 
   async getPlayerForUser(userId: string): Promise<Player> {
-    const dbPlayer = await this.players.findOne({ userId });
+    const dbPlayer = await this.players.findOne({ _id: new ObjectId(userId) });
     if (!dbPlayer) {
       return await this.createPlayerForUser(userId);
     }
@@ -34,5 +37,16 @@ export class PlayerService {
     }
 
     return player;
+  }
+
+  async updatePortraitForPlayer(
+    userId: string,
+    portrait: number,
+  ): Promise<jsonpatch.Operation[]> {
+    const player = await this.getPlayerForUser(userId);
+
+    return getPatchesAfterPropChanges<IPlayer>(player, (playerRef) => {
+      playerRef.cosmetics = { ...player.cosmetics, portrait };
+    });
   }
 }

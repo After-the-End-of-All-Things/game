@@ -6,11 +6,12 @@
   } as data"
 >
   <div class="avatar">
-    <app-icon
-      spritesheet="portraits"
-      [sprite]="data.player?.cosmetics?.portrait || 4"
-      [scale]="1"
-    ></app-icon>
+    <ion-avatar (click)="changePortrait(data.player?.cosmetics?.portrait || 4)">
+      <app-icon
+        spritesheet="portraits"
+        [sprite]="data.player?.cosmetics?.portrait || 4"
+      ></app-icon>
+    </ion-avatar>
   </div>
 
   <div class="user-info">

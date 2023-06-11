@@ -26,6 +26,10 @@ export class IconComponent implements OnInit {
     this.assetLocation = this.getSpriteLocation();
   }
 
+  ngOnChanges() {
+    this.assetLocation = this.getSpriteLocation();
+  }
+
   private getSpriteLocation() {
     const divisor = 16;
     const y = Math.floor(this.sprite / divisor);
