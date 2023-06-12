@@ -1,4 +1,4 @@
-import { EntityManager, EntityRepository, ObjectId } from '@mikro-orm/mongodb';
+import { EntityManager, EntityRepository } from '@mikro-orm/mongodb';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { Achievements } from '@modules/achievements/achievements.schema';
 import { BadRequestException, Injectable } from '@nestjs/common';
@@ -12,12 +12,12 @@ export class AchievementsService {
   ) {}
 
   async getAchievementsForUser(userId: string): Promise<Achievements> {
-    const dbPlayer = await this.players.findOne({ _id: new ObjectId(userId) });
-    if (!dbPlayer) {
+    const dbAchievements = await this.players.findOne({ userId });
+    if (!dbAchievements) {
       return await this.createAchievementsForUser(userId);
     }
 
-    return dbPlayer;
+    return dbAchievements;
   }
 
   async createAchievementsForUser(
@@ -31,7 +31,7 @@ export class AchievementsService {
     } catch (e) {
       // mongodb duplicate
       if (e.code === 11000) {
-        throw new BadRequestException('player id already in use.');
+        throw new BadRequestException('achievements id already in use.');
       }
     }
 

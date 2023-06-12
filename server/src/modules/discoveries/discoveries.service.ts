@@ -1,4 +1,4 @@
-import { EntityManager, EntityRepository, ObjectId } from '@mikro-orm/mongodb';
+import { EntityManager, EntityRepository } from '@mikro-orm/mongodb';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { Discoveries } from '@modules/discoveries/discoveries.schema';
 import { BadRequestException, Injectable } from '@nestjs/common';
@@ -12,12 +12,12 @@ export class DiscoveriesService {
   ) {}
 
   async getDiscoveriesForUser(userId: string): Promise<Discoveries> {
-    const dbPlayer = await this.players.findOne({ _id: new ObjectId(userId) });
-    if (!dbPlayer) {
+    const dbDiscoveries = await this.players.findOne({ userId });
+    if (!dbDiscoveries) {
       return await this.createDiscoveriesForUser(userId);
     }
 
-    return dbPlayer;
+    return dbDiscoveries;
   }
 
   async createDiscoveriesForUser(
@@ -31,7 +31,7 @@ export class DiscoveriesService {
     } catch (e) {
       // mongodb duplicate
       if (e.code === 11000) {
-        throw new BadRequestException('player id already in use.');
+        throw new BadRequestException('discoveries id already in use.');
       }
     }
 

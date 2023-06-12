@@ -1,5 +1,5 @@
 import { IPlayer } from '@interfaces';
-import { EntityManager, EntityRepository, ObjectId } from '@mikro-orm/mongodb';
+import { EntityManager, EntityRepository } from '@mikro-orm/mongodb';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { Player } from '@modules/player/player.schema';
 import { BadRequestException, Injectable } from '@nestjs/common';
@@ -15,7 +15,7 @@ export class PlayerService {
   ) {}
 
   async getPlayerForUser(userId: string): Promise<Player> {
-    const dbPlayer = await this.players.findOne({ _id: new ObjectId(userId) });
+    const dbPlayer = await this.players.findOne({ userId });
     if (!dbPlayer) {
       return await this.createPlayerForUser(userId);
     }

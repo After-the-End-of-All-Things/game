@@ -67,8 +67,8 @@ export class UserService {
   async getAllUserInformation(userId: string): Promise<IFullUser> {
     return {
       user: await this.findUserById(userId),
-      stats: await this.statsService.getStatsForUser(userId),
       player: await this.playerService.getPlayerForUser(userId),
+      stats: await this.statsService.getStatsForUser(userId),
       discoveries: await this.discoveriesService.getDiscoveriesForUser(userId),
       achievements: await this.achievementsService.getAchievementsForUser(
         userId,
