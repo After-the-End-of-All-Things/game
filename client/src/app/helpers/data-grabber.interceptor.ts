@@ -6,6 +6,14 @@ import {
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Store } from '@ngxs/store';
+import {
+  ApplyAchievementsPatches,
+  SetAchievements,
+} from '@stores/achievements/achievements.actions';
+import {
+  ApplyDiscoveriesPatches,
+  SetDiscoveries,
+} from '@stores/discoveries/discoveries.actions';
 import { ApplyPlayerPatches, SetPlayer } from '@stores/player/player.actions';
 import { ApplyStatsPatches, SetStats } from '@stores/stats/stats.actions';
 import { ApplyUserPatches, SetUser } from '@stores/user/user.actions';
@@ -46,6 +54,24 @@ export class DataGrabberInterceptor implements HttpInterceptor {
             this.store.dispatch(new ApplyStatsPatches(body.stats));
           } else {
             this.store.dispatch(new SetStats(body.stats));
+          }
+        }
+
+        if (body.achievements) {
+          if (isArray(body.achievements)) {
+            this.store.dispatch(
+              new ApplyAchievementsPatches(body.achievements)
+            );
+          } else {
+            this.store.dispatch(new SetAchievements(body.achievements));
+          }
+        }
+
+        if (body.discoveries) {
+          if (isArray(body.discoveries)) {
+            this.store.dispatch(new ApplyDiscoveriesPatches(body.discoveries));
+          } else {
+            this.store.dispatch(new SetDiscoveries(body.discoveries));
           }
         }
       })

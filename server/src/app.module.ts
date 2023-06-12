@@ -6,8 +6,10 @@ import { FlushInterceptor } from 'src/utils/flush.interceptor';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from './config/config.module';
+import { AchievementsModule } from './modules/achievements/achievements.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { DatabaseModule } from './modules/database/database.module';
+import { DiscoveriesModule } from './modules/discoveries/discoveries.module';
 import { NotificationModule } from './modules/notification/notification.module';
 import { PlayerModule } from './modules/player/player.module';
 import { StatsModule } from './modules/stats/stats.module';
@@ -53,6 +55,8 @@ const isProduction = process.env.NODE_ENV === 'production';
     NotificationModule,
     PlayerModule,
     StatsModule,
+    DiscoveriesModule,
+    AchievementsModule,
   ],
   controllers: [AppController],
   providers: [
