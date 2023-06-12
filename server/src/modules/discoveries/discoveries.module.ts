@@ -8,5 +8,6 @@ import { DiscoveriesService } from './discoveries.service';
   imports: [MikroOrmModule.forFeature([Discoveries])],
   controllers: [DiscoveriesController],
   providers: [DiscoveriesService],
+  exports: [DiscoveriesService],
 })
 export class DiscoveriesModule {}

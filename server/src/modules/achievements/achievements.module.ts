@@ -8,5 +8,6 @@ import { AchievementsService } from './achievements.service';
   imports: [MikroOrmModule.forFeature([Achievements])],
   controllers: [AchievementsController],
   providers: [AchievementsService],
+  exports: [AchievementsService],
 })
 export class AchievementsModule {}
