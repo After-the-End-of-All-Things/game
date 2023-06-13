@@ -41,7 +41,8 @@
         "src/app/components/*"
       ],
       "@helpers/*": [
-        "src/app/helpers/*"
+        "src/app/helpers/*",
+        "../shared/helpers/*"
       ],
       "@environment": [
         "src/environments/environment.ts"

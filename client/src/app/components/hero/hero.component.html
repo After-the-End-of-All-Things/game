@@ -2,7 +2,8 @@
   class="hero-container"
   *ngIf="{
     user: user$ | async,
-    player: player$ | async
+    player: player$ | async,
+    coins: playerCoins$ | async
   } as data"
 >
   <div class="avatar">
@@ -25,6 +26,10 @@
   </div>
 
   <div class="player-info">
-    <div class="level">Level {{ data.player?.level ?? 0 }}</div>
+    <div class="relevant-stats">
+      <span class="level">Level {{ data.player?.level ?? 0 | number }}</span>
+      &middot;
+      <span class="coins">{{ data.coins ?? 0 | number }} Coins</span>
+    </div>
   </div>
 </div>

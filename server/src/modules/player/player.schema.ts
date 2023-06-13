@@ -37,6 +37,9 @@ export class Player implements IPlayer {
   level: number;
 
   @Property()
+  statPoints: number;
+
+  @Property()
   stats: Record<Stat, number>;
 
   @Property()
@@ -59,6 +62,7 @@ export class Player implements IPlayer {
 
     this.xp = 0;
     this.level = 1;
+    this.statPoints = 0;
 
     this.stats = {
       health: 0,
@@ -81,6 +85,7 @@ export class Player implements IPlayer {
       current: 'Mork',
       goingTo: '',
       arrivesAt: 0,
+      cooldown: 0,
     };
 
     this.profile = {

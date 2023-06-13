@@ -1,0 +1,18 @@
+
+.content-card {
+
+  ion-title {
+    text-align: center;
+  }
+
+  ion-card-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    .earned {
+      min-height: 30px;
+    }
+  }
+}

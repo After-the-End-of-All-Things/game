@@ -13,7 +13,9 @@ export class AuthService {
     private store: Store,
     private http: HttpClient,
     private jwtHelper: JwtHelperService
-  ) {
+  ) {}
+
+  public init() {
     this.authIfPossible();
     this.watchToken();
   }

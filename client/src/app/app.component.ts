@@ -16,8 +16,13 @@ export class AppComponent {
     {
       title: 'Home',
       url: '',
-      icon: 'home'
-    }
+      icon: 'home',
+    },
+    {
+      title: 'Town',
+      url: 'town',
+      icon: 'map',
+    },
   ];
 
   constructor() {}

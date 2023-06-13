@@ -8,11 +8,11 @@ export class DiscoveriesService {
   constructor(
     private readonly em: EntityManager,
     @InjectRepository(Discoveries)
-    private readonly players: EntityRepository<Discoveries>,
+    private readonly discoveries: EntityRepository<Discoveries>,
   ) {}
 
   async getDiscoveriesForUser(userId: string): Promise<Discoveries> {
-    const dbDiscoveries = await this.players.findOne({ userId });
+    const dbDiscoveries = await this.discoveries.findOne({ userId });
     if (!dbDiscoveries) {
       return await this.createDiscoveriesForUser(userId);
     }
@@ -23,10 +23,10 @@ export class DiscoveriesService {
   async createDiscoveriesForUser(
     userId: string,
   ): Promise<Discoveries | undefined> {
-    const player = new Discoveries(userId);
+    const discoveries = new Discoveries(userId);
 
     try {
-      await this.players.create(player);
+      await this.discoveries.create(discoveries);
       await this.em.flush();
     } catch (e) {
       // mongodb duplicate
@@ -35,6 +35,12 @@ export class DiscoveriesService {
       }
     }
 
-    return player;
+    return discoveries;
+  }
+
+  discoverLocation(discoveries: Discoveries, locationName: string) {
+    if (discoveries.locations[locationName]) return;
+
+    discoveries.locations = { ...discoveries.locations, [locationName]: true };
   }
 }

@@ -16,6 +16,7 @@ import { AppComponent } from './app.component';
 import { ErrorInterceptor } from './helpers/error.interceptor';
 
 import { DataGrabberInterceptor } from '@helpers/data-grabber.interceptor';
+import { AuthService } from '@services/auth.service';
 import * as Stores from '../stores';
 import * as Migrations from '../stores/migrations';
 import { AssetService } from './services/asset.service';
@@ -76,10 +77,12 @@ export function getAuthToken() {
     },
     {
       provide: APP_INITIALIZER,
-      useFactory: (assetService: AssetService) => async () => {
-        await assetService.init();
-      },
-      deps: [AssetService],
+      useFactory:
+        (assetService: AssetService, authService: AuthService) => async () => {
+          await assetService.init();
+          await authService.init();
+        },
+      deps: [AssetService, AuthService],
       multi: true,
     },
   ],

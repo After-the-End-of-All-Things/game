@@ -7,6 +7,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve -o --port 3699",
+    "setup": "",
     "build": "ng build --configuration production",
     "build:netlify": "npm run build",
     "watch": "ng build --watch --configuration development",

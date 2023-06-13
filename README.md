@@ -2,15 +2,32 @@
 
 God, am I getting tired of typing that.
 
+## Getting Started
+
+- use Node 18.15 or higher
+- `npm i && npm run setup` - install dependencies and run setup scripts
+- `npm start` - start the client and server
+
 ## Useful Scripts
 
-* `npm run lint` - run the lint checker for client and server
-* `npm run build` - build the client and server
-* `npm run start` - start the client and the server
-* `npm run bump:<major,minor,patch>` - bump the version of the project, trigger a release, and changelog updates
+- `npm run setup` - run the setup scripts for both client and server
+- `npm run lint` - run the lint checker for client and server
+- `npm run build` - build the client and server
+- `npm run start` - start the client and the server
+- `npm run bump:<major,minor,patch>` - bump the version of the project, trigger a release, and changelog updates
 
 ## Server Setup
 
 1. Create `server/.env` file
 1. Add `MONGODB_URI` environment variable (you will need to set up MongoDB somehow) [default: `mongodb://localhost:27017/`]
 1. Add `JWT_SECRET` environment variable (set to any string) [default: `supersecret`]
+
+### Optional Server Environment Variables
+
+- `BASE_EXPLORE_XP` - the amount of XP gained per explore (default: 5)
+- `BASE_EXPLORE_COINS` - the amount of coins gained per explore (default: 3)
+- `BASE_EXPLORE_SPEED` - the cooldown between explores (default: 5)
+
+### Notes
+
+- When setting properties on a sub-object for a schema, it _will not flush_ unless you also set the object. One way to do this is: `this.prop = { ...this.prop, newProp: newPropValue }`

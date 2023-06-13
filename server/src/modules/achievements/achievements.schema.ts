@@ -4,17 +4,19 @@ import {
   PrimaryKey,
   Property,
   SerializedPrimaryKey,
+  Unique,
 } from '@mikro-orm/core';
 import { ObjectId } from '@mikro-orm/mongodb';
 
 @Entity()
 export class Achievements implements IAchievements {
-  @PrimaryKey()
+  @PrimaryKey({ hidden: true })
   _id!: ObjectId;
 
-  @SerializedPrimaryKey()
+  @SerializedPrimaryKey({ hidden: true })
   id!: string;
 
+  @Unique()
   @Property({ hidden: true })
   userId: string;
 
@@ -23,5 +25,7 @@ export class Achievements implements IAchievements {
 
   constructor(userId: string) {
     this.userId = userId;
+
+    this.achievements = {};
   }
 }

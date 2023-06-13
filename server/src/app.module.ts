@@ -8,9 +8,11 @@ import { AppService } from './app.service';
 import { ConfigModule } from './config/config.module';
 import { AchievementsModule } from './modules/achievements/achievements.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { ContentModule } from './modules/content/content.module';
 import { DatabaseModule } from './modules/database/database.module';
 import { DiscoveriesModule } from './modules/discoveries/discoveries.module';
 import { NotificationModule } from './modules/notification/notification.module';
+import { GameplayController } from './modules/player/gameplay.controller';
 import { PlayerModule } from './modules/player/player.module';
 import { StatsModule } from './modules/stats/stats.module';
 import { UserModule } from './modules/user/user.module';
@@ -57,8 +59,9 @@ const isProduction = process.env.NODE_ENV === 'production';
     StatsModule,
     DiscoveriesModule,
     AchievementsModule,
+    ContentModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, GameplayController],
   providers: [
     AppService,
     {

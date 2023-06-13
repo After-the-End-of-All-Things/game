@@ -1,0 +1,14 @@
+<ion-toolbar>
+  <ion-buttons slot="start">
+    <ion-button color="primary" [routerLink]="['/explore']" fill="solid">
+      Explore
+      <ion-icon slot="end" name="arrow-forward-circle"></ion-icon>
+    </ion-button>
+  </ion-buttons>
+
+  <ng-container *ngIf="player$ | async as player">
+    <ion-progress-bar
+      [value]="player.xp / nextLevelXp(player.level)"
+    ></ion-progress-bar>
+  </ng-container>
+</ion-toolbar>

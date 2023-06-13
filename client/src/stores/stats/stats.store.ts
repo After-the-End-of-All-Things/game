@@ -5,6 +5,7 @@ import { attachAction } from '@seiyria/ngxs-attach-action';
 import { IStatsStore } from '@interfaces';
 import { defaultStore } from './stats.functions';
 
+import { getStateHelpers } from '@helpers/store-context';
 import { attachments } from './stats.attachments';
 
 @State<IStatsStore>({
@@ -14,8 +15,11 @@ import { attachments } from './stats.attachments';
 @Injectable()
 export class StatsStore {
   constructor() {
+    const helpers = getStateHelpers();
     attachments.forEach(({ action, handler }) => {
-      attachAction(StatsStore, action, handler);
+      attachAction(StatsStore, action, (ctx, action) => {
+        handler(ctx, action, helpers);
+      });
     });
   }
 
