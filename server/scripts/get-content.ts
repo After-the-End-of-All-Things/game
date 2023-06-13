@@ -11,4 +11,4 @@ const getData = async () => {
   }
 };
 
-void getData();
+getData();
