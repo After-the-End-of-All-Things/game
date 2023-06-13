@@ -5,7 +5,7 @@ God, am I getting tired of typing that.
 ## Getting Started
 
 - use Node 18.15 or higher
-- `npm i && npm run setup` - install dependencies and run setup scripts
+- `npm i` - install dependencies and run setup scripts
 - `npm start` - start the client and server
 
 ## Useful Scripts
@@ -30,4 +30,5 @@ God, am I getting tired of typing that.
 
 ### Notes
 
+- Setup scripts must be non-mandatory (at this time)
 - When setting properties on a sub-object for a schema, it _will not flush_ unless you also set the object. One way to do this is: `this.prop = { ...this.prop, newProp: newPropValue }`
