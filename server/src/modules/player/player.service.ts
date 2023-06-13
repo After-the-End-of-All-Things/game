@@ -1,5 +1,5 @@
 import { xpForLevel } from '@helpers/xp';
-import { Currency, ILocation, IPlayer } from '@interfaces';
+import { Currency, ILocation } from '@interfaces';
 import { EntityManager, EntityRepository } from '@mikro-orm/mongodb';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { Discoveries } from '@modules/discoveries/discoveries.schema';
@@ -50,7 +50,7 @@ export class PlayerService {
   ): Promise<jsonpatch.Operation[]> {
     const player = await this.getPlayerForUser(userId);
 
-    return getPatchesAfterPropChanges<IPlayer>(player, async (playerRef) => {
+    return getPatchesAfterPropChanges<Player>(player, async (playerRef) => {
       playerRef.cosmetics = { ...player.cosmetics, portrait };
     });
   }
@@ -76,7 +76,6 @@ export class PlayerService {
 
     player.xp = 0;
     player.level += 1;
-    player.statPoints += 2;
   }
 
   async handleDiscoveries(

@@ -14,6 +14,7 @@ export const defaultStore: () => IPlayerStore = () => ({
   player: {
     xp: 0,
     level: 1,
+    job: 'Generalist',
 
     location: {
       current: '',
@@ -27,7 +28,6 @@ export const defaultStore: () => IPlayerStore = () => ({
       longBio: '',
     },
 
-    statPoints: 0,
     stats: {
       [Stat.Health]: 50,
       [Stat.Magic]: 0,

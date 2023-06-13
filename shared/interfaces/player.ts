@@ -35,9 +35,9 @@ export interface IPlayerCosmetics {
 export interface IPlayer {
   xp: number;
   level: number;
-  statPoints: number;
   stats: Record<Stat, number>;
   recharges: Record<RechargeableStat, number>;
+  job: string;
 
   currencies: Record<Currency, number>;
 

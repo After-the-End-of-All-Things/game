@@ -37,7 +37,7 @@ export class Player implements IPlayer {
   level: number;
 
   @Property()
-  statPoints: number;
+  job: string;
 
   @Property()
   stats: Record<Stat, number>;
@@ -62,7 +62,7 @@ export class Player implements IPlayer {
 
     this.xp = 0;
     this.level = 1;
-    this.statPoints = 0;
+    this.job = 'Generalist';
 
     this.stats = {
       health: 0,

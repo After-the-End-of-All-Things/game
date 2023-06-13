@@ -1,15 +1,19 @@
 import { Injectable } from '@nestjs/common';
 
-import { ILocation } from '@interfaces';
+import { IJob, ILocation } from '@interfaces';
 import * as fs from 'fs-extra';
 import { Logger } from 'nestjs-pino';
 
 @Injectable()
 export class ContentService {
-  public content = { locations: {} };
+  public content = { locations: {}, jobs: {} };
 
   public get locations(): Record<string, ILocation> {
     return this.content.locations;
+  }
+
+  public get jobs(): Record<string, IJob> {
+    return this.content.jobs;
   }
 
   constructor(private logger: Logger) {}

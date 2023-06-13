@@ -1,15 +1,19 @@
 import { Injectable } from '@angular/core';
 import { environment } from '@environment';
-import { ILocation } from '@interfaces';
+import { IJob, ILocation } from '@interfaces';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ContentService {
-  private content = { locations: [] };
+  private content = { locations: {}, jobs: {} };
 
-  public get locations(): ILocation[] {
+  public get locations(): Record<string, ILocation> {
     return this.content.locations;
+  }
+
+  public get jobs(): Record<string, IJob> {
+    return this.content.jobs;
   }
 
   constructor() {}
