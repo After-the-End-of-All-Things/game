@@ -8,6 +8,8 @@
 
   <ng-container *ngIf="player$ | async as player">
     <ion-progress-bar
+      [ngxTippy]="player.xp + ' / ' + nextLevelXp(player.level) + ' XP'"
+      [tippyProps]="{ placement: 'bottom' }"
       color="xp"
       [value]="player.xp / nextLevelXp(player.level)"
     ></ion-progress-bar>

@@ -33,7 +33,10 @@
               "src/_headers",
               "src/_redirects"
             ],
-            "styles": ["src/global.scss"],
+            "styles": [
+              "./node_modules/tippy.js/dist/tippy.css",
+              "src/global.scss"
+            ],
             "scripts": [],
             "serviceWorker": true,
             "ngswConfigPath": "ngsw-config.json"

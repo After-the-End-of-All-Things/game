@@ -8,6 +8,7 @@ import { IconComponent } from '@components/icon/icon.component';
 import { ChooseAvatarModalComponent } from '@components/modals/choose-avatar/choose-avatar.component';
 import { StoreTextComponent } from '@components/store-text/store-text.component';
 import { IonicModule } from '@ionic/angular';
+import { NgxTippyModule } from 'ngx-tippy-wrapper';
 
 const components = [
   StoreTextComponent,
@@ -21,6 +22,6 @@ const components = [
 @NgModule({
   declarations: components,
   exports: components,
-  imports: [CommonModule, IonicModule, RouterModule],
+  imports: [CommonModule, IonicModule, RouterModule, NgxTippyModule],
 })
 export class SharedModule {}
