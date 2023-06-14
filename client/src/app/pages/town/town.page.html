@@ -6,4 +6,58 @@
   <ion-header collapse="condense">
     <app-header-bar></app-header-bar>
   </ion-header>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col sizeXs="12" class="center-container">
+        <ion-card
+          class="card-with-actions center-title-card"
+          *ngIf="!locationInfo"
+        >
+          <ion-card-header>
+            <ion-card-title>Unknown Location</ion-card-title>
+          </ion-card-header>
+
+          <ion-card-content>
+            Your location doesn't seem to have any information. Try traveling to
+            a different location.
+          </ion-card-content>
+
+          <div class="card-actions">
+            <ion-button [routerLink]="['/travel']">Travel</ion-button>
+          </div>
+        </ion-card>
+
+        <ion-card class="location-card" *ngIf="locationInfo">
+          <div class="image-container">
+            <ion-img
+              [src]="'https://assets.ateoat.com/assets/backgrounds/' + locationInfo.background + '.webp'"
+            ></ion-img>
+          </div>
+
+          <ion-card-content>
+            <ion-row>
+              <ion-col sizeXs="10" offsetXs="1" class="center-container">
+                <ion-card
+                  class="location-info-card card-with-actions center-title-card"
+                >
+                  <ion-card-header>
+                    <ion-card-title>{{ locationInfo.name }}</ion-card-title>
+                  </ion-card-header>
+
+                  <ion-card-content>
+                    {{ locationInfo.description }}
+                  </ion-card-content>
+
+                  <div class="card-actions">
+                    <ion-button [routerLink]="['/travel']">Travel</ion-button>
+                  </div>
+                </ion-card>
+              </ion-col>
+            </ion-row>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>

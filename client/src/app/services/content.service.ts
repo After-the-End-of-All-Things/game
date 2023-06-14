@@ -37,4 +37,12 @@ export class ContentService {
       this.content = JSON.parse(localContent);
     }
   }
+
+  public getLocation(location: string): ILocation | undefined {
+    return this.locations[location];
+  }
+
+  public getJob(job: string): IJob | undefined {
+    return this.jobs[job];
+  }
 }

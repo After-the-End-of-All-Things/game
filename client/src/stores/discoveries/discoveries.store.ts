@@ -27,4 +27,9 @@ export class DiscoveriesStore {
   static discoveries(state: IDiscoveriesStore) {
     return state.discoveries;
   }
+
+  @Selector()
+  static locations(state: IDiscoveriesStore) {
+    return state.discoveries.locations;
+  }
 }

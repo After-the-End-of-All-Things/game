@@ -14,7 +14,7 @@ export interface ILocationConnection {
 export interface ILocation {
   name: string;
   description: string;
-  background: number;
+  background: string;
   level: number;
   steps: number;
   cost: number;
