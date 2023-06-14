@@ -36,8 +36,8 @@ export class UserService {
     return user;
   }
 
-  async numberOfUsersWithUsername(username: string): Promise<number> {
-    return this.users.count({ username });
+  async getAllUsersWithUsername(username: string): Promise<User[]> {
+    return this.users.find({ username }, { fields: ['discriminator'] });
   }
 
   async findOneByUsernameAndDiscriminator(
