@@ -1,6 +1,7 @@
 export enum LocationStat {
   XPGain = "xpGain",
   CoinGain = "coinGain",
+  ExploreSpeed = "exploreSpeed",
   LocationFind = "locationFind",
   ItemFind = "itemFind",
   NPCEncounter = "npcEncounter",
@@ -13,10 +14,10 @@ export interface ILocationConnection {
 export interface ILocation {
   name: string;
   description: string;
-  background: number;
+  background: string;
   level: number;
   steps: number;
   cost: number;
   baseStats: Record<LocationStat, number>;
-  connections: Record<string, ILocationConnection>;
+  connections: ILocationConnection[];
 }

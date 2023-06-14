@@ -19,6 +19,7 @@ export interface IPlayerLocation {
   current: string;
   goingTo: string;
   arrivesAt: number;
+  cooldown: number;
 }
 
 export interface IPlayerProfile {
@@ -36,6 +37,7 @@ export interface IPlayer {
   level: number;
   stats: Record<Stat, number>;
   recharges: Record<RechargeableStat, number>;
+  job: string;
 
   currencies: Record<Currency, number>;
 

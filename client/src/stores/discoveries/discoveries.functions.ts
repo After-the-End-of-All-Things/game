@@ -9,6 +9,7 @@ export const defaultStore: () => IDiscoveriesStore = () => ({
     backgrounds: {},
     locations: {},
     portraits: {},
+    borders: {},
   },
 });
 

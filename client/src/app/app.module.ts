@@ -16,6 +16,9 @@ import { AppComponent } from './app.component';
 import { ErrorInterceptor } from './helpers/error.interceptor';
 
 import { DataGrabberInterceptor } from '@helpers/data-grabber.interceptor';
+import { AuthService } from '@services/auth.service';
+import { ContentService } from '@services/content.service';
+import { NgxTippyModule } from 'ngx-tippy-wrapper';
 import * as Stores from '../stores';
 import * as Migrations from '../stores/migrations';
 import { AssetService } from './services/asset.service';
@@ -36,6 +39,7 @@ export function getAuthToken() {
     IonicModule.forRoot(),
     AppRoutingModule,
     HttpClientModule,
+    NgxTippyModule,
     SharedModule,
     JwtModule.forRoot({
       config: {
@@ -76,10 +80,18 @@ export function getAuthToken() {
     },
     {
       provide: APP_INITIALIZER,
-      useFactory: (assetService: AssetService) => async () => {
-        await assetService.init();
-      },
-      deps: [AssetService],
+      useFactory:
+        (
+          assetService: AssetService,
+          authService: AuthService,
+          contentService: ContentService
+        ) =>
+        async () => {
+          await assetService.init();
+          await contentService.init();
+          await authService.init();
+        },
+      deps: [AssetService, AuthService, ContentService],
       multi: true,
     },
   ],

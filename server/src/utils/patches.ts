@@ -1,12 +1,12 @@
 import * as jsonpatch from 'fast-json-patch';
 
-export function getPatchesAfterPropChanges<T>(
+export async function getPatchesAfterPropChanges<T>(
   object: T,
-  makeChanges: (object: T) => void,
+  makeChanges: (object: T) => Promise<void>,
 ) {
   const observer = jsonpatch.observe(object);
 
-  makeChanges(object);
+  await makeChanges(object);
 
   const patches = jsonpatch.generate(observer);
   observer.unobserve();

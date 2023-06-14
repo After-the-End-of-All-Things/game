@@ -17,10 +17,14 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
+    "resolveJsonModule": true,
     "paths": {
       "@interfaces": [
         "src/interfaces/index.ts",
         "../shared/interfaces/*"
+      ],
+      "@helpers/*": [
+        "../shared/helpers/*"
       ],
       "@modules/*": [
         "src/modules/*"

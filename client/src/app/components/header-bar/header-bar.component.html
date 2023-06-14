@@ -1,0 +1,19 @@
+<ion-toolbar>
+  <ion-buttons slot="start">
+    <ion-menu-button></ion-menu-button>
+
+    <ion-button color="primary" [routerLink]="['/explore']" fill="solid">
+      Explore
+      <ion-icon slot="end" name="arrow-forward-circle"></ion-icon>
+    </ion-button>
+  </ion-buttons>
+
+  <ng-container *ngIf="player$ | async as player">
+    <ion-progress-bar
+      [ngxTippy]="player.xp + ' / ' + nextLevelXp(player.level) + ' XP'"
+      [tippyProps]="{ placement: 'bottom' }"
+      color="xp"
+      [value]="player.xp / nextLevelXp(player.level)"
+    ></ion-progress-bar>
+  </ng-container>
+</ion-toolbar>

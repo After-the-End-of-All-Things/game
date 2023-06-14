@@ -1,0 +1,42 @@
+@font-face {
+  font-family: 'OtherText';
+  src: url('../../assets/font/Montserrat-VariableFont_wght.ttf') format('truetype supports variations'),
+       url('../../assets/font/Montserrat-VariableFont_wght.ttf') format('truetype-variations');
+}
+
+:root {
+  --other-font: 'OtherText', sans-serif;
+  --ion-font-family: var(--other-font);
+
+	--ion-color-health: #bc3a4b;
+	--ion-color-health-rgb: 188,58,75;
+	--ion-color-health-contrast: #ffffff;
+	--ion-color-health-contrast-rgb: 255,255,255;
+	--ion-color-health-shade: #a53342;
+	--ion-color-health-tint: #c34e5d;
+
+	--ion-color-xp: #23864a;
+	--ion-color-xp-rgb: 35,134,74;
+	--ion-color-xp-contrast: #ffffff;
+	--ion-color-xp-contrast-rgb: 255,255,255;
+	--ion-color-xp-shade: #1f7641;
+	--ion-color-xp-tint: #39925c;
+}
+
+.ion-color-health {
+  --ion-color-base: var(--ion-color-health, #eb445a) !important;
+  --ion-color-base-rgb: var(--ion-color-health-rgb, 235, 68, 90) !important;
+  --ion-color-contrast: var(--ion-color-health-contrast, #fff) !important;
+  --ion-color-contrast-rgb: var(--ion-color-health-contrast-rgb, 255, 255, 255) !important;
+  --ion-color-shade: var(--ion-color-health-shade, #cf3c4f) !important;
+  --ion-color-tint: var(--ion-color-health-tint, #ed576b) !important;
+}
+
+.ion-color-xp {
+  --ion-color-base: var(--ion-color-xp, #23864a) !important;
+  --ion-color-base-rgb: var(--ion-color-xp-rgb, 35,134,74) !important;
+  --ion-color-contrast: var(--ion-color-xp-contrast, #ffffff) !important;
+  --ion-color-contrast-rgb: var(--ion-color-xp-contrast-rgb, 255, 255, 255) !important;
+  --ion-color-shade: var(--ion-color-xp-shade, #1f7641) !important;
+  --ion-color-tint: var(--ion-color-xp-tint, #39925c) !important;
+}

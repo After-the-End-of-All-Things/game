@@ -1,4 +1,7 @@
 
+.ion-page > ion-content {
+  --padding-top: 24px;
+}
 
 ion-content {
   --background: url(../assets/bg/splash-dark.png) no-repeat center center/cover;
@@ -10,4 +13,8 @@ ion-content {
 ion-list {
   padding-top: 0 !important;
   padding-bottom: 0 !important;
+}
+
+ion-button {
+  text-transform: none;
 }

@@ -2,9 +2,10 @@ import { Injectable } from '@angular/core';
 import { Selector, State } from '@ngxs/store';
 import { attachAction } from '@seiyria/ngxs-attach-action';
 
-import { IPlayerStore } from '@interfaces';
+import { Currency, IPlayerStore } from '@interfaces';
 import { defaultStore } from './player.functions';
 
+import { getStateHelpers } from '@helpers/store-context';
 import { attachments } from './player.attachments';
 
 @State<IPlayerStore>({
@@ -14,13 +15,26 @@ import { attachments } from './player.attachments';
 @Injectable()
 export class PlayerStore {
   constructor() {
+    const helpers = getStateHelpers();
     attachments.forEach(({ action, handler }) => {
-      attachAction(PlayerStore, action, handler);
+      attachAction(PlayerStore, action, (ctx, action) => {
+        handler(ctx, action, helpers);
+      });
     });
   }
 
   @Selector()
   static player(state: IPlayerStore) {
     return state.player;
+  }
+
+  @Selector()
+  static playerCoins(state: IPlayerStore) {
+    return state.player.currencies[Currency.Coins];
+  }
+
+  @Selector()
+  static exploreCooldown(state: IPlayerStore) {
+    return state.player.location.cooldown;
   }
 }

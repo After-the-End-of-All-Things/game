@@ -6,6 +6,7 @@ export const environment = {
   production: false,
   apiUrl: 'http://localhost:3000',
   assetsUrl: 'https://assets.ateoat.com',
+  contentUrl: 'https://content.ateoat.com',
 };
 
 /*

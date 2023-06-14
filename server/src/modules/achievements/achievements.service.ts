@@ -8,11 +8,11 @@ export class AchievementsService {
   constructor(
     private readonly em: EntityManager,
     @InjectRepository(Achievements)
-    private readonly players: EntityRepository<Achievements>,
+    private readonly achievements: EntityRepository<Achievements>,
   ) {}
 
   async getAchievementsForUser(userId: string): Promise<Achievements> {
-    const dbAchievements = await this.players.findOne({ userId });
+    const dbAchievements = await this.achievements.findOne({ userId });
     if (!dbAchievements) {
       return await this.createAchievementsForUser(userId);
     }
@@ -23,10 +23,10 @@ export class AchievementsService {
   async createAchievementsForUser(
     userId: string,
   ): Promise<Achievements | undefined> {
-    const player = new Achievements(userId);
+    const achievements = new Achievements(userId);
 
     try {
-      await this.players.create(player);
+      await this.achievements.create(achievements);
       await this.em.flush();
     } catch (e) {
       // mongodb duplicate
@@ -35,6 +35,6 @@ export class AchievementsService {
       }
     }
 
-    return player;
+    return achievements;
   }
 }

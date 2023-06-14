@@ -1,10 +1,5 @@
 
-.fancy-card {
-  ion-card-title {
-    display: flex;
-    justify-content: center;
-  }
-
+.number-card {
   ion-card-content {
     min-height: 170px;
 
@@ -14,6 +9,27 @@
 
     .number {
       font-size: 4em;
+    }
+  }
+}
+
+.center-title-card {
+  ion-card-title {
+    display: flex;
+    justify-content: center;
+  }
+}
+
+.card-with-actions {
+  padding-bottom: 16px;
+
+  .card-actions {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+
+    ion-button {
+      margin: 0 5px;
     }
   }
 }

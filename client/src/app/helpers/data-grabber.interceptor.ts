@@ -35,7 +35,9 @@ export class DataGrabberInterceptor implements HttpInterceptor {
 
         if (body.user) {
           if (isArray(body.user)) {
-            this.store.dispatch(new ApplyUserPatches(body.user));
+            if (body.user.length > 0) {
+              this.store.dispatch(new ApplyUserPatches(body.user));
+            }
           } else {
             this.store.dispatch(new SetUser(body.user));
           }
@@ -43,7 +45,9 @@ export class DataGrabberInterceptor implements HttpInterceptor {
 
         if (body.player) {
           if (isArray(body.player)) {
-            this.store.dispatch(new ApplyPlayerPatches(body.player));
+            if (body.player.length > 0) {
+              this.store.dispatch(new ApplyPlayerPatches(body.player));
+            }
           } else {
             this.store.dispatch(new SetPlayer(body.player));
           }
@@ -51,7 +55,9 @@ export class DataGrabberInterceptor implements HttpInterceptor {
 
         if (body.stats) {
           if (isArray(body.stats)) {
-            this.store.dispatch(new ApplyStatsPatches(body.stats));
+            if (body.stats.length > 0) {
+              this.store.dispatch(new ApplyStatsPatches(body.stats));
+            }
           } else {
             this.store.dispatch(new SetStats(body.stats));
           }
@@ -59,9 +65,11 @@ export class DataGrabberInterceptor implements HttpInterceptor {
 
         if (body.achievements) {
           if (isArray(body.achievements)) {
-            this.store.dispatch(
-              new ApplyAchievementsPatches(body.achievements)
-            );
+            if (body.achievements.length > 0) {
+              this.store.dispatch(
+                new ApplyAchievementsPatches(body.achievements)
+              );
+            }
           } else {
             this.store.dispatch(new SetAchievements(body.achievements));
           }
@@ -69,7 +77,11 @@ export class DataGrabberInterceptor implements HttpInterceptor {
 
         if (body.discoveries) {
           if (isArray(body.discoveries)) {
-            this.store.dispatch(new ApplyDiscoveriesPatches(body.discoveries));
+            if (body.discoveries.length > 0) {
+              this.store.dispatch(
+                new ApplyDiscoveriesPatches(body.discoveries)
+              );
+            }
           } else {
             this.store.dispatch(new SetDiscoveries(body.discoveries));
           }
