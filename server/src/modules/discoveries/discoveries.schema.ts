@@ -29,6 +29,9 @@ export class Discoveries implements IDiscoveries {
   @Property()
   backgrounds: Record<string, boolean>;
 
+  @Property()
+  borders: Record<string, boolean>;
+
   constructor(userId: string) {
     this.userId = userId;
 
@@ -47,5 +50,6 @@ export class Discoveries implements IDiscoveries {
       101: true,
     };
     this.backgrounds = { 0: true };
+    this.borders = { 0: true };
   }
 }
