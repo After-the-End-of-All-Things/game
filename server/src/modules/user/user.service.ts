@@ -37,7 +37,7 @@ export class UserService {
   }
 
   async getAllUsersWithUsername(username: string): Promise<User[]> {
-    return this.users.find({ username });
+    return this.users.find({ username }, { fields: ['discriminator'] });
   }
 
   async findOneByUsernameAndDiscriminator(

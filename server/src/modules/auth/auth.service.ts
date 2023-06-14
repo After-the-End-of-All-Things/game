@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  UnauthorizedException,
+  BadRequestException
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { random } from 'lodash';
@@ -19,18 +23,20 @@ export class AuthService {
     password: string,
     email: string,
   ): Promise<IFullUser> {
-    const usersWithUsername = await this.userService.getAllUsersWithUsername(
-      username,
-    );
-    const usedDiscriminators = usersWithUsername.map(
-      (user) => user.discriminator,
-    );
-    let discriminator;
+    const usersWithUsername = await this.userService.getAllUsersWithUsername(username);
+    let availableDiscriminators = Array.from({ length: 9999 }, (_, i) => (i + 1).toString().padStart(4, '0'))
 
-    do {
-      discriminator = random(1, 9999).toString().padStart(4, '0');
-    } while (usedDiscriminators.includes(discriminator));
-
+    if (usersWithUsername.length > 9998) {
+      throw new BadRequestException('Username is not available.');
+    } else if (usersWithUsername.length >= 1) {
+      const usedDiscriminators = new Set(usersWithUsername.map(user => user.discriminator));
+      availableDiscriminators = availableDiscriminators
+        .filter(discriminator => !usedDiscriminators.has(discriminator));
+    }
+    
+    const randomIndex = Math.floor(Math.random() * availableDiscriminators.length);
+    const discriminator = availableDiscriminators[randomIndex];
+  
     const hash = await bcrypt.hash(password, 10);
     const newUser = new User(username, discriminator, hash, email);
     const createdUser = await this.userService.createUser(newUser);
