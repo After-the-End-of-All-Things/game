@@ -1,4 +1,13 @@
+@font-face {
+  font-family: 'OtherText';
+  src: url('../../assets/font/Montserrat-VariableFont_wght.ttf') format('truetype supports variations'),
+       url('../../assets/font/Montserrat-VariableFont_wght.ttf') format('truetype-variations');
+}
+
 :root {
+  --other-font: 'OtherText', sans-serif;
+  --ion-font-family: var(--other-font);
+
 	--ion-color-health: #bc3a4b;
 	--ion-color-health-rgb: 188,58,75;
 	--ion-color-health-contrast: #ffffff;
