@@ -34,6 +34,16 @@ export class PlayerStore {
   }
 
   @Selector()
+  static playerLevel(state: IPlayerStore) {
+    return state.player.level;
+  }
+
+  @Selector()
+  static playerLocation(state: IPlayerStore) {
+    return state.player.location;
+  }
+
+  @Selector()
   static exploreCooldown(state: IPlayerStore) {
     return state.player.location.cooldown;
   }

@@ -1,6 +1,6 @@
 import { JwtAuthGuard } from '@modules/auth/jwt.guard';
 import { GameplayService } from '@modules/player/gameplay.service';
-import { Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import { User } from '@utils/user.decorator';
 
 @Controller('gameplay')
@@ -11,5 +11,24 @@ export class GameplayController {
   @Post('explore')
   async explore(@User() user) {
     return this.gameplayService.explore(user.userId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('walk')
+  async walk(@User() user, @Body('location') location: string) {
+    return {
+      player: await this.gameplayService.walkToLocation(user.userId, location),
+    };
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('travel')
+  async travel(@User() user, @Body('location') location: string) {
+    return {
+      player: await this.gameplayService.travelToLocation(
+        user.userId,
+        location,
+      ),
+    };
   }
 }

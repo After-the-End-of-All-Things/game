@@ -11,4 +11,16 @@ export class GameplayService {
   explore() {
     return this.http.post(`${environment.apiUrl}/gameplay/explore`, {});
   }
+
+  walk(location: string) {
+    return this.http.post(`${environment.apiUrl}/gameplay/walk`, {
+      location,
+    });
+  }
+
+  travel(location: string) {
+    return this.http.post(`${environment.apiUrl}/gameplay/travel`, {
+      location,
+    });
+  }
 }

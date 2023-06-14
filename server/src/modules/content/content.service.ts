@@ -8,11 +8,11 @@ import { Logger } from 'nestjs-pino';
 export class ContentService {
   public content = { locations: {}, jobs: {} };
 
-  public get locations(): Record<string, ILocation> {
+  private get locations(): Record<string, ILocation> {
     return this.content.locations;
   }
 
-  public get jobs(): Record<string, IJob> {
+  private get jobs(): Record<string, IJob> {
     return this.content.jobs;
   }
 
@@ -43,5 +43,13 @@ export class ContentService {
     }
 
     await this.reloadContent();
+  }
+
+  public getLocation(location: string): ILocation | undefined {
+    return this.locations[location];
+  }
+
+  public getJob(job: string): IJob | undefined {
+    return this.jobs[job];
   }
 }

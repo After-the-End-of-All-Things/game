@@ -1,0 +1,14 @@
+
+.location-card {
+  .description {
+    min-height: 200px;
+  }
+
+  .locations {
+    text-align: center;
+
+    &.all-found {
+      color: var(--ion-color-success);
+    }
+  }
+}

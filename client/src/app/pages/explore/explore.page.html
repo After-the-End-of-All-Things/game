@@ -7,67 +7,81 @@
     <app-header-bar></app-header-bar>
   </ion-header>
 
-  <ion-grid>
-    <ion-row>
-      <ion-col
-        sizeXs="12"
-        sizeSm="12"
-        sizeMd="8"
-        sizeLg="8"
-        offsetMd="2"
-        offsetLg="2"
-      >
-        <ion-card class="content-card">
-          <ion-card-header>
-            <ion-title>
-              Explore
-              <app-store-text
-                storeKey="player.player.location.current"
-              ></app-store-text>
-            </ion-title>
-          </ion-card-header>
+  <ng-container
+    *ngIf="{
+    location: playerLocation$ | async
+  } as data"
+  >
+    <ion-grid>
+      <ion-row>
+        <ion-col
+          sizeXs="12"
+          sizeSm="12"
+          sizeMd="8"
+          sizeLg="8"
+          offsetMd="2"
+          offsetLg="2"
+        >
+          <ion-card class="content-card center-title-card italic-subtitle-card">
+            <ion-card-header>
+              <ion-card-title>
+                Explore&nbsp;
+                <app-store-text
+                  storeKey="player.player.location.current"
+                ></app-store-text>
+              </ion-card-title>
 
-          <ion-card-content>
-            <div class="earned">
-              <span class="xp">
-                <span class="xp-value" *ngIf="visualService.xp$ | async as xp">
-                  +{{ xp }} XP
+              <ion-card-subtitle *ngIf="data.location?.goingTo">
+                {{ data.location?.arrivesAt | number }} steps until {{
+                data.location?.goingTo }}!
+              </ion-card-subtitle>
+            </ion-card-header>
+
+            <ion-card-content>
+              <div class="earned">
+                <span class="xp">
+                  <span
+                    class="xp-value"
+                    *ngIf="visualService.xp$ | async as xp"
+                  >
+                    +{{ xp }} XP
+                  </span>
                 </span>
-              </span>
 
-              <span class="coin">
-                <span
-                  class="coin-value"
-                  *ngIf="visualService.coin$ | async as coin"
+                <span class="coin">
+                  <span
+                    class="coin-value"
+                    *ngIf="visualService.coin$ | async as coin"
+                  >
+                    +{{ coin }} Coins
+                  </span>
+                </span>
+              </div>
+
+              <div class="explore-container">
+                <ion-button
+                  color="primary"
+                  class="explore"
+                  (click)="explore()"
+                  [disabled]="!canExplore"
                 >
-                  +{{ coin }} Coins
-                </span>
-              </span>
-            </div>
+                  <span *ngIf="canExplore">Go!</span>
 
-            <div class="explore-container">
-              <ion-button
-                color="primary"
-                class="explore"
-                (click)="explore()"
-                [disabled]="!canExplore"
-              >
-                <span *ngIf="canExplore">Go!</span>
+                  <span *ngIf="!canExplore">
+                    <ion-spinner></ion-spinner>
+                  </span>
+                </ion-button>
 
-                <span *ngIf="!canExplore">
-                  <ion-spinner></ion-spinner>
-                </span>
-              </ion-button>
-
-              <ion-progress-bar
-                *ngIf="!canExplore"
-                [value]="nextExploreTime"
-                color="secondary"
-              ></ion-progress-bar>
-            </div>
-          </ion-card-content>
-        </ion-card>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+                <ion-progress-bar
+                  *ngIf="!canExplore"
+                  [value]="nextExploreTime"
+                  color="secondary"
+                ></ion-progress-bar>
+              </div>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ng-container>
 </ion-content>

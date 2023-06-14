@@ -13,23 +13,43 @@
   }
 }
 
+.italic-subtitle-card {
+  ion-card-subtitle {
+    font-style: italic;
+  }
+}
+
 .center-title-card {
-  ion-card-title {
+  ion-card-title, ion-card-subtitle {
     display: flex;
     justify-content: center;
   }
 }
 
 .card-with-actions {
-  padding-bottom: 16px;
 
   .card-actions {
+    padding-bottom: 16px;
+
     display: flex;
     justify-content: space-around;
     align-items: center;
 
     ion-button {
       margin: 0 5px;
+    }
+  }
+
+  .card-actions-multiline {
+    display: flex;
+    flex-wrap: wrap;
+
+    ion-button {
+      width: 100%;
+
+      &:not(:first) {
+        margin-top: 16px;
+      }
     }
   }
 }

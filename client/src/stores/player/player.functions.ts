@@ -86,5 +86,12 @@ export function applyPlayerPatches(
 
   applyPatch(player, patches);
 
+  player.stats = { ...player.stats };
+  player.location = { ...player.location };
+  player.recharges = { ...player.recharges };
+  player.currencies = { ...player.currencies };
+  player.profile = { ...player.profile };
+  player.cosmetics = { ...player.cosmetics };
+
   ctx.patchState({ player });
 }

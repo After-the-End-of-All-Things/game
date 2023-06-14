@@ -55,19 +55,37 @@ export class PlayerService {
     });
   }
 
-  gainXpForPlayer(player: Player, xp = 1) {
+  gainXp(player: Player, xp = 1) {
     player.xp += xp;
     this.attemptLevelUpForPlayer(player);
   }
 
-  gainCurrencyForPlayer(player: Player, amount = 1, currency: Currency) {
-    player.currencies[currency] ??= 0;
-    player.currencies[currency] += amount;
-    player.currencies = { ...player.currencies };
+  gainCurrency(player: Player, amount = 1, currency: Currency) {
+    const newCurrencyValue = Math.max(
+      0,
+      (player.currencies[currency] ?? 0) + amount,
+    );
+    player.currencies = { ...player.currencies, [currency]: newCurrencyValue };
   }
 
-  gainCoinsForPlayer(player: Player, amount = 1) {
-    this.gainCurrencyForPlayer(player, amount, 'coins' as Currency);
+  gainCoins(player: Player, amount = 1) {
+    this.gainCurrency(player, amount, 'coins' as Currency);
+  }
+
+  spendCurrency(player: Player, amount = 1, currency: Currency) {
+    this.gainCurrency(player, -amount, currency);
+  }
+
+  spendCoins(player: Player, amount = 1) {
+    this.spendCurrency(player, amount, 'coins' as Currency);
+  }
+
+  hasCurrency(player: Player, amount = 1, currency: Currency) {
+    return player.currencies[currency] >= amount;
+  }
+
+  hasCoins(player: Player, amount = 1) {
+    return this.hasCurrency(player, amount, 'coins' as Currency);
   }
 
   private attemptLevelUpForPlayer(player: Player) {
