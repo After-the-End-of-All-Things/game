@@ -15,6 +15,8 @@ export class ExplorePage implements OnInit {
   private destroyRef = inject(DestroyRef);
 
   public canExplore = false;
+  public firstPositiveNumber = 0;
+  public nextExploreTime = 0;
 
   @Select(PlayerStore.exploreCooldown) exploreCooldown$!: Observable<number>;
 
@@ -28,6 +30,19 @@ export class ExplorePage implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(([_, cooldown]) => {
         this.canExplore = Date.now() > cooldown;
+
+        if (!this.canExplore) {
+          if (!this.firstPositiveNumber) {
+            this.firstPositiveNumber = (cooldown - Date.now()) / 1000;
+          }
+
+          this.nextExploreTime =
+            1 - (cooldown - Date.now()) / 1000 / this.firstPositiveNumber;
+        }
+
+        if (this.canExplore) {
+          this.firstPositiveNumber = 0;
+        }
       });
   }
 

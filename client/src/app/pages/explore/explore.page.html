@@ -45,13 +45,26 @@
               </span>
             </div>
 
-            <ion-button
-              color="primary"
-              (click)="explore()"
-              [disabled]="!canExplore"
-            >
-              Go!
-            </ion-button>
+            <div class="explore-container">
+              <ion-button
+                color="primary"
+                class="explore"
+                (click)="explore()"
+                [disabled]="!canExplore"
+              >
+                <span *ngIf="canExplore">Go!</span>
+
+                <span *ngIf="!canExplore">
+                  <ion-spinner></ion-spinner>
+                </span>
+              </ion-button>
+
+              <ion-progress-bar
+                *ngIf="!canExplore"
+                [value]="nextExploreTime"
+                color="secondary"
+              ></ion-progress-bar>
+            </div>
           </ion-card-content>
         </ion-card>
       </ion-col>
