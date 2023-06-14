@@ -41,9 +41,7 @@ export class AuthService {
       );
     }
 
-    const randomIndex = Math.floor(
-      Math.random() * availableDiscriminators.length,
-    );
+    const randomIndex = random(0, availableDiscriminators.length - 1);
     const discriminator = availableDiscriminators[randomIndex];
 
     const hash = await bcrypt.hash(password, 10);
