@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { random } from 'lodash';
@@ -23,8 +19,12 @@ export class AuthService {
     password: string,
     email: string,
   ): Promise<IFullUser> {
-    const usersWithUsername = await this.userService.getAllUsersWithUsername(username);
-    const usedDiscriminators = usersWithUsername.map(user => user.discriminator);
+    const usersWithUsername = await this.userService.getAllUsersWithUsername(
+      username,
+    );
+    const usedDiscriminators = usersWithUsername.map(
+      (user) => user.discriminator,
+    );
     let discriminator;
 
     do {

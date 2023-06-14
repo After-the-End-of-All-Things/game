@@ -38,7 +38,7 @@ export class UserService {
 
   async getAllUsersWithUsername(username: string): Promise<User[]> {
     return this.users.find({ username });
-  }  
+  }
 
   async findOneByUsernameAndDiscriminator(
     username: string,
