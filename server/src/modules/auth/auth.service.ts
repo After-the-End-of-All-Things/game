@@ -23,27 +23,13 @@ export class AuthService {
     password: string,
     email: string,
   ): Promise<IFullUser> {
-    const numberOfUsers = await this.userService.numberOfUsersWithUsername(
-      username,
-    );
-
-    if (numberOfUsers > 9000) {
-      throw new BadRequestException(
-        'Username has been taken at least 9000 times, it is no longer usable.',
-      );
-    }
-
+    const usersWithUsername = await this.userService.getAllUsersWithUsername(username);
+    const usedDiscriminators = usersWithUsername.map(user => user.discriminator);
     let discriminator;
 
     do {
       discriminator = random(1, 9999).toString().padStart(4, '0');
-      const existingUser =
-        await this.userService.findOneByUsernameAndDiscriminator(
-          username,
-          discriminator,
-        );
-      if (!existingUser) break;
-    } while (true);
+    } while (usedDiscriminators.includes(discriminator));
 
     const hash = await bcrypt.hash(password, 10);
     const newUser = new User(username, discriminator, hash, email);
