@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { random } from 'lodash';
+import { sample } from 'lodash';
 
 import { IFullUser, IHasAccessToken } from '@interfaces';
 import { User } from '../user/user.schema';
@@ -26,6 +26,7 @@ export class AuthService {
     const usersWithUsername = await this.userService.getAllUsersWithUsername(
       username,
     );
+    console.log(usersWithUsername);
     let availableDiscriminators = Array.from({ length: 9999 }, (_, i) =>
       (i + 1).toString().padStart(4, '0'),
     );
@@ -41,9 +42,7 @@ export class AuthService {
       );
     }
 
-    const randomIndex = random(0, availableDiscriminators.length - 1);
-    const discriminator = availableDiscriminators[randomIndex];
-
+    const discriminator = sample(availableDiscriminators);
     const hash = await bcrypt.hash(password, 10);
     const newUser = new User(username, discriminator, hash, email);
     const createdUser = await this.userService.createUser(newUser);
