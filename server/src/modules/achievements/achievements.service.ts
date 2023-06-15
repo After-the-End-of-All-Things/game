@@ -11,7 +11,9 @@ export class AchievementsService {
     private readonly achievements: EntityRepository<Achievements>,
   ) {}
 
-  async getAchievementsForUser(userId: string): Promise<Achievements> {
+  async getAchievementsForUser(
+    userId: string,
+  ): Promise<Achievements | undefined> {
     const dbAchievements = await this.achievements.findOne({ userId });
     if (!dbAchievements) {
       return await this.createAchievementsForUser(userId);

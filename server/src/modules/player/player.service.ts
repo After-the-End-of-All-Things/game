@@ -6,7 +6,11 @@ import { Discoveries } from '@modules/discoveries/discoveries.schema';
 import { DiscoveriesService } from '@modules/discoveries/discoveries.service';
 import { NotificationService } from '@modules/notification/notification.service';
 import { Player } from '@modules/player/player.schema';
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+} from '@nestjs/common';
 import { getPatchesAfterPropChanges } from '@utils/patches';
 import * as jsonpatch from 'fast-json-patch';
 import { random, sample } from 'lodash';
@@ -21,7 +25,7 @@ export class PlayerService {
     private readonly notificationService: NotificationService,
   ) {}
 
-  async getPlayerForUser(userId: string): Promise<Player> {
+  async getPlayerForUser(userId: string): Promise<Player | undefined> {
     const dbPlayer = await this.players.findOne({ userId });
     if (!dbPlayer) {
       return await this.createPlayerForUser(userId);
@@ -51,6 +55,7 @@ export class PlayerService {
     portrait: number,
   ): Promise<jsonpatch.Operation[]> {
     const player = await this.getPlayerForUser(userId);
+    if (!player) throw new ForbiddenException('Player not found');
 
     return getPatchesAfterPropChanges<Player>(player, async (playerRef) => {
       playerRef.cosmetics = { ...player.cosmetics, portrait };

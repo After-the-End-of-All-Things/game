@@ -5,7 +5,11 @@ import { Discoveries } from '@modules/discoveries/discoveries.schema';
 import { DiscoveriesService } from '@modules/discoveries/discoveries.service';
 import { Player } from '@modules/player/player.schema';
 import { PlayerService } from '@modules/player/player.service';
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+} from '@nestjs/common';
 import { getPatchesAfterPropChanges } from '@utils/patches';
 import * as jsonpatch from 'fast-json-patch';
 
@@ -23,10 +27,18 @@ export class GameplayService {
     discoveries: jsonpatch.Operation[];
   }> {
     const player = await this.playerService.getPlayerForUser(userId);
+    if (!player) throw new ForbiddenException('Player not found');
+
     if (player.location.cooldown > Date.now())
       return { player: [], discoveries: [] };
 
-    let foundLocation: ILocation;
+    const discoveries = await this.discoveriesService.getDiscoveriesForUser(
+      userId,
+    );
+
+    if (!discoveries) throw new ForbiddenException('Discoveries not found');
+
+    let foundLocation: ILocation | undefined;
 
     const playerPatches = await getPatchesAfterPropChanges<Player>(
       player,
@@ -41,6 +53,8 @@ export class GameplayService {
             playerRef.location.current,
           );
         }
+
+        if (!foundLocation) throw new BadRequestException('Location not found');
 
         // gain xp
         const baseXp = this.constantsService.baseExploreXp;
@@ -89,13 +103,11 @@ export class GameplayService {
       },
     );
 
-    const discoveries = await this.discoveriesService.getDiscoveriesForUser(
-      userId,
-    );
-
     const discoveriesPatches = await getPatchesAfterPropChanges<Discoveries>(
       discoveries,
       async (discRef) => {
+        if (!foundLocation) return;
+
         await this.playerService.handleDiscoveries(
           player,
           discRef,
@@ -112,6 +124,7 @@ export class GameplayService {
     locationName: string,
   ): Promise<jsonpatch.Operation[]> {
     const player = await this.playerService.getPlayerForUser(userId);
+    if (!player) throw new ForbiddenException('Player not found');
 
     if (player.location.goingTo === locationName)
       throw new ForbiddenException(
@@ -124,6 +137,8 @@ export class GameplayService {
     const discoveries = await this.discoveriesService.getDiscoveriesForUser(
       userId,
     );
+
+    if (!discoveries) throw new ForbiddenException('Discoveries not found');
 
     const location = this.contentService.getLocation(locationName);
     if (!location) throw new ForbiddenException('Location does not exist!');
@@ -152,6 +167,7 @@ export class GameplayService {
 
   async travelToLocation(userId: string, locationName: string): Promise<any> {
     const player = await this.playerService.getPlayerForUser(userId);
+    if (!player) throw new ForbiddenException('Player not found');
 
     if (player.location.current === locationName)
       throw new ForbiddenException('You are already here!');
@@ -159,6 +175,7 @@ export class GameplayService {
     const discoveries = await this.discoveriesService.getDiscoveriesForUser(
       userId,
     );
+    if (!discoveries) throw new ForbiddenException('Discoveries not found');
 
     const location = this.contentService.getLocation(locationName);
     if (!location) throw new ForbiddenException('Location does not exist!');

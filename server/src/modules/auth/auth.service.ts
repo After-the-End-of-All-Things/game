@@ -1,7 +1,7 @@
 import {
+  BadRequestException,
   Injectable,
   UnauthorizedException,
-  BadRequestException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
@@ -26,7 +26,6 @@ export class AuthService {
     const usersWithUsername = await this.userService.getAllUsersWithUsername(
       username,
     );
-    console.log(usersWithUsername);
     let availableDiscriminators = Array.from({ length: 9999 }, (_, i) =>
       (i + 1).toString().padStart(4, '0'),
     );
@@ -46,6 +45,8 @@ export class AuthService {
     const hash = await bcrypt.hash(password, 10);
     const newUser = new User(username, discriminator, hash, email);
     const createdUser = await this.userService.createUser(newUser);
+
+    if (!createdUser) throw new BadRequestException('Failed to create user.');
 
     return this.userService.getAllUserInformation(createdUser._id.toString());
   }

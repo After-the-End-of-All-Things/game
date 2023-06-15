@@ -11,7 +11,7 @@ export class StatsService {
     private readonly stats: EntityRepository<Stats>,
   ) {}
 
-  async getStatsForUser(userId: string): Promise<Stats> {
+  async getStatsForUser(userId: string): Promise<Stats | undefined> {
     const dbStats = await this.stats.findOne({ userId });
     if (!dbStats) {
       return await this.createStatsForUser(userId);

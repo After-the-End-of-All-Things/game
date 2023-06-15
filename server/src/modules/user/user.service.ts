@@ -43,15 +43,15 @@ export class UserService {
   async findOneByUsernameAndDiscriminator(
     username: string,
     discriminator: string,
-  ): Promise<User | undefined> {
+  ): Promise<User | null> {
     return this.users.findOne({ username, discriminator });
   }
 
-  async findUserById(id: string): Promise<User | undefined> {
+  async findUserById(id: string): Promise<User | null> {
     return this.users.findOne({ _id: new ObjectId(id) });
   }
 
-  async findUserByEmail(email: string): Promise<User | undefined> {
+  async findUserByEmail(email: string): Promise<User | null> {
     return this.users.findOne({ email });
   }
 
@@ -75,6 +75,6 @@ export class UserService {
       achievements: await this.achievementsService.getAchievementsForUser(
         userId,
       ),
-    };
+    } as IFullUser;
   }
 }

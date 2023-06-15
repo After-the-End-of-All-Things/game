@@ -11,7 +11,9 @@ export class DiscoveriesService {
     private readonly discoveries: EntityRepository<Discoveries>,
   ) {}
 
-  async getDiscoveriesForUser(userId: string): Promise<Discoveries> {
+  async getDiscoveriesForUser(
+    userId: string,
+  ): Promise<Discoveries | undefined> {
     const dbDiscoveries = await this.discoveries.findOne({ userId });
     if (!dbDiscoveries) {
       return await this.createDiscoveriesForUser(userId);
