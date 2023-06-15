@@ -1,11 +1,11 @@
 import {
-  BadRequestException,
   Injectable,
   UnauthorizedException,
+  BadRequestException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { random } from 'lodash';
+import { sample } from 'lodash';
 
 import { IFullUser, IHasAccessToken } from '@interfaces';
 import { User } from '../user/user.schema';
@@ -23,28 +23,26 @@ export class AuthService {
     password: string,
     email: string,
   ): Promise<IFullUser> {
-    const numberOfUsers = await this.userService.numberOfUsersWithUsername(
+    const usersWithUsername = await this.userService.getAllUsersWithUsername(
       username,
     );
+    console.log(usersWithUsername);
+    let availableDiscriminators = Array.from({ length: 9999 }, (_, i) =>
+      (i + 1).toString().padStart(4, '0'),
+    );
 
-    if (numberOfUsers > 9000) {
-      throw new BadRequestException(
-        'Username has been taken at least 9000 times, it is no longer usable.',
+    if (usersWithUsername.length > 9998) {
+      throw new BadRequestException('Username is not available.');
+    } else if (usersWithUsername.length >= 1) {
+      const usedDiscriminators = new Set(
+        usersWithUsername.map((user) => user.discriminator),
+      );
+      availableDiscriminators = availableDiscriminators.filter(
+        (discriminator) => !usedDiscriminators.has(discriminator),
       );
     }
 
-    let discriminator;
-
-    do {
-      discriminator = random(1, 9999).toString().padStart(4, '0');
-      const existingUser =
-        await this.userService.findOneByUsernameAndDiscriminator(
-          username,
-          discriminator,
-        );
-      if (!existingUser) break;
-    } while (true);
-
+    const discriminator = sample(availableDiscriminators);
     const hash = await bcrypt.hash(password, 10);
     const newUser = new User(username, discriminator, hash, email);
     const createdUser = await this.userService.createUser(newUser);
