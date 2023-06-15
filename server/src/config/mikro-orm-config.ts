@@ -14,7 +14,7 @@ function mikroOrmConfigFactory(
 ): MikroOrmModuleOptions {
   const mongoUrl = configService.get<string>(
     'MONGODB_URI',
-    'mongodb://localhost:27017',
+    'mongodb://127.0.0.1:27017',
   );
 
   return {
