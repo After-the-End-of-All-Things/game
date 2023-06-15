@@ -105,7 +105,6 @@ export class PlayerService {
     void this.notificationService.createNotificationForUser(
       player.userId,
       {
-        createdAt: new Date(),
         liveAt: new Date(),
         text: `You have reached level ${player.level}!`,
         actions: [],
@@ -129,6 +128,16 @@ export class PlayerService {
         this.discoveriesService.discoverLocation(
           discoveries,
           discoveredLocation.name,
+        );
+
+        void this.notificationService.createNotificationForUser(
+          player.userId,
+          {
+            liveAt: new Date(),
+            text: `You have discovered ${discoveredLocation.name}!`,
+            actions: [],
+          },
+          1,
         );
       }
     }

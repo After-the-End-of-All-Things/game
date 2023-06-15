@@ -1,4 +1,4 @@
-import { INotification } from '@interfaces';
+import { INotificationAction } from '@interfaces';
 import { EntityManager, EntityRepository, ObjectId } from '@mikro-orm/mongodb';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { Notification } from '@modules/notification/notification.schema';
@@ -27,7 +27,11 @@ export class NotificationService {
 
   async createNotificationForUser(
     userId: string,
-    notification: INotification,
+    notification: {
+      text: string;
+      liveAt: Date;
+      actions: INotificationAction[];
+    },
     expiresAfterHours = 24,
   ) {
     const notificationEntity = new Notification(
