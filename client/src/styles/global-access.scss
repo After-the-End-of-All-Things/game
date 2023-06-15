@@ -1,0 +1,22 @@
+
+.notification-area {
+  --width: 400px;
+
+  ion-content {
+    --background: var(--ion-color-light);
+  }
+
+  .notification-list {
+    max-height: 600px;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  .header {
+    padding-top: 16px;
+
+    ion-title {
+      text-align: center;
+    }
+  }
+}

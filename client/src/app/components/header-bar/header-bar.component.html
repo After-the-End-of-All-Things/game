@@ -8,6 +8,20 @@
     </ion-button>
   </ion-buttons>
 
+  <ion-buttons slot="end">
+    <ion-button class="notifications" (click)="popover.present($event)">
+      <ion-icon slot="icon-only" name="notifications"></ion-icon>
+
+      <ion-badge
+        class="number"
+        color="secondary"
+        *ngIf="notificationCount$ | async as count"
+      >
+        {{ count }}
+      </ion-badge>
+    </ion-button>
+  </ion-buttons>
+
   <ng-container *ngIf="player$ | async as player">
     <ion-progress-bar
       [ngxTippy]="player.xp + ' / ' + nextLevelXp(player.level) + ' XP'"
@@ -17,3 +31,41 @@
     ></ion-progress-bar>
   </ng-container>
 </ion-toolbar>
+
+<ion-popover #popover [showBackdrop]="false" class="notification-area">
+  <ng-template>
+    <ion-content *ngIf="notifications$ | async as notifications">
+      <div class="header">
+        <ion-title>Notifications</ion-title>
+
+        <ion-button
+          (click)="markAllNotificationsRead(notifications)"
+          size="small"
+          fill="clear"
+        >
+          Mark all as read
+        </ion-button>
+      </div>
+
+      <ion-list class="notification-list">
+        <ion-item class="notification" *ngIf="notifications.length === 0">
+          You have no notifications.
+        </ion-item>
+
+        <ion-item
+          *ngFor="let notification of notifications; trackBy: trackBy"
+          class="notification"
+          [class.unread]="!notification.read"
+          (mouseover)="markNotificationRead(notification)"
+        >
+          <ion-label class="ion-text-wrap">
+            <div>{{ notification.text }}</div>
+            <ion-note class="timeago">
+              {{ notification.createdAt | relativeTime }}
+            </ion-note>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-content>
+  </ng-template>
+</ion-popover>

@@ -1,0 +1,21 @@
+
+.notifications {
+  .number {
+    position: absolute;
+    bottom: -7px;
+    right: -7px;
+    border-radius: 40%;
+
+    --padding-start: 6px;
+  }
+}
+
+.notification {
+  &.unread {
+    --ion-item-background: var(--ion-color-step-200, #333333);
+  }
+
+  .timeago {
+    font-style: italic;
+  }
+}

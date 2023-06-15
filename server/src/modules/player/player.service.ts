@@ -4,6 +4,7 @@ import { EntityManager, EntityRepository } from '@mikro-orm/mongodb';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { Discoveries } from '@modules/discoveries/discoveries.schema';
 import { DiscoveriesService } from '@modules/discoveries/discoveries.service';
+import { NotificationService } from '@modules/notification/notification.service';
 import { Player } from '@modules/player/player.schema';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { getPatchesAfterPropChanges } from '@utils/patches';
@@ -17,6 +18,7 @@ export class PlayerService {
     @InjectRepository(Player)
     private readonly players: EntityRepository<Player>,
     private readonly discoveriesService: DiscoveriesService,
+    private readonly notificationService: NotificationService,
   ) {}
 
   async getPlayerForUser(userId: string): Promise<Player> {
@@ -94,6 +96,17 @@ export class PlayerService {
 
     player.xp = 0;
     player.level += 1;
+
+    void this.notificationService.createNotificationForUser(
+      player.userId,
+      {
+        createdAt: new Date(),
+        liveAt: new Date(),
+        text: `You have reached level ${player.level}!`,
+        actions: [],
+      },
+      1,
+    );
   }
 
   async handleDiscoveries(

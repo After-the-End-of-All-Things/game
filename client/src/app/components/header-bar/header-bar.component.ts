@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { xpForLevel } from '@helpers/xp';
-import { IPlayer } from '@interfaces';
-import { Select } from '@ngxs/store';
-import { PlayerStore } from '@stores';
+import { INotification, IPlayer } from '@interfaces';
+import { Select, Store } from '@ngxs/store';
+import { NotificationsService } from '@services/notifications.service';
+import { NotificationsStore, PlayerStore } from '@stores';
+import { MarkNotificationRead } from '@stores/notifications/notifications.actions';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -12,12 +14,38 @@ import { Observable } from 'rxjs';
 })
 export class HeaderBarComponent implements OnInit {
   @Select(PlayerStore.player) player$!: Observable<IPlayer>;
+  @Select(NotificationsStore.notifications) notifications$!: Observable<
+    INotification[]
+  >;
+  @Select(NotificationsStore.notificationCount)
+  notificationCount$!: Observable<number>;
 
-  constructor() {}
+  constructor(
+    private store: Store,
+    private notificationService: NotificationsService,
+  ) {}
 
   ngOnInit() {}
 
   nextLevelXp(level: number) {
     return xpForLevel(level + 1);
+  }
+
+  trackBy(index: number, item: INotification) {
+    return item.id;
+  }
+
+  markAllNotificationsRead(notifications: INotification[]) {
+    this.store.dispatch(
+      notifications.map((n) => new MarkNotificationRead(n.id || '')),
+    );
+    this.notificationService.markAllRead().subscribe();
+  }
+
+  markNotificationRead(notification: INotification) {
+    if (notification.read) return;
+
+    this.store.dispatch(new MarkNotificationRead(notification.id || ''));
+    this.notificationService.markRead(notification.id || '').subscribe();
   }
 }

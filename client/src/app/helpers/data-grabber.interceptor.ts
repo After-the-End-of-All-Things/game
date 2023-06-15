@@ -14,6 +14,7 @@ import {
   ApplyDiscoveriesPatches,
   SetDiscoveries,
 } from '@stores/discoveries/discoveries.actions';
+import { SetNotifications } from '@stores/notifications/notifications.actions';
 import { ApplyPlayerPatches, SetPlayer } from '@stores/player/player.actions';
 import { ApplyStatsPatches, SetStats } from '@stores/stats/stats.actions';
 import { ApplyUserPatches, SetUser } from '@stores/user/user.actions';
@@ -26,7 +27,7 @@ export class DataGrabberInterceptor implements HttpInterceptor {
 
   intercept(
     request: HttpRequest<unknown>,
-    next: HttpHandler
+    next: HttpHandler,
   ): Observable<HttpEvent<unknown>> {
     return next.handle(request).pipe(
       tap((data: any) => {
@@ -67,7 +68,7 @@ export class DataGrabberInterceptor implements HttpInterceptor {
           if (isArray(body.achievements)) {
             if (body.achievements.length > 0) {
               this.store.dispatch(
-                new ApplyAchievementsPatches(body.achievements)
+                new ApplyAchievementsPatches(body.achievements),
               );
             }
           } else {
@@ -79,14 +80,18 @@ export class DataGrabberInterceptor implements HttpInterceptor {
           if (isArray(body.discoveries)) {
             if (body.discoveries.length > 0) {
               this.store.dispatch(
-                new ApplyDiscoveriesPatches(body.discoveries)
+                new ApplyDiscoveriesPatches(body.discoveries),
               );
             }
           } else {
             this.store.dispatch(new SetDiscoveries(body.discoveries));
           }
         }
-      })
+
+        if (body.notifications) {
+          this.store.dispatch(new SetNotifications(body.notifications));
+        }
+      }),
     );
   }
 }

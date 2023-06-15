@@ -26,6 +26,9 @@ export class Notification implements INotification {
   liveAt: Date;
 
   @Property()
+  read: boolean;
+
+  @Property()
   @Index({ options: { expireAfterSeconds: 0 } })
   expiresAt: Date;
 
@@ -46,10 +49,14 @@ export class Notification implements INotification {
     this.text = text;
     this.actions = actions;
 
+    this.read = false;
+
     this.liveAt = liveAt;
     this.createdAt = new Date();
     this.expiresAt = new Date();
 
-    this.expiresAt.setHours(this.expiresAt.getHours() + expiresAfterHours);
+    this.expiresAt.setMinutes(
+      this.expiresAt.getMinutes() + 60 * expiresAfterHours,
+    );
   }
 }

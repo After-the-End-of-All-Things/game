@@ -18,6 +18,7 @@ import { ErrorInterceptor } from './helpers/error.interceptor';
 import { DataGrabberInterceptor } from '@helpers/data-grabber.interceptor';
 import { AuthService } from '@services/auth.service';
 import { ContentService } from '@services/content.service';
+import { NotificationsService } from '@services/notifications.service';
 import { NgxTippyModule } from 'ngx-tippy-wrapper';
 import * as Stores from '../stores';
 import * as Migrations from '../stores/migrations';
@@ -84,14 +85,16 @@ export function getAuthToken() {
         (
           assetService: AssetService,
           authService: AuthService,
-          contentService: ContentService
+          contentService: ContentService,
+          notificationService: NotificationsService,
         ) =>
         async () => {
           await assetService.init();
           await contentService.init();
           await authService.init();
+          await notificationService.init();
         },
-      deps: [AssetService, AuthService, ContentService],
+      deps: [AssetService, AuthService, ContentService, NotificationsService],
       multi: true,
     },
   ],
