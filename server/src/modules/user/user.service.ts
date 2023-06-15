@@ -61,6 +61,8 @@ export class UserService {
 
   async updateUserOnlineTimeById(userId: string): Promise<void> {
     const user = await this.findUserById(userId);
+    if (!user) return;
+
     user.onlineUntil = onlineUntilExpiration();
   }
 
