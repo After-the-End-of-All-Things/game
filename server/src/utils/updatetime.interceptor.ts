@@ -16,7 +16,7 @@ export class UpdateAuthTimeInterceptor implements NestInterceptor {
 
   async intercept(context: ExecutionContext, handler: CallHandler) {
     const request = context.switchToHttp().getRequest();
-    const ignoredRoutes = ['/auth/login', '/user/online'];
+    const ignoredRoutes = ['/auth/login', '/auth/register', '/user/online'];
 
     if (
       request.headers.authorization &&
