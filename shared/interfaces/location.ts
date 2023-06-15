@@ -5,6 +5,7 @@ export enum LocationStat {
   LocationFind = "locationFind",
   ItemFind = "itemFind",
   NPCEncounter = "npcEncounter",
+  CollectibleFind = "collectibleFind",
 }
 
 export interface ILocationConnection {
