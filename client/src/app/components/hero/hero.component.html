@@ -7,7 +7,7 @@
   } as data"
 >
   <div class="avatar">
-    <ion-avatar (click)="changePortrait(data.player?.cosmetics?.portrait || 4)">
+    <ion-avatar>
       <app-icon
         spritesheet="portraits"
         [sprite]="data.player?.cosmetics?.portrait || 4"
@@ -21,16 +21,16 @@
     </span>
 
     <span class="discriminator">
-      #<app-store-text storeKey="user.user.discriminator"></app-store-text>
+      #
+      <app-store-text storeKey="user.user.discriminator"></app-store-text>
     </span>
   </div>
 
   <div class="player-info">
     <div class="relevant-stats">
-      <span class="level"
-        >Level {{ data.player?.level ?? 0 | number }}
-        {{ data.player?.job }}</span
-      >
+      <span class="level">
+        Level {{ data.player?.level ?? 0 | number }} {{ data.player?.job }}
+      </span>
       &middot;
       <span class="coins">{{ data.coins ?? 0 | number }} Coins</span>
     </div>

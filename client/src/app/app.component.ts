@@ -25,5 +25,13 @@ export class AppComponent {
     },
   ];
 
+  public characterPages: IMenuItem[] = [
+    {
+      title: 'My Character',
+      url: 'me',
+      icon: 'person',
+    },
+  ];
+
   constructor() {}
 }

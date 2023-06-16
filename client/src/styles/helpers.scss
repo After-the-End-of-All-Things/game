@@ -6,3 +6,19 @@
 .hidden {
   display: none;
 }
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.avatar {
+  width: 128px;
+  height: 128px;
+  padding: 32px;
+
+  app-icon {
+    display: block;
+    max-width: 128px;
+    max-height: 128px;
+  }
+}

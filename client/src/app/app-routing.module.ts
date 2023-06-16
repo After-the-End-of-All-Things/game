@@ -30,6 +30,11 @@ const routes: Routes = [
       import('./pages/town/town.module').then((m) => m.TownPageModule),
   },
   {
+    path: 'me',
+    loadChildren: () =>
+      import('./pages/me/me.module').then((m) => m.MePageModule),
+  },
+  {
     path: '**',
     redirectTo: '',
     pathMatch: 'full',
