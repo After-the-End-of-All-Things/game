@@ -1,3 +1,4 @@
+import { TrackedStat } from '@interfaces';
 import { EntityManager, EntityRepository } from '@mikro-orm/mongodb';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { Stats } from '@modules/stats/stats.schema';
@@ -34,5 +35,15 @@ export class StatsService {
     }
 
     return stats;
+  }
+
+  async incrementStat(userId: string, stat: TrackedStat, byValue = 1) {
+    const stats = await this.getStatsForUser(userId);
+    if (!stats) throw new BadRequestException('Stats not found');
+
+    stats.stats = {
+      ...stats.stats,
+      [stat]: (stats.stats[stat] ?? 0) + byValue,
+    };
   }
 }

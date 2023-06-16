@@ -5,6 +5,7 @@ import { applyPatch } from 'fast-json-patch';
 import { uniqBy } from 'lodash';
 import {
   ApplyNotificationsPatches,
+  ClearNotificationActions,
   MarkNotificationRead,
   SetNotifications,
 } from './notifications.actions';
@@ -46,6 +47,20 @@ export function markRead(
       notifications: updateItem<INotification>(
         (n) => n.id === id,
         patch<INotification>({ read: true }),
+      ),
+    }),
+  );
+}
+
+export function clearActions(
+  ctx: StateContext<INotificationsStore>,
+  { id }: ClearNotificationActions,
+) {
+  ctx.setState(
+    patch<INotificationsStore>({
+      notifications: updateItem<INotification>(
+        (n) => n.id === id,
+        patch<INotification>({ actions: [] }),
       ),
     }),
   );

@@ -67,14 +67,35 @@ export class UserService {
   }
 
   async getAllUserInformation(userId: string): Promise<IFullUser> {
-    return {
-      user: await this.findUserById(userId),
-      player: await this.playerService.getPlayerForUser(userId),
-      stats: await this.statsService.getStatsForUser(userId),
-      discoveries: await this.discoveriesService.getDiscoveriesForUser(userId),
-      achievements: await this.achievementsService.getAchievementsForUser(
-        userId,
-      ),
+    const user = await this.findUserById(userId);
+    const player = await this.playerService.getPlayerForUser(userId);
+    const stats = await this.statsService.getStatsForUser(userId);
+    const discoveries = await this.discoveriesService.getDiscoveriesForUser(
+      userId,
+    );
+    const achievements = await this.achievementsService.getAchievementsForUser(
+      userId,
+    );
+
+    const fullUser = {
+      user,
+      player,
+      stats,
+      discoveries,
+      achievements,
     } as IFullUser;
+
+    await this.migrateAccount(fullUser);
+
+    return fullUser;
+  }
+
+  async migrateAccount(user: IFullUser): Promise<void> {
+    if (!user.player.profile.displayName) {
+      user.player.profile = {
+        ...user.player.profile,
+        displayName: user.user.username,
+      };
+    }
   }
 }

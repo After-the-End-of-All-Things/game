@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { AvatarComponent } from '@components/avatar/avatar.component';
 import { CardOnlineUsersComponent } from '@components/card-online-users/card-online-users.component';
 import { HeaderBarComponent } from '@components/header-bar/header-bar.component';
 import { HeroComponent } from '@components/hero/hero.component';
@@ -18,6 +19,7 @@ const components = [
   HeroComponent,
   ChooseAvatarModalComponent,
   HeaderBarComponent,
+  AvatarComponent,
   RelativeTimePipe,
 ];
 

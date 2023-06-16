@@ -9,7 +9,8 @@
 
   <ng-container
     *ngIf="{
-    location: playerLocation$ | async
+    location: playerLocation$ | async,
+    action: playerAction$ | async
   } as data"
   >
     <ion-grid>
@@ -38,6 +39,73 @@
             </ion-card-header>
 
             <ion-card-content>
+              <div class="action" *ngIf="data.action as actionInfo">
+                <ion-card
+                  class="wave-card"
+                  *ngIf="actionInfo.action === 'wave'"
+                >
+                  <ion-card-content>
+                    <div class="intro">
+                      You came across {{
+                      actionInfo.actionData.player.profile.displayName }}! Would
+                      you like to wave to them?
+                    </div>
+
+                    <div class="info">
+                      <ion-row>
+                        <ion-col sizeXs="8">
+                          <ion-row>
+                            <ion-col sizeXs="4" class="wave-avatar">
+                              <app-avatar
+                                [avatar]="actionInfo.actionData.player.profile.avatar ?? 4"
+                                [padding]="0"
+                              ></app-avatar>
+                            </ion-col>
+
+                            <ion-col sizeXs="8" class="wave-player">
+                              <div class="name">
+                                {{
+                                actionInfo.actionData.player.profile.displayName
+                                }}
+                              </div>
+                              <div class="profession">
+                                Level {{ actionInfo.actionData.player.level }}
+                                {{ actionInfo.actionData.player.job }}
+                              </div>
+                              <div class="bio">
+                                {{ actionInfo.actionData.player.profile.shortBio
+                                }}
+                              </div>
+                            </ion-col>
+                          </ion-row>
+                        </ion-col>
+
+                        <ion-col sizeXs="4" class="wave-action">
+                          <ion-button
+                            color="secondary"
+                            (click)="actionsService.doAction(actionInfo)"
+                          >
+                            {{ actionInfo.text }}
+                          </ion-button>
+                        </ion-col>
+                      </ion-row>
+                    </div>
+                  </ion-card-content>
+                </ion-card>
+
+                <ion-card
+                  class="wave-card"
+                  *ngIf="actionInfo.action === 'waveconfirm'"
+                >
+                  <ion-card-content>
+                    <div class="intro">
+                      You waved at {{
+                      actionInfo.actionData.player.profile.displayName }}!
+                    </div>
+                  </ion-card-content>
+                </ion-card>
+              </div>
+
               <div class="earned">
                 <span class="xp">
                   <span

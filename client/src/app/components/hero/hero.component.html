@@ -6,14 +6,7 @@
     coins: playerCoins$ | async
   } as data"
 >
-  <div class="avatar">
-    <ion-avatar>
-      <app-icon
-        spritesheet="portraits"
-        [sprite]="data.player?.cosmetics?.portrait || 4"
-      ></app-icon>
-    </ion-avatar>
-  </div>
+  <app-avatar [avatar]="data.player?.cosmetics?.portrait ?? 4"></app-avatar>
 
   <div class="user-info">
     <span class="username">

@@ -2,7 +2,7 @@ import { INotificationAction } from '@interfaces';
 import { EntityManager, EntityRepository, ObjectId } from '@mikro-orm/mongodb';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { Notification } from '@modules/notification/notification.schema';
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 
 @Injectable()
 export class NotificationService {
@@ -34,6 +34,9 @@ export class NotificationService {
     },
     expiresAfterHours = 24,
   ) {
+    if (!userId)
+      throw new BadRequestException('No user id provided for notification');
+
     const notificationEntity = new Notification(
       userId,
       notification.text,
@@ -62,5 +65,14 @@ export class NotificationService {
     if (!notif) return;
 
     notif.read = true;
+  }
+
+  async clearNotificationActions(notificationId: string) {
+    const notif = await this.notifications.findOne({
+      _id: new ObjectId(notificationId),
+    });
+    if (!notif) return;
+
+    notif.actions = [];
   }
 }

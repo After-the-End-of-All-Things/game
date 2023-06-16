@@ -69,7 +69,7 @@
             <ion-button
               slot="end"
               *ngIf="notification.actions?.[0] as action"
-              (click)="doNotificationAction(action)"
+              (click)="actionsService.doAction(action, notification)"
             >
               {{ action.text }}
             </ion-button>

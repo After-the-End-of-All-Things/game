@@ -7,6 +7,7 @@ import { GameplayService } from '@modules/player/gameplay.service';
 import { PlayerController } from '@modules/player/player.controller';
 import { Player } from '@modules/player/player.schema';
 import { PlayerService } from '@modules/player/player.service';
+import { StatsModule } from '@modules/stats/stats.module';
 import { Module } from '@nestjs/common';
 
 @Module({
@@ -16,6 +17,7 @@ import { Module } from '@nestjs/common';
     ContentModule,
     DiscoveriesModule,
     NotificationModule,
+    StatsModule,
   ],
   providers: [PlayerService, GameplayService],
   exports: [PlayerService, GameplayService],

@@ -31,4 +31,20 @@ export class GameplayController {
       ),
     };
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('wave')
+  async wave(
+    @User() user,
+    @Body('targetUserId') targetUserId: string,
+    @Body('isWaveBack') isWaveBack: boolean,
+  ) {
+    return {
+      player: await this.gameplayService.waveToPlayer(
+        user.userId,
+        targetUserId,
+        isWaveBack,
+      ),
+    };
+  }
 }

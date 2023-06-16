@@ -1,18 +1,20 @@
+import { INotificationAction } from '@interfaces';
+
 export enum Stat {
-  Health = "health",
-  Power = "power",
-  Toughness = "toughness",
-  Magic = "magic",
-  Resistance = "resistance",
-  Special = "special",
+  Health = 'health',
+  Power = 'power',
+  Toughness = 'toughness',
+  Magic = 'magic',
+  Resistance = 'resistance',
+  Special = 'special',
 }
 
 export enum RechargeableStat {
-  Health = "health",
+  Health = 'health',
 }
 
 export enum Currency {
-  Coins = "coins",
+  Coins = 'coins',
 }
 
 export interface IPlayerLocation {
@@ -23,6 +25,7 @@ export interface IPlayerLocation {
 }
 
 export interface IPlayerProfile {
+  displayName: string;
   shortBio: string;
   longBio: string;
 }
@@ -46,4 +49,6 @@ export interface IPlayer {
   profile: IPlayerProfile;
 
   cosmetics: IPlayerCosmetics;
+
+  action?: INotificationAction;
 }

@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { xpForLevel } from '@helpers/xp';
-import { INotification, INotificationAction, IPlayer } from '@interfaces';
+import { INotification, IPlayer } from '@interfaces';
 import { Select, Store } from '@ngxs/store';
+import { ActionsService } from '@services/actions.service';
 import { NotificationsService } from '@services/notifications.service';
 import { NotificationsStore, PlayerStore } from '@stores';
 import { MarkNotificationRead } from '@stores/notifications/notifications.actions';
@@ -25,6 +26,7 @@ export class HeaderBarComponent implements OnInit {
     private store: Store,
     private router: Router,
     private notificationService: NotificationsService,
+    public actionsService: ActionsService,
   ) {}
 
   ngOnInit() {}
@@ -49,11 +51,5 @@ export class HeaderBarComponent implements OnInit {
 
     this.store.dispatch(new MarkNotificationRead(notification.id || ''));
     this.notificationService.markRead(notification.id || '').subscribe();
-  }
-
-  doNotificationAction(notificationAction: INotificationAction) {
-    if (notificationAction.action === 'navigate') {
-      this.router.navigate([notificationAction.actionData.url]);
-    }
   }
 }

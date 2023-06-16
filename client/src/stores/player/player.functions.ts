@@ -24,6 +24,7 @@ export const defaultStore: () => IPlayerStore = () => ({
     },
 
     profile: {
+      displayName: '',
       shortBio: '',
       longBio: '',
     },
@@ -54,7 +55,7 @@ export const defaultStore: () => IPlayerStore = () => ({
 
 export function setPlayer(
   ctx: StateContext<IPlayerStore>,
-  { player }: SetPlayer
+  { player }: SetPlayer,
 ) {
   ctx.patchState({ player });
 }
@@ -62,7 +63,7 @@ export function setPlayer(
 export function applyPlayerPatches(
   ctx: StateContext<IPlayerStore>,
   { patches }: ApplyPlayerPatches,
-  helpers?: IAttachmentHelpers
+  helpers?: IAttachmentHelpers,
 ) {
   const player = ctx.getState().player;
 
@@ -71,7 +72,7 @@ export function applyPlayerPatches(
 
   const hasXpPatch = patches.find((patch) => patch.path === '/xp');
   const hasCoinsPatch = patches.find(
-    (patch) => patch.path === '/currencies/coins'
+    (patch) => patch.path === '/currencies/coins',
   );
 
   if (hasXpPatch) {
@@ -92,6 +93,16 @@ export function applyPlayerPatches(
   player.currencies = { ...player.currencies };
   player.profile = { ...player.profile };
   player.cosmetics = { ...player.cosmetics };
+
+  if (player.action) {
+    player.action = { ...player.action };
+
+    if (player.action.actionData) {
+      player.action.actionData = {
+        ...player.action.actionData,
+      };
+    }
+  }
 
   ctx.patchState({ player });
 }

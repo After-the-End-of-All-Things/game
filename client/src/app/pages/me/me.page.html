@@ -35,17 +35,13 @@
             <ion-list>
               <ion-item
                 class="cursor-pointer"
-                (click)="changePortrait(data.player?.cosmetics?.portrait || 4)"
+                (click)="changePortrait(data.player?.cosmetics?.portrait ?? 4)"
               >
-                <ion-avatar slot="start"></ion-avatar>
-                <div class="avatar" slot="start">
-                  <ion-avatar>
-                    <app-icon
-                      spritesheet="portraits"
-                      [sprite]="data.player?.cosmetics?.portrait || 4"
-                    ></app-icon>
-                  </ion-avatar>
-                </div>
+                <app-avatar
+                  slot="start"
+                  size="small"
+                  [avatar]="data.player?.cosmetics?.portrait ?? 4"
+                ></app-avatar>
 
                 <ion-label>Change Avatar</ion-label>
               </ion-item>

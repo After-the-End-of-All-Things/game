@@ -42,4 +42,13 @@ export class NotificationController {
   async markRead(@User() user, @Body('notificationId') notificationId: string) {
     return this.notificationService.markNotificationRead(notificationId);
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('/clearactions')
+  async clearActions(
+    @User() user,
+    @Body('notificationId') notificationId: string,
+  ) {
+    return this.notificationService.clearNotificationActions(notificationId);
+  }
 }

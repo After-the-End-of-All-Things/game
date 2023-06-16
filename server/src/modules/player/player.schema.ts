@@ -1,5 +1,6 @@
 import {
   Currency,
+  INotificationAction,
   IPlayer,
   IPlayerCosmetics,
   IPlayerLocation,
@@ -52,6 +53,9 @@ export class Player implements IPlayer {
   location: IPlayerLocation;
 
   @Property()
+  action: INotificationAction | undefined;
+
+  @Property()
   profile: IPlayerProfile;
 
   @Property()
@@ -89,6 +93,7 @@ export class Player implements IPlayer {
     };
 
     this.profile = {
+      displayName: '',
       shortBio: '',
       longBio: '',
     };
@@ -96,6 +101,12 @@ export class Player implements IPlayer {
     this.cosmetics = {
       portrait: 4,
       background: 0,
+    };
+
+    this.action = {
+      text: '',
+      action: '',
+      actionData: {},
     };
   }
 }

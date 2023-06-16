@@ -23,4 +23,11 @@ export class GameplayService {
       location,
     });
   }
+
+  wave(targetUserId: string, isWaveBack = true) {
+    return this.http.post(`${environment.apiUrl}/gameplay/wave`, {
+      targetUserId,
+      isWaveBack,
+    });
+  }
 }

@@ -1,13 +1,11 @@
 
-.avatar {
-  position: absolute;
+app-avatar {
+  position: relative;
   left: -32px;
-  top: -36px;
+  top: -18px;
 
   max-height: 64px;
   max-width: 64px;
 
-  ion-avatar {
-    transform: scale(0.5);
-  }
+  margin-right: 0;
 }

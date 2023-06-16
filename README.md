@@ -19,7 +19,7 @@ God, am I getting tired of typing that.
 ## Server Setup
 
 1. Create `server/.env` file
-1. Add `MONGODB_URI` environment variable (you will need to set up MongoDB somehow) [default: `mongodb://127.0.0.1:27017`] Note the use of `127.0.0.1` instead of `localhost`, as `localhost` appears to not work. 
+1. Add `MONGODB_URI` environment variable (you will need to set up MongoDB somehow) [default: `mongodb://127.0.0.1:27017`] Note the use of `127.0.0.1` instead of `localhost`, as `localhost` appears to not work.
 1. Add `JWT_SECRET` environment variable (set to any string) [default: `supersecret`]
 
 ### Optional Server Environment Variables
@@ -30,5 +30,6 @@ God, am I getting tired of typing that.
 
 ### Notes
 
-- Setup scripts must be non-mandatory (at this time)
-- When setting properties on a sub-object for a schema, it _will not flush_ unless you also set the object. One way to do this is: `this.prop = { ...this.prop, newProp: newPropValue }`
+- Setup scripts must be non-mandatory (at this time).
+- When setting properties on a sub-object for a schema, it _will not flush_ unless you also set the object. One way to do this is: `this.prop = { ...this.prop, newProp: newPropValue }`.
+- When setting properties on a sub-object for a schema, it must not be more than one property deep where possible. This causes unknown, annoying complications with the ORM. It is fiesty.

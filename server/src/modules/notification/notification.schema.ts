@@ -55,8 +55,6 @@ export class Notification implements INotification {
     this.createdAt = new Date();
     this.expiresAt = new Date();
 
-    this.expiresAt.setMinutes(
-      this.expiresAt.getMinutes() + 60 * expiresAfterHours,
-    );
+    this.expiresAt.setHours(this.expiresAt.getHours() + expiresAfterHours);
   }
 }

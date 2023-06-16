@@ -54,4 +54,10 @@ export class NotificationsService {
       notificationId,
     });
   }
+
+  clearActions(notificationId: string) {
+    return this.http.post(`${environment.apiUrl}/notification/clearactions`, {
+      notificationId,
+    });
+  }
 }

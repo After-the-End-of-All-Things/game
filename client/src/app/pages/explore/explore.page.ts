@@ -1,7 +1,8 @@
 import { Component, DestroyRef, OnInit, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { IPlayerLocation } from '@interfaces';
+import { INotificationAction, IPlayerLocation } from '@interfaces';
 import { Select } from '@ngxs/store';
+import { ActionsService } from '@services/actions.service';
 import { GameplayService } from '@services/gameplay.service';
 import { VisualService } from '@services/visual.service';
 import { PlayerStore } from '@stores';
@@ -22,10 +23,13 @@ export class ExplorePage implements OnInit {
   @Select(PlayerStore.exploreCooldown) exploreCooldown$!: Observable<number>;
   @Select(PlayerStore.playerLocation)
   playerLocation$!: Observable<IPlayerLocation>;
+  @Select(PlayerStore.playerAction)
+  playerAction$!: Observable<INotificationAction>;
 
   constructor(
     private gameplayService: GameplayService,
-    public visualService: VisualService
+    public actionsService: ActionsService,
+    public visualService: VisualService,
   ) {}
 
   ngOnInit() {

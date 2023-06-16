@@ -1,10 +1,12 @@
-import { ILocation } from '@interfaces';
+import { ILocation, TrackedStat } from '@interfaces';
 import { ConstantsService } from '@modules/content/constants.service';
 import { ContentService } from '@modules/content/content.service';
 import { Discoveries } from '@modules/discoveries/discoveries.schema';
 import { DiscoveriesService } from '@modules/discoveries/discoveries.service';
+import { NotificationService } from '@modules/notification/notification.service';
 import { Player } from '@modules/player/player.schema';
 import { PlayerService } from '@modules/player/player.service';
+import { StatsService } from '@modules/stats/stats.service';
 import {
   BadRequestException,
   ForbiddenException,
@@ -18,6 +20,8 @@ export class GameplayService {
   constructor(
     private readonly playerService: PlayerService,
     private readonly discoveriesService: DiscoveriesService,
+    private readonly statsService: StatsService,
+    private readonly notificationService: NotificationService,
     private readonly constantsService: ConstantsService,
     private readonly contentService: ContentService,
   ) {}
@@ -78,6 +82,9 @@ export class GameplayService {
           baseExploreSpeed * (explorePercent / 100),
         );
 
+        // reset explore action
+        this.playerService.setPlayerAction(playerRef, undefined);
+
         // put explore on cooldown
         playerRef.location = {
           ...playerRef.location,
@@ -100,6 +107,8 @@ export class GameplayService {
             };
           }
         }
+
+        await this.playerService.handleRandomWave(playerRef, foundLocation);
       },
     );
 
@@ -209,6 +218,81 @@ export class GameplayService {
         };
       },
     );
+
+    return playerPatches;
+  }
+
+  async waveToPlayer(userId: string, targetUserId: string, isWaveBack = true) {
+    const player = await this.playerService.getPlayerForUser(userId);
+    if (!player) throw new ForbiddenException('Player not found');
+
+    const otherPlayer = await this.playerService.getPlayerForUser(targetUserId);
+    if (!otherPlayer) throw new ForbiddenException('Target player not found');
+
+    const stats = await this.statsService.getStatsForUser(targetUserId);
+    if (!stats) throw new ForbiddenException('Stats not found');
+
+    // tell the user they waved
+    const playerPatches = await getPatchesAfterPropChanges<Player>(
+      player,
+      async (playerRef) => {
+        // clear it from the location action
+        const locationAction = playerRef.action;
+        if (
+          locationAction?.action === 'wave' &&
+          locationAction.actionData?.player?.userId === targetUserId
+        ) {
+          this.playerService.setPlayerAction(player, {
+            text: 'Waved!',
+            action: 'waveconfirm',
+            actionData: {
+              player: playerRef.action?.actionData.player,
+            },
+          });
+        }
+      },
+    );
+
+    // share the stat tracking
+    await this.statsService.incrementStat(userId, 'wavesTo' as TrackedStat, 1);
+    await this.statsService.incrementStat(
+      otherPlayer.userId,
+      'wavesFrom' as TrackedStat,
+      1,
+    );
+
+    // notify the target they were waved back at
+    if (isWaveBack) {
+      void this.notificationService.createNotificationForUser(
+        targetUserId,
+        {
+          liveAt: new Date(),
+          text: `${player.profile.displayName} waved back at you!`,
+          actions: [],
+        },
+        1,
+      );
+
+      // give the target a chance to wave back at us
+    } else {
+      void this.notificationService.createNotificationForUser(
+        targetUserId,
+        {
+          liveAt: new Date(),
+          text: `You were waved at by ${player.profile.displayName}!`,
+          actions: [
+            {
+              text: 'Wave back',
+              action: 'waveback',
+              actionData: {
+                player,
+              },
+            },
+          ],
+        },
+        1,
+      );
+    }
 
     return playerPatches;
   }

@@ -40,9 +40,10 @@ export class DiscoveriesService {
     return discoveries;
   }
 
-  discoverLocation(discoveries: Discoveries, locationName: string) {
-    if (discoveries.locations[locationName]) return;
+  discoverLocation(discoveries: Discoveries, locationName: string): boolean {
+    if (discoveries.locations[locationName]) return false;
 
     discoveries.locations = { ...discoveries.locations, [locationName]: true };
+    return true;
   }
 }

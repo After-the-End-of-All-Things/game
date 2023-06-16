@@ -1,5 +1,5 @@
 import { xpForLevel } from '@helpers/xp';
-import { Currency, ILocation } from '@interfaces';
+import { Currency, ILocation, INotificationAction } from '@interfaces';
 import { EntityManager, EntityRepository } from '@mikro-orm/mongodb';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { Discoveries } from '@modules/discoveries/discoveries.schema';
@@ -113,6 +113,86 @@ export class PlayerService {
     );
   }
 
+  getMicroPlayer(player: Player): Partial<Player> {
+    return {
+      userId: player.userId,
+      level: player.level,
+      job: player.job,
+      cosmetics: {
+        portrait: player.cosmetics.portrait,
+        background: player.cosmetics.background,
+      },
+      profile: {
+        displayName: player.profile.displayName,
+        shortBio: player.profile.shortBio,
+        longBio: '',
+      },
+    };
+  }
+
+  setPlayerAction(player: Player, action: INotificationAction | undefined) {
+    player.action = action;
+
+    if (!action) {
+      return;
+    }
+
+    if (player.action?.actionData) {
+      player.action.actionData = {
+        ...player.action.actionData,
+      };
+
+      if (player.action.actionData.player) {
+        player.action.actionData.player = this.getMicroPlayer(
+          player.action.actionData.player,
+        );
+      }
+    }
+  }
+
+  async getRandomUserAtLocation(
+    excludeUserId: string,
+    locationName: string,
+  ): Promise<Player> {
+    const found = await this.players.aggregate([
+      {
+        $match: {
+          userId: { $ne: excludeUserId },
+          'location.current': locationName,
+        },
+      },
+      {
+        $sample: {
+          size: 1,
+        },
+      },
+    ]);
+
+    return found[0];
+  }
+
+  async handleRandomWave(player: Player, location: ILocation) {
+    const waveChance = location.baseStats.npcEncounter;
+    const waveRoll = random(0, 100);
+
+    if (waveRoll > waveChance) return;
+
+    const randomPlayer = await this.getRandomUserAtLocation(
+      player.userId,
+      player.location.current,
+    );
+
+    if (!randomPlayer) return;
+
+    this.setPlayerAction(player, {
+      text: 'Wave',
+      action: 'wave',
+      actionData: {
+        player: randomPlayer,
+      },
+    });
+  }
+
   async handleDiscoveries(
     player: Player,
     discoveries: Discoveries,
@@ -125,26 +205,28 @@ export class PlayerService {
 
       if (discoverRoll <= discoverChance) {
         const discoveredLocation = sample(locations);
-        this.discoveriesService.discoverLocation(
+        const didDiscover = this.discoveriesService.discoverLocation(
           discoveries,
           discoveredLocation.name,
         );
 
-        void this.notificationService.createNotificationForUser(
-          player.userId,
-          {
-            liveAt: new Date(),
-            text: `You have discovered ${discoveredLocation.name}!`,
-            actions: [
-              {
-                text: 'Travel',
-                action: 'navigate',
-                actionData: { url: '/travel' },
-              },
-            ],
-          },
-          1,
-        );
+        if (didDiscover) {
+          void this.notificationService.createNotificationForUser(
+            player.userId,
+            {
+              liveAt: new Date(),
+              text: `You have discovered ${discoveredLocation.name}!`,
+              actions: [
+                {
+                  text: 'Travel',
+                  action: 'navigate',
+                  actionData: { url: '/travel' },
+                },
+              ],
+            },
+            1,
+          );
+        }
       }
     }
   }

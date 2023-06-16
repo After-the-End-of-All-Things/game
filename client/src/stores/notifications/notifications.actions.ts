@@ -15,3 +15,8 @@ export class MarkNotificationRead {
   static type = '[Notifications] Mark Read';
   constructor(public id: string) {}
 }
+
+export class ClearNotificationActions {
+  static type = '[Notifications] Clear Actions';
+  constructor(public id: string) {}
+}

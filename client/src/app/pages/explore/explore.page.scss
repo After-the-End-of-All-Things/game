@@ -34,3 +34,32 @@
     }
   }
 }
+
+.wave-card {
+  .wave-avatar, .wave-player, .wave-action {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .wave-avatar {
+
+  }
+
+  .wave-player {
+    align-items: flex-start;
+
+    .name {
+      font-weight: bold;
+    }
+
+    .bio {
+      font-style: italic;
+    }
+  }
+
+  .wave-action {
+
+  }
+}

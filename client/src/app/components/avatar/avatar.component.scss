@@ -1,0 +1,22 @@
+
+
+.avatar {
+  width: 128px;
+  height: 128px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  app-icon {
+    display: block;
+    max-width: 128px;
+    max-height: 128px;
+  }
+
+  &.small {
+    width: 64px;
+    height: 64px;
+    transform: scale(0.5);
+  }
+}
