@@ -135,7 +135,13 @@ export class PlayerService {
           {
             liveAt: new Date(),
             text: `You have discovered ${discoveredLocation.name}!`,
-            actions: [],
+            actions: [
+              {
+                text: 'Travel',
+                action: 'navigate',
+                actionData: { url: '/travel' },
+              },
+            ],
           },
           1,
         );

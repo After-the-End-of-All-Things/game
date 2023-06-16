@@ -64,6 +64,16 @@
               {{ notification.createdAt | relativeTime }}
             </ion-note>
           </ion-label>
+
+          <ng-container *ngIf="notification.actions?.length === 1">
+            <ion-button
+              slot="end"
+              *ngIf="notification.actions?.[0] as action"
+              (click)="doNotificationAction(action)"
+            >
+              {{ action.text }}
+            </ion-button>
+          </ng-container>
         </ion-item>
       </ion-list>
     </ion-content>
