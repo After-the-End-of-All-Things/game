@@ -9,6 +9,22 @@
 
   <ion-grid *ngIf="{ player: player$ | async } as data">
     <ion-row>
+      <ion-col sizeSm="4" *ngFor="let stat of stats">
+        <ion-card class="number-card center-title-card">
+          <ion-card-header>
+            <ion-card-title>{{ stat.name }}</ion-card-title>
+          </ion-card-header>
+
+          <ion-card-content>
+            <div class="number">
+              {{ calcStat(data.player!, stat.stat) | number }}
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
       <ion-col>
         <ion-card>
           <ion-card-header>

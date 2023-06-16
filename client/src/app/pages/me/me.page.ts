@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ChooseAvatarModalComponent } from '@components/modals/choose-avatar/choose-avatar.component';
-import { IPlayer } from '@interfaces';
+import { IPlayer, Stat } from '@interfaces';
 import { ModalController } from '@ionic/angular';
 import { Select } from '@ngxs/store';
+import { ContentService } from '@services/content.service';
 import { PlayerService } from '@services/player.service';
 import { PlayerStore } from '@stores';
 import { Observable } from 'rxjs';
@@ -15,8 +16,36 @@ import { Observable } from 'rxjs';
 export class MePage implements OnInit {
   @Select(PlayerStore.player) player$!: Observable<IPlayer>;
 
+  public readonly stats = [
+    {
+      name: 'HP',
+      stat: Stat.Health,
+    },
+    {
+      name: 'Power',
+      stat: Stat.Power,
+    },
+    {
+      name: 'Toughness',
+      stat: Stat.Toughness,
+    },
+    {
+      name: 'Special',
+      stat: Stat.Special,
+    },
+    {
+      name: 'Magic',
+      stat: Stat.Magic,
+    },
+    {
+      name: 'Resistance',
+      stat: Stat.Resistance,
+    },
+  ];
+
   constructor(
     private modal: ModalController,
+    private contentService: ContentService,
     private playerService: PlayerService,
   ) {}
 
@@ -36,5 +65,12 @@ export class MePage implements OnInit {
     if (data) {
       this.playerService.changePortrait(data);
     }
+  }
+
+  calcStat(player: IPlayer, stat: Stat) {
+    const job = this.contentService.getJob(player.job);
+    if (!job) return 0;
+
+    return Math.floor(job.statGainsPerLevel[stat] * player.level);
   }
 }
