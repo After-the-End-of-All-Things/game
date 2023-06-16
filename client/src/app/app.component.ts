@@ -27,7 +27,7 @@ export class AppComponent {
 
   public characterPages: IMenuItem[] = [
     {
-      title: 'My Character',
+      title: 'My Profile',
       url: 'me',
       icon: 'person',
     },

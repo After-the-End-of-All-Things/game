@@ -1,0 +1,42 @@
+<ion-header [translucent]="true">
+  <app-header-bar></app-header-bar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <app-header-bar></app-header-bar>
+  </ion-header>
+
+  <ion-grid *ngIf="{ player: player$ | async } as data">
+    <ion-row>
+      <ion-col>
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>My Profile</ion-card-title>
+          </ion-card-header>
+
+          <ion-card-content>
+            <ion-list>
+              <ion-item
+                class="cursor-pointer"
+                (click)="changePortrait(data.player?.cosmetics?.portrait || 4)"
+              >
+                <ion-avatar slot="start"></ion-avatar>
+                <div class="avatar" slot="start">
+                  <ion-avatar>
+                    <app-icon
+                      spritesheet="portraits"
+                      [sprite]="data.player?.cosmetics?.portrait || 4"
+                    ></app-icon>
+                  </ion-avatar>
+                </div>
+
+                <ion-label>Change Avatar</ion-label>
+              </ion-item>
+            </ion-list>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

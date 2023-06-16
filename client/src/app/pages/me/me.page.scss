@@ -1,0 +1,13 @@
+
+.avatar {
+  position: absolute;
+  left: -32px;
+  top: -36px;
+
+  max-height: 64px;
+  max-width: 64px;
+
+  ion-avatar {
+    transform: scale(0.5);
+  }
+}
