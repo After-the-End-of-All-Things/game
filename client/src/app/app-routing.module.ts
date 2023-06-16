@@ -35,6 +35,11 @@ const routes: Routes = [
       import('./pages/me/me.module').then((m) => m.MePageModule),
   },
   {
+    path: 'options',
+    loadChildren: () =>
+      import('./pages/options/options.module').then((m) => m.OptionsPageModule),
+  },
+  {
     path: '**',
     redirectTo: '',
     pathMatch: 'full',

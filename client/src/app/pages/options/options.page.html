@@ -1,0 +1,40 @@
+<ion-header [translucent]="true">
+  <app-header-bar></app-header-bar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <app-header-bar></app-header-bar>
+  </ion-header>
+
+  <ion-grid *ngIf="{ options: options$ | async } as data">
+    <ion-row>
+      <ion-col>
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Options</ion-card-title>
+          </ion-card-header>
+
+          <ion-card-content>
+            <ion-list>
+              <ion-select
+                placeholder="Select asset quality"
+                label="Asset Quality"
+                labelPlacement="stacked"
+                [value]="data.options?.assetQuality"
+                (ionChange)="setOption('assetQuality', $event)"
+              >
+                <ion-select-option
+                  [value]="quality"
+                  *ngFor="let quality of ['high', 'medium', 'low', 'minimal']"
+                >
+                  {{ quality }}
+                </ion-select-option>
+              </ion-select>
+            </ion-list>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

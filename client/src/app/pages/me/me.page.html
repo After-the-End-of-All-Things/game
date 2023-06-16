@@ -38,5 +38,24 @@
         </ion-card>
       </ion-col>
     </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Miscellaneous</ion-card-title>
+          </ion-card-header>
+
+          <ion-card-content>
+            <ion-list>
+              <ion-item class="cursor-pointer" [routerLink]="['/options']">
+                <ion-icon name="settings" slot="start"></ion-icon>
+                <ion-label>Change Settings</ion-label>
+              </ion-item>
+            </ion-list>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
   </ion-grid>
 </ion-content>
