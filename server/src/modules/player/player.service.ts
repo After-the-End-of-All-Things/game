@@ -180,6 +180,9 @@ export class PlayerService {
           userId: { $ne: excludeUserId },
         },
       },
+      {
+        $sample: { size: 1 },
+      },
     ]);
 
     return found[0];
