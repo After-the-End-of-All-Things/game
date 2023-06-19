@@ -154,33 +154,32 @@ export class PlayerService {
     excludeUserId: string,
     locationName: string,
   ): Promise<Player> {
-
     const currentTime = Date.now();
 
     const found = await this.em.aggregate(Player, [
       {
         $lookup: {
           from: 'user',
-          let: { userId: "$userId" },
+          let: { userId: '$userId' },
           pipeline: [
             {
               $match: {
                 $expr: {
-                  $eq: [{ $toObjectId: "$$userId" }, "$_id"]
-                }
-              }
-            }
+                  $eq: [{ $toObjectId: '$$userId' }, '$_id'],
+                },
+              },
+            },
           ],
-          as: 'user'
+          as: 'user',
         },
       },
       {
         $match: {
           'location.current': locationName,
           'user.onlineUntil': { $gt: currentTime },
-          'userId': { $ne: excludeUserId }
-        }
-      }
+          userId: { $ne: excludeUserId },
+        },
+      },
     ]);
 
     return found[0];
@@ -196,7 +195,7 @@ export class PlayerService {
       player.userId,
       player.location.current,
     );
-    
+
     if (!randomPlayer) return;
 
     this.setPlayerAction(player, {
