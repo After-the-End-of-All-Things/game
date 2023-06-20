@@ -16,31 +16,37 @@ const routes: Routes = [
   },
   {
     path: 'explore',
+    canActivate: [AuthGuard],
     loadChildren: () =>
       import('./pages/explore/explore.module').then((m) => m.ExplorePageModule),
   },
   {
     path: 'travel',
+    canActivate: [AuthGuard],
     loadChildren: () =>
       import('./pages/travel/travel.module').then((m) => m.TravelPageModule),
   },
   {
     path: 'town',
+    canActivate: [AuthGuard],
     loadChildren: () =>
       import('./pages/town/town.module').then((m) => m.TownPageModule),
   },
   {
     path: 'me',
+    canActivate: [AuthGuard],
     loadChildren: () =>
       import('./pages/me/me.module').then((m) => m.MePageModule),
   },
   {
     path: 'options',
+    canActivate: [AuthGuard],
     loadChildren: () =>
       import('./pages/options/options.module').then((m) => m.OptionsPageModule),
   },
   {
     path: 'inventory',
+    canActivate: [AuthGuard],
     loadChildren: () =>
       import('./pages/inventory/inventory.module').then(
         (m) => m.InventoryPageModule,
@@ -48,6 +54,7 @@ const routes: Routes = [
   },
   {
     path: 'equipment',
+    canActivate: [AuthGuard],
     loadChildren: () =>
       import('./pages/equipment/equipment.module').then(
         (m) => m.EquipmentPageModule,
