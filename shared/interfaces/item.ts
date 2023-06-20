@@ -34,6 +34,7 @@ export interface IItem {
   name: string;
   itemId: string;
   instanceId?: string;
+  description?: string;
   rarity: Rarity;
   sprite: number;
   type: ItemType;
