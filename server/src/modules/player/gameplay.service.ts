@@ -341,6 +341,11 @@ export class GameplayService {
               actionData: {
                 player,
               },
+              url: 'gameplay/wave',
+              urlData: {
+                targetUserId: userId,
+                isWaveBack: true,
+              },
             },
           ],
         },

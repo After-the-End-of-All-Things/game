@@ -1,8 +1,9 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { environment } from '@environment';
 import { INotification, INotificationAction } from '@interfaces';
 import { Store } from '@ngxs/store';
-import { GameplayService } from '@services/gameplay.service';
 import { NotificationsService } from '@services/notifications.service';
 import { ClearNotificationActions } from '@stores/notifications/notifications.actions';
 
@@ -13,8 +14,8 @@ export class ActionsService {
   constructor(
     private store: Store,
     private router: Router,
+    private http: HttpClient,
     private notificationService: NotificationsService,
-    private gameplayService: GameplayService,
   ) {}
 
   doAction(action: INotificationAction, notification?: INotification) {
@@ -27,18 +28,10 @@ export class ActionsService {
       this.router.navigate([action.actionData.url]);
     }
 
-    if (action.action === 'wave') {
-      this.gameplayService.wave(action.actionData.player.userId).subscribe();
-    }
-
-    if (action.action === 'waveback') {
-      this.gameplayService
-        .wave(action.actionData.player.userId, true)
+    if (action.url) {
+      this.http
+        .post(`${environment.apiUrl}/${action.url}`, action.urlData || {})
         .subscribe();
-    }
-
-    if (action.action === 'collectible' || action.action === 'item') {
-      this.gameplayService.takeitem().subscribe();
     }
   }
 }

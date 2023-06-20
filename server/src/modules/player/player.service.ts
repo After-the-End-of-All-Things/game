@@ -204,6 +204,8 @@ export class PlayerService {
       actionData: {
         player: randomPlayer,
       },
+      url: 'gameplay/wave',
+      urlData: {},
     });
   }
 
@@ -258,6 +260,8 @@ export class PlayerService {
       actionData: {
         item: randomCollectibleForLocation,
       },
+      url: 'gameplay/takeitem',
+      urlData: {},
     });
   }
 
@@ -280,6 +284,8 @@ export class PlayerService {
       actionData: {
         item: randomItemForLocation,
       },
+      url: 'gameplay/takeitem',
+      urlData: {},
     });
   }
 }
