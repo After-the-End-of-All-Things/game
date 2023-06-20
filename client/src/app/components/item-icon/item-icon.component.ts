@@ -8,7 +8,7 @@ import { IItem } from '@interfaces';
 })
 export class ItemIconComponent implements OnInit {
   @Input({ required: true }) item!: IItem;
-  @Input() scale = 1;
+  @Input() size: 'small' | 'normal' = 'normal';
 
   constructor() {}
 

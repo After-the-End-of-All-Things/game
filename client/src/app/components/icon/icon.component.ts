@@ -10,7 +10,7 @@ export class IconComponent implements OnInit {
   @Input({ required: true }) spritesheet!: string;
   @Input({ required: true }) sprite!: number;
   @Input() quality = 'medium';
-  @Input() scale = 1;
+  @Input() size: 'small' | 'normal' = 'normal';
 
   public spritesheetUrl!: any;
   public assetLocation = '-0px -0px';

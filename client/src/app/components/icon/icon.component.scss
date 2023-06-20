@@ -1,9 +1,21 @@
 
-.icon {
-  width: 64px;
-  height: 64px;
-  object-fit: none;
-  pointer-events: none;
-  user-select: none;
-  transform-origin: top left;
+:host {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.icon-container {
+  &.small {
+    transform: scale(0.5);
+  }
+
+  .icon {
+    width: 64px;
+    height: 64px;
+    object-fit: none;
+    pointer-events: none;
+    user-select: none;
+    transform-origin: top left;
+  }
 }

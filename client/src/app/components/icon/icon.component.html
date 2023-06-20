@@ -1,6 +1,7 @@
-<img
-  class="icon"
-  [src]="spritesheetUrl"
-  [style.object-position]="assetLocation"
-  [style.transform]="'scale(' + scale + ')'"
-/>
+<div class="icon-container" [ngClass]="[size]">
+  <img
+    class="icon"
+    [src]="spritesheetUrl"
+    [style.object-position]="assetLocation"
+  />
+</div>
