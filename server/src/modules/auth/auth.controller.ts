@@ -10,9 +10,11 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
+import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt.guard';
 
+@ApiBearerAuth()
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -21,6 +23,7 @@ export class AuthController {
   ) {}
 
   @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Register a new account' })
   @Post('register')
   signUp(@Body() signInDto: Record<string, any>) {
     if (!signInDto.username || !signInDto.password || !signInDto.email)
@@ -44,6 +47,7 @@ export class AuthController {
   }
 
   @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Log into an account' })
   @Post('login')
   signIn(@Body() signInDto: Record<string, any>) {
     if (!signInDto.password || !signInDto.email)
@@ -53,6 +57,7 @@ export class AuthController {
   }
 
   @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Refresh auth token' })
   @Get('refresh')
   @UseGuards(JwtAuthGuard)
   refreshToken(@Headers('authorization') authHeader: string) {
