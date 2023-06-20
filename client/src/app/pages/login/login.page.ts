@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MenuController } from '@ionic/angular';
+import { NotificationsService } from '@services/notifications.service';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -10,27 +11,41 @@ import { AuthService } from '../../services/auth.service';
   styleUrls: ['./login.page.scss'],
 })
 export class LoginPage implements OnInit {
-
-  authType: 'login'|'register' = 'login';
+  authType: 'login' | 'register' = 'login';
 
   loginForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl('', [Validators.required, Validators.minLength(8)]),
+    password: new FormControl('', [
+      Validators.required,
+      Validators.minLength(8),
+    ]),
   });
 
   registerForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl('', [Validators.required, Validators.minLength(8)]),
-    username: new FormControl('', [Validators.required, Validators.minLength(2), Validators.maxLength(20)]),
+    password: new FormControl('', [
+      Validators.required,
+      Validators.minLength(8),
+    ]),
+    username: new FormControl('', [
+      Validators.required,
+      Validators.minLength(2),
+      Validators.maxLength(20),
+    ]),
   });
 
   public loginError = '';
   public registerError = '';
 
-  constructor(public menu: MenuController, private authService: AuthService, private router: Router) { }
+  constructor(
+    public menu: MenuController,
+    private authService: AuthService,
+    private notificationService: NotificationsService,
+    private router: Router,
+  ) {}
 
   ngOnInit() {
-    this.loginForm.controls.email.errors
+    this.loginForm.controls.email.errors;
   }
 
   ionViewDidEnter() {
@@ -44,43 +59,69 @@ export class LoginPage implements OnInit {
   }
 
   login() {
-    if(!this.loginForm.value.email || !this.loginForm.value.password || !this.loginForm.valid) return;
+    if (
+      !this.loginForm.value.email ||
+      !this.loginForm.value.password ||
+      !this.loginForm.valid
+    )
+      return;
     this.loginError = '';
 
-    this.authService.login(this.loginForm.value.email, this.loginForm.value.password)
+    this.authService
+      .login(this.loginForm.value.email, this.loginForm.value.password)
       .subscribe({
         next: () => {
           this.router.navigate(['/']);
+          this.notificationService.getNotifications();
         },
         error: () => {
           this.loginError = 'Invalid email or password.';
-        }
+        },
       });
   }
 
   register() {
-    if(!this.registerForm.value.email || !this.registerForm.value.password || !this.registerForm.value.username || !this.registerForm.valid) return;
+    if (
+      !this.registerForm.value.email ||
+      !this.registerForm.value.password ||
+      !this.registerForm.value.username ||
+      !this.registerForm.valid
+    )
+      return;
     this.registerError = '';
 
-    this.authService.register(this.registerForm.value.email, this.registerForm.value.password, this.registerForm.value.username)
+    this.authService
+      .register(
+        this.registerForm.value.email,
+        this.registerForm.value.password,
+        this.registerForm.value.username,
+      )
       .subscribe({
         next: () => {
-          if(!this.registerForm.value.email || !this.registerForm.value.password) return;
+          if (
+            !this.registerForm.value.email ||
+            !this.registerForm.value.password
+          )
+            return;
 
-          this.authService.login(this.registerForm.value.email, this.registerForm.value.password)
+          this.authService
+            .login(
+              this.registerForm.value.email,
+              this.registerForm.value.password,
+            )
             .subscribe({
               next: () => {
                 this.router.navigate(['/']);
+                this.notificationService.getNotifications();
               },
               error: (err) => {
                 this.registerError = err.error.message;
-              }
+              },
             });
         },
         error: (err) => {
           this.registerError = err.error.message;
-        }
+        },
       });
   }
-
 }
