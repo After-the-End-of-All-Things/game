@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '@environment';
 import { INotification } from '@interfaces';
 import { Select, Store } from '@ngxs/store';
+import { AuthService } from '@services/auth.service';
 import { NotificationsStore } from '@stores';
 import { Observable, timer } from 'rxjs';
 
@@ -16,10 +17,16 @@ export class NotificationsService {
     INotification[]
   >;
 
-  constructor(private store: Store, private http: HttpClient) {}
+  constructor(
+    private store: Store,
+    private http: HttpClient,
+    private authService: AuthService,
+  ) {}
 
   init() {
     timer(0, 1000 * 60 * this.intervalMinutes).subscribe(() => {
+      if (!this.authService.isAuthenticated()) return;
+
       const notifications = this.store.selectSnapshot(
         NotificationsStore.notifications,
       );
