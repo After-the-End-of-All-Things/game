@@ -8,6 +8,10 @@ import { environment } from '@environment';
 export class PlayerService {
   constructor(private http: HttpClient) {}
 
+  getInventoryItems() {
+    return this.http.get(`${environment.apiUrl}/inventory/items`);
+  }
+
   changePortrait(portrait: number) {
     this.http
       .patch(`${environment.apiUrl}/player/cosmetics/portrait`, { portrait })

@@ -1,6 +1,7 @@
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { ContentModule } from '@modules/content/content.module';
 import { DiscoveriesModule } from '@modules/discoveries/discoveries.module';
+import { InventoryModule } from '@modules/inventory/inventory.module';
 import { NotificationModule } from '@modules/notification/notification.module';
 import { GameplayController } from '@modules/player/gameplay.controller';
 import { GameplayService } from '@modules/player/gameplay.service';
@@ -18,6 +19,7 @@ import { Module } from '@nestjs/common';
     DiscoveriesModule,
     NotificationModule,
     StatsModule,
+    InventoryModule,
   ],
   providers: [PlayerService, GameplayService],
   exports: [PlayerService, GameplayService],

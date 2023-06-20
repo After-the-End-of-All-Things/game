@@ -35,21 +35,21 @@
   }
 }
 
-.wave-card {
-  .wave-avatar, .wave-player, .wave-action {
+.action-card {
+  .action-avatar, .action-center, .action-action {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
   }
 
-  .wave-avatar {
-
-  }
-
-  .wave-player {
+  .action-center {
     align-items: flex-start;
+  }
+}
 
+.wave-card {
+  .action-center {
     .name {
       font-weight: bold;
     }
@@ -58,8 +58,12 @@
       font-style: italic;
     }
   }
+}
 
-  .wave-action {
-
+.item-card {
+  .action-center {
+    .item-name {
+      font-weight: bold;
+    }
   }
 }

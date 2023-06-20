@@ -1,7 +1,7 @@
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { Global, Module, NotFoundException } from '@nestjs/common';
-import { ConfigModule } from '../../config/config.module';
-import { MIKRO_ORM_CONFIG } from '../../config/mikro-orm-config';
+import { ConfigModule } from '../config/config.module';
+import { MIKRO_ORM_CONFIG } from '../config/mikro-orm-config';
 
 @Global()
 @Module({

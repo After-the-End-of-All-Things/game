@@ -41,7 +41,7 @@
             <ion-card-content>
               <div class="action" *ngIf="data.action as actionInfo">
                 <ion-card
-                  class="wave-card"
+                  class="wave-card action-card"
                   *ngIf="actionInfo.action === 'wave'"
                 >
                   <ion-card-content>
@@ -51,18 +51,18 @@
                       you like to wave to them?
                     </div>
 
-                    <div class="info">
+                    <div class="info full-width">
                       <ion-row>
                         <ion-col sizeXs="8">
                           <ion-row>
-                            <ion-col sizeXs="4" class="wave-avatar">
+                            <ion-col sizeXs="4" class="action-avatar">
                               <app-avatar
                                 [avatar]="actionInfo.actionData.player.profile.avatar ?? 4"
                                 [padding]="0"
                               ></app-avatar>
                             </ion-col>
 
-                            <ion-col sizeXs="8" class="wave-player">
+                            <ion-col sizeXs="8" class="action-center">
                               <div class="name">
                                 {{
                                 actionInfo.actionData.player.profile.displayName
@@ -80,7 +80,7 @@
                           </ion-row>
                         </ion-col>
 
-                        <ion-col sizeXs="4" class="wave-action">
+                        <ion-col sizeXs="4" class="action-action">
                           <ion-button
                             color="secondary"
                             (click)="actionsService.doAction(actionInfo)"
@@ -94,13 +94,73 @@
                 </ion-card>
 
                 <ion-card
-                  class="wave-card"
+                  class="wave-card action-card"
                   *ngIf="actionInfo.action === 'waveconfirm'"
                 >
                   <ion-card-content>
                     <div class="intro">
                       You waved at {{
                       actionInfo.actionData.player.profile.displayName }}!
+                    </div>
+                  </ion-card-content>
+                </ion-card>
+
+                <ion-card
+                  class="item-card action-card"
+                  *ngIf="actionInfo.action === 'item' || actionInfo.action === 'collectible'"
+                >
+                  <ion-card-content>
+                    <div class="intro">
+                      You came across
+                      <strong>{{ actionInfo.actionData.item.name }}!</strong>
+                      What would you like to do with it?
+                    </div>
+
+                    <div class="info full-width">
+                      <ion-row>
+                        <ion-col sizeXs="8">
+                          <ion-row>
+                            <ion-col sizeXs="4" class="action-avatar">
+                              <app-item-icon
+                                [item]="actionInfo.actionData.item"
+                              ></app-item-icon>
+                            </ion-col>
+
+                            <ion-col sizeXs="8" class="action-center">
+                              <div class="item-name">
+                                {{ actionInfo.actionData.item.name }}
+                              </div>
+
+                              <div class="item-classification">
+                                <app-item-rarity
+                                  [item]="actionInfo.actionData.item"
+                                ></app-item-rarity>
+                              </div>
+                            </ion-col>
+                          </ion-row>
+                        </ion-col>
+
+                        <ion-col sizeXs="4" class="action-action">
+                          <ion-button
+                            color="secondary"
+                            (click)="actionsService.doAction(actionInfo)"
+                          >
+                            {{ actionInfo.text }}
+                          </ion-button>
+                        </ion-col>
+                      </ion-row>
+                    </div>
+                  </ion-card-content>
+                </ion-card>
+
+                <ion-card
+                  class="item-card action-card"
+                  *ngIf="actionInfo.action === 'takeconfirm'"
+                >
+                  <ion-card-content>
+                    <div class="intro">
+                      You took
+                      <strong>{{ actionInfo.actionData.item.name }}!</strong>
                     </div>
                   </ion-card-content>
                 </ion-card>

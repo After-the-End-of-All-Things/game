@@ -1,6 +1,8 @@
 import { MikroOrmModuleOptions } from '@mikro-orm/nestjs';
 import { Achievements } from '@modules/achievements/achievements.schema';
 import { Discoveries } from '@modules/discoveries/discoveries.schema';
+import { Inventory } from '@modules/inventory/inventory.schema';
+import { InventoryItem } from '@modules/inventory/inventoryitem.schema';
 import { Notification } from '@modules/notification/notification.schema';
 import { Player } from '@modules/player/player.schema';
 import { Stats } from '@modules/stats/stats.schema';
@@ -18,7 +20,16 @@ function mikroOrmConfigFactory(
   );
 
   return {
-    entities: [User, Notification, Player, Stats, Discoveries, Achievements],
+    entities: [
+      User,
+      Notification,
+      Player,
+      Stats,
+      Discoveries,
+      Achievements,
+      Inventory,
+      InventoryItem,
+    ],
     dbName: process.env.NODE_ENV === 'production' ? 'ateoat' : 'ateoattest',
     type: 'mongo',
     ensureIndexes: true,

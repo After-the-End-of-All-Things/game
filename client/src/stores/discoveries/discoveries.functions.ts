@@ -10,19 +10,20 @@ export const defaultStore: () => IDiscoveriesStore = () => ({
     locations: {},
     portraits: {},
     borders: {},
+    collectibles: {},
   },
 });
 
 export function setDiscoveries(
   ctx: StateContext<IDiscoveriesStore>,
-  { discoveries }: SetDiscoveries
+  { discoveries }: SetDiscoveries,
 ) {
   ctx.patchState({ discoveries });
 }
 
 export function applyDiscoveriesPatches(
   ctx: StateContext<IDiscoveriesStore>,
-  { patches }: ApplyDiscoveriesPatches
+  { patches }: ApplyDiscoveriesPatches,
 ) {
   const discoveries = ctx.getState().discoveries;
 

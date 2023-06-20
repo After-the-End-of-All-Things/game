@@ -5,12 +5,13 @@ import { LoggerModule } from 'nestjs-pino';
 import { FlushInterceptor } from 'src/utils/flush.interceptor';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ConfigModule } from './config/config.module';
 import { AchievementsModule } from './modules/achievements/achievements.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { ConfigModule } from './modules/config/config.module';
 import { ContentModule } from './modules/content/content.module';
 import { DatabaseModule } from './modules/database/database.module';
 import { DiscoveriesModule } from './modules/discoveries/discoveries.module';
+import { InventoryModule } from './modules/inventory/inventory.module';
 import { NotificationModule } from './modules/notification/notification.module';
 import { GameplayController } from './modules/player/gameplay.controller';
 import { PlayerModule } from './modules/player/player.module';
@@ -60,6 +61,7 @@ const isProduction = process.env.NODE_ENV === 'production';
     DiscoveriesModule,
     AchievementsModule,
     ContentModule,
+    InventoryModule,
   ],
   controllers: [AppController, GameplayController],
   providers: [

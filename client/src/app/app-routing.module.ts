@@ -40,6 +40,20 @@ const routes: Routes = [
       import('./pages/options/options.module').then((m) => m.OptionsPageModule),
   },
   {
+    path: 'inventory',
+    loadChildren: () =>
+      import('./pages/inventory/inventory.module').then(
+        (m) => m.InventoryPageModule,
+      ),
+  },
+  {
+    path: 'equipment',
+    loadChildren: () =>
+      import('./pages/equipment/equipment.module').then(
+        (m) => m.EquipmentPageModule,
+      ),
+  },
+  {
     path: '**',
     redirectTo: '',
     pathMatch: 'full',

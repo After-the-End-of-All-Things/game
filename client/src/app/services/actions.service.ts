@@ -36,5 +36,9 @@ export class ActionsService {
         .wave(action.actionData.player.userId, true)
         .subscribe();
     }
+
+    if (action.action === 'collectible' || action.action === 'item') {
+      this.gameplayService.takeitem().subscribe();
+    }
   }
 }

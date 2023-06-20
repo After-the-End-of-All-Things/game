@@ -1,11 +1,21 @@
 import { JwtAuthGuard } from '@modules/auth/jwt.guard';
+import { InventoryService } from '@modules/inventory/inventory.service';
 import { GameplayService } from '@modules/player/gameplay.service';
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { User } from '@utils/user.decorator';
 
 @Controller('gameplay')
 export class GameplayController {
-  constructor(private gameplayService: GameplayService) {}
+  constructor(
+    private gameplayService: GameplayService,
+    private inventoryService: InventoryService,
+  ) {}
 
   @UseGuards(JwtAuthGuard)
   @Post('explore')
@@ -45,6 +55,18 @@ export class GameplayController {
         targetUserId,
         isWaveBack,
       ),
+    };
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('takeitem')
+  async takeitem(@User() user) {
+    if (await this.inventoryService.isInventoryFull(user.userId)) {
+      throw new BadRequestException('Inventory is full.');
+    }
+
+    return {
+      player: await this.gameplayService.takeItem(user.userId),
     };
   }
 }

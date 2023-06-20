@@ -14,6 +14,10 @@ import {
   ApplyDiscoveriesPatches,
   SetDiscoveries,
 } from '@stores/discoveries/discoveries.actions';
+import {
+  ApplyInventoryPatches,
+  SetInventory,
+} from '@stores/inventory/inventory.actions';
 import { SetNotifications } from '@stores/notifications/notifications.actions';
 import { ApplyPlayerPatches, SetPlayer } from '@stores/player/player.actions';
 import { ApplyStatsPatches, SetStats } from '@stores/stats/stats.actions';
@@ -85,6 +89,16 @@ export class DataGrabberInterceptor implements HttpInterceptor {
             }
           } else {
             this.store.dispatch(new SetDiscoveries(body.discoveries));
+          }
+        }
+
+        if (body.inventory) {
+          if (isArray(body.inventory)) {
+            if (body.inventory.length > 0) {
+              this.store.dispatch(new ApplyInventoryPatches(body.inventory));
+            }
+          } else {
+            this.store.dispatch(new SetInventory(body.inventory));
           }
         }
 

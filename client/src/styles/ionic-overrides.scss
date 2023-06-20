@@ -22,3 +22,8 @@ ion-button {
 ion-avatar {
   overflow: hidden;
 }
+
+.ngx-datatable .datatable-body-cell {
+  display: flex !important;
+  align-items: center;
+}

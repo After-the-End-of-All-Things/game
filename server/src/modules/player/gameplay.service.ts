@@ -1,19 +1,22 @@
-import { ILocation, TrackedStat } from '@interfaces';
+import { IItem, ILocation, TrackedStat } from '@interfaces';
 import { ConstantsService } from '@modules/content/constants.service';
 import { ContentService } from '@modules/content/content.service';
 import { Discoveries } from '@modules/discoveries/discoveries.schema';
 import { DiscoveriesService } from '@modules/discoveries/discoveries.service';
+import { InventoryService } from '@modules/inventory/inventory.service';
 import { NotificationService } from '@modules/notification/notification.service';
 import { Player } from '@modules/player/player.schema';
 import { PlayerService } from '@modules/player/player.service';
 import { StatsService } from '@modules/stats/stats.service';
-import {
-  BadRequestException,
-  ForbiddenException,
-  Injectable,
-} from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { getPatchesAfterPropChanges } from '@utils/patches';
 import * as jsonpatch from 'fast-json-patch';
+import { sample } from 'lodash';
+
+type ExploreResult = 'Nothing' | 'Wave' | 'Item' | 'Discovery' | 'Collectible';
+
+const createFilledArray = (length: number, fill: ExploreResult) =>
+  Array(length).fill(fill);
 
 @Injectable()
 export class GameplayService {
@@ -21,6 +24,7 @@ export class GameplayService {
     private readonly playerService: PlayerService,
     private readonly discoveriesService: DiscoveriesService,
     private readonly statsService: StatsService,
+    private readonly inventoryService: InventoryService,
     private readonly notificationService: NotificationService,
     private readonly constantsService: ConstantsService,
     private readonly contentService: ContentService,
@@ -44,21 +48,56 @@ export class GameplayService {
 
     let foundLocation: ILocation | undefined;
 
+    foundLocation = this.contentService.getLocation(player.location.current);
+
+    if (!foundLocation) {
+      foundLocation = this.contentService.getLocation('Mork');
+    }
+
+    if (!foundLocation) return { player: [], discoveries: [] };
+
+    let exploreResult: ExploreResult = 'Nothing';
+
+    if (foundLocation) {
+      const choices = [
+        ...createFilledArray(
+          this.constantsService.wavePercentBoost + foundLocation.baseStats.wave,
+          'Wave',
+        ),
+        ...createFilledArray(
+          this.constantsService.locationFindPercentBoost +
+            foundLocation.baseStats.locationFind,
+          'Discovery',
+        ),
+        ...createFilledArray(
+          this.constantsService.itemFindPercentBoost +
+            foundLocation.baseStats.itemFind,
+          'Item',
+        ),
+        ...createFilledArray(
+          this.constantsService.collectibleFindPercentBoost +
+            foundLocation.baseStats.collectibleFind,
+          'Collectible',
+        ),
+      ];
+
+      if (choices.length < 100) {
+        const nothings = createFilledArray(100 - choices.length, 'Nothing');
+        choices.push(...nothings);
+      }
+
+      exploreResult = sample(choices);
+    }
+
     const playerPatches = await getPatchesAfterPropChanges<Player>(
       player,
       async (playerRef) => {
-        foundLocation = this.contentService.getLocation(
-          playerRef.location.current,
-        );
+        if (!foundLocation) return;
 
-        if (!foundLocation) {
-          playerRef.location.current = 'Mork';
-          foundLocation = this.contentService.getLocation(
-            playerRef.location.current,
-          );
-        }
-
-        if (!foundLocation) throw new BadRequestException('Location not found');
+        playerRef.location = {
+          ...playerRef.location,
+          current: foundLocation.name,
+        };
 
         // gain xp
         const baseXp = this.constantsService.baseExploreXp;
@@ -108,7 +147,20 @@ export class GameplayService {
           }
         }
 
-        await this.playerService.handleRandomWave(playerRef, foundLocation);
+        if (exploreResult === 'Wave') {
+          await this.playerService.handleRandomWave(playerRef);
+        }
+
+        if (exploreResult === 'Collectible') {
+          await this.playerService.handleFindCollectible(
+            playerRef,
+            foundLocation,
+          );
+        }
+
+        if (exploreResult === 'Item') {
+          await this.playerService.handleFindItem(playerRef, foundLocation);
+        }
       },
     );
 
@@ -117,11 +169,13 @@ export class GameplayService {
       async (discRef) => {
         if (!foundLocation) return;
 
-        await this.playerService.handleDiscoveries(
-          player,
-          discRef,
-          foundLocation,
-        );
+        if (exploreResult === 'Discovery') {
+          await this.playerService.handleDiscoveries(
+            player,
+            discRef,
+            foundLocation,
+          );
+        }
       },
     );
 
@@ -293,6 +347,32 @@ export class GameplayService {
         1,
       );
     }
+
+    return playerPatches;
+  }
+
+  async takeItem(userId: string) {
+    const player = await this.playerService.getPlayerForUser(userId);
+    if (!player) throw new ForbiddenException('Player not found');
+
+    const playerPatches = await getPatchesAfterPropChanges<Player>(
+      player,
+      async (playerRef) => {
+        const item: IItem = player.action?.actionData.item;
+        if (!item) return;
+
+        await this.inventoryService.acquireItem(userId, item.itemId);
+
+        // clear it from the location action
+        this.playerService.setPlayerAction(playerRef, {
+          text: 'Took item!',
+          action: 'takeconfirm',
+          actionData: {
+            item,
+          },
+        });
+      },
+    );
 
     return playerPatches;
   }

@@ -1,12 +1,17 @@
 import { Injectable } from '@angular/core';
 import { environment } from '@environment';
-import { IJob, ILocation } from '@interfaces';
+import { ICollectible, IEquipment, IItem, IJob, ILocation } from '@interfaces';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ContentService {
-  private content = { locations: {}, jobs: {} };
+  private content = {
+    locations: {},
+    jobs: {},
+    collectibles: {},
+    equipment: {},
+  };
 
   public get locations(): Record<string, ILocation> {
     return this.content.locations;
@@ -14,6 +19,14 @@ export class ContentService {
 
   public get jobs(): Record<string, IJob> {
     return this.content.jobs;
+  }
+
+  public get collectibles(): Record<string, ICollectible> {
+    return this.content.collectibles;
+  }
+
+  public get equipment(): Record<string, IEquipment> {
+    return this.content.equipment;
   }
 
   constructor() {}
@@ -44,5 +57,17 @@ export class ContentService {
 
   public getJob(job: string): IJob | undefined {
     return this.jobs[job];
+  }
+
+  public getCollectible(collectible: string): ICollectible | undefined {
+    return this.collectibles[collectible];
+  }
+
+  public getEquipment(equipment: string): IEquipment | undefined {
+    return this.equipment[equipment];
+  }
+
+  public getItem(item: string): IItem | undefined {
+    return this.getCollectible(item) || this.getEquipment(item);
   }
 }

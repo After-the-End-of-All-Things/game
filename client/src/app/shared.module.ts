@@ -6,6 +6,10 @@ import { CardOnlineUsersComponent } from '@components/card-online-users/card-onl
 import { HeaderBarComponent } from '@components/header-bar/header-bar.component';
 import { HeroComponent } from '@components/hero/hero.component';
 import { IconComponent } from '@components/icon/icon.component';
+import { ItemElementsComponent } from '@components/item-elements/item-elements.component';
+import { ItemIconComponent } from '@components/item-icon/item-icon.component';
+import { ItemRarityComponent } from '@components/item-rarity/item-rarity.component';
+import { ItemStatsComponent } from '@components/item-stats/item-stats.component';
 import { ChooseAvatarModalComponent } from '@components/modals/choose-avatar/choose-avatar.component';
 import { StoreTextComponent } from '@components/store-text/store-text.component';
 import { RelativeTimePipe } from '@helpers/relativetime.pipe';
@@ -20,6 +24,10 @@ const components = [
   ChooseAvatarModalComponent,
   HeaderBarComponent,
   AvatarComponent,
+  ItemIconComponent,
+  ItemRarityComponent,
+  ItemStatsComponent,
+  ItemElementsComponent,
   RelativeTimePipe,
 ];
 

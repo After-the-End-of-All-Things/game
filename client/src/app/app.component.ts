@@ -31,6 +31,16 @@ export class AppComponent {
       url: 'me',
       icon: 'person',
     },
+    {
+      title: 'My Items',
+      url: 'inventory',
+      icon: 'file-tray-full',
+    },
+    {
+      title: 'My Equipment',
+      url: 'equipment',
+      icon: 'shirt',
+    },
   ];
 
   constructor() {}

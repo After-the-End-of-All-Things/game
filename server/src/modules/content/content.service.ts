@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 
-import { IJob, ILocation } from '@interfaces';
+import { ICollectible, IEquipment, IJob, ILocation } from '@interfaces';
 import * as fs from 'fs-extra';
 import { Logger } from 'nestjs-pino';
 
 @Injectable()
 export class ContentService {
-  public content = { locations: {}, jobs: {} };
+  public content = { locations: {}, jobs: {}, collectibles: {}, equipment: {} };
 
   private get locations(): Record<string, ILocation> {
     return this.content.locations;
@@ -14,6 +14,14 @@ export class ContentService {
 
   private get jobs(): Record<string, IJob> {
     return this.content.jobs;
+  }
+
+  private get collectibles(): Record<string, ICollectible> {
+    return this.content.collectibles;
+  }
+
+  private get equipment(): Record<string, IEquipment> {
+    return this.content.equipment;
   }
 
   constructor(private logger: Logger) {}
@@ -45,11 +53,35 @@ export class ContentService {
     await this.reloadContent();
   }
 
+  public allLocations(): ILocation[] {
+    return Object.values(this.locations);
+  }
+
   public getLocation(location: string): ILocation | undefined {
     return this.locations[location];
   }
 
+  public allJobs(): IJob[] {
+    return Object.values(this.jobs);
+  }
+
   public getJob(job: string): IJob | undefined {
     return this.jobs[job];
+  }
+
+  public allCollectibles(): ICollectible[] {
+    return Object.values(this.collectibles);
+  }
+
+  public getCollectible(collectible: string): ICollectible | undefined {
+    return this.collectibles[collectible];
+  }
+
+  public allEquipment(): IEquipment[] {
+    return Object.values(this.equipment);
+  }
+
+  public getEquipment(equipment: string): IEquipment | undefined {
+    return this.equipment[equipment];
   }
 }

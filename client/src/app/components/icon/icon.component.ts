@@ -20,20 +20,26 @@ export class IconComponent implements OnInit {
   async ngOnInit() {
     this.spritesheetUrl = await this.imageService.getImageUrl(
       this.spritesheet,
-      this.quality
+      this.quality,
     );
 
     this.assetLocation = this.getSpriteLocation();
   }
 
-  ngOnChanges() {
+  async ngOnChanges() {
+    this.spritesheetUrl = await this.imageService.getImageUrl(
+      this.spritesheet,
+      this.quality,
+    );
+
     this.assetLocation = this.getSpriteLocation();
   }
 
   private getSpriteLocation() {
     const divisor = 16;
-    const y = Math.floor(this.sprite / divisor);
-    const x = this.sprite % divisor;
+    const realSprite = this.sprite - 1;
+    const y = Math.floor(realSprite / divisor);
+    const x = realSprite % divisor;
     return `-${x * 64}px -${y * 64}px`;
   }
 }

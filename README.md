@@ -24,9 +24,14 @@ God, am I getting tired of typing that.
 
 ### Optional Server Environment Variables
 
+- `MAX_INVENTORY_SIZE` - the maximum inventory size per player (default: 100)
 - `BASE_EXPLORE_XP` - the amount of XP gained per explore (default: 5)
 - `BASE_EXPLORE_COINS` - the amount of coins gained per explore (default: 3)
 - `BASE_EXPLORE_SPEED` - the cooldown between explores (default: 5)
+- `WAVE_PERCENT_BOOST` - the percent boost to wave events happening (default: 0)
+- `ITEM_FIND_PERCENT_BOOST` - the percent boost to item find events happening (default: 0)
+- `COLLECTIBLE_FIND_PERCENT_BOOST` - the percent boost to collectible find events happening (default: 0)
+- `LOCATION_FIND_PERCENT_BOOST` - the percent boost to location find events happening (default: 0)
 
 ### Notes
 

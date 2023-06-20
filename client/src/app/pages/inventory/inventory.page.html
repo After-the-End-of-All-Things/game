@@ -1,0 +1,78 @@
+<ion-header [translucent]="true">
+  <app-header-bar></app-header-bar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <app-header-bar></app-header-bar>
+  </ion-header>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>
+              Inventory ({{ items.length }} / 100)
+            </ion-card-title>
+          </ion-card-header>
+
+          <ion-card-content>
+            <ngx-datatable
+              class="dark"
+              [rows]="items"
+              [rowHeight]="64"
+              [sorts]="[{ prop: 'name', dir: 'asc' }]"
+            >
+              <ngx-datatable-column name="" [maxWidth]="100" [sortable]="false">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  <app-item-icon [item]="row" [scale]="0.5"></app-item-icon>
+                </ng-template>
+              </ngx-datatable-column>
+
+              <ngx-datatable-column name="Item" [prop]="'name'">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  <div><strong>{{ row.name }}</strong></div>
+                </ng-template>
+              </ngx-datatable-column>
+
+              <ngx-datatable-column name="Rarity" [sortable]="false">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  <app-item-rarity [item]="row"></app-item-rarity>
+                </ng-template>
+              </ngx-datatable-column>
+
+              <ngx-datatable-column name="Level" [prop]="'levelRequirement'">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  Lv. {{ row.levelRequirement || 0 }}
+                </ng-template>
+              </ngx-datatable-column>
+
+              <ngx-datatable-column name="Value">
+                <ng-template
+                  let-row="row"
+                  ngx-datatable-cell-template
+                ></ng-template>
+              </ngx-datatable-column>
+
+              <!--
+              <ngx-datatable-column name="Stats" [sortable]="false">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  <app-item-stats [item]="row"></app-item-stats>
+                </ng-template>
+              </ngx-datatable-column>
+              -->
+
+              <ngx-datatable-column name="" [sortable]="false">
+                <ng-template
+                  let-row="row"
+                  ngx-datatable-cell-template
+                ></ng-template>
+              </ngx-datatable-column>
+            </ngx-datatable>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

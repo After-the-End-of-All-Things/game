@@ -3,6 +3,7 @@ import { EntityManager, EntityRepository } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { AchievementsService } from '@modules/achievements/achievements.service';
 import { DiscoveriesService } from '@modules/discoveries/discoveries.service';
+import { InventoryService } from '@modules/inventory/inventory.service';
 import { PlayerService } from '@modules/player/player.service';
 import { StatsService } from '@modules/stats/stats.service';
 import { BadRequestException, Injectable } from '@nestjs/common';
@@ -20,6 +21,7 @@ export class UserService {
     private readonly statsService: StatsService,
     private readonly discoveriesService: DiscoveriesService,
     private readonly achievementsService: AchievementsService,
+    private readonly inventoryService: InventoryService,
   ) {}
 
   async createUser(user: User): Promise<User | undefined> {
@@ -76,13 +78,15 @@ export class UserService {
     const achievements = await this.achievementsService.getAchievementsForUser(
       userId,
     );
+    const inventory = await this.inventoryService.getInventoryForUser(userId);
 
-    const fullUser = {
+    const fullUser: IFullUser = {
       user,
       player,
       stats,
       discoveries,
       achievements,
+      inventory,
     } as IFullUser;
 
     await this.migrateAccount(fullUser);

@@ -1,0 +1,50 @@
+
+:root {
+  --rarity-common: #999;
+  --rarity-uncommon: #050;
+  --rarity-unusual: #550;
+  --rarity-rare: #00b;
+  --rarity-masterful: #077;
+  --rarity-arcane: #505;
+  --rarity-epic: #b0b;
+  --rarity-divine: #66a;
+  --rarity-unique: #444;
+}
+
+.rarity {
+  &.common {
+    color: #999;
+  }
+
+  &.uncommon {
+    color: #01b301;
+  }
+
+  &.unusual {
+    color: #550;
+  }
+
+  &.rare {
+    color: #00b;
+  }
+
+  &.masterful {
+    color: #077;
+  }
+
+  &.arcane {
+    color: #505;
+  }
+
+  &.epic {
+    color: #b0b;
+  }
+
+  &.divine {
+    color: #66a;
+  }
+
+  &.unique {
+    color: #444;
+  }
+}

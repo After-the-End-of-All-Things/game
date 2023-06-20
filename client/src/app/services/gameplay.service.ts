@@ -30,4 +30,8 @@ export class GameplayService {
       isWaveBack,
     });
   }
+
+  takeitem() {
+    return this.http.post(`${environment.apiUrl}/gameplay/takeitem`, {});
+  }
 }

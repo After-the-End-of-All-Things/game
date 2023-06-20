@@ -34,6 +34,9 @@
               "src/_redirects"
             ],
             "styles": [
+              "./node_modules/@swimlane/ngx-datatable/index.css",
+              "./node_modules/@swimlane/ngx-datatable/themes/dark.css",
+              "./node_modules/@swimlane/ngx-datatable/assets/icons.css",
               "./node_modules/tippy.js/dist/tippy.css",
               "src/global.scss"
             ],

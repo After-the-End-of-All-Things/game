@@ -2,6 +2,7 @@ import { xpForLevel } from '@helpers/xp';
 import { Currency, ILocation, INotificationAction } from '@interfaces';
 import { EntityManager, EntityRepository } from '@mikro-orm/mongodb';
 import { InjectRepository } from '@mikro-orm/nestjs';
+import { ContentService } from '@modules/content/content.service';
 import { Discoveries } from '@modules/discoveries/discoveries.schema';
 import { DiscoveriesService } from '@modules/discoveries/discoveries.service';
 import { NotificationService } from '@modules/notification/notification.service';
@@ -13,7 +14,7 @@ import {
 } from '@nestjs/common';
 import { getPatchesAfterPropChanges } from '@utils/patches';
 import * as jsonpatch from 'fast-json-patch';
-import { random, sample } from 'lodash';
+import { sample } from 'lodash';
 
 @Injectable()
 export class PlayerService {
@@ -23,6 +24,7 @@ export class PlayerService {
     private readonly players: EntityRepository<Player>,
     private readonly discoveriesService: DiscoveriesService,
     private readonly notificationService: NotificationService,
+    private readonly contentService: ContentService,
   ) {}
 
   async getPlayerForUser(userId: string): Promise<Player | undefined> {
@@ -171,12 +173,7 @@ export class PlayerService {
     return found[0];
   }
 
-  async handleRandomWave(player: Player, location: ILocation) {
-    const waveChance = location.baseStats.npcEncounter;
-    const waveRoll = random(0, 100);
-
-    if (waveRoll > waveChance) return;
-
+  async handleRandomWave(player: Player) {
     const randomPlayer = await this.getRandomUserAtLocation(
       player.userId,
       player.location.current,
@@ -200,34 +197,72 @@ export class PlayerService {
   ) {
     const locations = location.connections;
     if (locations.length > 0) {
-      const discoverChance = location.baseStats.locationFind;
-      const discoverRoll = random(0, 100);
+      const discoveredLocation = sample(locations);
+      const didDiscover = this.discoveriesService.discoverLocation(
+        discoveries,
+        discoveredLocation.name,
+      );
 
-      if (discoverRoll <= discoverChance) {
-        const discoveredLocation = sample(locations);
-        const didDiscover = this.discoveriesService.discoverLocation(
-          discoveries,
-          discoveredLocation.name,
+      if (didDiscover) {
+        void this.notificationService.createNotificationForUser(
+          player.userId,
+          {
+            liveAt: new Date(),
+            text: `You have discovered ${discoveredLocation.name}!`,
+            actions: [
+              {
+                text: 'Travel',
+                action: 'navigate',
+                actionData: { url: '/travel' },
+              },
+            ],
+          },
+          1,
         );
-
-        if (didDiscover) {
-          void this.notificationService.createNotificationForUser(
-            player.userId,
-            {
-              liveAt: new Date(),
-              text: `You have discovered ${discoveredLocation.name}!`,
-              actions: [
-                {
-                  text: 'Travel',
-                  action: 'navigate',
-                  actionData: { url: '/travel' },
-                },
-              ],
-            },
-            1,
-          );
-        }
       }
     }
+  }
+
+  async handleFindCollectible(
+    player: Player,
+    location: ILocation,
+  ): Promise<any> {
+    const randomCollectibleForLocation = sample(
+      this.contentService
+        .allCollectibles()
+        .filter((coll) => coll.location === location.name),
+    );
+
+    if (!randomCollectibleForLocation) return;
+
+    this.setPlayerAction(player, {
+      text: 'Take',
+      action: 'collectible',
+      actionData: {
+        item: randomCollectibleForLocation,
+      },
+    });
+  }
+
+  async handleFindItem(player: Player, location: ILocation): Promise<any> {
+    const randomItemForLocation = sample(
+      this.contentService
+        .allEquipment()
+        .filter(
+          (item) =>
+            item.levelRequirement <= location.level &&
+            item.levelRequirement >= location.itemLevel,
+        ),
+    );
+
+    if (!randomItemForLocation) return;
+
+    this.setPlayerAction(player, {
+      text: 'Take',
+      action: 'item',
+      actionData: {
+        item: randomItemForLocation,
+      },
+    });
   }
 }
