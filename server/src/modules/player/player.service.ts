@@ -152,21 +152,38 @@ export class PlayerService {
     }
   }
 
-  async getRandomUserAtLocation(
+  async getRandomOnlinePlayerAtLocation(
     excludeUserId: string,
     locationName: string,
   ): Promise<Player> {
-    const found = await this.players.aggregate([
+    const currentTime = Date.now();
+
+    const found = await this.em.aggregate(Player, [
       {
-        $match: {
-          userId: { $ne: excludeUserId },
-          'location.current': locationName,
+        $lookup: {
+          from: 'user',
+          let: { userId: '$userId' },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $eq: [{ $toObjectId: '$$userId' }, '$_id'],
+                },
+              },
+            },
+          ],
+          as: 'user',
         },
       },
       {
-        $sample: {
-          size: 1,
+        $match: {
+          'location.current': locationName,
+          'user.onlineUntil': { $gt: currentTime },
+          userId: { $ne: excludeUserId },
         },
+      },
+      {
+        $sample: { size: 1 },
       },
     ]);
 
@@ -174,7 +191,7 @@ export class PlayerService {
   }
 
   async handleRandomWave(player: Player) {
-    const randomPlayer = await this.getRandomUserAtLocation(
+    const randomPlayer = await this.getRandomOnlinePlayerAtLocation(
       player.userId,
       player.location.current,
     );
