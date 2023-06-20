@@ -41,6 +41,11 @@ export class AppComponent {
       url: 'equipment',
       icon: 'shirt',
     },
+    {
+      title: 'My Collections',
+      url: 'collections',
+      icon: 'diamond',
+    },
   ];
 
   constructor() {}

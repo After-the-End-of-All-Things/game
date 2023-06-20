@@ -61,6 +61,14 @@ const routes: Routes = [
       ),
   },
   {
+    path: 'collections',
+    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('./pages/collections/collections.module').then(
+        (m) => m.CollectionsPageModule,
+      ),
+  },
+  {
     path: '**',
     redirectTo: '',
     pathMatch: 'full',
