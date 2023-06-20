@@ -3,6 +3,7 @@ import { ChooseAvatarModalComponent } from '@components/modals/choose-avatar/cho
 import { IPlayer, Stat } from '@interfaces';
 import { ModalController } from '@ionic/angular';
 import { Select } from '@ngxs/store';
+import { AuthService } from '@services/auth.service';
 import { ContentService } from '@services/content.service';
 import { PlayerService } from '@services/player.service';
 import { PlayerStore } from '@stores';
@@ -47,6 +48,7 @@ export class MePage implements OnInit {
     private modal: ModalController,
     private contentService: ContentService,
     private playerService: PlayerService,
+    public authService: AuthService,
   ) {}
 
   ngOnInit() {}

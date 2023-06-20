@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { Store } from '@ngxs/store';
 import { interval, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
 
@@ -10,9 +10,9 @@ import { environment } from '../../environments/environment';
 })
 export class AuthService {
   constructor(
-    private store: Store,
+    private router: Router,
     private http: HttpClient,
-    private jwtHelper: JwtHelperService
+    private jwtHelper: JwtHelperService,
   ) {}
 
   public init() {
@@ -59,7 +59,7 @@ export class AuthService {
           localStorage.setItem('lastEmail', email);
           localStorage.setItem('lastPassword', password);
           localStorage.setItem('token', res.access_token);
-        })
+        }),
       );
   }
 
@@ -69,5 +69,13 @@ export class AuthService {
       password,
       username,
     });
+  }
+
+  public logout() {
+    localStorage.removeItem('lastEmail');
+    localStorage.removeItem('lastPassword');
+    localStorage.removeItem('token');
+
+    this.router.navigate(['/login']);
   }
 }
