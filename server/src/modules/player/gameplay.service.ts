@@ -61,22 +61,27 @@ export class GameplayService {
     if (foundLocation) {
       const choices = [
         ...createFilledArray(
-          this.constantsService.wavePercentBoost + foundLocation.baseStats.wave,
+          (this.constantsService.wavePercentBoost +
+            foundLocation.baseStats.wave) |
+            0,
           'Wave',
         ),
         ...createFilledArray(
-          this.constantsService.locationFindPercentBoost +
-            foundLocation.baseStats.locationFind,
+          (this.constantsService.locationFindPercentBoost +
+            foundLocation.baseStats.locationFind) |
+            0,
           'Discovery',
         ),
         ...createFilledArray(
-          this.constantsService.itemFindPercentBoost +
-            foundLocation.baseStats.itemFind,
+          (this.constantsService.itemFindPercentBoost +
+            foundLocation.baseStats.itemFind) |
+            0,
           'Item',
         ),
         ...createFilledArray(
-          this.constantsService.collectibleFindPercentBoost +
-            foundLocation.baseStats.collectibleFind,
+          (this.constantsService.collectibleFindPercentBoost +
+            foundLocation.baseStats.collectibleFind) |
+            0,
           'Collectible',
         ),
       ];
