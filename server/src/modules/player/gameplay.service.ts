@@ -281,7 +281,11 @@ export class GameplayService {
     return playerPatches;
   }
 
-  async waveToPlayer(userId: string, targetUserId: string, isWaveBack = true) {
+  async waveToPlayer(
+    userId: string,
+    targetUserId: string,
+    isWaveBack: boolean,
+  ) {
     const player = await this.playerService.getPlayerForUser(userId);
     if (!player) throw new ForbiddenException('Player not found');
 
