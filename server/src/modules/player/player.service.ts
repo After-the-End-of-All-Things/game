@@ -205,7 +205,9 @@ export class PlayerService {
         player: randomPlayer,
       },
       url: 'gameplay/wave',
-      urlData: {},
+      urlData: {
+        targetUserId: randomPlayer.userId,
+      },
     });
   }
 
