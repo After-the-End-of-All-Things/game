@@ -17,7 +17,7 @@
     "start": "concurrently --kill-others -n client,server \"npm run start:client\" \"npm run start:server\"",
     "start:client": "cd client && npm run start",
     "start:server": "cd server && npm run start",
-    "setup": "concurrently --kill-others -n client,server \"npm run setup:client\" \"npm run setup:server\"",
+    "setup": "concurrently -n client,server \"npm run setup:client\" \"npm run setup:server\"",
     "setup:client": "cd client && npm run setup",
     "setup:server": "cd server && npm run setup",
     "util:buildvars": "ts-node utils/buildvars",

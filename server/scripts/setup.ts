@@ -6,9 +6,11 @@ const getData = async () => {
     const json = await data.json();
 
     fs.writeJsonSync('./content.json', json);
+
+    console.log('Data fetched and saved to ./content.json');
   } catch (e) {
     console.error(e);
   }
 };
 
-void getData();
+getData();
