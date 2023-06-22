@@ -7,6 +7,7 @@ God, am I getting tired of typing that.
 - use Node 18.15 or higher
 - `npm i` - install dependencies and run setup scripts
 - `npm start` - start the client and server
+- Install recommended VSCode extensions
 
 ## Useful Scripts
 
@@ -24,7 +25,7 @@ God, am I getting tired of typing that.
 
 ### Optional Server Environment Variables
 
-- `MAX_INVENTORY_SIZE` - the maximum inventory size per player (default: 100)
+- `MAX_INVENTORY_SIZE` - the maximum inventory size per player (default: 100e)
 - `BASE_EXPLORE_XP` - the amount of XP gained per explore (default: 5)
 - `BASE_EXPLORE_COINS` - the amount of coins gained per explore (default: 3)
 - `BASE_EXPLORE_SPEED` - the cooldown between explores (default: 5)
