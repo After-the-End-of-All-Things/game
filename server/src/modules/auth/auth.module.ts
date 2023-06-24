@@ -1,3 +1,4 @@
+import { ContentModule } from '@modules/content/content.module';
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule } from '../config/config.module';
@@ -11,6 +12,7 @@ import { JwtStrategy } from './jwt.strategy';
   imports: [
     UserModule,
     ConfigModule,
+    ContentModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [JWT_CONFIG],

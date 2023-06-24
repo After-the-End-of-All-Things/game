@@ -49,11 +49,18 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Log into an account' })
   @Post('login')
-  signIn(@Body() signInDto: Record<string, any>) {
+  signIn(
+    @Body() signInDto: Record<string, any>,
+    @Headers('user-agent') userAgent: string,
+  ) {
     if (!signInDto.password || !signInDto.email)
       throw new BadRequestException('Missing password or email');
 
-    return this.authService.signIn(signInDto.email, signInDto.password);
+    return this.authService.signIn(
+      signInDto.email,
+      signInDto.password,
+      userAgent,
+    );
   }
 
   @HttpCode(HttpStatus.OK)

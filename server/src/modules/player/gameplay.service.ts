@@ -6,6 +6,7 @@ import {
   IPatchUser,
   TrackedStat,
 } from '@interfaces';
+import { AnalyticsService } from '@modules/content/analytics.service';
 import { ConstantsService } from '@modules/content/constants.service';
 import { ContentService } from '@modules/content/content.service';
 import { Discoveries } from '@modules/discoveries/discoveries.schema';
@@ -34,6 +35,7 @@ export class GameplayService {
     private readonly notificationService: NotificationService,
     private readonly constantsService: ConstantsService,
     private readonly contentService: ContentService,
+    private readonly analyticsService: AnalyticsService,
   ) {}
 
   async explore(userId: string): Promise<Partial<IFullUser | IPatchUser>> {
@@ -95,6 +97,11 @@ export class GameplayService {
       }
 
       exploreResult = sample(choices);
+
+      this.analyticsService.sendDesignEvent(
+        userId,
+        `Gameplay:Explore:${foundLocation.name}:${exploreResult}`,
+      );
     }
 
     const playerPatches = await getPatchesAfterPropChanges<Player>(
@@ -222,6 +229,11 @@ export class GameplayService {
         'You have not discovered this location yet!',
       );
 
+    this.analyticsService.sendDesignEvent(
+      userId,
+      `Gameplay:Walk:${location.name}`,
+    );
+
     const playerPatches = await getPatchesAfterPropChanges<Player>(
       player,
       async (playerRef) => {
@@ -269,6 +281,11 @@ export class GameplayService {
         'You do not have enough coins to travel here!',
       );
     }
+
+    this.analyticsService.sendDesignEvent(
+      userId,
+      `Gameplay:Travel:${location.name}`,
+    );
 
     const playerPatches = await getPatchesAfterPropChanges<Player>(
       player,
@@ -368,6 +385,8 @@ export class GameplayService {
       );
     }
 
+    this.analyticsService.sendDesignEvent(userId, `Gameplay:Wave`);
+
     return { player: playerPatches };
   }
 
@@ -417,6 +436,8 @@ export class GameplayService {
 
     const coinsGained = itemValue(item);
     await this.inventoryService.removeInventoryItemForUser(userId, instanceId);
+
+    this.analyticsService.sendDesignEvent(userId, `Item:Sell:${item.itemId}`);
 
     const playerPatches = await getPatchesAfterPropChanges<Player>(
       player,

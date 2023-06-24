@@ -8,6 +8,7 @@ import * as bcrypt from 'bcrypt';
 import { sample } from 'lodash';
 
 import { IFullUser, IHasAccessToken } from '@interfaces';
+import { AnalyticsService } from '@modules/content/analytics.service';
 import { User } from '../user/user.schema';
 import { UserService } from '../user/user.service';
 
@@ -16,6 +17,7 @@ export class AuthService {
   constructor(
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
+    private readonly analyticsService: AnalyticsService,
   ) {}
 
   async signUp(
@@ -54,6 +56,7 @@ export class AuthService {
   async signIn(
     username: string,
     password: string,
+    userAgent: string,
   ): Promise<IFullUser | IHasAccessToken> {
     const user = await this.userService.findUserByEmail(username);
     if (!user) {
@@ -72,6 +75,8 @@ export class AuthService {
       username: user.username,
       discriminator: user.discriminator,
     };
+
+    this.analyticsService.startSession(user.id, { ua: userAgent });
 
     return {
       ...(await this.userService.getAllUserInformation(user._id.toString())),
