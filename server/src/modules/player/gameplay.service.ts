@@ -1,5 +1,11 @@
 import { itemValue } from '@helpers/item';
-import { IItem, ILocation, TrackedStat } from '@interfaces';
+import {
+  IFullUser,
+  IItem,
+  ILocation,
+  IPatchUser,
+  TrackedStat,
+} from '@interfaces';
 import { ConstantsService } from '@modules/content/constants.service';
 import { ContentService } from '@modules/content/content.service';
 import { Discoveries } from '@modules/discoveries/discoveries.schema';
@@ -11,7 +17,6 @@ import { PlayerService } from '@modules/player/player.service';
 import { StatsService } from '@modules/stats/stats.service';
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { getPatchesAfterPropChanges } from '@utils/patches';
-import * as jsonpatch from 'fast-json-patch';
 import { sample } from 'lodash';
 
 type ExploreResult = 'Nothing' | 'Wave' | 'Item' | 'Discovery' | 'Collectible';
@@ -31,10 +36,7 @@ export class GameplayService {
     private readonly contentService: ContentService,
   ) {}
 
-  async explore(userId: string): Promise<{
-    player: jsonpatch.Operation[];
-    discoveries: jsonpatch.Operation[];
-  }> {
+  async explore(userId: string): Promise<Partial<IFullUser | IPatchUser>> {
     const player = await this.playerService.getPlayerForUser(userId);
     if (!player) throw new ForbiddenException('Player not found');
 
@@ -191,7 +193,7 @@ export class GameplayService {
   async walkToLocation(
     userId: string,
     locationName: string,
-  ): Promise<jsonpatch.Operation[]> {
+  ): Promise<Partial<IFullUser | IPatchUser>> {
     const player = await this.playerService.getPlayerForUser(userId);
     if (!player) throw new ForbiddenException('Player not found');
 
@@ -231,10 +233,13 @@ export class GameplayService {
       },
     );
 
-    return playerPatches;
+    return { player: playerPatches };
   }
 
-  async travelToLocation(userId: string, locationName: string): Promise<any> {
+  async travelToLocation(
+    userId: string,
+    locationName: string,
+  ): Promise<Partial<IFullUser | IPatchUser>> {
     const player = await this.playerService.getPlayerForUser(userId);
     if (!player) throw new ForbiddenException('Player not found');
 
@@ -279,14 +284,14 @@ export class GameplayService {
       },
     );
 
-    return playerPatches;
+    return { player: playerPatches };
   }
 
   async waveToPlayer(
     userId: string,
     targetUserId: string,
     isWaveBack: boolean,
-  ) {
+  ): Promise<Partial<IFullUser | IPatchUser>> {
     const player = await this.playerService.getPlayerForUser(userId);
     if (!player) throw new ForbiddenException('Player not found');
 
@@ -363,10 +368,10 @@ export class GameplayService {
       );
     }
 
-    return playerPatches;
+    return { player: playerPatches };
   }
 
-  async takeItem(userId: string) {
+  async takeItem(userId: string): Promise<Partial<IFullUser | IPatchUser>> {
     const player = await this.playerService.getPlayerForUser(userId);
     if (!player) throw new ForbiddenException('Player not found');
 
@@ -389,10 +394,13 @@ export class GameplayService {
       },
     );
 
-    return playerPatches;
+    return { player: playerPatches };
   }
 
-  async sellItem(userId: string, instanceId: string) {
+  async sellItem(
+    userId: string,
+    instanceId: string,
+  ): Promise<Partial<IFullUser | IPatchUser>> {
     if (!instanceId) throw new ForbiddenException('Item instance not found!');
 
     const player = await this.playerService.getPlayerForUser(userId);

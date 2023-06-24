@@ -1,3 +1,4 @@
+import { IFullUser, IPatchUser } from '@interfaces';
 import { JwtAuthGuard } from '@modules/auth/jwt.guard';
 import { PlayerService } from '@modules/player/player.service';
 import { Body, Controller, Patch, UseGuards } from '@nestjs/common';
@@ -12,14 +13,12 @@ export class PlayerController {
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Get the online users count' })
   @Patch('cosmetics/portrait')
-  async changePortrait(@User() user, @Body('portrait') portrait: number) {
+  async changePortrait(
+    @User() user,
+    @Body('portrait') portrait: number,
+  ): Promise<Partial<IFullUser | IPatchUser>> {
     const portraitId = Math.round(Math.min(107, Math.max(0, portrait)));
 
-    return {
-      player: await this.playerService.updatePortraitForPlayer(
-        user.userId,
-        portraitId,
-      ),
-    };
+    return this.playerService.updatePortraitForPlayer(user.userId, portraitId);
   }
 }

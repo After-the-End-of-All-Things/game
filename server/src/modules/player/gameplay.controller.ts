@@ -1,3 +1,4 @@
+import { IFullUser, IPatchUser } from '@interfaces';
 import { JwtAuthGuard } from '@modules/auth/jwt.guard';
 import { InventoryService } from '@modules/inventory/inventory.service';
 import { GameplayService } from '@modules/player/gameplay.service';
@@ -22,29 +23,28 @@ export class GameplayController {
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Explore the current location' })
   @Post('explore')
-  async explore(@User() user) {
+  async explore(@User() user): Promise<Partial<IFullUser | IPatchUser>> {
     return this.gameplayService.explore(user.userId);
   }
 
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Set a walking path to a new location' })
   @Post('walk')
-  async walk(@User() user, @Body('location') location: string) {
-    return {
-      player: await this.gameplayService.walkToLocation(user.userId, location),
-    };
+  async walk(
+    @User() user,
+    @Body('location') location: string,
+  ): Promise<Partial<IFullUser | IPatchUser>> {
+    return this.gameplayService.walkToLocation(user.userId, location);
   }
 
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Travel immediately to a new location' })
   @Post('travel')
-  async travel(@User() user, @Body('location') location: string) {
-    return {
-      player: await this.gameplayService.travelToLocation(
-        user.userId,
-        location,
-      ),
-    };
+  async travel(
+    @User() user,
+    @Body('location') location: string,
+  ): Promise<Partial<IFullUser | IPatchUser>> {
+    return this.gameplayService.travelToLocation(user.userId, location);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -54,33 +54,32 @@ export class GameplayController {
     @User() user,
     @Body('targetUserId') targetUserId: string,
     @Body('isWaveBack') isWaveBack: boolean,
-  ) {
-    return {
-      player: await this.gameplayService.waveToPlayer(
-        user.userId,
-        targetUserId,
-        isWaveBack,
-      ),
-    };
+  ): Promise<Partial<IFullUser | IPatchUser>> {
+    return this.gameplayService.waveToPlayer(
+      user.userId,
+      targetUserId,
+      isWaveBack,
+    );
   }
 
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Explore Event: Take an item' })
   @Post('takeitem')
-  async takeItem(@User() user) {
+  async takeItem(@User() user): Promise<Partial<IFullUser | IPatchUser>> {
     if (await this.inventoryService.isInventoryFull(user.userId)) {
       throw new BadRequestException('Inventory is full.');
     }
 
-    return {
-      player: await this.gameplayService.takeItem(user.userId),
-    };
+    return this.gameplayService.takeItem(user.userId);
   }
 
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Sell an item' })
   @Post('sellitem')
-  async sellItem(@User() user, @Body('instanceId') instanceId: string) {
-    return await this.gameplayService.sellItem(user.userId, instanceId);
+  async sellItem(
+    @User() user,
+    @Body('instanceId') instanceId: string,
+  ): Promise<Partial<IFullUser | IPatchUser>> {
+    return this.gameplayService.sellItem(user.userId, instanceId);
   }
 }

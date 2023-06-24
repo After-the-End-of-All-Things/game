@@ -1,5 +1,11 @@
 import { xpForLevel } from '@helpers/xp';
-import { Currency, ILocation, INotificationAction } from '@interfaces';
+import {
+  Currency,
+  IFullUser,
+  ILocation,
+  INotificationAction,
+  IPatchUser,
+} from '@interfaces';
 import { EntityManager, EntityRepository } from '@mikro-orm/mongodb';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { ContentService } from '@modules/content/content.service';
@@ -13,7 +19,6 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { getPatchesAfterPropChanges } from '@utils/patches';
-import * as jsonpatch from 'fast-json-patch';
 import { sample } from 'lodash';
 
 @Injectable()
@@ -55,13 +60,20 @@ export class PlayerService {
   async updatePortraitForPlayer(
     userId: string,
     portrait: number,
-  ): Promise<jsonpatch.Operation[]> {
+  ): Promise<Partial<IFullUser | IPatchUser>> {
     const player = await this.getPlayerForUser(userId);
     if (!player) throw new ForbiddenException('Player not found');
 
-    return getPatchesAfterPropChanges<Player>(player, async (playerRef) => {
-      playerRef.cosmetics = { ...player.cosmetics, portrait };
-    });
+    const playerPatches = await getPatchesAfterPropChanges<Player>(
+      player,
+      async (playerRef) => {
+        playerRef.cosmetics = { ...player.cosmetics, portrait };
+      },
+    );
+
+    return {
+      player: playerPatches,
+    };
   }
 
   gainXp(player: Player, xp = 1) {

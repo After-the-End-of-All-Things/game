@@ -1,3 +1,4 @@
+import { IFullUser, IPatchUser } from '@interfaces';
 import { EntityManager, EntityRepository } from '@mikro-orm/mongodb';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { ConstantsService } from '@modules/content/constants.service';
@@ -43,8 +44,10 @@ export class InventoryService {
     return inventory;
   }
 
-  async getInventoryItemsForUser(userId: string): Promise<InventoryItem[]> {
-    return this.inventoryItems.find({ userId });
+  async getInventoryItemsForUser(
+    userId: string,
+  ): Promise<Partial<IFullUser | IPatchUser>> {
+    return { items: await this.inventoryItems.find({ userId }) };
   }
 
   async getInventoryItemForUser(
