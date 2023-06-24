@@ -6,6 +6,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Param,
   Post,
   UseGuards,
 } from '@nestjs/common';
@@ -55,15 +56,21 @@ export class GameplayController {
   @ApiOperation({ summary: 'Explore Event: Wave at another player' })
   @Post('wave')
   @RollbarHandler()
-  async wave(
+  async wave(@User() user): Promise<Partial<IFullUser | IPatchUser>> {
+    return this.gameplayService.waveToPlayerFromExplore(user.userId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Explore Event: Wave at another player' })
+  @Post('wave/:id')
+  @RollbarHandler()
+  async waveFromNotification(
     @User() user,
-    @Body('targetUserId') targetUserId: string,
-    @Body('isWaveBack') isWaveBack: boolean,
+    @Param('id') notificationId: string,
   ): Promise<Partial<IFullUser | IPatchUser>> {
-    return this.gameplayService.waveToPlayer(
+    return this.gameplayService.waveToPlayerFromNotification(
       user.userId,
-      targetUserId,
-      isWaveBack,
+      notificationId,
     );
   }
 

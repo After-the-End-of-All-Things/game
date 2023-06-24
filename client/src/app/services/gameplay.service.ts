@@ -24,13 +24,6 @@ export class GameplayService {
     });
   }
 
-  wave(targetUserId: string, isWaveBack = true) {
-    return this.http.post(`${environment.apiUrl}/gameplay/wave`, {
-      targetUserId,
-      isWaveBack,
-    });
-  }
-
   sellItem(instanceId: string) {
     return this.http.post(`${environment.apiUrl}/gameplay/sellitem`, {
       instanceId,

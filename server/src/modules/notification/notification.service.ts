@@ -16,6 +16,13 @@ export class NotificationService {
     return (await this.notifications.find({ userId })).reverse();
   }
 
+  async getNotificationForUser(
+    userId: string,
+    notificationId: string,
+  ): Promise<Notification | null> {
+    return this.notifications.findOne({ userId, id: notificationId });
+  }
+
   async getNotificationsForUserAfter(
     userId: string,
     after: Date,

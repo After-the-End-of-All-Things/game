@@ -45,9 +45,19 @@ export class Notification implements INotification {
     liveAt = new Date(),
     expiresAfterHours = 24 * 7,
   ) {
+    this._id = new ObjectId();
+
     this.userId = userId;
     this.text = text;
     this.actions = actions;
+
+    if (this.actions) {
+      this.actions.forEach((action) => {
+        if (!action.url) return;
+
+        action.url = `${action.url}/${this.id}`;
+      });
+    }
 
     this.read = false;
 

@@ -19,6 +19,11 @@ export class ActionsService {
   ) {}
 
   doAction(action: INotificationAction, notification?: INotification) {
+    if (action.url) {
+      // we never send data here, it's inferred server side
+      this.http.post(`${environment.apiUrl}/${action.url}`, {}).subscribe();
+    }
+
     if (notification) {
       this.notificationService.clearActions(notification.id || '').subscribe();
       this.store.dispatch(new ClearNotificationActions(notification.id || ''));
@@ -26,12 +31,6 @@ export class ActionsService {
 
     if (action.action === 'navigate') {
       this.router.navigate([action.actionData.url]);
-    }
-
-    if (action.url) {
-      this.http
-        .post(`${environment.apiUrl}/${action.url}`, action.urlData || {})
-        .subscribe();
     }
   }
 }

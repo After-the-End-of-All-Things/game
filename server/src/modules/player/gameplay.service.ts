@@ -3,6 +3,7 @@ import {
   IFullUser,
   IItem,
   ILocation,
+  INotificationAction,
   IPatchUser,
   TrackedStat,
 } from '@interfaces';
@@ -304,13 +305,43 @@ export class GameplayService {
     return { player: playerPatches };
   }
 
-  async waveToPlayer(
+  async waveToPlayerFromExplore(
     userId: string,
-    targetUserId: string,
-    isWaveBack: boolean,
   ): Promise<Partial<IFullUser | IPatchUser>> {
     const player = await this.playerService.getPlayerForUser(userId);
     if (!player) throw new ForbiddenException('Player not found');
+
+    if (!player.action) throw new ForbiddenException('Player has no action');
+
+    return this.waveToPlayer(userId, player, player.action);
+  }
+
+  async waveToPlayerFromNotification(
+    userId: string,
+    notificationId: string,
+  ): Promise<Partial<IFullUser | IPatchUser>> {
+    const player = await this.playerService.getPlayerForUser(userId);
+    if (!player) throw new ForbiddenException('Player not found');
+
+    const notification = await this.notificationService.getNotificationForUser(
+      userId,
+      notificationId,
+    );
+    if (!notification) throw new ForbiddenException('Notification not found');
+
+    const notificationAction = notification.actions?.[0];
+    if (!notificationAction)
+      throw new ForbiddenException('Notification has no actions');
+
+    return this.waveToPlayer(userId, player, notificationAction);
+  }
+
+  private async waveToPlayer(
+    userId: string,
+    player: Player,
+    action: INotificationAction,
+  ) {
+    const { targetUserId, isWaveBack } = action?.urlData ?? {};
 
     const otherPlayer = await this.playerService.getPlayerForUser(targetUserId);
     if (!otherPlayer) throw new ForbiddenException('Target player not found');
