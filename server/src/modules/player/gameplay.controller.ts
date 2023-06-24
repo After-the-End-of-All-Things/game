@@ -11,6 +11,7 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { User } from '@utils/user.decorator';
+import { RollbarHandler } from 'nestjs-rollbar';
 
 @ApiBearerAuth()
 @Controller('gameplay')
@@ -23,6 +24,7 @@ export class GameplayController {
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Explore the current location' })
   @Post('explore')
+  @RollbarHandler()
   async explore(@User() user): Promise<Partial<IFullUser | IPatchUser>> {
     return this.gameplayService.explore(user.userId);
   }
@@ -30,6 +32,7 @@ export class GameplayController {
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Set a walking path to a new location' })
   @Post('walk')
+  @RollbarHandler()
   async walk(
     @User() user,
     @Body('location') location: string,
@@ -40,6 +43,7 @@ export class GameplayController {
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Travel immediately to a new location' })
   @Post('travel')
+  @RollbarHandler()
   async travel(
     @User() user,
     @Body('location') location: string,
@@ -50,6 +54,7 @@ export class GameplayController {
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Explore Event: Wave at another player' })
   @Post('wave')
+  @RollbarHandler()
   async wave(
     @User() user,
     @Body('targetUserId') targetUserId: string,
@@ -65,6 +70,7 @@ export class GameplayController {
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Explore Event: Take an item' })
   @Post('takeitem')
+  @RollbarHandler()
   async takeItem(@User() user): Promise<Partial<IFullUser | IPatchUser>> {
     if (await this.inventoryService.isInventoryFull(user.userId)) {
       throw new BadRequestException('Inventory is full.');
@@ -76,6 +82,7 @@ export class GameplayController {
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Sell an item' })
   @Post('sellitem')
+  @RollbarHandler()
   async sellItem(
     @User() user,
     @Body('instanceId') instanceId: string,

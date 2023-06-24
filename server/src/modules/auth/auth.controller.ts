@@ -11,6 +11,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
+import { RollbarHandler } from 'nestjs-rollbar';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt.guard';
 
@@ -25,6 +26,7 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Register a new account' })
   @Post('register')
+  @RollbarHandler()
   signUp(@Body() signInDto: Record<string, any>) {
     if (!signInDto.username || !signInDto.password || !signInDto.email)
       throw new BadRequestException('Missing username, password or email');
@@ -49,6 +51,7 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Log into an account' })
   @Post('login')
+  @RollbarHandler()
   signIn(
     @Body() signInDto: Record<string, any>,
     @Headers('user-agent') userAgent: string,
@@ -67,6 +70,7 @@ export class AuthController {
   @ApiOperation({ summary: 'Refresh auth token' })
   @Get('refresh')
   @UseGuards(JwtAuthGuard)
+  @RollbarHandler()
   refreshToken(@Headers('authorization') authHeader: string) {
     return this.authService.newJwt(authHeader.split(' ')[1].trim());
   }

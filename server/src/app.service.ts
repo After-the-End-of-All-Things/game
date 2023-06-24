@@ -1,8 +1,10 @@
 import { Injectable } from '@nestjs/common';
+import { RollbarHandler } from 'nestjs-rollbar';
 
 @Injectable()
 export class AppService {
+  @RollbarHandler()
   getHello(): string {
-    return 'Hello World!';
+    throw new Error('Test error');
   }
 }

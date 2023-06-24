@@ -7,6 +7,10 @@ export const environment = {
   apiUrl: 'http://localhost:3000',
   assetsUrl: 'https://assets.ateoat.com',
   contentUrl: 'https://content.ateoat.com',
+  rollbar: {
+    environment: 'local',
+    apiKey: 'da97b1e738be4048adf922e88706494c',
+  },
 };
 
 /*

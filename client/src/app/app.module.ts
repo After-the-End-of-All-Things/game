@@ -1,5 +1,10 @@
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
-import { APP_INITIALIZER, NgModule, isDevMode } from '@angular/core';
+import {
+  APP_INITIALIZER,
+  ErrorHandler,
+  NgModule,
+  isDevMode,
+} from '@angular/core';
 import { RouteReuseStrategy } from '@angular/router';
 import { JwtModule } from '@auth0/angular-jwt';
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
@@ -18,6 +23,7 @@ import { DataGrabberInterceptor } from '@helpers/data-grabber.interceptor';
 import { AuthService } from '@services/auth.service';
 import { ContentService } from '@services/content.service';
 import { NotificationsService } from '@services/notifications.service';
+import { RollbarErrorHandler, RollbarService } from '@services/rollbar.service';
 import { NgxTippyModule } from 'ngx-tippy-wrapper';
 import * as Stores from '../stores';
 import * as Migrations from '../stores/migrations';
@@ -86,16 +92,25 @@ export function getAuthToken() {
           authService: AuthService,
           contentService: ContentService,
           notificationService: NotificationsService,
+          rollbarService: RollbarService,
         ) =>
         async () => {
           await assetService.init();
           await contentService.init();
           await authService.init();
           await notificationService.init();
+          await rollbarService.init();
         },
-      deps: [AssetService, AuthService, ContentService, NotificationsService],
+      deps: [
+        AssetService,
+        AuthService,
+        ContentService,
+        NotificationsService,
+        RollbarService,
+      ],
       multi: true,
     },
+    { provide: ErrorHandler, useClass: RollbarErrorHandler },
   ],
   bootstrap: [AppComponent],
 })
