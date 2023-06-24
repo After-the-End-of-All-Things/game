@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { ICollectible, IEquipment, IJob, ILocation } from '@interfaces';
+import { ICollectible, IEquipment, IItem, IJob, ILocation } from '@interfaces';
 import * as fs from 'fs-extra';
 import { Logger } from 'nestjs-pino';
 
@@ -83,5 +83,9 @@ export class ContentService {
 
   public getEquipment(equipment: string): IEquipment | undefined {
     return this.equipment[equipment];
+  }
+
+  public getItem(item: string): IItem | undefined {
+    return this.equipment[item] || this.collectibles[item];
   }
 }

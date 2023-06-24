@@ -1,3 +1,4 @@
+import { itemValue } from '@helpers/item';
 import { IItem, ILocation, TrackedStat } from '@interfaces';
 import { ConstantsService } from '@modules/content/constants.service';
 import { ContentService } from '@modules/content/content.service';
@@ -389,5 +390,33 @@ export class GameplayService {
     );
 
     return playerPatches;
+  }
+
+  async sellItem(userId: string, instanceId: string) {
+    if (!instanceId) throw new ForbiddenException('Item instance not found!');
+
+    const player = await this.playerService.getPlayerForUser(userId);
+    if (!player) throw new ForbiddenException('Player not found');
+
+    const itemRef = await this.inventoryService.getInventoryItemForUser(
+      userId,
+      instanceId,
+    );
+    if (!itemRef) throw new ForbiddenException('Item ref not found!');
+
+    const item = this.contentService.getItem(itemRef.itemId);
+    if (!item) throw new ForbiddenException('Item existence not found!');
+
+    const coinsGained = itemValue(item);
+    await this.inventoryService.removeInventoryItemForUser(userId, instanceId);
+
+    const playerPatches = await getPatchesAfterPropChanges<Player>(
+      player,
+      async (playerRef) => {
+        this.playerService.gainCoins(playerRef, coinsGained);
+      },
+    );
+
+    return { player: playerPatches };
   }
 }

@@ -67,7 +67,7 @@ export class GameplayController {
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Explore Event: Take an item' })
   @Post('takeitem')
-  async takeitem(@User() user) {
+  async takeItem(@User() user) {
     if (await this.inventoryService.isInventoryFull(user.userId)) {
       throw new BadRequestException('Inventory is full.');
     }
@@ -75,5 +75,12 @@ export class GameplayController {
     return {
       player: await this.gameplayService.takeItem(user.userId),
     };
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Sell an item' })
+  @Post('sellitem')
+  async sellItem(@User() user, @Body('instanceId') instanceId: string) {
+    return await this.gameplayService.sellItem(user.userId, instanceId);
   }
 }

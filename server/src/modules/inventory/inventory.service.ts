@@ -47,6 +47,23 @@ export class InventoryService {
     return this.inventoryItems.find({ userId });
   }
 
+  async getInventoryItemForUser(
+    userId: string,
+    instanceId: string,
+  ): Promise<InventoryItem | null> {
+    return this.inventoryItems.findOne({ userId, instanceId });
+  }
+
+  async removeInventoryItemForUser(
+    userId: string,
+    instanceId: string,
+  ): Promise<any> {
+    const item = await this.getInventoryItemForUser(userId, instanceId);
+    if (!item) return;
+
+    return this.em.remove<InventoryItem>(item);
+  }
+
   async isInventoryFull(userId: string): Promise<boolean> {
     const count = await this.inventoryItems.count({
       userId,

@@ -30,4 +30,10 @@ export class GameplayService {
       isWaveBack,
     });
   }
+
+  sellItem(instanceId: string) {
+    return this.http.post(`${environment.apiUrl}/gameplay/sellitem`, {
+      instanceId,
+    });
+  }
 }

@@ -22,9 +22,15 @@
               class="dark"
               [rows]="items"
               [rowHeight]="64"
+              [columnMode]="'force'"
               [sorts]="[{ prop: 'name', dir: 'asc' }]"
             >
-              <ngx-datatable-column name="" [maxWidth]="100" [sortable]="false">
+              <ngx-datatable-column
+                name=""
+                [maxWidth]="100"
+                [minWidth]="100"
+                [sortable]="false"
+              >
                 <ng-template let-row="row" ngx-datatable-cell-template>
                   <app-item-icon [item]="row" size="small"></app-item-icon>
                 </ng-template>
@@ -48,11 +54,10 @@
                 </ng-template>
               </ngx-datatable-column>
 
-              <ngx-datatable-column name="Value">
-                <ng-template
-                  let-row="row"
-                  ngx-datatable-cell-template
-                ></ng-template>
+              <ngx-datatable-column name="Value" [comparator]="valueComparison">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  {{ getValueForItem(row) | number }}
+                </ng-template>
               </ngx-datatable-column>
 
               <!--
@@ -63,11 +68,40 @@
               </ngx-datatable-column>
               -->
 
-              <ngx-datatable-column name="" [sortable]="false">
+              <ngx-datatable-column name="" [maxWidth]="90" [sortable]="false">
                 <ng-template
                   let-row="row"
+                  let-rowIndex="rowIndex"
                   ngx-datatable-cell-template
-                ></ng-template>
+                >
+                  <ion-button
+                    class="icon-only"
+                    size="small"
+                    color="tertiary"
+                    (click)="popover.present($event)"
+                  >
+                    <ion-icon name="ellipsis-vertical"></ion-icon>
+                  </ion-button>
+
+                  <ion-popover
+                    #popover
+                    [showBackdrop]="false"
+                    class="inventory-item-actions"
+                  >
+                    <ng-template>
+                      <ion-content>
+                        <ion-list class="action-list">
+                          <ion-item
+                            class="cursor-pointer"
+                            (click)="sellItem(row, rowIndex); popover.dismiss()"
+                          >
+                            Sell
+                          </ion-item>
+                        </ion-list>
+                      </ion-content>
+                    </ng-template>
+                  </ion-popover>
+                </ng-template>
               </ngx-datatable-column>
             </ngx-datatable>
           </ion-card-content>
