@@ -30,9 +30,9 @@
 
         <ion-card class="location-card" *ngIf="locationInfo">
           <div class="image-container">
-            <ion-img
-              [src]="'https://assets.ateoat.com/assets/backgrounds/' + locationInfo.background + '.webp'"
-            ></ion-img>
+            <app-background-art
+              [sprite]="locationInfo.background"
+            ></app-background-art>
           </div>
 
           <ion-card-content>

@@ -134,10 +134,10 @@
         class="collect-col"
         *ngFor="let background of allBackgrounds; trackBy: trackBy"
       >
-        <ion-img
+        <app-background-art
           [class.uncollected]="!discoveries.backgrounds?.[background]"
-          [src]="'https://assets.ateoat.com/assets/backgrounds/' + background.toString().padStart(4, '0') + '.webp'"
-        ></ion-img>
+          [sprite]="background.toString().padStart(4, '0')"
+        ></app-background-art>
       </ion-col>
     </ion-row>
   </div>
