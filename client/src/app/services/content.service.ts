@@ -13,6 +13,9 @@ export class ContentService {
     equipment: {},
   };
 
+  public readonly maxPortraits = 107;
+  public readonly maxBackgrounds = 18;
+
   public get locations(): Record<string, ILocation> {
     return this.content.locations;
   }
@@ -63,8 +66,16 @@ export class ContentService {
     return this.collectibles[collectible];
   }
 
+  public getAllCollectibles(): ICollectible[] {
+    return Object.values(this.collectibles);
+  }
+
   public getEquipment(equipment: string): IEquipment | undefined {
     return this.equipment[equipment];
+  }
+
+  public getAllEquipment(): IEquipment[] {
+    return Object.values(this.equipment);
   }
 
   public getItem(item: string): IItem | undefined {

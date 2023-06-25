@@ -1,5 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
+import { ContentService } from '@services/content.service';
+import { UserService } from '@services/user.service';
 
 @Component({
   selector: 'app-choose-avatar',
@@ -10,17 +12,24 @@ export class ChooseAvatarModalComponent implements OnInit {
   @Input() defaultPortrait!: number;
   @Input() selectedPortrait!: number;
 
-  public readonly defaultSelectablePortraits = [
-    1, 2, 4, 5, 6, 16, 17, 18, 50, 64, 101,
-  ].map((x) => x + 1);
+  public selectablePortraits: number[] = [];
 
-  public readonly allPortraits = Array(107)
+  public readonly allPortraits = Array(this.contentService.maxPortraits)
     .fill(0)
     .map((_, i) => i + 1);
 
-  constructor(private modalCtrl: ModalController) {}
+  constructor(
+    private modalCtrl: ModalController,
+    private userService: UserService,
+    private contentService: ContentService,
+  ) {}
 
   ngOnInit() {
+    this.userService.getDiscoveries().subscribe(({ discoveries }: any) => {
+      const portraits = discoveries.portraits || {};
+      this.selectablePortraits = Object.keys(portraits).map((x) => +x + 1);
+    });
+
     this.selectedPortrait = this.defaultPortrait + 1;
   }
 

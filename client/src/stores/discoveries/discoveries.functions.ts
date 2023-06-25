@@ -11,6 +11,7 @@ export const defaultStore: () => IDiscoveriesStore = () => ({
     portraits: {},
     borders: {},
     collectibles: {},
+    items: {},
   },
 });
 

@@ -4,4 +4,5 @@ export interface IDiscoveries {
   backgrounds: Record<string, boolean>;
   borders: Record<string, boolean>;
   collectibles: Record<string, boolean>;
+  items: Record<string, boolean>;
 }

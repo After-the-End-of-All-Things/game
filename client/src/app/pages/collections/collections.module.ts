@@ -6,6 +6,7 @@ import { IonicModule } from '@ionic/angular';
 
 import { CollectionsPageRoutingModule } from './collections-routing.module';
 
+import { NgxTippyModule } from 'ngx-tippy-wrapper';
 import { SharedModule } from 'src/app/shared.module';
 import { CollectionsPage } from './collections.page';
 
@@ -16,6 +17,7 @@ import { CollectionsPage } from './collections.page';
     IonicModule,
     CollectionsPageRoutingModule,
     SharedModule,
+    NgxTippyModule,
   ],
   declarations: [CollectionsPage],
 })

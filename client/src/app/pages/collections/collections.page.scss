@@ -1,0 +1,36 @@
+
+ion-segment {
+  margin-bottom: 1em;
+}
+
+.collectibles, .items {
+  .collect-col {
+    min-width: 64px;
+  }
+}
+
+.backgrounds {
+  .collect-col {
+    min-width: 128px;
+    max-width: 128px;
+  }
+}
+
+.collect-row {
+  flex-wrap: wrap;
+
+  .collect-col {
+    margin: 2px;
+    max-width: 64px;
+  }
+}
+
+ion-avatar {
+  overflow: hidden;
+}
+
+.uncollected {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+

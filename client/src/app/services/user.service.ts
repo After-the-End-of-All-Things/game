@@ -11,4 +11,8 @@ export class UserService {
   public getOnlineUsers() {
     return this.http.get(`${environment.apiUrl}/user/online`);
   }
+
+  public getDiscoveries() {
+    return this.http.get(`${environment.apiUrl}/discoveries/mine`);
+  }
 }

@@ -6,4 +6,139 @@
   <ion-header collapse="condense">
     <app-header-bar></app-header-bar>
   </ion-header>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-card>
+          <ion-card-content>
+            <ion-segment
+              value="collectibles"
+              (ionChange)="selectCategory($event)"
+            >
+              <ion-segment-button value="collectibles">
+                <ion-label>Collectibles</ion-label>
+              </ion-segment-button>
+
+              <ion-segment-button value="items">
+                <ion-label>Items</ion-label>
+              </ion-segment-button>
+
+              <ion-segment-button value="portraits">
+                <ion-label>Portraits</ion-label>
+              </ion-segment-button>
+
+              <ion-segment-button value="backgrounds">
+                <ion-label>Backgrounds</ion-label>
+              </ion-segment-button>
+            </ion-segment>
+
+            <ng-container *ngIf="discoveries$ | async as discoveries">
+              <ng-container [ngSwitch]="selectedCategory">
+                <ng-container *ngSwitchCase="'collectibles'">
+                  <ng-container
+                    *ngTemplateOutlet="collectibles; context: { discoveries }"
+                  ></ng-container>
+                </ng-container>
+
+                <ng-container *ngSwitchCase="'items'">
+                  <ng-container
+                    *ngTemplateOutlet="items; context: { discoveries }"
+                  ></ng-container>
+                </ng-container>
+
+                <ng-container *ngSwitchCase="'portraits'">
+                  <ng-container
+                    *ngTemplateOutlet="portraits; context: { discoveries }"
+                  ></ng-container>
+                </ng-container>
+
+                <ng-container *ngSwitchCase="'backgrounds'">
+                  <ng-container
+                    *ngTemplateOutlet="backgrounds; context: { discoveries }"
+                  ></ng-container>
+                </ng-container>
+              </ng-container>
+            </ng-container>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
+
+<ng-template #collectibles let-discoveries="discoveries">
+  <div class="collectibles">
+    <ion-row class="collect-row">
+      <ion-col
+        class="collect-col"
+        *ngFor="let collectible of allCollectibles; trackBy: trackBy"
+        [ngxTippy]="tooltip"
+      >
+        <app-item-icon
+          [item]="collectible"
+          [class.uncollected]="!discoveries.collectibles?.[collectible.itemId]"
+        ></app-item-icon>
+
+        <ng-template #tooltip>
+          <strong>{{ collectible.name }}</strong>
+          <br />
+          <br />
+          <em>Found in {{ collectible.location }}</em>
+        </ng-template>
+      </ion-col>
+    </ion-row>
+  </div>
+</ng-template>
+
+<ng-template #items let-discoveries="discoveries">
+  <div class="items">
+    <ion-row class="collect-row">
+      <ion-col
+        class="collect-col"
+        *ngFor="let item of allEquipment; trackBy: trackBy"
+        [ngxTippy]="tooltip"
+      >
+        <app-item-icon
+          [item]="item"
+          [class.uncollected]="!discoveries.item?.[item.itemId]"
+        ></app-item-icon>
+
+        <ng-template #tooltip>
+          <strong>{{ item.name }}</strong>
+        </ng-template>
+      </ion-col>
+    </ion-row>
+  </div>
+</ng-template>
+
+<ng-template #portraits let-discoveries="discoveries">
+  <div class="portraits">
+    <ion-row class="collect-row">
+      <ion-col
+        class="collect-col"
+        *ngFor="let portrait of allPortraits; trackBy: trackBy"
+      >
+        <ion-avatar [class.uncollected]="!discoveries.portraits?.[portrait]">
+          <app-icon spritesheet="portraits" [sprite]="portrait"></app-icon>
+        </ion-avatar>
+      </ion-col>
+    </ion-row>
+  </div>
+</ng-template>
+
+<ng-template #backgrounds let-discoveries="discoveries">
+  <div class="backgrounds">
+    <ion-row class="collect-row">
+      <ion-col
+        class="collect-col"
+        *ngFor="let background of allBackgrounds; trackBy: trackBy"
+      >
+        <ion-img
+          [class.uncollected]="!discoveries.backgrounds?.[background]"
+          [src]="'https://assets.ateoat.com/assets/backgrounds/' + background.toString().padStart(4, '0') + '.webp'"
+        ></ion-img>
+      </ion-col>
+    </ion-row>
+  </div>
+</ng-template>

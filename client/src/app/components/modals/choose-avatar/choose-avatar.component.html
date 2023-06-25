@@ -14,7 +14,7 @@
       <ion-avatar
         (click)="selectPortrait(portrait)"
         [class.selected]="selectedPortrait === portrait"
-        [class.disabled]="!defaultSelectablePortraits.includes(portrait)"
+        [class.disabled]="!selectablePortraits.includes(portrait)"
       >
         <app-icon spritesheet="portraits" [sprite]="portrait"></app-icon>
       </ion-avatar>
