@@ -27,13 +27,28 @@ export class CollectionsPage implements OnInit {
   public readonly allCollectibles = this.contentService.getAllCollectibles();
   public readonly allEquipment = this.contentService.getAllEquipment();
 
+  public unlocked: Record<keyof IDiscoveries, number> = {
+    collectibles: 0,
+    backgrounds: 0,
+    borders: 0,
+    items: 0,
+    locations: 0,
+    portraits: 0,
+  };
+
   constructor(
     private userService: UserService,
-    private contentService: ContentService,
+    public contentService: ContentService,
   ) {}
 
   ngOnInit() {
-    this.userService.getDiscoveries().subscribe();
+    this.userService.getDiscoveries().subscribe(({ discoveries }: any) => {
+      Object.keys(discoveries).forEach((key) => {
+        this.unlocked[key as keyof IDiscoveries] = Object.keys(
+          discoveries[key],
+        ).length;
+      });
+    });
   }
 
   trackBy(index: number) {

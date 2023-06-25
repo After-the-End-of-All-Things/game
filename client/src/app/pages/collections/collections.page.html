@@ -69,6 +69,18 @@
 
 <ng-template #collectibles let-discoveries="discoveries">
   <div class="collectibles">
+    <ion-row class="unlocked">
+      <ion-col>
+        <span class="base">
+          {{ unlocked['collectibles'] }} / {{ allCollectibles.length }} unlocked
+        </span>
+
+        <span class="percent">
+          ({{ unlocked['collectibles'] / allCollectibles.length | percent }})
+        </span>
+      </ion-col>
+    </ion-row>
+
     <ion-row class="collect-row">
       <ion-col
         class="collect-col"
@@ -93,6 +105,18 @@
 
 <ng-template #items let-discoveries="discoveries">
   <div class="items">
+    <ion-row class="unlocked">
+      <ion-col>
+        <span class="base">
+          {{ unlocked['items'] }} / {{ allEquipment.length }} unlocked
+        </span>
+
+        <span class="percent">
+          ({{ unlocked['items'] / allEquipment.length | percent }})
+        </span>
+      </ion-col>
+    </ion-row>
+
     <ion-row class="collect-row">
       <ion-col
         class="collect-col"
@@ -114,6 +138,19 @@
 
 <ng-template #portraits let-discoveries="discoveries">
   <div class="portraits">
+    <ion-row class="unlocked">
+      <ion-col>
+        <span class="base">
+          {{ unlocked['portraits'] }} / {{ contentService.maxPortraits }}
+          unlocked
+        </span>
+
+        <span class="percent">
+          ({{ unlocked['portraits'] / contentService.maxPortraits | percent }})
+        </span>
+      </ion-col>
+    </ion-row>
+
     <ion-row class="collect-row">
       <ion-col
         class="collect-col"
@@ -129,6 +166,20 @@
 
 <ng-template #backgrounds let-discoveries="discoveries">
   <div class="backgrounds">
+    <ion-row class="unlocked">
+      <ion-col>
+        <span class="base">
+          {{ unlocked['backgrounds'] }} / {{ contentService.maxBackgrounds }}
+          unlocked
+        </span>
+
+        <span class="percent">
+          ({{ unlocked['backgrounds'] / contentService.maxBackgrounds | percent
+          }})
+        </span>
+      </ion-col>
+    </ion-row>
+
     <ion-row class="collect-row">
       <ion-col
         class="collect-col"
