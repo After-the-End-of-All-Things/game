@@ -1,3 +1,4 @@
+import { xpForLevel } from '@helpers/xp';
 import {
   Currency,
   IAttachmentHelpers,
@@ -77,7 +78,14 @@ export function applyPlayerPatches(
 
   if (hasXpPatch) {
     const xpDiff = (hasXpPatch as any).value - currentXp;
-    helpers?.visual.showXpGain(xpDiff);
+    if (xpDiff > 0) {
+      helpers?.visual.showXpGain(xpDiff);
+    } else {
+      const oldLevelMaxXp = xpForLevel(player.level);
+      const diff = oldLevelMaxXp - currentXp;
+
+      helpers?.visual.showXpGain(diff);
+    }
   }
 
   if (hasCoinsPatch) {
