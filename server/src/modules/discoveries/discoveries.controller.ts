@@ -9,7 +9,6 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
-import { RollbarHandler } from 'nestjs-rollbar';
 import { User } from '../../utils/user.decorator';
 import { JwtAuthGuard } from '../auth/jwt.guard';
 
@@ -21,7 +20,6 @@ export class DiscoveriesController {
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Get my discoveries' })
   @Get('mine')
-  @RollbarHandler()
   async getMyDiscoveries(
     @User() user,
   ): Promise<Partial<IFullUser | IPatchUser>> {
@@ -36,7 +34,6 @@ export class DiscoveriesController {
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Discover a collectible' })
   @Post('discover/collectible')
-  @RollbarHandler()
   async discoverCollectible(
     @User() user,
     @Body('instanceId') instanceId: string,
@@ -47,7 +44,6 @@ export class DiscoveriesController {
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Discover an equipment item' })
   @Post('discover/equipment')
-  @RollbarHandler()
   async discoverEquipment(
     @User() user,
     @Body('instanceId') instanceId: string,

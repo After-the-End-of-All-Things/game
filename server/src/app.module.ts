@@ -1,8 +1,7 @@
 import { Module } from '@nestjs/common';
-import { APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { LoggerModule } from 'nestjs-pino';
-import { LoggerModule as RollbarModule } from 'nestjs-rollbar';
 import { FlushInterceptor } from 'src/utils/flush.interceptor';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -19,7 +18,7 @@ import { PlayerModule } from './modules/player/player.module';
 import { StatsModule } from './modules/stats/stats.module';
 import { UserModule } from './modules/user/user.module';
 
-import { ROLLBAR_CONFIG } from '@modules/config/rollbar';
+import { HttpExceptionFilter } from '@utils/http-exception.filter';
 import { UpdateAuthTimeInterceptor } from './utils/updatetime.interceptor';
 
 const isProduction = process.env.NODE_ENV === 'production';
@@ -30,13 +29,6 @@ const isProduction = process.env.NODE_ENV === 'production';
     UserModule,
     DatabaseModule,
     ConfigModule,
-    RollbarModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ROLLBAR_CONFIG],
-      useFactory: (rollbarConfig) => ({
-        ...rollbarConfig,
-      }),
-    }),
     LoggerModule.forRoot({
       pinoHttp: {
         transport: isProduction
@@ -83,6 +75,10 @@ const isProduction = process.env.NODE_ENV === 'production';
     {
       provide: APP_INTERCEPTOR,
       useClass: FlushInterceptor,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter,
     },
   ],
 })

@@ -11,7 +11,6 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { User } from '@utils/user.decorator';
-import { RollbarHandler } from 'nestjs-rollbar';
 
 @ApiBearerAuth()
 @Controller('player')
@@ -24,7 +23,6 @@ export class PlayerController {
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Change Player Portrait' })
   @Patch('cosmetics/portrait')
-  @RollbarHandler()
   async changePortrait(
     @User() user,
     @Body('portrait') portrait: number,
