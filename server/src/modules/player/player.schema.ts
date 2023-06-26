@@ -44,6 +44,12 @@ export class Player implements IPlayer {
   stats: Record<Stat, number>;
 
   @Property()
+  attackElements: Element[];
+
+  @Property()
+  defenseElements: Element[];
+
+  @Property()
   recharges: Record<RechargeableStat, number>;
 
   @Property()
@@ -108,5 +114,8 @@ export class Player implements IPlayer {
       action: '',
       actionData: {},
     };
+
+    this.attackElements = [];
+    this.defenseElements = [];
   }
 }

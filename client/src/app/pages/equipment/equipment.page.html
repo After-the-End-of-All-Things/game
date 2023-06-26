@@ -6,4 +6,77 @@
   <ion-header collapse="condense">
     <app-header-bar></app-header-bar>
   </ion-header>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Equipment</ion-card-title>
+          </ion-card-header>
+
+          <ion-card-content>
+            <ion-list>
+              <ion-item *ngFor="let equipment of armorSlots">
+                <ng-container
+                  *ngTemplateOutlet="equipmentRow; context: { slotKey: equipment.slot, slotName: equipment.name, inventory: inventory$ | async }"
+                ></ng-container>
+              </ion-item>
+            </ion-list>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Accessories</ion-card-title>
+          </ion-card-header>
+
+          <ion-card-content>
+            <ion-list>
+              <ion-item *ngFor="let equipment of accessorySlots">
+                <ng-container
+                  *ngTemplateOutlet="equipmentRow; context: { slotKey: equipment.slot, slotName: equipment.name, inventory: inventory$ | async }"
+                ></ng-container>
+              </ion-item>
+            </ion-list>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
+
+<ng-template
+  #equipmentRow
+  let-slotKey="slotKey"
+  let-slotName="slotName"
+  let-inventory="inventory"
+>
+  <ion-label slot="start" *ngIf="!inventory.equippedItems[slotKey]">
+    <em>nothing equipped</em>
+  </ion-label>
+
+  <ion-row class="full-width" *ngIf="inventory.equippedItems[slotKey] as item">
+    <ion-col class="icon">
+      <app-item-icon [item]="item" size="small"></app-item-icon>
+    </ion-col>
+
+    <ion-col>
+      <ion-row>
+        <ion-col class="name">{{ item.name }}</ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <app-item-stats [item]="item"></app-item-stats>
+        </ion-col>
+      </ion-row>
+    </ion-col>
+  </ion-row>
+
+  <ion-label class="slot" slot="end"><em>{{ slotName }}</em></ion-label>
+</ng-template>

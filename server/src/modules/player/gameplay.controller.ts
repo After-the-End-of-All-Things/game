@@ -1,4 +1,4 @@
-import { IFullUser, IPatchUser } from '@interfaces';
+import { IFullUser, IPatchUser, ItemSlot } from '@interfaces';
 import { JwtAuthGuard } from '@modules/auth/jwt.guard';
 import { InventoryService } from '@modules/inventory/inventory.service';
 import { GameplayService } from '@modules/player/gameplay.service';
@@ -7,6 +7,7 @@ import {
   Body,
   Controller,
   Param,
+  Patch,
   Post,
   UseGuards,
 } from '@nestjs/common';
@@ -76,7 +77,7 @@ export class GameplayController {
 
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Explore Event: Take an item' })
-  @Post('takeitem')
+  @Post('item/take')
   @RollbarHandler()
   async takeItem(@User() user): Promise<Partial<IFullUser | IPatchUser>> {
     if (await this.inventoryService.isInventoryFull(user.userId)) {
@@ -88,12 +89,27 @@ export class GameplayController {
 
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Sell an item' })
-  @Post('sellitem')
+  @Post('item/sell')
   @RollbarHandler()
   async sellItem(
     @User() user,
     @Body('instanceId') instanceId: string,
   ): Promise<Partial<IFullUser | IPatchUser>> {
     return this.gameplayService.sellItem(user.userId, instanceId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Equip an item' })
+  @Patch('item/equip/:slot')
+  async equipItem(
+    @User() user,
+    @Param('slot') equipmentSlot: ItemSlot,
+    @Body('instanceId') instanceId: string,
+  ): Promise<Partial<IFullUser | IPatchUser>> {
+    return this.gameplayService.equipItem(
+      user.userId,
+      equipmentSlot,
+      instanceId,
+    );
   }
 }

@@ -274,7 +274,7 @@ export class PlayerService {
       actionData: {
         item: randomCollectibleForLocation,
       },
-      url: 'gameplay/takeitem',
+      url: 'gameplay/item/take',
       urlData: {},
     });
   }
@@ -298,7 +298,7 @@ export class PlayerService {
       actionData: {
         item: randomItemForLocation,
       },
-      url: 'gameplay/takeitem',
+      url: 'gameplay/item/take',
       urlData: {},
     });
   }

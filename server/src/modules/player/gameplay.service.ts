@@ -1,10 +1,12 @@
-import { itemValue } from '@helpers/item';
+import { itemSlotForItem, itemValue } from '@helpers/item';
 import {
+  IEquipment,
   IFullUser,
   IItem,
   ILocation,
   INotificationAction,
   IPatchUser,
+  ItemSlot,
   TrackedStat,
 } from '@interfaces';
 import { AnalyticsService } from '@modules/content/analytics.service';
@@ -12,6 +14,7 @@ import { ConstantsService } from '@modules/content/constants.service';
 import { ContentService } from '@modules/content/content.service';
 import { Discoveries } from '@modules/discoveries/discoveries.schema';
 import { DiscoveriesService } from '@modules/discoveries/discoveries.service';
+import { Inventory } from '@modules/inventory/inventory.schema';
 import { InventoryService } from '@modules/inventory/inventory.service';
 import { NotificationService } from '@modules/notification/notification.service';
 import { Player } from '@modules/player/player.schema';
@@ -488,6 +491,110 @@ export class GameplayService {
           } for ${coinsGained.toLocaleString()} coins!`,
         },
       ],
+    };
+  }
+
+  async equipItem(
+    userId: string,
+    equipmentSlot: ItemSlot,
+    instanceId: string,
+  ): Promise<Partial<IFullUser | IPatchUser>> {
+    const player = await this.playerService.getPlayerForUser(userId);
+    if (!player) throw new ForbiddenException('Player not found.');
+
+    const inventory = await this.inventoryService.getInventoryForUser(userId);
+    if (!inventory) throw new ForbiddenException('Inventory not found.');
+
+    const item = await this.inventoryService.getInventoryItemForUser(
+      userId,
+      instanceId,
+    );
+    if (!item) throw new ForbiddenException('Item not found.');
+
+    const itemRef = await this.contentService.getItem(item.itemId);
+    if (!itemRef) throw new ForbiddenException('Item not found.');
+
+    const job = await this.contentService.getJob(player.job);
+    if (!job) throw new ForbiddenException('Job not found.');
+
+    if (
+      !job.armorSlots[itemRef.type] &&
+      !job.weapons[itemRef.type] &&
+      !['accessory1', 'accessory2', 'accessory3'].includes(equipmentSlot)
+    )
+      throw new ForbiddenException('Invalid equipment slot.');
+
+    if (player.level < (itemRef as IEquipment).levelRequirement ?? 0)
+      throw new ForbiddenException(
+        'You are not high enough level to equip this item.',
+      );
+
+    let realSlotForItem = itemSlotForItem(itemRef);
+    if (
+      realSlotForItem === 'accessory' &&
+      ['accessory1', 'accessory2', 'accessory3'].includes(equipmentSlot)
+    ) {
+      realSlotForItem = equipmentSlot;
+    }
+
+    console.log(equipmentSlot, itemRef, realSlotForItem);
+
+    const existingInstance = inventory.equippedItems[equipmentSlot];
+    if (existingInstance) {
+      await this.unequipItem(
+        userId,
+        equipmentSlot,
+        existingInstance.instanceId ?? '',
+      );
+    }
+
+    item.isInUse = true;
+
+    const inventoryPatches = await getPatchesAfterPropChanges<Inventory>(
+      inventory,
+      async (inventoryRef) => {
+        inventoryRef.equippedItems = {
+          ...inventoryRef.equippedItems,
+          [equipmentSlot]: {
+            ...itemRef,
+            ...item,
+          },
+        };
+      },
+    );
+
+    return {
+      inventory: inventoryPatches,
+      actions: [
+        {
+          type: 'Notify',
+          messageType: 'success',
+          message: `You equipped ${itemRef.name} Lv.${
+            (itemRef as IEquipment).levelRequirement ?? 0
+          }!`,
+        },
+      ],
+    };
+  }
+
+  async unequipItem(
+    userId: string,
+    equipmentSlot: ItemSlot,
+    instanceId: string,
+  ) {
+    const inventory = await this.inventoryService.getInventoryForUser(userId);
+    if (!inventory) throw new ForbiddenException('Inventory not found.');
+
+    const item = await this.inventoryService.getInventoryItemForUser(
+      userId,
+      instanceId,
+    );
+    if (!item) throw new ForbiddenException('Item not found.');
+
+    item.isInUse = false;
+    inventory.equippedItems = {
+      ...inventory.equippedItems,
+      [equipmentSlot]: undefined,
     };
   }
 }

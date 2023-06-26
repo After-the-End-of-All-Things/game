@@ -30,6 +30,44 @@ export type Accessory = 'jewelry' | 'wrist' | 'hands' | 'ammo';
 
 export type ItemType = Armor | Weapon | Accessory | 'collectible';
 
+export type ItemSlot =
+  | 'body'
+  | 'feet'
+  | 'head'
+  | 'legs'
+  | 'shoulders'
+  | 'waist'
+  | 'accessory1'
+  | 'accessory2'
+  | 'accessory3'
+  | 'weapon';
+
+export const AllArmor: Armor[] = [
+  'body',
+  'feet',
+  'head',
+  'legs',
+  'shoulders',
+  'waist',
+];
+export const AllWeapons: Weapon[] = [
+  'axe',
+  'bow',
+  'dagger',
+  'fist',
+  'gun',
+  'mace',
+  'spear',
+  'staff',
+  'sword',
+];
+export const AllAccessories: Accessory[] = [
+  'jewelry',
+  'wrist',
+  'hands',
+  'ammo',
+];
+
 export interface IItem {
   name: string;
   itemId: string;
@@ -46,6 +84,7 @@ export interface ICollectible extends IItem {
 
 export interface IEquipment extends IItem {
   stats: Record<Stat, number>;
-  elements: Element[];
+  attackElements: Element[];
+  defenseElements: Element[];
   levelRequirement: number;
 }

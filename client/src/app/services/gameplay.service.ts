@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '@environment';
+import { ItemSlot } from '@interfaces';
 
 @Injectable({
   providedIn: 'root',
@@ -25,7 +26,7 @@ export class GameplayService {
   }
 
   sellItem(instanceId: string) {
-    return this.http.post(`${environment.apiUrl}/gameplay/sellitem`, {
+    return this.http.post(`${environment.apiUrl}/gameplay/item/sell`, {
       instanceId,
     });
   }
@@ -43,6 +44,16 @@ export class GameplayService {
     return this.http.post(
       `${environment.apiUrl}/discoveries/discover/equipment`,
       {
+        instanceId,
+      },
+    );
+  }
+
+  equipItem(slot: ItemSlot, instanceId: string) {
+    return this.http.patch(
+      `${environment.apiUrl}/gameplay/item/equip/${slot}`,
+      {
+        slot,
         instanceId,
       },
     );

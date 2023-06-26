@@ -1,17 +1,7 @@
-export type ItemSlot =
-  | 'body'
-  | 'feet'
-  | 'head'
-  | 'legs'
-  | 'shoulders'
-  | 'waist'
-  | 'accessory1'
-  | 'accessory2'
-  | 'accessory3'
-  | 'weapon';
+import { IEquipment, ItemSlot } from '@interfaces';
 
 export interface IInventory {
-  equippedItems: Record<ItemSlot, string | undefined>;
+  equippedItems: Record<ItemSlot, IEquipment | undefined>;
 }
 
 export interface IInventoryItem {

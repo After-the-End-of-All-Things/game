@@ -1,10 +1,15 @@
-import { IFullUser, IPatchUser } from '@interfaces';
+import { IFullUser, IPatchUser, Stat } from '@interfaces';
 import { EntityManager, EntityRepository } from '@mikro-orm/mongodb';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { ConstantsService } from '@modules/content/constants.service';
+import { ContentService } from '@modules/content/content.service';
 import { Inventory } from '@modules/inventory/inventory.schema';
 import { InventoryItem } from '@modules/inventory/inventoryitem.schema';
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+} from '@nestjs/common';
 import { v4 as uuid } from 'uuid';
 
 @Injectable()
@@ -17,6 +22,7 @@ export class InventoryService {
     private readonly inventoryItems: EntityRepository<InventoryItem>,
 
     private readonly constantsService: ConstantsService,
+    private readonly contentService: ContentService,
   ) {}
 
   async getInventoryForUser(userId: string): Promise<Inventory | undefined> {
@@ -37,7 +43,7 @@ export class InventoryService {
     } catch (e) {
       // mongodb duplicate
       if (e.code === 11000) {
-        throw new BadRequestException('discoveries id already in use.');
+        throw new BadRequestException('inventory id already in use.');
       }
     }
 
@@ -65,6 +71,19 @@ export class InventoryService {
     if (!item) return;
 
     return this.em.remove<InventoryItem>(item);
+  }
+
+  async get(
+    userId: string,
+    instanceId: string,
+  ): Promise<Partial<Record<Stat, number>>> {
+    const item = await this.getInventoryItemForUser(userId, instanceId);
+    if (!item) throw new ForbiddenException('Item not found.');
+
+    const itemRef = this.contentService.getEquipment(item.itemId);
+    if (!itemRef) return {};
+
+    return itemRef.stats;
   }
 
   async isInventoryFull(userId: string): Promise<boolean> {

@@ -1,4 +1,16 @@
-import { IEquipment, IItem, Rarity, Stat } from '../interfaces/';
+import {
+  Accessory,
+  AllAccessories,
+  AllArmor,
+  AllWeapons,
+  Armor,
+  IEquipment,
+  IItem,
+  ItemSlot,
+  Rarity,
+  Stat,
+  Weapon,
+} from '../interfaces/';
 
 const multiplierPerRarity: Record<Rarity, number> = {
   Common: 1,
@@ -39,4 +51,16 @@ export function itemValue(item: IItem): number {
   value *= Math.log(levelRequirement + 1);
 
   return Math.max(1, Math.floor(value));
+}
+
+export function itemSlotForItem(
+  item: IItem,
+): ItemSlot | 'accessory' | undefined {
+  const type = item.type;
+
+  if (AllArmor.includes(type as Armor)) return type as Armor;
+  if (AllWeapons.includes(type as Weapon)) return 'weapon';
+  if (AllAccessories.includes(type as Accessory)) return 'accessory';
+
+  return undefined;
 }

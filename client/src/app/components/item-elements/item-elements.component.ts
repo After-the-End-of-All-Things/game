@@ -14,7 +14,10 @@ export class ItemElementsComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {
-    const elements = (this.item as IEquipment).elements || [];
+    const elements = [
+      ...((this.item as IEquipment).attackElements || []),
+      ...((this.item as IEquipment).defenseElements || []),
+    ];
 
     this.elements = elements;
   }

@@ -1,4 +1,4 @@
-import { IInventory, ItemSlot } from '@interfaces';
+import { IEquipment, IInventory, ItemSlot } from '@interfaces';
 import {
   Entity,
   PrimaryKey,
@@ -21,7 +21,7 @@ export class Inventory implements IInventory {
   userId: string;
 
   @Property()
-  equippedItems: Record<ItemSlot, string | undefined>;
+  equippedItems: Record<ItemSlot, IEquipment | undefined>;
 
   constructor(userId: string) {
     this.userId = userId;

@@ -42,19 +42,7 @@ export class Discoveries implements IDiscoveries {
     this.userId = userId;
 
     this.locations = { Mork: true };
-    this.portraits = {
-      1: true,
-      2: true,
-      4: true,
-      5: true,
-      6: true,
-      16: true,
-      17: true,
-      18: true,
-      50: true,
-      64: true,
-      101: true,
-    };
+    this.portraits = { 4: true };
     this.backgrounds = { 0: true };
     this.borders = { 0: true };
     this.collectibles = {};

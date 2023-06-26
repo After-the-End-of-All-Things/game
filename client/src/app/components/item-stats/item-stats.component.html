@@ -1,3 +1,9 @@
 <div>
-  <div *ngFor="let stat of stats">{{ stat.key }} +{{ stat.value }}</div>
+  <ion-chip
+    class="stats"
+    [color]="stat.value > 0 ? 'success' : 'danger'"
+    *ngFor="let stat of stats"
+  >
+    {{ stat.key }} +{{ stat.value }}
+  </ion-chip>
 </div>
