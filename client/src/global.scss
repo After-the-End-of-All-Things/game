@@ -34,6 +34,10 @@
 @import "./styles/global-access.scss";
 
 app-inventory {
+  .text-wrap-column {
+    white-space: normal !important;
+  }
+
   .icon-column ion-icon {
     font-size: 24px;
   }
