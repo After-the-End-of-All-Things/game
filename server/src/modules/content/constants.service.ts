@@ -4,6 +4,8 @@ import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class ConstantsService {
+  public readonly exploreSpeedMultiplier: number = 100;
+
   public readonly maxInventorySize: number = 100;
 
   public readonly baseExploreXp: number = 5;
@@ -16,6 +18,11 @@ export class ConstantsService {
   public readonly locationFindPercentBoost: number = 0;
 
   constructor(private readonly configService: ConfigService) {
+    this.exploreSpeedMultiplier = +this.configService.get<number>(
+      'EXPLORE_SPEED_MULTIPLIER',
+      100,
+    );
+
     this.maxInventorySize = +this.configService.get<number>(
       'MAX_INVENTORY_SIZE',
       100,

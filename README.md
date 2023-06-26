@@ -25,6 +25,7 @@ God, am I getting tired of typing that.
 
 ### Optional Server Environment Variables
 
+- `EXPLORE_SPEED_MULTIPLIER` - the multiplier for explore speed (default: 1)
 - `MAX_INVENTORY_SIZE` - the maximum inventory size per player (default: 100e)
 - `BASE_EXPLORE_XP` - the amount of XP gained per explore (default: 5)
 - `BASE_EXPLORE_COINS` - the amount of coins gained per explore (default: 3)

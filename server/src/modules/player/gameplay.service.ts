@@ -143,10 +143,18 @@ export class GameplayService {
         // reset explore action
         this.playerService.setPlayerAction(playerRef, undefined);
 
+        this.constantsService.exploreSpeedMultiplier;
+
+        const secondsAddedToCooldown = Math.floor(
+          (this.constantsService.exploreSpeedMultiplier / 100) *
+            totalExploreSpeed *
+            1000,
+        );
+
         // put explore on cooldown
         playerRef.location = {
           ...playerRef.location,
-          cooldown: Date.now() + Math.floor(totalExploreSpeed * 1000),
+          cooldown: Date.now() + secondsAddedToCooldown,
         };
 
         // travel via walk if the flags are set
