@@ -52,18 +52,11 @@ export class AuthController {
   @ApiOperation({ summary: 'Log into an account' })
   @Post('login')
   @RollbarHandler()
-  signIn(
-    @Body() signInDto: Record<string, any>,
-    @Headers('user-agent') userAgent: string,
-  ) {
+  signIn(@Body() signInDto: Record<string, any>) {
     if (!signInDto.password || !signInDto.email)
       throw new BadRequestException('Missing password or email');
 
-    return this.authService.signIn(
-      signInDto.email,
-      signInDto.password,
-      userAgent,
-    );
+    return this.authService.signIn(signInDto.email, signInDto.password);
   }
 
   @HttpCode(HttpStatus.OK)

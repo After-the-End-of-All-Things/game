@@ -58,6 +58,12 @@ export class AnalyticsService {
       return;
     }
 
+    this.startSession(userId, {
+      ua: 'User Agent',
+      os_version: 'webplayer 1.0.0',
+      platform: 'webplayer',
+    });
+
     this.track(userId, 'design', {
       event_id: eventId,
       amount: value,

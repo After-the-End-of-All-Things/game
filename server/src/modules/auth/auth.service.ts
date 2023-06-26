@@ -56,7 +56,6 @@ export class AuthService {
   async signIn(
     username: string,
     password: string,
-    userAgent: string,
   ): Promise<IFullUser | IHasAccessToken> {
     const user = await this.userService.findUserByEmail(username);
     if (!user) {
@@ -75,8 +74,6 @@ export class AuthService {
       username: user.username,
       discriminator: user.discriminator,
     };
-
-    this.analyticsService.startSession(user.id, { ua: userAgent });
 
     return {
       ...(await this.userService.getAllUserInformation(user._id.toString())),
