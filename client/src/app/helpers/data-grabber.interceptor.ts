@@ -105,6 +105,10 @@ export class DataGrabberInterceptor implements HttpInterceptor {
         if (body.notifications) {
           this.store.dispatch(new SetNotifications(body.notifications));
         }
+
+        if (body.actions) {
+          this.store.dispatch(body.actions);
+        }
       }),
     );
   }

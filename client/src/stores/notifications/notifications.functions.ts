@@ -1,4 +1,8 @@
-import { INotification, INotificationsStore } from '@interfaces';
+import {
+  IAttachmentHelpers,
+  INotification,
+  INotificationsStore,
+} from '@interfaces';
 import { StateContext } from '@ngxs/store';
 import { patch, updateItem } from '@ngxs/store/operators';
 import { applyPatch } from 'fast-json-patch';
@@ -7,6 +11,7 @@ import {
   ApplyNotificationsPatches,
   ClearNotificationActions,
   MarkNotificationRead,
+  Notify,
   SetNotifications,
 } from './notifications.actions';
 
@@ -64,4 +69,12 @@ export function clearActions(
       ),
     }),
   );
+}
+
+export function notify(
+  ctx: StateContext<INotificationsStore>,
+  { message, messageType }: Notify,
+  helpers: IAttachmentHelpers | undefined,
+) {
+  helpers?.notify.showToast(message, messageType);
 }

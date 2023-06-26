@@ -477,6 +477,17 @@ export class GameplayService {
       },
     );
 
-    return { player: playerPatches };
+    return {
+      player: playerPatches,
+      actions: [
+        {
+          type: 'Notify',
+          messageType: 'success',
+          message: `You sold ${
+            item.name
+          } for ${coinsGained.toLocaleString()} coins!`,
+        },
+      ],
+    };
   }
 }

@@ -10,3 +10,8 @@ export class ApplyInventoryPatches {
   static type = '[Inventory] Apply Patches';
   constructor(public patches: jsonpatch.Operation[]) {}
 }
+
+export class RemoveItemFromInventory {
+  static type = '[Inventory] Remove Item';
+  constructor(public instanceId: string) {}
+}

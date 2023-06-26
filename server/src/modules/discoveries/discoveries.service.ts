@@ -92,7 +92,16 @@ export class DiscoveriesService {
       },
     );
 
-    return { discoveries: discoveryPatches };
+    return {
+      discoveries: discoveryPatches,
+      actions: [
+        {
+          type: 'Notify',
+          messageType: 'success',
+          message: `You collected ${itemDefinition.name}!`,
+        },
+      ],
+    };
   }
 
   async discoverEquipment(
@@ -127,6 +136,15 @@ export class DiscoveriesService {
       },
     );
 
-    return { discoveries: discoveryPatches };
+    return {
+      discoveries: discoveryPatches,
+      actions: [
+        {
+          type: 'Notify',
+          messageType: 'success',
+          message: `You collected ${itemDefinition.name}!`,
+        },
+      ],
+    };
   }
 }

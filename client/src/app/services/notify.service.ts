@@ -2,13 +2,12 @@ import { Injectable } from '@angular/core';
 import { ToastController } from '@ionic/angular';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class NotifyService {
-
   constructor(private toastController: ToastController) {}
 
-  private async showToast(message: string, color: string) {
+  public async showToast(message: string, color: string) {
     const toast = await this.toastController.create({
       message,
       duration: 1500,
@@ -17,9 +16,9 @@ export class NotifyService {
       buttons: [
         {
           text: 'Close',
-          role: 'cancel'
-        }
-      ]
+          role: 'cancel',
+        },
+      ],
     });
 
     await toast.present();

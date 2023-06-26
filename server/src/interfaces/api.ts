@@ -20,6 +20,8 @@ export interface IFullUser {
   achievements: Achievements;
   inventory: Inventory;
   items: InventoryItem[];
+
+  actions: Array<{ type: string } & any>;
 }
 
 export interface IPatchUser {

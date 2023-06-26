@@ -20,3 +20,8 @@ export class ClearNotificationActions {
   static type = '[Notifications] Clear Actions';
   constructor(public id: string) {}
 }
+
+export class Notify {
+  static type = 'Notify';
+  constructor(public messageType: string, public message: string) {}
+}
