@@ -5,6 +5,7 @@ import { ConfigService } from '@nestjs/config';
 @Injectable()
 export class ConstantsService {
   public readonly exploreSpeedMultiplier: number = 100;
+  public readonly exploreXpMultiplier: number = 100;
 
   public readonly maxInventorySize: number = 100;
 
@@ -20,6 +21,10 @@ export class ConstantsService {
   constructor(private readonly configService: ConfigService) {
     this.exploreSpeedMultiplier = +this.configService.get<number>(
       'EXPLORE_SPEED_MULTIPLIER',
+      100,
+    );
+    this.exploreXpMultiplier = +this.configService.get<number>(
+      'EXPLORE_XP_MULTIPLIER',
       100,
     );
 

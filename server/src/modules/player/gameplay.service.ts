@@ -121,7 +121,11 @@ export class GameplayService {
         // gain xp
         const baseXp = this.constantsService.baseExploreXp;
         const xpGainPercent = foundLocation.baseStats.xpGain;
-        const xpGained = Math.floor(baseXp * (xpGainPercent / 100));
+        const xpGained = Math.floor(
+          baseXp *
+            (xpGainPercent / 100) *
+            (this.constantsService.exploreXpMultiplier / 100),
+        );
 
         this.playerService.gainXp(playerRef, xpGained);
 
@@ -142,8 +146,6 @@ export class GameplayService {
 
         // reset explore action
         this.playerService.setPlayerAction(playerRef, undefined);
-
-        this.constantsService.exploreSpeedMultiplier;
 
         const secondsAddedToCooldown = Math.floor(
           (this.constantsService.exploreSpeedMultiplier / 100) *
