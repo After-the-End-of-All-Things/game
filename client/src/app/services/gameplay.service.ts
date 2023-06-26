@@ -29,4 +29,22 @@ export class GameplayService {
       instanceId,
     });
   }
+
+  discoverCollectible(instanceId: string) {
+    return this.http.post(
+      `${environment.apiUrl}/discoveries/discover/collectible`,
+      {
+        instanceId,
+      },
+    );
+  }
+
+  discoverEquipment(instanceId: string) {
+    return this.http.post(
+      `${environment.apiUrl}/discoveries/discover/equipment`,
+      {
+        instanceId,
+      },
+    );
+  }
 }

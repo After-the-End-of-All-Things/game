@@ -73,16 +73,16 @@ export class ContentService {
     return Object.values(this.collectibles);
   }
 
-  public getCollectible(collectible: string): ICollectible | undefined {
-    return this.collectibles[collectible];
+  public getCollectible(collectibleId: string): ICollectible | undefined {
+    return this.collectibles[collectibleId];
   }
 
   public allEquipment(): IEquipment[] {
     return Object.values(this.equipment);
   }
 
-  public getEquipment(equipment: string): IEquipment | undefined {
-    return this.equipment[equipment];
+  public getEquipment(equipmentId: string): IEquipment | undefined {
+    return this.equipment[equipmentId];
   }
 
   public getItem(item: string): IItem | undefined {

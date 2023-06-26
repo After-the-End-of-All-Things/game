@@ -125,7 +125,7 @@
       >
         <app-item-icon
           [item]="item"
-          [class.uncollected]="!discoveries.item?.[item.itemId]"
+          [class.uncollected]="!discoveries.items?.[item.itemId]"
         ></app-item-icon>
 
         <ng-template #tooltip>

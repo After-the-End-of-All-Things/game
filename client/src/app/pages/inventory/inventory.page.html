@@ -60,15 +60,26 @@
                 </ng-template>
               </ngx-datatable-column>
 
-              <!--
-              <ngx-datatable-column name="Stats" [sortable]="false">
+              <ngx-datatable-column
+                name="Collected"
+                [maxWidth]="100"
+                [sortable]="false"
+                [cellClass]="'center-column icon-column'"
+              >
                 <ng-template let-row="row" ngx-datatable-cell-template>
-                  <app-item-stats [item]="row"></app-item-stats>
+                  <ion-icon
+                    [name]="isDiscovered(row) ? 'checkmark-circle' : 'close-circle'"
+                    [color]="isDiscovered(row) ? 'success' : 'danger'"
+                  ></ion-icon>
                 </ng-template>
               </ngx-datatable-column>
-              -->
 
-              <ngx-datatable-column name="" [maxWidth]="90" [sortable]="false">
+              <ngx-datatable-column
+                name=""
+                [maxWidth]="90"
+                [sortable]="false"
+                [cellClass]="'center-column'"
+              >
                 <ng-template
                   let-row="row"
                   let-rowIndex="rowIndex"
@@ -93,9 +104,30 @@
                         <ion-list class="action-list">
                           <ion-item
                             class="cursor-pointer"
-                            (click)="sellItem(row, rowIndex); popover.dismiss()"
+                            (click)="sellItem(row); popover.dismiss()"
                           >
                             Sell
+                          </ion-item>
+
+                          <ion-item
+                            class="cursor-pointer"
+                            *ngIf="row.type === 'collectible' && !isDiscovered(row)"
+                            (click)="discoverCollectible(row); popover.dismiss()"
+                          >
+                            Collect
+                          </ion-item>
+
+                          <ion-item
+                            class="cursor-pointer"
+                            *ngIf="row.type !== 'collectible' && !isDiscovered(row)"
+                            (click)="discoverEquipment(row); popover.dismiss()"
+                          >
+                            Collect
+                          </ion-item>
+
+                          <ion-item *ngIf="isDiscovered(row)" [disabled]>
+                            <em>Collected</em>
+                            <ion-icon slot="end" name="checkbox"></ion-icon>
                           </ion-item>
                         </ion-list>
                       </ion-content>
