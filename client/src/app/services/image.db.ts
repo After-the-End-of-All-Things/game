@@ -58,8 +58,8 @@ export function readImagesByQuality(quality: string): Promise<BlobImage[]> {
   return db.images.where('quality').equals(quality).toArray();
 }
 
-export function readImagesByURL(url: string): Promise<BlobImage[]> {
-  return db.images.where('url').equals(url).toArray();
+export function readImageByURL(url: string): Promise<BlobImage | undefined> {
+  return db.images.where('url').equals(url).first();
 }
 
 export function readImagesByName(name: string): Promise<BlobImage[]> {

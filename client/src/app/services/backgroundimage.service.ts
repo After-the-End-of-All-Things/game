@@ -36,7 +36,7 @@ export class BackgroundImageService {
     return `url("${url.changingThisBreaksApplicationSecurity}")`;
   }
 
-  async getImageData(id: string) {
+  async getImageDataById(id: string) {
     return readBackgroundImageByID(id);
   }
 

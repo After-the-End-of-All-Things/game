@@ -37,7 +37,10 @@ export class AssetService {
       async ({ name, path, hash }: any) => {
         const fullUrl = `${environment.assetsUrl}/${path}`;
 
-        const oldImage = await this.backgroundImageService.getImageData(name);
+        const oldImage = await this.backgroundImageService.getImageDataById(
+          name,
+        );
+
         if (!oldImage || oldImage.hash !== hash) {
           this.backgroundImageService.fetchImage(fullUrl).subscribe((blob) => {
             this.backgroundImageService.saveImageToDatabase(
@@ -51,17 +54,24 @@ export class AssetService {
       },
     );
 
-    manifestData.assets.spritesheetMQ.forEach(({ name, path, hash }: any) => {
-      const fullUrl = `${environment.assetsUrl}/${path}`;
-      this.imageService.fetchImage(fullUrl).subscribe((blob) => {
-        this.imageService.saveImageToDatabase(
-          name,
-          hash,
-          'medium',
-          fullUrl,
-          blob,
-        );
-      });
-    });
+    manifestData.assets.spritesheetMQ.forEach(
+      async ({ name, path, hash }: any) => {
+        const fullUrl = `${environment.assetsUrl}/${path}`;
+
+        const oldImage = await this.imageService.getImageDataByUrl(fullUrl);
+
+        if (!oldImage || oldImage.hash !== hash) {
+          this.imageService.fetchImage(fullUrl).subscribe((blob) => {
+            this.imageService.saveImageToDatabase(
+              name,
+              hash,
+              'medium',
+              fullUrl,
+              blob,
+            );
+          });
+        }
+      },
+    );
   }
 }

@@ -4,8 +4,8 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import {
   BlobImage,
   createImage,
+  readImageByURL,
   readImagesByNameAndQuality,
-  readImagesByURL,
 } from '@services/image.db';
 import { Observable } from 'rxjs';
 
@@ -19,13 +19,13 @@ export class ImageService {
   ) {}
 
   async getCSSBackgroundImageURL(url: string) {
-    let images: BlobImage[] = await readImagesByURL(url);
-    if (images.length == 0) {
+    const image = await readImageByURL(url);
+    if (!image) {
       return `url('${url}')`;
     }
 
     const safeURL: SafeUrl = this.sanitizer.bypassSecurityTrustUrl(
-      URL.createObjectURL(images[0].data),
+      URL.createObjectURL(image.data),
     );
 
     return this.getSafeBackgroundImageUrl(safeURL);
@@ -33,6 +33,10 @@ export class ImageService {
 
   private getSafeBackgroundImageUrl(url: any) {
     return `url("${url.changingThisBreaksApplicationSecurity}")`;
+  }
+
+  async getImageDataByUrl(url: string) {
+    return readImageByURL(url);
   }
 
   async getImageUrl(name: string, quality: string) {
@@ -61,7 +65,7 @@ export class ImageService {
     url: string,
     blob: Blob,
   ) {
-    if ((await readImagesByURL(url)).length === 0) {
+    if (!(await readImageByURL(url))) {
       const blobImage = new BlobImage(
         name,
         hash,
