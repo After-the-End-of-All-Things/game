@@ -1,4 +1,15 @@
-import { Component, Input, OnChanges, OnInit } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  Input,
+  OnChanges,
+  OnInit,
+  inject,
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Select } from '@ngxs/store';
+import { OptionsStore } from '@stores';
+import { Observable } from 'rxjs';
 import { ImageService } from '../../services/image.service';
 
 @Component({
@@ -7,10 +18,15 @@ import { ImageService } from '../../services/image.service';
   styleUrls: ['./icon.component.scss'],
 })
 export class IconComponent implements OnInit, OnChanges {
+  private destroyRef = inject(DestroyRef);
+
+  @Select(OptionsStore.quality) quality$!: Observable<string>;
+
   @Input({ required: true }) spritesheet!: string;
   @Input({ required: true }) sprite!: number;
-  @Input() quality = 'medium';
   @Input() size: 'small' | 'normal' = 'normal';
+
+  private quality = 'medium';
 
   public spritesheetUrl!: any;
   public assetLocation = '-0px -0px';
@@ -18,15 +34,19 @@ export class IconComponent implements OnInit, OnChanges {
   constructor(private imageService: ImageService) {}
 
   async ngOnInit() {
-    this.spritesheetUrl = await this.imageService.getImageUrl(
-      this.spritesheet,
-      this.quality,
-    );
-
-    this.assetLocation = this.getSpriteLocation();
+    this.quality$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((res: any) => {
+        this.quality = res;
+        this.updateSprite();
+      });
   }
 
   async ngOnChanges() {
+    this.updateSprite();
+  }
+
+  private async updateSprite() {
     this.spritesheetUrl = await this.imageService.getImageUrl(
       this.spritesheet,
       this.quality,

@@ -27,4 +27,9 @@ export class OptionsStore {
   static options(state: IOptionsStore) {
     return state.options;
   }
+
+  @Selector()
+  static quality(state: IOptionsStore) {
+    return state.options.assetQuality;
+  }
 }
