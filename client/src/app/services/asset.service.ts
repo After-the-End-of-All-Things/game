@@ -54,8 +54,15 @@ export class AssetService {
       },
     );
 
-    manifestData.assets.spritesheetMQ.forEach(
-      async ({ name, path, hash }: any) => {
+    const qualitiesAndSheets = [
+      { quality: 'minimal', sheets: manifestData.assets.spritesheetPQ },
+      { quality: 'low', sheets: manifestData.assets.spritesheetLQ },
+      { quality: 'medium', sheets: manifestData.assets.spritesheetMQ },
+      { quality: 'high', sheets: manifestData.assets.spritesheetHQ },
+    ];
+
+    qualitiesAndSheets.forEach(({ quality, sheets }) => {
+      sheets.forEach(async ({ name, path, hash }: any) => {
         const fullUrl = `${environment.assetsUrl}/${path}`;
 
         const oldImage = await this.imageService.getImageDataByUrl(fullUrl);
@@ -65,13 +72,13 @@ export class AssetService {
             this.imageService.saveImageToDatabase(
               name,
               hash,
-              'medium',
+              quality,
               fullUrl,
               blob,
             );
           });
         }
-      },
-    );
+      });
+    });
   }
 }
