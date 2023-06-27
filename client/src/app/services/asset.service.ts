@@ -33,17 +33,23 @@ export class AssetService {
 
     this.maxBackgrounds = manifestData.assets.backgrounds.length;
 
-    manifestData.assets.backgrounds.forEach(({ name, path, hash }: any) => {
-      const fullUrl = `${environment.assetsUrl}/${path}`;
-      this.backgroundImageService.fetchImage(fullUrl).subscribe((blob) => {
-        this.backgroundImageService.saveImageToDatabase(
-          name,
-          hash,
-          fullUrl,
-          blob,
-        );
-      });
-    });
+    manifestData.assets.backgrounds.forEach(
+      async ({ name, path, hash }: any) => {
+        const fullUrl = `${environment.assetsUrl}/${path}`;
+
+        const oldImage = await this.backgroundImageService.getImageData(name);
+        if (!oldImage || oldImage.hash !== hash) {
+          this.backgroundImageService.fetchImage(fullUrl).subscribe((blob) => {
+            this.backgroundImageService.saveImageToDatabase(
+              name,
+              hash,
+              fullUrl,
+              blob,
+            );
+          });
+        }
+      },
+    );
 
     manifestData.assets.spritesheetMQ.forEach(({ name, path, hash }: any) => {
       const fullUrl = `${environment.assetsUrl}/${path}`;
