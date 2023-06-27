@@ -57,7 +57,7 @@
   let-inventory="inventory"
 >
   <ion-label slot="start" *ngIf="!inventory.equippedItems[slotKey]">
-    <em>nothing equipped</em>
+    <em>nothing equipped in {{ slotKey }} slot</em>
   </ion-label>
 
   <ion-row class="full-width" *ngIf="inventory.equippedItems[slotKey] as item">
