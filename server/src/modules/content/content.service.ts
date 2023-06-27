@@ -4,8 +4,17 @@ import { ICollectible, IEquipment, IItem, IJob, ILocation } from '@interfaces';
 import * as fs from 'fs-extra';
 import { Logger } from 'nestjs-pino';
 
+import { CensorSensor } from 'censor-sensor';
+
+const censor = new CensorSensor();
+censor.disableTier(4);
+
 @Injectable()
 export class ContentService {
+  public get censor(): CensorSensor {
+    return censor;
+  }
+
   public content = { locations: {}, jobs: {}, collectibles: {}, equipment: {} };
 
   private get locations(): Record<string, ILocation> {

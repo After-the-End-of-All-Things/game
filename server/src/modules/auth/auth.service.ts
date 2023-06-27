@@ -8,7 +8,7 @@ import * as bcrypt from 'bcrypt';
 import { sample } from 'lodash';
 
 import { IFullUser, IHasAccessToken } from '@interfaces';
-import { AnalyticsService } from '@modules/content/analytics.service';
+import { ContentService } from '@modules/content/content.service';
 import { User } from '../user/user.schema';
 import { UserService } from '../user/user.service';
 
@@ -17,7 +17,7 @@ export class AuthService {
   constructor(
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
-    private readonly analyticsService: AnalyticsService,
+    private readonly contentService: ContentService,
   ) {}
 
   async signUp(
@@ -25,6 +25,11 @@ export class AuthService {
     password: string,
     email: string,
   ): Promise<IFullUser> {
+    if (this.contentService.censor.isProfaneIsh(username))
+      throw new BadRequestException(
+        'Username is somewhat profane. Please choose again.',
+      );
+
     const usersWithUsername = await this.userService.getAllUsersWithUsername(
       username,
     );

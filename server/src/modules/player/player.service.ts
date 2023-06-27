@@ -90,9 +90,11 @@ export class PlayerService {
     const player = await this.getPlayerForUser(userId);
     if (!player) throw new ForbiddenException('Player not found');
 
-    shortBio = shortBio.substring(0, 30).trim();
+    shortBio = this.contentService.censor.cleanProfanityIsh(
+      shortBio.substring(0, 30).trim(),
+    );
 
-    if(player.profile.shortBio === shortBio) return {};
+    if (player.profile.shortBio === shortBio) return {};
 
     const playerPatches = await getPatchesAfterPropChanges<Player>(
       player,
@@ -120,9 +122,11 @@ export class PlayerService {
     const player = await this.getPlayerForUser(userId);
     if (!player) throw new ForbiddenException('Player not found');
 
-    longBio = longBio.substring(0, 500).trim();
+    longBio = this.contentService.censor.cleanProfanityIsh(
+      longBio.substring(0, 500).trim(),
+    );
 
-    if(player.profile.longBio === longBio) return {};
+    if (player.profile.longBio === longBio) return {};
 
     const playerPatches = await getPatchesAfterPropChanges<Player>(
       player,
