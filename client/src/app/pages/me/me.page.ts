@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ChooseAvatarModalComponent } from '@components/modals/choose-avatar/choose-avatar.component';
-import { IPlayer, Stat } from '@interfaces';
+import { IEquipment, IPlayer, ItemSlot, Stat } from '@interfaces';
 import { ModalController } from '@ionic/angular';
 import { Select } from '@ngxs/store';
 import { AuthService } from '@services/auth.service';
 import { ContentService } from '@services/content.service';
 import { PlayerService } from '@services/player.service';
-import { PlayerStore } from '@stores';
+import { InventoryStore, PlayerStore } from '@stores';
+import { sum } from 'lodash';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -16,6 +17,9 @@ import { Observable } from 'rxjs';
 })
 export class MePage implements OnInit {
   @Select(PlayerStore.player) player$!: Observable<IPlayer>;
+  @Select(InventoryStore.equipped) equipment$!: Observable<
+    Record<ItemSlot, IEquipment>
+  >;
 
   public readonly stats = [
     {
@@ -69,10 +73,28 @@ export class MePage implements OnInit {
     }
   }
 
-  calcStat(player: IPlayer, stat: Stat) {
+  calcStat(
+    player: IPlayer,
+    equipment: Record<ItemSlot, IEquipment>,
+    stat: Stat,
+  ) {
     const job = this.contentService.getJob(player.job);
     if (!job) return 0;
 
-    return Math.floor(job.statGainsPerLevel[stat] * player.level);
+    const total = sum(
+      Object.values(equipment)
+        .filter(Boolean)
+        .map((item) => item.stats[stat] ?? 0),
+    );
+
+    return total + Math.floor(job.statGainsPerLevel[stat] * player.level);
+  }
+
+  getMainNumber(value: number) {
+    return Math.floor(value);
+  }
+
+  getSubNumber(value: number) {
+    return (value - Math.floor(value)).toFixed(1).substring(1);
   }
 }

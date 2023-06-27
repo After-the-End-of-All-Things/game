@@ -7,7 +7,9 @@
     <app-header-bar></app-header-bar>
   </ion-header>
 
-  <ion-grid *ngIf="{ player: player$ | async } as data">
+  <ion-grid
+    *ngIf="{ player: player$ | async, equipment: equipment$ | async } as data"
+  >
     <ion-row>
       <ion-col sizeSm="4" *ngFor="let stat of stats">
         <ion-card class="number-card center-title-card">
@@ -16,8 +18,12 @@
           </ion-card-header>
 
           <ion-card-content>
-            <div class="number">
-              {{ calcStat(data.player!, stat.stat) | number }}
+            <div
+              class="number"
+              *ngIf="calcStat(data.player!, data.equipment!, stat.stat) as value"
+            >
+              <span class="main-number">{{ getMainNumber(value) }}</span>
+              <span class="sub-number">{{ getSubNumber(value) }}</span>
             </div>
           </ion-card-content>
         </ion-card>
