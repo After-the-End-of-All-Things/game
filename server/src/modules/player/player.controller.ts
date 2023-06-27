@@ -45,4 +45,24 @@ export class PlayerController {
 
     return this.playerService.updatePortraitForPlayer(user.userId, portraitId);
   }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Change Player Tagline' })
+  @Patch('profile/shortbio')
+  async changeShortBio(
+    @User() user,
+    @Body('shortbio') shortbio: string,
+  ): Promise<Partial<IFullUser | IPatchUser>> {
+    return this.playerService.updateShortBioForPlayer(user.userId, shortbio);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Change Player Bio' })
+  @Patch('profile/longbio')
+  async changeLongBio(
+    @User() user,
+    @Body('longbio') longbio: string,
+  ): Promise<Partial<IFullUser | IPatchUser>> {
+    return this.playerService.updateLongBioForPlayer(user.userId, longbio);
+  }
 }

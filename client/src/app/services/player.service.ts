@@ -17,4 +17,16 @@ export class PlayerService {
       .patch(`${environment.apiUrl}/player/cosmetics/portrait`, { portrait })
       .subscribe();
   }
+
+  changeShortBio(shortbio: string) {
+    this.http
+      .patch(`${environment.apiUrl}/player/profile/shortbio`, { shortbio })
+      .subscribe();
+  }
+
+  changeLongBio(longbio: string) {
+    this.http
+      .patch(`${environment.apiUrl}/player/profile/longbio`, { longbio })
+      .subscribe();
+  }
 }

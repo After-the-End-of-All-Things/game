@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ChooseAvatarModalComponent } from '@components/modals/choose-avatar/choose-avatar.component';
 import { IEquipment, IPlayer, ItemSlot, Stat } from '@interfaces';
-import { ModalController } from '@ionic/angular';
+import { AlertController, ModalController } from '@ionic/angular';
 import { Select } from '@ngxs/store';
 import { AuthService } from '@services/auth.service';
 import { ContentService } from '@services/content.service';
@@ -50,6 +50,7 @@ export class MePage implements OnInit {
 
   constructor(
     private modal: ModalController,
+    private alert: AlertController,
     private contentService: ContentService,
     private playerService: PlayerService,
     public authService: AuthService,
@@ -96,5 +97,67 @@ export class MePage implements OnInit {
 
   getSubNumber(value: number) {
     return (value - Math.floor(value)).toFixed(1).substring(1);
+  }
+
+  async changeShortBio(defaultValue: string) {
+    const alert = await this.alert.create({
+      header: 'Change Tagline',
+      inputs: [
+        {
+          placeholder: 'Tagline',
+          type: 'textarea',
+          value: defaultValue,
+          attributes: {
+            maxlength: 30,
+          },
+        },
+      ],
+      buttons: [
+        {
+          role: 'cancel',
+          text: 'Cancel',
+        },
+        {
+          text: 'Save',
+          handler: (data: any) => {
+            const newTagline = data[0];
+            this.playerService.changeShortBio(newTagline);
+          },
+        },
+      ],
+    });
+
+    await alert.present();
+  }
+
+  async changeLongBio(defaultValue: string) {
+    const alert = await this.alert.create({
+      header: 'Change Tagline',
+      inputs: [
+        {
+          placeholder: 'Bio',
+          type: 'textarea',
+          value: defaultValue,
+          attributes: {
+            maxlength: 500,
+          },
+        },
+      ],
+      buttons: [
+        {
+          role: 'cancel',
+          text: 'Cancel',
+        },
+        {
+          text: 'Save',
+          handler: (data: any) => {
+            const newBio = data[0];
+            this.playerService.changeLongBio(newBio);
+          },
+        },
+      ],
+    });
+
+    await alert.present();
   }
 }

@@ -73,6 +73,73 @@ export class PlayerService {
 
     return {
       player: playerPatches,
+      actions: [
+        {
+          type: 'Notify',
+          messageType: 'success',
+          message: `Portrait updated!`,
+        },
+      ],
+    };
+  }
+
+  async updateShortBioForPlayer(
+    userId: string,
+    shortBio: string,
+  ): Promise<Partial<IFullUser | IPatchUser>> {
+    const player = await this.getPlayerForUser(userId);
+    if (!player) throw new ForbiddenException('Player not found');
+
+    shortBio = shortBio.substring(0, 30).trim();
+
+    if(player.profile.shortBio === shortBio) return {};
+
+    const playerPatches = await getPatchesAfterPropChanges<Player>(
+      player,
+      async (playerRef) => {
+        playerRef.profile = { ...playerRef.profile, shortBio };
+      },
+    );
+
+    return {
+      player: playerPatches,
+      actions: [
+        {
+          type: 'Notify',
+          messageType: 'success',
+          message: `Tagline updated!`,
+        },
+      ],
+    };
+  }
+
+  async updateLongBioForPlayer(
+    userId: string,
+    longBio: string,
+  ): Promise<Partial<IFullUser | IPatchUser>> {
+    const player = await this.getPlayerForUser(userId);
+    if (!player) throw new ForbiddenException('Player not found');
+
+    longBio = longBio.substring(0, 500).trim();
+
+    if(player.profile.longBio === longBio) return {};
+
+    const playerPatches = await getPatchesAfterPropChanges<Player>(
+      player,
+      async (playerRef) => {
+        playerRef.profile = { ...playerRef.profile, longBio };
+      },
+    );
+
+    return {
+      player: playerPatches,
+      actions: [
+        {
+          type: 'Notify',
+          messageType: 'success',
+          message: `Bio updated!`,
+        },
+      ],
     };
   }
 
