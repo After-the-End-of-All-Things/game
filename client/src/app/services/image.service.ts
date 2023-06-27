@@ -15,20 +15,9 @@ import {
 export class ImageService {
   constructor(
     private sanitizer: DomSanitizer,
-    private httpClient: HttpClient
+    private httpClient: HttpClient,
   ) {}
 
-  /**
-   * This method attempts to load the image array
-   * from the database, and if it is not found,
-   * it encodes the image, saves it and returns the
-   * encode
-   *
-   * This way it should be available in the database on future
-   * requests.
-   *
-   * @param url The image URL
-   */
   async getCSSBackgroundImageURL(url: string) {
     let images: BlobImage[] = await readImagesByURL(url);
     if (images.length == 0) {
@@ -36,15 +25,12 @@ export class ImageService {
     }
 
     const safeURL: SafeUrl = this.sanitizer.bypassSecurityTrustUrl(
-      URL.createObjectURL(images[0].data)
+      URL.createObjectURL(images[0].data),
     );
 
     return this.getSafeBackgroundImageUrl(safeURL);
   }
 
-  /**
-   * @param url The SafeUrl instance
-   */
   private getSafeBackgroundImageUrl(url: any) {
     return `url("${url.changingThisBreaksApplicationSecurity}")`;
   }
@@ -56,7 +42,7 @@ export class ImageService {
     }
 
     const safeURL: SafeUrl = this.sanitizer.bypassSecurityTrustUrl(
-      URL.createObjectURL(blob.data)
+      URL.createObjectURL(blob.data),
     );
 
     return safeURL;
@@ -68,20 +54,12 @@ export class ImageService {
     });
   }
 
-  /**
-   * Save the blob image to the database.
-   * It first checks whether there exists an
-   * image with the URL in the database.
-   *
-   * @param url The URL of the image
-   * @param blob The blob
-   */
   async saveImageToDatabase(
     name: string,
     hash: string,
     quality: string,
     url: string,
-    blob: Blob
+    blob: Blob,
   ) {
     if ((await readImagesByURL(url)).length === 0) {
       const blobImage = new BlobImage(
@@ -90,7 +68,7 @@ export class ImageService {
         quality,
         url,
         blob,
-        blob.type
+        blob.type,
       );
 
       createImage(blobImage);

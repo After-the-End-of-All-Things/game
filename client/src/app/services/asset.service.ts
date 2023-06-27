@@ -6,11 +6,28 @@ import { ImageService } from './image.service';
   providedIn: 'root',
 })
 export class AssetService {
+  private maxPortraits = 0;
+  private maxBackgrounds = 0;
+
+  public get portraitCount(): number {
+    return this.maxPortraits;
+  }
+
+  public get backgroundCount(): number {
+    return this.maxBackgrounds;
+  }
+
   constructor(private imageService: ImageService) {}
 
   async init() {
     const manifest = await fetch(`${environment.assetsUrl}/manifest.json`);
     const manifestData = await manifest.json();
+
+    this.maxPortraits = manifestData.assets.individualLQ.filter((x: any) =>
+      x.name.startsWith('portraits-'),
+    ).length;
+
+    this.maxBackgrounds = manifestData.assets.backgrounds.length;
 
     manifestData.assets.spritesheetMQ.forEach((asset: any) => {
       const fullUrl = `${environment.assetsUrl}/${asset.path}`;
@@ -20,7 +37,7 @@ export class AssetService {
           asset.hash,
           'medium',
           fullUrl,
-          blob
+          blob,
         );
       });
     });

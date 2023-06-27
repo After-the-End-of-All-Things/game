@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from '@environment';
 import { ICollectible, IEquipment, IItem, IJob, ILocation } from '@interfaces';
+import { AssetService } from '@services/asset.service';
 
 @Injectable({
   providedIn: 'root',
@@ -13,8 +14,13 @@ export class ContentService {
     equipment: {},
   };
 
-  public readonly maxPortraits = 107;
-  public readonly maxBackgrounds = 18;
+  public get maxPortraits() {
+    return this.assetService.portraitCount;
+  }
+
+  public get maxBackgrounds() {
+    return this.assetService.backgroundCount;
+  }
 
   public get locations(): Record<string, ILocation> {
     return this.content.locations;
@@ -32,7 +38,7 @@ export class ContentService {
     return this.content.equipment;
   }
 
-  constructor() {}
+  constructor(private assetService: AssetService) {}
 
   public async init() {
     const version = await fetch(`${environment.contentUrl}/version.json`);
