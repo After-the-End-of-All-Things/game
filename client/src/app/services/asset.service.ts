@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BackgroundImageService } from '@services/backgroundimage.service';
+import { lastValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { ImageService } from './image.service';
 
@@ -9,6 +10,8 @@ import { ImageService } from './image.service';
 export class AssetService {
   private maxPortraits = 0;
   private maxBackgrounds = 0;
+
+  private spritesheetUrlsByQuality: Record<string, Record<string, string>> = {};
 
   public get portraitCount(): number {
     return this.maxPortraits;
@@ -61,24 +64,39 @@ export class AssetService {
       { quality: 'high', sheets: manifestData.assets.spritesheetHQ },
     ];
 
-    qualitiesAndSheets.forEach(({ quality, sheets }) => {
-      sheets.forEach(async ({ name, path, hash }: any) => {
-        const fullUrl = `${environment.assetsUrl}/${path}`;
+    await Promise.all(
+      qualitiesAndSheets.map(async ({ quality, sheets }) => {
+        await Promise.all(
+          sheets.map(async ({ name, path, hash }: any) => {
+            const fullUrl = `${environment.assetsUrl}/${path}`;
 
-        const oldImage = await this.imageService.getImageDataByUrl(fullUrl);
+            this.spritesheetUrlsByQuality[quality] = {};
 
-        if (!oldImage || oldImage.hash !== hash) {
-          this.imageService.fetchImage(fullUrl).subscribe((blob) => {
-            this.imageService.saveImageToDatabase(
-              name,
-              hash,
-              quality,
-              fullUrl,
-              blob,
-            );
-          });
-        }
-      });
-    });
+            const oldImage = await this.imageService.getImageDataByUrl(fullUrl);
+
+            if (!oldImage || oldImage.hash !== hash) {
+              const blob = await lastValueFrom(
+                this.imageService.fetchImage(fullUrl),
+              );
+
+              await this.imageService.saveImageToDatabase(
+                name,
+                hash,
+                quality,
+                fullUrl,
+                blob,
+              );
+            }
+
+            const url = await this.imageService.getSafeImageUrl(name, quality);
+            this.spritesheetUrlsByQuality[quality][name] = url;
+          }),
+        );
+      }),
+    );
+  }
+
+  public getSpritesheetUrl(name: string, quality: string): string {
+    return this.spritesheetUrlsByQuality[quality][name];
   }
 }

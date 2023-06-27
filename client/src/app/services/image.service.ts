@@ -39,6 +39,11 @@ export class ImageService {
     return readImageByURL(url);
   }
 
+  async getSafeImageUrl(name: string, quality: string) {
+    const baseUrl = await this.getImageUrl(name, quality);
+    return (baseUrl as any).changingThisBreaksApplicationSecurity;
+  }
+
   async getImageUrl(name: string, quality: string) {
     const blob = await readImagesByNameAndQuality(name, quality);
     if (!blob) {

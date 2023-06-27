@@ -8,9 +8,9 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Select } from '@ngxs/store';
+import { AssetService } from '@services/asset.service';
 import { OptionsStore } from '@stores';
 import { Observable } from 'rxjs';
-import { ImageService } from '../../services/image.service';
 
 @Component({
   selector: 'app-icon',
@@ -26,12 +26,13 @@ export class IconComponent implements OnInit, OnChanges {
   @Input({ required: true }) sprite!: number;
   @Input() size: 'small' | 'normal' = 'normal';
 
+  private hasLoaded = false;
   private quality = 'medium';
 
   public spritesheetUrl!: any;
   public assetLocation = '-0px -0px';
 
-  constructor(private imageService: ImageService) {}
+  constructor(private assetService: AssetService) {}
 
   async ngOnInit() {
     this.quality$
@@ -39,19 +40,20 @@ export class IconComponent implements OnInit, OnChanges {
       .subscribe((res: any) => {
         this.quality = res;
         this.updateSprite();
+        this.hasLoaded = true;
       });
   }
 
   async ngOnChanges() {
+    if (!this.hasLoaded) return;
     this.updateSprite();
   }
 
   private async updateSprite() {
-    this.spritesheetUrl = await this.imageService.getImageUrl(
+    this.spritesheetUrl = this.assetService.getSpritesheetUrl(
       this.spritesheet,
       this.quality,
     );
-
     this.assetLocation = this.getSpriteLocation();
   }
 
