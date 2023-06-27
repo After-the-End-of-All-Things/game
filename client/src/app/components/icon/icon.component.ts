@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { ImageService } from '../../services/image.service';
 
 @Component({
@@ -6,7 +6,7 @@ import { ImageService } from '../../services/image.service';
   templateUrl: './icon.component.html',
   styleUrls: ['./icon.component.scss'],
 })
-export class IconComponent implements OnInit {
+export class IconComponent implements OnInit, OnChanges {
   @Input({ required: true }) spritesheet!: string;
   @Input({ required: true }) sprite!: number;
   @Input() quality = 'medium';

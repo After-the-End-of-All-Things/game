@@ -1,25 +1,26 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import {
-  BlobImage,
-  createImage,
-  readImagesByNameAndQuality,
-  readImagesByURL,
-} from '@services/image.db';
 import { Observable } from 'rxjs';
+
+import {
+  BackgroundBlobImage,
+  createBackgroundImage,
+  readBackgroundImageByID,
+  readBackgroundImagesByURL,
+} from '@services/backgroundimage.db';
 
 @Injectable({
   providedIn: 'root',
 })
-export class ImageService {
+export class BackgroundImageService {
   constructor(
     private sanitizer: DomSanitizer,
     private httpClient: HttpClient,
   ) {}
 
   async getCSSBackgroundImageURL(url: string) {
-    let images: BlobImage[] = await readImagesByURL(url);
+    let images: BackgroundBlobImage[] = await readBackgroundImagesByURL(url);
     if (images.length == 0) {
       return `url('${url}')`;
     }
@@ -35,8 +36,8 @@ export class ImageService {
     return `url("${url.changingThisBreaksApplicationSecurity}")`;
   }
 
-  async getImageUrl(name: string, quality: string) {
-    const blob = await readImagesByNameAndQuality(name, quality);
+  async getImageUrl(id: string) {
+    const blob = await readBackgroundImageByID(id);
     if (!blob) {
       return '';
     }
@@ -48,6 +49,11 @@ export class ImageService {
     return safeURL;
   }
 
+  async getSafeImageUrl(id: string) {
+    const baseUrl = await this.getImageUrl(id);
+    return (baseUrl as any).changingThisBreaksApplicationSecurity;
+  }
+
   fetchImage(url: string): Observable<Blob> {
     return this.httpClient.get(url, {
       responseType: 'blob',
@@ -57,21 +63,19 @@ export class ImageService {
   async saveImageToDatabase(
     name: string,
     hash: string,
-    quality: string,
     url: string,
     blob: Blob,
   ) {
-    if ((await readImagesByURL(url)).length === 0) {
-      const blobImage = new BlobImage(
+    if ((await readBackgroundImagesByURL(url)).length === 0) {
+      const blobImage = new BackgroundBlobImage(
         name,
-        hash,
-        quality,
         url,
+        hash,
         blob,
         blob.type,
       );
 
-      createImage(blobImage);
+      createBackgroundImage(blobImage);
     }
   }
 }

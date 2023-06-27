@@ -22,9 +22,7 @@
           <ion-card-subtitle>Level {{ location.level }}</ion-card-subtitle>
         </ion-card-header>
 
-        <ion-img
-          [src]="'https://assets.ateoat.com/assets/backgrounds/' + location.background + '.webp'"
-        ></ion-img>
+        <app-background-art [sprite]="location.background"></app-background-art>
 
         <ion-card-content>
           <div class="description">{{ location.description }}</div>
