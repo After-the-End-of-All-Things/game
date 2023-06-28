@@ -11,6 +11,7 @@ export class AssetService {
   private maxPortraits = 0;
   private maxBackgrounds = 0;
 
+  private backgroundUrls: Record<string, string> = {};
   private spritesheetUrlsByQuality: Record<string, Record<string, string>> = {};
 
   public get portraitCount(): number {
@@ -36,8 +37,8 @@ export class AssetService {
 
     this.maxBackgrounds = manifestData.assets.backgrounds.length;
 
-    manifestData.assets.backgrounds.forEach(
-      async ({ name, path, hash }: any) => {
+    await Promise.all(
+      manifestData.assets.backgrounds.map(async ({ name, path, hash }: any) => {
         const fullUrl = `${environment.assetsUrl}/${path}`;
 
         const oldImage = await this.backgroundImageService.getImageDataById(
@@ -45,16 +46,21 @@ export class AssetService {
         );
 
         if (!oldImage || oldImage.hash !== hash) {
-          this.backgroundImageService.fetchImage(fullUrl).subscribe((blob) => {
-            this.backgroundImageService.saveImageToDatabase(
-              name,
-              hash,
-              fullUrl,
-              blob,
-            );
-          });
+          const blob = await lastValueFrom(
+            this.imageService.fetchImage(fullUrl),
+          );
+
+          this.backgroundImageService.saveImageToDatabase(
+            name,
+            hash,
+            fullUrl,
+            blob,
+          );
         }
-      },
+
+        const url = await this.backgroundImageService.getSafeImageUrl(name);
+        this.backgroundUrls[name] = url;
+      }),
     );
 
     const qualitiesAndSheets = [
@@ -98,5 +104,9 @@ export class AssetService {
 
   public getSpritesheetUrl(name: string, quality: string): string {
     return this.spritesheetUrlsByQuality[quality][name];
+  }
+
+  public getBackgroundUrl(name: string): string {
+    return this.backgroundUrls[name];
   }
 }

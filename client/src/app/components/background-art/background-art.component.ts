@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, OnInit } from '@angular/core';
-import { BackgroundImageService } from '@services/backgroundimage.service';
+import { AssetService } from '@services/asset.service';
 
 @Component({
   selector: 'app-background-art',
@@ -11,13 +11,13 @@ export class BackgroundArtComponent implements OnInit, OnChanges {
 
   public bgUrl: any;
 
-  constructor(private backgroundImageService: BackgroundImageService) {}
+  constructor(private assetService: AssetService) {}
 
   async ngOnInit() {
-    this.bgUrl = await this.backgroundImageService.getSafeImageUrl(this.sprite);
+    this.bgUrl = await this.assetService.getBackgroundUrl(this.sprite);
   }
 
   async ngOnChanges() {
-    this.bgUrl = await this.backgroundImageService.getSafeImageUrl(this.sprite);
+    this.bgUrl = await this.assetService.getBackgroundUrl(this.sprite);
   }
 }
