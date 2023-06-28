@@ -27,6 +27,13 @@
         <ion-card-content>
           <div class="description">{{ location.description }}</div>
           <div
+            class="collectibles"
+            [class.all-found]="numCollectiblesDiscoveredAt(location) >= maxCollectiblesAtLocation(location)"
+          >
+            {{ numCollectiblesDiscoveredAt(location) }} / {{
+            maxCollectiblesAtLocation(location) }} Collectibles Collected
+          </div>
+          <div
             class="locations"
             [class.all-found]="numLocationsDiscoveredAt(location) >= location.connections.length"
           >
@@ -41,7 +48,7 @@
         >
           <ion-button
             color="secondary"
-            (click)="walkToLocation(location.name)"
+            (click)="walkToLocation(location)"
             *ngIf="currentWalkTo !== location.name"
           >
             Walk for {{ location.steps | number }} Steps
@@ -58,7 +65,7 @@
           <ion-button
             color="secondary"
             [disabled]="currentCoins < location.cost"
-            (click)="travelToLocation(location.name)"
+            (click)="travelToLocation(location)"
           >
             Travel for {{ location.cost | number }} Coins
           </ion-button>

@@ -16,6 +16,9 @@ import { Observable, combineLatest } from 'rxjs';
 export class TravelPage implements OnInit {
   private destroyRef = inject(DestroyRef);
 
+  @Select(DiscoveriesStore.collectibles) collectibles$!: Observable<
+    Record<string, boolean>
+  >;
   @Select(PlayerStore.playerCoins) playerCoins$!: Observable<number>;
   @Select(PlayerStore.playerLocation)
   playerLocation$!: Observable<IPlayerLocation>;
@@ -29,20 +32,27 @@ export class TravelPage implements OnInit {
   public currentLocation = '';
   public currentWalkTo = '';
   public locations: ILocation[] = [];
+  public collectibles: Record<string, boolean> = {};
 
   constructor(
     private contentService: ContentService,
-    private gameplayService: GameplayService
+    private gameplayService: GameplayService,
   ) {}
 
   ngOnInit() {
-    combineLatest([this.playerCoins$, this.playerLocation$, this.playerLevel$])
+    combineLatest([
+      this.playerCoins$,
+      this.playerLocation$,
+      this.playerLevel$,
+      this.collectibles$,
+    ])
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(([coins, location, level]) => {
+      .subscribe(([coins, location, level, collectibles]) => {
         this.currentCoins = coins;
         this.currentLocation = location.current;
         this.currentLevel = level;
         this.currentWalkTo = location.goingTo;
+        this.collectibles = collectibles;
       });
 
     this.locations$
@@ -58,15 +68,28 @@ export class TravelPage implements OnInit {
 
   numLocationsDiscoveredAt(location: ILocation): number {
     return location.connections.filter((x) =>
-      this.locations.find((y) => y.name === x.name)
+      this.locations.find((y) => y.name === x.name),
     ).length;
   }
 
-  walkToLocation(locationName: string) {
-    this.gameplayService.walk(locationName).subscribe();
+  walkToLocation(location: ILocation) {
+    this.gameplayService.walk(location.name).subscribe();
   }
 
-  travelToLocation(locationName: string) {
-    this.gameplayService.travel(locationName).subscribe();
+  travelToLocation(location: ILocation) {
+    this.gameplayService.travel(location.name).subscribe();
+  }
+
+  numCollectiblesDiscoveredAt(location: ILocation): number {
+    return Object.keys(this.collectibles).filter(
+      (id) =>
+        this.contentService.getCollectible(id)?.location === location.name,
+    ).length;
+  }
+
+  maxCollectiblesAtLocation(location: ILocation): number {
+    return this.contentService
+      .getAllCollectibles()
+      .filter((coll) => coll.location === location.name).length;
   }
 }
