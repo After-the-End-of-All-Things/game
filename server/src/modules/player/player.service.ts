@@ -5,6 +5,7 @@ import {
   ILocation,
   INotificationAction,
   IPatchUser,
+  Rarity,
 } from '@interfaces';
 import { EntityManager, EntityRepository } from '@mikro-orm/mongodb';
 import { InjectRepository } from '@mikro-orm/nestjs';
@@ -331,12 +332,29 @@ export class PlayerService {
     player: Player,
     location: ILocation,
   ): Promise<any> {
-    const randomCollectibleForLocation = sample(
-      this.contentService
-        .allCollectibles()
-        .filter((coll) => coll.location === location.name),
-    );
+    const collectibleRarityCommonality: Record<Rarity, number> = {
+      Common: 100,
+      Uncommon: 75,
+      Unusual: 50,
+      Rare: 25,
+      Epic: 10,
+      Arcane: 5,
+      Divine: 3,
+      Masterful: 2,
+      Unique: 1,
+    };
 
+    const allCollectibles = this.contentService
+      .allCollectibles()
+      .filter((coll) => coll.location === location.name);
+
+    const allCollectiblesWithRarity = allCollectibles
+      .map((coll) =>
+        Array(collectibleRarityCommonality[coll.rarity] ?? 1).fill(coll),
+      )
+      .flat();
+
+    const randomCollectibleForLocation = sample(allCollectiblesWithRarity);
     if (!randomCollectibleForLocation) return;
 
     this.setPlayerAction(player, {
