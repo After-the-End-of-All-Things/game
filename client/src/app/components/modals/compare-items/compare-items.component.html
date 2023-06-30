@@ -1,0 +1,98 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start"></ion-buttons>
+
+    <ion-title>Compare Items</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss(true)" [strong]="true">Equip</ion-button>
+      <ion-button color="medium" (click)="dismiss()">Close</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-card>
+    <ion-card-content>
+      <ion-row>
+        <ion-col>
+          <ion-row>
+            <ion-col>
+              <ion-row class="name-row">
+                <ion-col class="icon">
+                  <app-item-icon [item]="item1" size="small"></app-item-icon>
+                </ion-col>
+                <ion-col class="name">
+                  {{ item1.name }}
+                  <br />
+                  Lv.{{ item1.levelRequirement }}
+                </ion-col>
+              </ion-row>
+            </ion-col>
+          </ion-row>
+
+          <ion-row
+            *ngFor="let stat of commonStats"
+            class="stat-row"
+            [ngClass]="getStatClassBetweenItems(stat, item1, item2)"
+          >
+            <ion-col>
+              <ion-row>
+                <ion-col class="stat">
+                  {{ stat }}
+                </ion-col>
+
+                <ion-col class="value">
+                  {{ item1.stats[stat] > 0 ? '+' : '' }}
+                  {{ item1.stats[stat] || 0 | number }}
+                </ion-col>
+              </ion-row>
+            </ion-col>
+          </ion-row>
+        </ion-col>
+
+        <ion-col *ngIf="!item2">
+          <ion-row>
+            <ion-col>(nothing)</ion-col>
+          </ion-row>
+        </ion-col>
+
+        <ion-col *ngIf="item2">
+          <ion-row>
+            <ion-col>
+              <ion-row class="name-row">
+                <ion-col class="icon">
+                  <app-item-icon [item]="item2" size="small"></app-item-icon>
+                </ion-col>
+                <ion-col class="name">
+                  {{ item2.name }}
+                  <br />
+                  Lv.{{ item2.levelRequirement }}
+                </ion-col>
+              </ion-row>
+            </ion-col>
+          </ion-row>
+
+          <ion-row
+            *ngFor="let stat of commonStats"
+            class="stat-row"
+            [ngClass]="getStatClassBetweenItems(stat, item2, item1)"
+          >
+            <ion-col>
+              <ion-row>
+                <ion-col class="stat">
+                  {{ stat }}
+                </ion-col>
+
+                <ion-col class="value">
+                  {{ item2.stats[stat] > 0 ? '+' : '' }}
+                  {{ item2.stats[stat] || 0 | number }}
+                </ion-col>
+              </ion-row>
+            </ion-col>
+          </ion-row>
+        </ion-col>
+      </ion-row>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

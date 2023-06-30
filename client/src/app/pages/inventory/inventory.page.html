@@ -7,7 +7,9 @@
     <app-header-bar></app-header-bar>
   </ion-header>
 
-  <ion-grid *ngIf="{ player: player$ | async } as data">
+  <ion-grid
+    *ngIf="{ player: player$ | async, equipped: equipped$ | async } as data"
+  >
     <ion-row>
       <ion-col>
         <ion-card>
@@ -116,7 +118,7 @@
                           <ion-item
                             class="cursor-pointer"
                             *ngIf="basicEquipTypes.includes(row.type) && canEquipItem(data.player, row) && canEquipArmor(data.player, row)"
-                            (click)="equipArmor(row); popover.dismiss()"
+                            (click)="equipArmor(row, getEquippedItem(row.type, $any(data.equipped))); popover.dismiss()"
                           >
                             Equip Armor
                           </ion-item>
@@ -124,7 +126,7 @@
                           <ion-item
                             class="cursor-pointer"
                             *ngIf="weaponEquipTypes.includes(row.type) && canEquipItem(data.player, row) && canEquipWeapon(data.player, row)"
-                            (click)="equipWeapon(row); popover.dismiss()"
+                            (click)="equipWeapon(row, getEquippedItem('weapon', $any(data.equipped))); popover.dismiss()"
                           >
                             Equip Weapon
                           </ion-item>
@@ -135,7 +137,7 @@
                             <ion-item
                               class="cursor-pointer"
                               *ngFor="let slot of [1, 2, 3]"
-                              (click)="equipAccessory(row, slot); popover.dismiss()"
+                              (click)="equipAccessory(row, slot, getEquippedItem('accessory' + slot, $any(data.equipped))); popover.dismiss()"
                             >
                               Equip Accessory (Slot {{ slot }})
                             </ion-item>

@@ -6,16 +6,19 @@ import {
   IEquipment,
   IItem,
   IPlayer,
+  ItemSlot,
   Weapon,
 } from '@interfaces';
 import { ContentService } from '@services/content.service';
 import { PlayerService } from '@services/player.service';
 
+import { CompareItemsModalComponent } from '@components/modals/compare-items/compare-items.component';
 import { itemValue } from '@helpers/item';
+import { ModalController } from '@ionic/angular';
 import { Select, Store } from '@ngxs/store';
 import { GameplayService } from '@services/gameplay.service';
 import { UserService } from '@services/user.service';
-import { PlayerStore } from '@stores';
+import { InventoryStore, PlayerStore } from '@stores';
 import { Observable } from 'dexie';
 
 @Component({
@@ -25,6 +28,9 @@ import { Observable } from 'dexie';
 })
 export class InventoryPage implements OnInit {
   @Select(PlayerStore.player) player$!: Observable<IPlayer>;
+  @Select(InventoryStore.equipped) equipped$!: Observable<
+    Record<ItemSlot, IEquipment>
+  >;
 
   public readonly basicEquipTypes = [
     'body',
@@ -62,6 +68,7 @@ export class InventoryPage implements OnInit {
     private store: Store,
     public playerService: PlayerService,
     public contentService: ContentService,
+    private modalController: ModalController,
     private gameplayService: GameplayService,
     private userService: UserService,
   ) {}
@@ -140,9 +147,21 @@ export class InventoryPage implements OnInit {
     );
   }
 
-  // job check, job check, job check, level check
+  getEquippedItem(
+    slot: ItemSlot | string,
+    equipment?: Record<ItemSlot, IEquipment>,
+  ): IEquipment | undefined {
+    return equipment?.[slot as ItemSlot];
+  }
+
   canEquipItem(player: unknown, item: IEquipment) {
-    return (player as IPlayer).level >= item.levelRequirement;
+    const playerRef = player as IPlayer;
+    const playerJob = this.contentService.getJob(playerRef.job);
+    return (
+      playerRef.level >= item.levelRequirement &&
+      (playerJob?.armorSlots[item.type as Armor] ||
+        playerJob?.weapons[item.type as Weapon])
+    );
   }
 
   canEquipWeapon(player: unknown, item: IEquipment) {
@@ -161,27 +180,54 @@ export class InventoryPage implements OnInit {
     return jobRef.armorSlots[item.type as Armor];
   }
 
-  equipArmor(item: IEquipment) {
-    this.gameplayService
-      .equipItem(item.type as Armor, item.instanceId ?? '')
-      .subscribe(() => {
-        this.updateItems();
-      });
+  private async compareItems(
+    item1: IItem,
+    item2: IItem | undefined,
+    success: () => void,
+  ) {
+    const modal = await this.modalController.create({
+      component: CompareItemsModalComponent,
+      componentProps: {
+        item1,
+        item2,
+      },
+    });
+
+    await modal.present();
+
+    const { data } = await modal.onWillDismiss();
+    if (data) {
+      success();
+    }
   }
 
-  equipWeapon(item: IEquipment) {
-    this.gameplayService
-      .equipItem('weapon', item.instanceId ?? '')
-      .subscribe(() => {
-        this.updateItems();
-      });
+  equipArmor(item: IEquipment, currentItem?: IEquipment) {
+    this.compareItems(item, currentItem, () => {
+      this.gameplayService
+        .equipItem(item.type as Armor, item.instanceId ?? '')
+        .subscribe(() => {
+          this.updateItems();
+        });
+    });
   }
 
-  equipAccessory(item: IEquipment, slot: number) {
-    this.gameplayService
-      .equipItem(`accessory${slot as 1 | 2 | 3}`, item.instanceId ?? '')
-      .subscribe(() => {
-        this.updateItems();
-      });
+  equipWeapon(item: IEquipment, currentItem?: IEquipment) {
+    this.compareItems(item, currentItem, () => {
+      this.gameplayService
+        .equipItem('weapon', item.instanceId ?? '')
+        .subscribe(() => {
+          this.updateItems();
+        });
+    });
+  }
+
+  equipAccessory(item: IEquipment, slot: number, currentItem?: IEquipment) {
+    this.compareItems(item, currentItem, () => {
+      this.gameplayService
+        .equipItem(`accessory${slot as 1 | 2 | 3}`, item.instanceId ?? '')
+        .subscribe(() => {
+          this.updateItems();
+        });
+    });
   }
 }

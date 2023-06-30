@@ -12,6 +12,7 @@ import { ItemIconComponent } from '@components/item-icon/item-icon.component';
 import { ItemRarityComponent } from '@components/item-rarity/item-rarity.component';
 import { ItemStatsComponent } from '@components/item-stats/item-stats.component';
 import { ChooseAvatarModalComponent } from '@components/modals/choose-avatar/choose-avatar.component';
+import { CompareItemsModalComponent } from '@components/modals/compare-items/compare-items.component';
 import { StoreTextComponent } from '@components/store-text/store-text.component';
 import { RelativeTimePipe } from '@helpers/relativetime.pipe';
 import { IonicModule } from '@ionic/angular';
@@ -23,6 +24,7 @@ const components = [
   CardOnlineUsersComponent,
   HeroComponent,
   ChooseAvatarModalComponent,
+  CompareItemsModalComponent,
   HeaderBarComponent,
   AvatarComponent,
   ItemIconComponent,

@@ -1,0 +1,35 @@
+
+.name-row {
+
+  .icon {
+    max-width: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .name {
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+  }
+}
+
+.stat-row {
+
+  &.higher {
+    color: var(--ion-color-success);
+  }
+
+  &.lower {
+    color: var(--ion-color-danger);
+  }
+
+  .stat {
+
+  }
+
+  .value {
+    font-weight: bold;
+  }
+}
