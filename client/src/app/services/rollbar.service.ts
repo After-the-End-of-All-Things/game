@@ -59,28 +59,7 @@ export class RollbarErrorHandler implements ErrorHandler {
       return;
     }
 
-    const savefile = this.store.snapshot();
-    delete savefile.mods;
-
-    // check if the user will let errors be sent
-    if (savefile.options.telemetryErrors) {
-      const extraOptions: any = {};
-
-      // double check if the user will let their savefile be sent
-      if (savefile.options.telemetrySavefiles) {
-        extraOptions.gameState = JSON.stringify(savefile);
-      }
-
-      // send the error, and possibly the savefile
-      this.rollbar.rollbarInstance?.error(
-        err.originalError || err,
-        extraOptions,
-      );
-    }
-
-    // if we have debug mode enabled, tell the player an error happened
-    if (savefile.options.debugMode) {
-      this.notify.error(err.message);
-    }
+    // send the error, and possibly the savefile
+    this.rollbar.rollbarInstance?.error(err.originalError || err);
   }
 }
