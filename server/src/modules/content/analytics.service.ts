@@ -44,10 +44,12 @@ export class AnalyticsService {
   startSession(userId: string, startArgs: any) {
     if (!this.analytics) return;
 
-    this.analytics.sessionStart(userId, {
-      ...startArgs,
-      session_num: 1,
-    });
+    try {
+      this.analytics.sessionStart(userId, {
+        ...startArgs,
+        session_num: 1,
+      });
+    } catch (e) {}
   }
 
   sendDesignEvent(userId: string, eventId: string, value = 0) {
