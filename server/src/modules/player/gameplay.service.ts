@@ -547,8 +547,6 @@ export class GameplayService {
       realSlotForItem = equipmentSlot;
     }
 
-    console.log(equipmentSlot, itemRef, realSlotForItem);
-
     const existingInstance = inventory.equippedItems[equipmentSlot];
     if (existingInstance) {
       await this.unequipItem(
