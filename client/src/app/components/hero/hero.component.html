@@ -3,7 +3,8 @@
   *ngIf="{
     user: user$ | async,
     player: player$ | async,
-    coins: playerCoins$ | async
+    coins: playerCoins$ | async,
+    oats: playerOats$ | async
   } as data"
 >
   <app-avatar [avatar]="data.player?.cosmetics?.portrait ?? 4"></app-avatar>
@@ -24,8 +25,12 @@
       <span class="level">
         Level {{ data.player?.level ?? 0 | number }} {{ data.player?.job }}
       </span>
-      &middot;
+    </div>
+
+    <div class="currencies">
       <span class="coins">{{ data.coins ?? 0 | number }} Coins</span>
+      &middot;
+      <span class="coins">{{ data.oats ?? 0 | number }} Oats</span>
     </div>
   </div>
 </div>

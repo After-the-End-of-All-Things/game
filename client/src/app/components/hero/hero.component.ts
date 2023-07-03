@@ -13,6 +13,7 @@ export class HeroComponent implements OnInit {
   @Select(UserStore.user) user$!: Observable<IUser>;
   @Select(PlayerStore.player) player$!: Observable<IPlayer>;
   @Select(PlayerStore.playerCoins) playerCoins$!: Observable<number>;
+  @Select(PlayerStore.playerOats) playerOats$!: Observable<number>;
 
   ngOnInit() {}
 }

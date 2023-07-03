@@ -14,7 +14,9 @@ export class PlayerService {
 
   changePortrait(portrait: number) {
     this.http
-      .patch(`${environment.apiUrl}/player/cosmetics/portrait`, { portrait })
+      .patch(`${environment.apiUrl}/discoveries/cosmetics/portrait`, {
+        portrait,
+      })
       .subscribe();
   }
 

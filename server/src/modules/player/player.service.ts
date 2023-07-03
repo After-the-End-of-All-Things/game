@@ -1,6 +1,4 @@
-import { xpForLevel } from '@helpers/xp';
 import {
-  Currency,
   IFullUser,
   ILocation,
   INotificationAction,
@@ -10,9 +8,6 @@ import {
 import { EntityManager, EntityRepository } from '@mikro-orm/mongodb';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { ContentService } from '@modules/content/content.service';
-import { Discoveries } from '@modules/discoveries/discoveries.schema';
-import { DiscoveriesService } from '@modules/discoveries/discoveries.service';
-import { NotificationService } from '@modules/notification/notification.service';
 import { Player } from '@modules/player/player.schema';
 import {
   BadRequestException,
@@ -28,8 +23,6 @@ export class PlayerService {
     private readonly em: EntityManager,
     @InjectRepository(Player)
     private readonly players: EntityRepository<Player>,
-    private readonly discoveriesService: DiscoveriesService,
-    private readonly notificationService: NotificationService,
     private readonly contentService: ContentService,
   ) {}
 
@@ -148,57 +141,6 @@ export class PlayerService {
     };
   }
 
-  gainXp(player: Player, xp = 1) {
-    player.xp += xp;
-    this.attemptLevelUpForPlayer(player);
-  }
-
-  gainCurrency(player: Player, amount = 1, currency: Currency) {
-    const newCurrencyValue = Math.max(
-      0,
-      (player.currencies[currency] ?? 0) + amount,
-    );
-    player.currencies = { ...player.currencies, [currency]: newCurrencyValue };
-  }
-
-  gainCoins(player: Player, amount = 1) {
-    this.gainCurrency(player, amount, 'coins' as Currency);
-  }
-
-  spendCurrency(player: Player, amount = 1, currency: Currency) {
-    this.gainCurrency(player, -amount, currency);
-  }
-
-  spendCoins(player: Player, amount = 1) {
-    this.spendCurrency(player, amount, 'coins' as Currency);
-  }
-
-  hasCurrency(player: Player, amount = 1, currency: Currency) {
-    return player.currencies[currency] >= amount;
-  }
-
-  hasCoins(player: Player, amount = 1) {
-    return this.hasCurrency(player, amount, 'coins' as Currency);
-  }
-
-  private attemptLevelUpForPlayer(player: Player) {
-    const requiredXp = xpForLevel(player.level + 1);
-    if (player.xp < requiredXp) return;
-
-    player.xp = 0;
-    player.level += 1;
-
-    void this.notificationService.createNotificationForUser(
-      player.userId,
-      {
-        liveAt: new Date(),
-        text: `You have reached level ${player.level}!`,
-        actions: [],
-      },
-      1,
-    );
-  }
-
   getMicroPlayer(player: Player): Partial<Player> {
     return {
       userId: player.userId,
@@ -293,39 +235,6 @@ export class PlayerService {
         targetUserId: randomPlayer.userId,
       },
     });
-  }
-
-  async handleDiscoveries(
-    player: Player,
-    discoveries: Discoveries,
-    location: ILocation,
-  ) {
-    const locations = location.connections;
-    if (locations.length > 0) {
-      const discoveredLocation = sample(locations);
-      const didDiscover = this.discoveriesService.discoverLocation(
-        discoveries,
-        discoveredLocation.name,
-      );
-
-      if (didDiscover) {
-        void this.notificationService.createNotificationForUser(
-          player.userId,
-          {
-            liveAt: new Date(),
-            text: `You have discovered ${discoveredLocation.name}!`,
-            actions: [
-              {
-                text: 'Travel',
-                action: 'navigate',
-                actionData: { url: '/travel' },
-              },
-            ],
-          },
-          1,
-        );
-      }
-    }
   }
 
   async handleFindCollectible(

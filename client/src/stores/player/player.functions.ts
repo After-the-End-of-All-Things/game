@@ -46,6 +46,7 @@ export const defaultStore: () => IPlayerStore = () => ({
 
     currencies: {
       [Currency.Coins]: 0,
+      [Currency.Oats]: 0,
     },
 
     recharges: {

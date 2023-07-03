@@ -49,6 +49,8 @@ export class AuthService {
     }
 
     const discriminator = sample(availableDiscriminators);
+    if (!discriminator) throw new BadRequestException('Failed to create user.');
+
     const hash = await bcrypt.hash(password, 10);
     const newUser = new User(username, discriminator, hash, email);
     const createdUser = await this.userService.createUser(newUser);

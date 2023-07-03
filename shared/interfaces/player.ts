@@ -15,6 +15,7 @@ export enum RechargeableStat {
 
 export enum Currency {
   Coins = 'coins',
+  Oats = 'oats',
 }
 
 export interface IPlayerLocation {

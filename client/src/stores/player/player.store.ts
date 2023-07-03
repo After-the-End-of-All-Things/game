@@ -34,6 +34,11 @@ export class PlayerStore {
   }
 
   @Selector()
+  static playerOats(state: IPlayerStore) {
+    return state.player.currencies[Currency.Oats];
+  }
+
+  @Selector()
   static playerLevel(state: IPlayerStore) {
     return state.player.level;
   }

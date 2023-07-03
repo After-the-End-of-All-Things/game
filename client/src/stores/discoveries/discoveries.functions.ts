@@ -12,6 +12,10 @@ export const defaultStore: () => IDiscoveriesStore = () => ({
     borders: {},
     collectibles: {},
     items: {},
+    uniqueCollectibleClaims: 0,
+    totalCollectibleClaims: 0,
+    uniqueEquipmentClaims: 0,
+    totalEquipmentClaims: 0,
   },
 });
 

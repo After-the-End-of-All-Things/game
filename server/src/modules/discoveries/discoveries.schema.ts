@@ -33,10 +33,22 @@ export class Discoveries implements IDiscoveries {
   borders: Record<string, boolean>;
 
   @Property()
-  collectibles: Record<string, boolean>;
+  collectibles: Record<string, number>;
 
   @Property()
-  items: Record<string, boolean>;
+  items: Record<string, number>;
+
+  @Property()
+  uniqueCollectibleClaims: number;
+
+  @Property()
+  totalCollectibleClaims: number;
+
+  @Property()
+  uniqueEquipmentClaims: number;
+
+  @Property()
+  totalEquipmentClaims: number;
 
   constructor(userId: string) {
     this.userId = userId;
@@ -47,5 +59,10 @@ export class Discoveries implements IDiscoveries {
     this.borders = { 0: true };
     this.collectibles = {};
     this.items = {};
+
+    this.uniqueCollectibleClaims = 0;
+    this.totalCollectibleClaims = 0;
+    this.uniqueEquipmentClaims = 0;
+    this.totalEquipmentClaims = 0;
   }
 }

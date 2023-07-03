@@ -12,6 +12,7 @@ import {
 import { AnalyticsService } from '@modules/content/analytics.service';
 import { ConstantsService } from '@modules/content/constants.service';
 import { ContentService } from '@modules/content/content.service';
+import { PlayerHelperService } from '@modules/content/playerhelper.service';
 import { Discoveries } from '@modules/discoveries/discoveries.schema';
 import { DiscoveriesService } from '@modules/discoveries/discoveries.service';
 import { Inventory } from '@modules/inventory/inventory.schema';
@@ -21,6 +22,7 @@ import { Player } from '@modules/player/player.schema';
 import { PlayerService } from '@modules/player/player.service';
 import { StatsService } from '@modules/stats/stats.service';
 import { ForbiddenException, Injectable } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { getPatchesAfterPropChanges } from '@utils/patches';
 import { sample } from 'lodash';
 
@@ -36,10 +38,12 @@ export class GameplayService {
     private readonly discoveriesService: DiscoveriesService,
     private readonly statsService: StatsService,
     private readonly inventoryService: InventoryService,
-    private readonly notificationService: NotificationService,
     private readonly constantsService: ConstantsService,
     private readonly contentService: ContentService,
     private readonly analyticsService: AnalyticsService,
+    private readonly events: EventEmitter2,
+    private readonly notificationService: NotificationService,
+    private readonly playerHelper: PlayerHelperService,
   ) {}
 
   async explore(userId: string): Promise<Partial<IFullUser | IPatchUser>> {
@@ -127,14 +131,14 @@ export class GameplayService {
             (this.constantsService.exploreXpMultiplier / 100),
         );
 
-        this.playerService.gainXp(playerRef, xpGained);
+        this.playerHelper.gainXp(playerRef, xpGained);
 
         // gain coins
         const baseCoins = this.constantsService.baseExploreCoins;
         const coinsGainPercent = foundLocation.baseStats.coinGain;
         const coinsGained = Math.floor(baseCoins * (coinsGainPercent / 100));
 
-        this.playerService.gainCoins(playerRef, coinsGained);
+        this.playerHelper.gainCoins(playerRef, coinsGained);
 
         // get cooldown
         const baseExploreSpeed = this.constantsService.baseExploreSpeed;
@@ -199,7 +203,7 @@ export class GameplayService {
         if (!foundLocation) return;
 
         if (exploreResult === 'Discovery') {
-          await this.playerService.handleDiscoveries(
+          await this.discoveriesService.handleExploreDiscoveries(
             player,
             discRef,
             foundLocation,
@@ -290,7 +294,7 @@ export class GameplayService {
 
     const cost = location.cost ?? 0;
 
-    if (!this.playerService.hasCoins(player, cost)) {
+    if (!this.playerHelper.hasCoins(player, cost)) {
       throw new ForbiddenException(
         'You do not have enough coins to travel here!',
       );
@@ -304,7 +308,7 @@ export class GameplayService {
     const playerPatches = await getPatchesAfterPropChanges<Player>(
       player,
       async (playerRef) => {
-        this.playerService.spendCoins(playerRef, cost);
+        this.playerHelper.spendCoins(playerRef, cost);
 
         playerRef.location = {
           ...playerRef.location,
@@ -393,21 +397,21 @@ export class GameplayService {
 
     // notify the target they were waved back at
     if (isWaveBack) {
-      void this.notificationService.createNotificationForUser(
-        targetUserId,
-        {
+      this.events.emit('notification.create', {
+        userId: targetUserId,
+        notification: {
           liveAt: new Date(),
           text: `${player.profile.displayName} waved back at you!`,
           actions: [],
         },
-        1,
-      );
+        expiresAfterHours: 1,
+      });
 
       // give the target a chance to wave back at us
     } else {
-      void this.notificationService.createNotificationForUser(
-        targetUserId,
-        {
+      this.events.emit('notification.create', {
+        userId: targetUserId,
+        notification: {
           liveAt: new Date(),
           text: `You were waved at by ${player.profile.displayName}!`,
           actions: [
@@ -425,8 +429,8 @@ export class GameplayService {
             },
           ],
         },
-        1,
-      );
+        expiresAfterHours: 1,
+      });
     }
 
     this.analyticsService.sendDesignEvent(userId, `Gameplay:Wave`);
@@ -486,7 +490,7 @@ export class GameplayService {
     const playerPatches = await getPatchesAfterPropChanges<Player>(
       player,
       async (playerRef) => {
-        this.playerService.gainCoins(playerRef, coinsGained);
+        this.playerHelper.gainCoins(playerRef, coinsGained);
       },
     );
 

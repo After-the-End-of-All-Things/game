@@ -71,13 +71,102 @@
   <div class="collectibles">
     <ion-row class="unlocked">
       <ion-col>
-        <span class="base">
-          {{ unlocked['collectibles'] }} / {{ allCollectibles.length }} unlocked
-        </span>
+        <ion-row>
+          <ion-col>
+            <ion-card class="number-card center-title-card" color="secondary">
+              <ion-card-header>
+                <ion-card-title>Unique</ion-card-title>
+              </ion-card-header>
 
-        <span class="percent">
-          ({{ unlocked['collectibles'] / allCollectibles.length | percent }})
-        </span>
+              <ion-card-content>
+                <div class="number">
+                  <span class="main-number">
+                    {{ unlocked['collectibles'] | number }}
+                  </span>
+                  <span class="sub-number">
+                    / {{ allCollectibles.length | number }}
+                  </span>
+                </div>
+                <div class="number-action">
+                  {{ (unlocked['collectibles'] ?? 0) / allCollectibles.length |
+                  percent }}
+                </div>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+
+          <ion-col>
+            <ion-card class="number-card center-title-card" color="tertiary">
+              <ion-card-header>
+                <ion-card-title>Unique Rewards</ion-card-title>
+              </ion-card-header>
+
+              <ion-card-content>
+                <div class="number">
+                  <span class="main-number">
+                    {{ getUniqueCollectibleClaimNumber() > collectibleUniqueMax
+                    ? collectibleUniqueMax : getUniqueCollectibleClaimNumber()
+                    }}
+                  </span>
+                  <span class="sub-number">/ {{ collectibleUniqueMax }}</span>
+                </div>
+
+                <ion-button
+                  class="number-action"
+                  color="secondary"
+                  (click)="claimCollectiblesUnique()"
+                  [disabled]="!canClaimUniqueCollectible()"
+                >
+                  Claim
+                </ion-button>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+
+          <ion-col>
+            <ion-card class="number-card center-title-card" color="secondary">
+              <ion-card-header>
+                <ion-card-title>Total</ion-card-title>
+              </ion-card-header>
+
+              <ion-card-content>
+                <div class="number">
+                  <span class="main-number">
+                    {{ totals['collectibles'] | number }}
+                  </span>
+                </div>
+                <div class="number-action"></div>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+
+          <ion-col>
+            <ion-card class="number-card center-title-card" color="tertiary">
+              <ion-card-header>
+                <ion-card-title>Total Rewards</ion-card-title>
+              </ion-card-header>
+
+              <ion-card-content>
+                <div class="number">
+                  <span class="main-number">
+                    {{ getTotalCollectibleClaimNumber() > collectibleTotalMax ?
+                    collectibleTotalMax : getTotalCollectibleClaimNumber() }}
+                  </span>
+                  <span class="sub-number">/ {{ collectibleTotalMax }}</span>
+                </div>
+
+                <ion-button
+                  class="number-action"
+                  color="secondary"
+                  (click)="claimCollectiblesTotal()"
+                  [disabled]="!canClaimTotalCollectible()"
+                >
+                  Claim
+                </ion-button>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+        </ion-row>
       </ion-col>
     </ion-row>
 
@@ -110,13 +199,100 @@
   <div class="items">
     <ion-row class="unlocked">
       <ion-col>
-        <span class="base">
-          {{ unlocked['items'] }} / {{ allEquipment.length }} unlocked
-        </span>
+        <ion-row>
+          <ion-col>
+            <ion-card class="number-card center-title-card" color="secondary">
+              <ion-card-header>
+                <ion-card-title>Unique</ion-card-title>
+              </ion-card-header>
 
-        <span class="percent">
-          ({{ unlocked['items'] / allEquipment.length | percent }})
-        </span>
+              <ion-card-content>
+                <div class="number">
+                  <span class="main-number">
+                    {{ unlocked['items'] | number }}
+                  </span>
+                  <span class="sub-number">
+                    / {{ allEquipment.length | number }}
+                  </span>
+                </div>
+                <div class="number-action">
+                  {{ (unlocked['items'] ?? 0) / allEquipment.length | percent }}
+                </div>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+
+          <ion-col>
+            <ion-card class="number-card center-title-card" color="tertiary">
+              <ion-card-header>
+                <ion-card-title>Unique Rewards</ion-card-title>
+              </ion-card-header>
+
+              <ion-card-content>
+                <div class="number">
+                  <span class="main-number">
+                    {{ getUniqueEquipmentClaimNumber() > equipmentUniqueMax ?
+                    equipmentUniqueMax : getUniqueEquipmentClaimNumber() }}
+                  </span>
+                  <span class="sub-number">/ {{ equipmentUniqueMax }}</span>
+                </div>
+
+                <ion-button
+                  class="number-action"
+                  color="secondary"
+                  (click)="claimEquipmentUnique()"
+                  [disabled]="!canClaimUniqueEquipment()"
+                >
+                  Claim
+                </ion-button>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+
+          <ion-col>
+            <ion-card class="number-card center-title-card" color="secondary">
+              <ion-card-header>
+                <ion-card-title>Total</ion-card-title>
+              </ion-card-header>
+
+              <ion-card-content>
+                <div class="number">
+                  <span class="main-number">
+                    {{ totals['items'] | number }}
+                  </span>
+                </div>
+                <div class="number-action"></div>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+
+          <ion-col>
+            <ion-card class="number-card center-title-card" color="tertiary">
+              <ion-card-header>
+                <ion-card-title>Total Rewards</ion-card-title>
+              </ion-card-header>
+
+              <ion-card-content>
+                <div class="number">
+                  <span class="main-number">
+                    {{ getTotalEquipmentClaimNumber() > equipmentTotalMax ?
+                    equipmentTotalMax : getTotalEquipmentClaimNumber() }}
+                  </span>
+                  <span class="sub-number">/ {{ equipmentTotalMax }}</span>
+                </div>
+
+                <ion-button
+                  class="number-action"
+                  color="secondary"
+                  (click)="claimEquipmentTotal()"
+                  [disabled]="!canClaimTotalEquipment()"
+                >
+                  Claim
+                </ion-button>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+        </ion-row>
       </ion-col>
     </ion-row>
 
@@ -149,7 +325,8 @@
         </span>
 
         <span class="percent">
-          ({{ unlocked['portraits'] / contentService.maxPortraits | percent }})
+          ({{ unlocked['portraits'] ?? 0 / contentService.maxPortraits | percent
+          }})
         </span>
       </ion-col>
     </ion-row>
@@ -177,8 +354,8 @@
         </span>
 
         <span class="percent">
-          ({{ unlocked['backgrounds'] / contentService.maxBackgrounds | percent
-          }})
+          ({{ unlocked['backgrounds'] ?? 0 / contentService.maxBackgrounds |
+          percent }})
         </span>
       </ion-col>
     </ion-row>

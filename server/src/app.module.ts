@@ -11,14 +11,16 @@ import { ConfigModule } from './modules/config/config.module';
 import { ContentModule } from './modules/content/content.module';
 import { DatabaseModule } from './modules/database/database.module';
 import { DiscoveriesModule } from './modules/discoveries/discoveries.module';
+import { GameplayController } from './modules/gameplay/gameplay.controller';
 import { InventoryModule } from './modules/inventory/inventory.module';
 import { NotificationModule } from './modules/notification/notification.module';
-import { GameplayController } from './modules/player/gameplay.controller';
 import { PlayerModule } from './modules/player/player.module';
 import { StatsModule } from './modules/stats/stats.module';
 import { UserModule } from './modules/user/user.module';
 
+import { EventEmitterModule } from '@nestjs/event-emitter';
 import { HttpExceptionFilter } from '@utils/http-exception.filter';
+import { GameplayModule } from './modules/gameplay/gameplay.module';
 import { UpdateAuthTimeInterceptor } from './utils/updatetime.interceptor';
 
 const isProduction = process.env.NODE_ENV === 'production';
@@ -64,6 +66,8 @@ const isProduction = process.env.NODE_ENV === 'production';
     AchievementsModule,
     ContentModule,
     InventoryModule,
+    EventEmitterModule.forRoot(),
+    GameplayModule,
   ],
   controllers: [AppController, GameplayController],
   providers: [

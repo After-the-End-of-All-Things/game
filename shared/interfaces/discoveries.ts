@@ -3,6 +3,10 @@ export interface IDiscoveries {
   portraits: Record<string, boolean>;
   backgrounds: Record<string, boolean>;
   borders: Record<string, boolean>;
-  collectibles: Record<string, boolean>;
-  items: Record<string, boolean>;
+  collectibles: Record<string, number>;
+  items: Record<string, number>;
+  uniqueCollectibleClaims: number;
+  totalCollectibleClaims: number;
+  uniqueEquipmentClaims: number;
+  totalEquipmentClaims: number;
 }

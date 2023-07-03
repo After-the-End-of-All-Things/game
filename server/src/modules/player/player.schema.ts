@@ -89,6 +89,7 @@ export class Player implements IPlayer {
 
     this.currencies = {
       coins: 0,
+      oats: 0,
     };
 
     this.location = {

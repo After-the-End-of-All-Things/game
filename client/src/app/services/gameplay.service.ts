@@ -49,6 +49,34 @@ export class GameplayService {
     );
   }
 
+  claimCollectibleUnique() {
+    return this.http.post(
+      `${environment.apiUrl}/discoveries/claim/unique/collectible`,
+      {},
+    );
+  }
+
+  claimCollectibleTotal() {
+    return this.http.post(
+      `${environment.apiUrl}/discoveries/claim/total/collectible`,
+      {},
+    );
+  }
+
+  claimEquipmentUnique() {
+    return this.http.post(
+      `${environment.apiUrl}/discoveries/claim/unique/equipment`,
+      {},
+    );
+  }
+
+  claimEquipmentTotal() {
+    return this.http.post(
+      `${environment.apiUrl}/discoveries/claim/total/equipment`,
+      {},
+    );
+  }
+
   equipItem(slot: ItemSlot, instanceId: string) {
     return this.http.patch(
       `${environment.apiUrl}/gameplay/item/equip/${slot}`,

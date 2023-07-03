@@ -4,11 +4,22 @@
     min-height: 170px;
 
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
 
     .number {
-      font-size: 4em;
+      font-size: 3.5em;
+    }
+
+    .sub-number {
+      font-size: 0.3em;
+    }
+
+    .number-action {
+      min-height: 36px;
+      display: flex;
+      align-items: center;
     }
   }
 }

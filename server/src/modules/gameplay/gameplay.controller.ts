@@ -1,7 +1,7 @@
 import { IFullUser, IPatchUser, ItemSlot } from '@interfaces';
 import { JwtAuthGuard } from '@modules/auth/jwt.guard';
+import { GameplayService } from '@modules/gameplay/gameplay.service';
 import { InventoryService } from '@modules/inventory/inventory.service';
-import { GameplayService } from '@modules/player/gameplay.service';
 import {
   BadRequestException,
   Body,
