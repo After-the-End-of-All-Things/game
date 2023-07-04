@@ -120,9 +120,6 @@ export class DiscoveriesService {
     if (!itemDefinition)
       throw new NotFoundException('Item definition not found');
 
-    if (discoveries.collectibles?.[itemDefinition.itemId])
-      throw new BadRequestException('Collectible already discovered');
-
     await this.inventoryService.removeInventoryItemForUser(userId, instanceId);
 
     const discoveryPatches = await getPatchesAfterPropChanges<Discoveries>(
@@ -164,9 +161,6 @@ export class DiscoveriesService {
     const itemDefinition = await this.contentService.getEquipment(item.itemId);
     if (!itemDefinition)
       throw new NotFoundException('Item definition not found');
-
-    if (discoveries.items?.[itemDefinition.itemId])
-      throw new BadRequestException('Item already discovered');
 
     await this.inventoryService.removeInventoryItemForUser(userId, instanceId);
 
