@@ -1,13 +1,37 @@
 import { JwtAuthGuard } from '@modules/auth/jwt.guard';
 import { NotificationService } from '@modules/notification/notification.service';
-import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Sse,
+  UseGuards,
+} from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { User } from '@utils/user.decorator';
 
 @ApiBearerAuth()
 @Controller('notification')
 export class NotificationController {
-  constructor(private readonly notificationService: NotificationService) {}
+  constructor(
+    private readonly jwtService: JwtService,
+    private readonly notificationService: NotificationService,
+  ) {}
+
+  @Sse('/sse/:token')
+  @ApiOperation({
+    summary: 'Create an event stream for the client to subscribe to',
+  })
+  async notificationStream(@Param('token') token: string) {
+    const data: any = this.jwtService.decode(token);
+    if (!data) throw new BadRequestException('Invalid token');
+
+    return this.notificationService.subscribe(data.sub);
+  }
 
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Get all of my current notifications' })
@@ -17,23 +41,6 @@ export class NotificationController {
       notifications: await this.notificationService.getNotificationsForUser(
         user.userId,
       ),
-    };
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @ApiOperation({
-    summary: 'Get all of my notifications after a certain timestamp',
-  })
-  @Get('/mine/after')
-  async getMyNotificationsAfter(@User() user, @Query('after') after: string) {
-    if (!after) return this.getMyNotifications(user);
-
-    return {
-      notifications:
-        await this.notificationService.getNotificationsForUserAfter(
-          user.userId,
-          new Date(after),
-        ),
     };
   }
 

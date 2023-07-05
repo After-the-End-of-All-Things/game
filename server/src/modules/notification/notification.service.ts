@@ -3,14 +3,26 @@ import { EntityManager, EntityRepository, ObjectId } from '@mikro-orm/mongodb';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { Notification } from '@modules/notification/notification.schema';
 import { BadRequestException, Injectable } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { fromEvent } from 'rxjs';
 
 @Injectable()
 export class NotificationService {
+  private readonly events = new EventEmitter2();
+
   constructor(
     private readonly em: EntityManager,
     @InjectRepository(Notification)
     private readonly notifications: EntityRepository<Notification>,
   ) {}
+
+  public subscribe(channel: string) {
+    return fromEvent(this.events, channel);
+  }
+
+  public emit(channel: string, data: any = {}) {
+    this.events.emit(channel, { data });
+  }
 
   async getNotificationsForUser(userId: string): Promise<Notification[]> {
     return (await this.notifications.find({ userId })).reverse();
@@ -40,7 +52,7 @@ export class NotificationService {
       actions: INotificationAction[];
     },
     expiresAfterHours = 24,
-  ) {
+  ): Promise<Notification> {
     if (!userId)
       throw new BadRequestException('No user id provided for notification');
 
@@ -55,6 +67,8 @@ export class NotificationService {
     this.em.persist(notificationEntity);
 
     await this.em.flush();
+
+    return notificationEntity;
   }
 
   async markAllNotificationsRead(userId: string) {

@@ -8,7 +8,7 @@ export class NotificationEventService {
   constructor(private readonly notifications: NotificationService) {}
 
   @OnEvent('notification.create')
-  createNotification(event: {
+  async createNotification(event: {
     userId: string;
     notification: {
       text: string;
@@ -17,11 +17,12 @@ export class NotificationEventService {
     };
     expiresAfterHours: number;
   }) {
-    console.log('create notification', event);
-    void this.notifications.createNotificationForUser(
+    const notification = await this.notifications.createNotificationForUser(
       event.userId,
       event.notification,
       event.expiresAfterHours,
     );
+
+    this.notifications.emit(event.userId, notification);
   }
 }

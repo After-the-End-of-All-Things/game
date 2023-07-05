@@ -1,14 +1,13 @@
 import { INotification } from '@interfaces';
-import * as jsonpatch from 'fast-json-patch';
 
 export class SetNotifications {
   static type = '[Notifications] Set';
   constructor(public notifications: INotification[]) {}
 }
 
-export class ApplyNotificationsPatches {
+export class AddNotification {
   static type = '[Notifications] Apply Patches';
-  constructor(public patches: jsonpatch.Operation[]) {}
+  constructor(public notification: INotification) {}
 }
 
 export class MarkNotificationRead {

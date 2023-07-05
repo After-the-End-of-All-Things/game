@@ -5,10 +5,9 @@ import {
 } from '@interfaces';
 import { StateContext } from '@ngxs/store';
 import { patch, updateItem } from '@ngxs/store/operators';
-import { applyPatch } from 'fast-json-patch';
 import { uniqBy } from 'lodash';
 import {
-  ApplyNotificationsPatches,
+  AddNotification,
   ClearNotificationActions,
   MarkNotificationRead,
   Notify,
@@ -30,17 +29,6 @@ export function setNotifications(
   const splicedNotifications = uniqBy(allNotifications, 'id');
 
   ctx.patchState({ notifications: splicedNotifications });
-}
-
-export function applyNotificationsPatches(
-  ctx: StateContext<INotificationsStore>,
-  { patches }: ApplyNotificationsPatches,
-) {
-  const notifications = ctx.getState().notifications;
-
-  applyPatch(notifications, patches);
-
-  ctx.patchState({ notifications });
 }
 
 export function markRead(
@@ -69,6 +57,18 @@ export function clearActions(
       ),
     }),
   );
+}
+
+export function addNotification(
+  ctx: StateContext<INotificationsStore>,
+  { notification }: AddNotification,
+) {
+  const currentNotifications = ctx.getState().notifications;
+  const allNotifications = [notification, ...currentNotifications];
+
+  const splicedNotifications = uniqBy(allNotifications, 'id');
+
+  ctx.patchState({ notifications: splicedNotifications });
 }
 
 export function notify(

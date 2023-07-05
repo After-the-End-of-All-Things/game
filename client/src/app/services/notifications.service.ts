@@ -3,9 +3,9 @@ import { Injectable } from '@angular/core';
 import { environment } from '@environment';
 import { INotification } from '@interfaces';
 import { Select, Store } from '@ngxs/store';
-import { AuthService } from '@services/auth.service';
 import { NotificationsStore } from '@stores';
-import { Observable, timer } from 'rxjs';
+import { AddNotification } from '@stores/notifications/notifications.actions';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -13,33 +13,33 @@ import { Observable, timer } from 'rxjs';
 export class NotificationsService {
   readonly intervalMinutes = 1;
 
+  private notificationEvents!: EventSource;
+
   @Select(NotificationsStore.notifications) notifications$!: Observable<
     INotification[]
   >;
 
-  constructor(
-    private store: Store,
-    private http: HttpClient,
-    private authService: AuthService,
-  ) {}
+  constructor(private store: Store, private http: HttpClient) {}
 
   init() {
-    timer(0, 1000 * 60 * this.intervalMinutes).subscribe(() => {
-      if (!this.authService.isAuthenticated()) return;
+    this.initEvents();
+  }
 
-      const notifications = this.store.selectSnapshot(
-        NotificationsStore.notifications,
-      );
+  initEvents() {
+    this.getNotifications().subscribe();
 
-      if (notifications.length > 0) {
-        this.getNotificationsAfter(
-          new Date(notifications[0].createdAt),
-        ).subscribe();
-        return;
-      }
+    const token = localStorage.getItem('token');
+    if (!token) return;
 
-      this.getNotifications().subscribe();
-    });
+    this.notificationEvents = new EventSource(
+      `${environment.apiUrl}/notification/sse/${token}`,
+    );
+
+    this.notificationEvents.onmessage = (data) => {
+      if (!data.data) return;
+
+      this.store.dispatch(new AddNotification(JSON.parse(data.data)));
+    };
   }
 
   getNotifications() {

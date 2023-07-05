@@ -18,7 +18,9 @@ import { PlayerModule } from './modules/player/player.module';
 import { StatsModule } from './modules/stats/stats.module';
 import { UserModule } from './modules/user/user.module';
 
+import { JWT_CONFIG } from '@modules/config/jwt-config';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { JwtModule } from '@nestjs/jwt';
 import { HttpExceptionFilter } from '@utils/http-exception.filter';
 import { GameplayModule } from './modules/gameplay/gameplay.module';
 import { UpdateAuthTimeInterceptor } from './utils/updatetime.interceptor';
@@ -68,6 +70,16 @@ const isProduction = process.env.NODE_ENV === 'production';
     InventoryModule,
     EventEmitterModule.forRoot(),
     GameplayModule,
+    {
+      ...JwtModule.registerAsync({
+        imports: [ConfigModule],
+        inject: [JWT_CONFIG],
+        useFactory: (jwtConfig) => ({
+          ...jwtConfig,
+        }),
+      }),
+      global: true,
+    },
   ],
   controllers: [AppController, GameplayController],
   providers: [
