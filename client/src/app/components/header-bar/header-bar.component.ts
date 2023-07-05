@@ -6,7 +6,10 @@ import { Select, Store } from '@ngxs/store';
 import { ActionsService } from '@services/actions.service';
 import { NotificationsService } from '@services/notifications.service';
 import { NotificationsStore, PlayerStore } from '@stores';
-import { MarkNotificationRead } from '@stores/notifications/notifications.actions';
+import {
+  MarkAllNotificationsRead,
+  MarkNotificationRead,
+} from '@stores/notifications/notifications.actions';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -39,10 +42,8 @@ export class HeaderBarComponent implements OnInit {
     return item.id;
   }
 
-  markAllNotificationsRead(notifications: INotification[]) {
-    this.store.dispatch(
-      notifications.map((n) => new MarkNotificationRead(n.id || '')),
-    );
+  markAllNotificationsRead() {
+    this.store.dispatch(new MarkAllNotificationsRead());
     this.notificationService.markAllRead().subscribe();
   }
 

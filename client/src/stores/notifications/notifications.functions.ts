@@ -31,6 +31,18 @@ export function setNotifications(
   ctx.patchState({ notifications: splicedNotifications });
 }
 
+export function markAllRead(
+  ctx: StateContext<INotificationsStore>,
+  { id }: MarkNotificationRead,
+) {
+  const currentNotifications = ctx.getState().notifications;
+  currentNotifications.forEach((notification) => {
+    notification.read = true;
+  });
+
+  ctx.patchState({ notifications: currentNotifications });
+}
+
 export function markRead(
   ctx: StateContext<INotificationsStore>,
   { id }: MarkNotificationRead,
