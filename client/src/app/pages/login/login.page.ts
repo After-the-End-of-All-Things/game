@@ -46,9 +46,7 @@ export class LoginPage implements OnInit {
     private router: Router,
   ) {}
 
-  ngOnInit() {
-    this.loginForm.controls.email.errors;
-  }
+  ngOnInit() {}
 
   ionViewDidEnter() {
     this.menu.enable(false);
