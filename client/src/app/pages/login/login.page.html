@@ -20,11 +20,42 @@
         sizeXs="12"
         sizeMd="6"
         sizeXl="6"
+        class="full-width blog-container"
+      >
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>
+              Latest Oats: {{ announcementService.latestAnnouncement.title }}
+            </ion-card-title>
+          </ion-card-header>
+
+          <ion-card-content>
+            {{ announcementService.latestAnnouncement.summary }}
+
+            <br />
+            <br />
+            <a
+              [href]="announcementService.latestAnnouncement.link"
+              target="_blank"
+            >
+              Read more...
+            </a>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+
+    <ion-row class="full-width">
+      <ion-col
+        sizeSm="12"
+        sizeXs="12"
+        sizeMd="6"
+        sizeXl="6"
         class="full-width auth-container"
       >
         <ion-segment [(ngModel)]="authType">
-          <ion-segment-button value="login"> Login </ion-segment-button>
-          <ion-segment-button value="register"> Register </ion-segment-button>
+          <ion-segment-button value="login">Login</ion-segment-button>
+          <ion-segment-button value="register">Register</ion-segment-button>
         </ion-segment>
 
         <ion-card class="full-width auth" *ngIf="authType === 'login'">
@@ -66,14 +97,16 @@
                 fill="clear"
                 color="warning"
                 (click)="loginForm.reset()"
-                >Clear</ion-button
               >
+                Clear
+              </ion-button>
               <ion-button
                 fill="clear"
                 [disabled]="!loginForm.valid"
                 (click)="login()"
-                >Login</ion-button
               >
+                Login
+              </ion-button>
             </div>
           </ion-card-content>
         </ion-card>
@@ -129,14 +162,16 @@
                 fill="clear"
                 color="warning"
                 (click)="registerForm.reset()"
-                >Clear</ion-button
               >
+                Clear
+              </ion-button>
               <ion-button
                 fill="clear"
                 [disabled]="!registerForm.valid"
                 (click)="register()"
-                >Register</ion-button
               >
+                Register
+              </ion-button>
             </div>
           </ion-card-content>
         </ion-card>

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MenuController } from '@ionic/angular';
+import { AnnouncementService } from '@services/announcement.service';
 import { NotificationsService } from '@services/notifications.service';
 import { AuthService } from '../../services/auth.service';
 
@@ -41,6 +42,7 @@ export class LoginPage implements OnInit {
     public menu: MenuController,
     private authService: AuthService,
     private notificationService: NotificationsService,
+    public announcementService: AnnouncementService,
     private router: Router,
   ) {}
 

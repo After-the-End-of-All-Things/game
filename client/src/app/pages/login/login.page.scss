@@ -7,21 +7,18 @@ ion-item {
   min-height: 85px;
 }
 
-.image-container {
-  margin-top: 10vh;
-}
-
-.auth-container {
-  margin-top: 5vh;
-}
-
-.image-container, .auth-container {
+.image-container, .auth-container, .blog-container {
+  margin-top: 2vh;
   width: 100vw;
 
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
+  ion-card {
+    width: 100%;
+  }
 }
 
 .actions {

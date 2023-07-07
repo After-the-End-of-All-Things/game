@@ -26,10 +26,10 @@ export class NotificationsService {
   }
 
   initEvents() {
-    this.getNotifications().subscribe();
-
     const token = localStorage.getItem('token');
     if (!token) return;
+
+    this.getNotifications().subscribe();
 
     this.notificationEvents = new EventSource(
       `${environment.apiUrl}/notification/sse/${token}`,
