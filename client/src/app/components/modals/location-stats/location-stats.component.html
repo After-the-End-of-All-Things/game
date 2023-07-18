@@ -1,0 +1,31 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{ location.name }} Stats</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button color="medium" (click)="dismiss()">Close</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-card>
+    <ion-card-content>
+      <ion-list>
+        <ion-item *ngFor="let stat of displayStats">
+          <ion-label>
+            <ion-row>
+              <ion-col>
+                {{ statNames[stat] }}
+              </ion-col>
+
+              <ion-col>
+                {{ statFormatters[stat](location.baseStats[stat]) }}
+              </ion-col>
+            </ion-row>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

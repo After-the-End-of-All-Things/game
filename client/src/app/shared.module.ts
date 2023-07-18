@@ -11,8 +11,10 @@ import { ItemElementsComponent } from '@components/item-elements/item-elements.c
 import { ItemIconComponent } from '@components/item-icon/item-icon.component';
 import { ItemRarityComponent } from '@components/item-rarity/item-rarity.component';
 import { ItemStatsComponent } from '@components/item-stats/item-stats.component';
+import { LocationStatsButtonComponent } from '@components/location-stats-button/location-stats-button.component';
 import { ChooseAvatarModalComponent } from '@components/modals/choose-avatar/choose-avatar.component';
 import { CompareItemsModalComponent } from '@components/modals/compare-items/compare-items.component';
+import { LocationStatsModalComponent } from '@components/modals/location-stats/location-stats.component';
 import { StoreTextComponent } from '@components/store-text/store-text.component';
 import { RelativeTimePipe } from '@helpers/relativetime.pipe';
 import { IonicModule } from '@ionic/angular';
@@ -25,6 +27,8 @@ const components = [
   HeroComponent,
   ChooseAvatarModalComponent,
   CompareItemsModalComponent,
+  LocationStatsButtonComponent,
+  LocationStatsModalComponent,
   HeaderBarComponent,
   AvatarComponent,
   ItemIconComponent,

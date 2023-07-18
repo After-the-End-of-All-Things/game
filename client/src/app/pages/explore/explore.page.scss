@@ -1,6 +1,12 @@
 
 .content-card {
 
+  app-location-stats-button {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+  }
+
   ion-title {
     text-align: center;
   }

@@ -1,5 +1,11 @@
 
 .location-card {
+  app-location-stats-button {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+  }
+
   .description {
     min-height: 200px;
   }

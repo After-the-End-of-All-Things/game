@@ -36,6 +36,12 @@
                 {{ data.location?.arrivesAt | number }} steps until {{
                 data.location?.goingTo }}!
               </ion-card-subtitle>
+
+              <ng-container *ngIf="data.location as location">
+                <app-location-stats-button
+                  [location]="location.current"
+                ></app-location-stats-button>
+              </ng-container>
             </ion-card-header>
 
             <ion-card-content>

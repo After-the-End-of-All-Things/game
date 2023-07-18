@@ -20,6 +20,9 @@
         <ion-card-header>
           <ion-card-title>{{ location.name }}</ion-card-title>
           <ion-card-subtitle>Level {{ location.level }}</ion-card-subtitle>
+          <app-location-stats-button
+            [location]="location.name"
+          ></app-location-stats-button>
         </ion-card-header>
 
         <app-background-art [sprite]="location.background"></app-background-art>
