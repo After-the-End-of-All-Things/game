@@ -1,6 +1,7 @@
 import { Component, DestroyRef, OnInit, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ILocation, IPlayerLocation } from '@interfaces';
+import { AlertController } from '@ionic/angular';
 import { Select } from '@ngxs/store';
 import { ContentService } from '@services/content.service';
 import { GameplayService } from '@services/gameplay.service';
@@ -37,6 +38,7 @@ export class TravelPage implements OnInit {
   constructor(
     private contentService: ContentService,
     private gameplayService: GameplayService,
+    private alert: AlertController,
   ) {}
 
   ngOnInit() {
@@ -72,12 +74,46 @@ export class TravelPage implements OnInit {
     ).length;
   }
 
-  walkToLocation(location: ILocation) {
-    this.gameplayService.walk(location.name).subscribe();
+  async walkToLocation(location: ILocation) {
+    const alert = await this.alert.create({
+      header: 'Walk to Location',
+      message: `Are you sure you want to walk to ${
+        location.name
+      } in ${location.steps.toLocaleString()} steps?`,
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+        },
+        {
+          text: 'Walk',
+          handler: () => this.gameplayService.walk(location.name).subscribe(),
+        },
+      ],
+    });
+
+    await alert.present();
   }
 
-  travelToLocation(location: ILocation) {
-    this.gameplayService.travel(location.name).subscribe();
+  async travelToLocation(location: ILocation) {
+    const alert = await this.alert.create({
+      header: 'Travel to Location',
+      message: `Are you sure you want to travel to ${
+        location.name
+      } for ${location.cost.toLocaleString()} coins?`,
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+        },
+        {
+          text: 'Travel',
+          handler: () => this.gameplayService.travel(location.name).subscribe(),
+        },
+      ],
+    });
+
+    await alert.present();
   }
 
   numCollectiblesDiscoveredAt(location: ILocation): number {
