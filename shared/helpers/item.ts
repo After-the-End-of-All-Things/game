@@ -36,7 +36,10 @@ const valuePerStat: Record<Stat, number> = {
 export function itemValue(item: IItem): number {
   const levelRequirement = (item as IEquipment).levelRequirement ?? 1;
   const itemStats = (item as IEquipment).stats ?? {};
-  const multiplier = item.type === 'collectible' ? 50 : 1;
+
+  let multiplier = 1;
+  if (item.type === 'collectible') multiplier = 50;
+  if (item.type === 'resource') multiplier = 25;
 
   let value = 1;
 

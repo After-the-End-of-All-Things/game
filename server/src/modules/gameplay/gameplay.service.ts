@@ -26,7 +26,13 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { getPatchesAfterPropChanges } from '@utils/patches';
 import { sample } from 'lodash';
 
-type ExploreResult = 'Nothing' | 'Wave' | 'Item' | 'Discovery' | 'Collectible';
+type ExploreResult =
+  | 'Nothing'
+  | 'Wave'
+  | 'Item'
+  | 'Discovery'
+  | 'Collectible'
+  | 'Resource';
 
 const createFilledArray = (length: number, fill: ExploreResult) =>
   Array(length).fill(fill);
@@ -74,28 +80,29 @@ export class GameplayService {
     if (foundLocation) {
       const choices = [
         ...createFilledArray(
-          (this.constantsService.wavePercentBoost +
-            foundLocation.baseStats.wave) |
-            0,
+          this.constantsService.wavePercentBoost +
+            foundLocation.baseStats.wave || 0,
           'Wave',
         ),
         ...createFilledArray(
-          (this.constantsService.locationFindPercentBoost +
-            foundLocation.baseStats.locationFind) |
-            0,
+          this.constantsService.locationFindPercentBoost +
+            foundLocation.baseStats.locationFind || 0,
           'Discovery',
         ),
         ...createFilledArray(
-          (this.constantsService.itemFindPercentBoost +
-            foundLocation.baseStats.itemFind) |
-            0,
+          this.constantsService.itemFindPercentBoost +
+            foundLocation.baseStats.itemFind || 0,
           'Item',
         ),
         ...createFilledArray(
-          (this.constantsService.collectibleFindPercentBoost +
-            foundLocation.baseStats.collectibleFind) |
-            0,
+          this.constantsService.collectibleFindPercentBoost +
+            foundLocation.baseStats.collectibleFind || 0,
           'Collectible',
+        ),
+        ...createFilledArray(
+          this.constantsService.collectibleFindPercentBoost +
+            foundLocation.baseStats.resourceFind || 0,
+          'Resource',
         ),
       ];
 
@@ -189,6 +196,10 @@ export class GameplayService {
             playerRef,
             foundLocation,
           );
+        }
+
+        if (exploreResult === 'Resource') {
+          await this.playerService.handleFindResource(playerRef, foundLocation);
         }
 
         if (exploreResult === 'Item') {
@@ -442,13 +453,31 @@ export class GameplayService {
     const player = await this.playerService.getPlayerForUser(userId);
     if (!player) throw new ForbiddenException('Player not found');
 
+    const inventory = await this.inventoryService.getInventoryForUser(userId);
+    if (!inventory) throw new ForbiddenException('Inventory not found');
+
+    const inventoryPatches = await getPatchesAfterPropChanges<Inventory>(
+      inventory,
+      async (inventoryRef) => {
+        const item: IItem = player.action?.actionData.item;
+        if (!item) return;
+
+        if (player.action?.action === 'resource') {
+          inventoryRef.resources = {
+            ...(inventoryRef.resources || {}),
+            [item.itemId]: (inventoryRef.resources?.[item.itemId] ?? 0) + 1,
+          };
+        } else {
+          await this.inventoryService.acquireItem(userId, item.itemId);
+        }
+      },
+    );
+
     const playerPatches = await getPatchesAfterPropChanges<Player>(
       player,
       async (playerRef) => {
         const item: IItem = player.action?.actionData.item;
         if (!item) return;
-
-        await this.inventoryService.acquireItem(userId, item.itemId);
 
         // clear it from the location action
         this.playerService.setPlayerAction(playerRef, {
@@ -461,7 +490,7 @@ export class GameplayService {
       },
     );
 
-    return { player: playerPatches };
+    return { player: playerPatches, inventory: inventoryPatches };
   }
 
   async sellItem(

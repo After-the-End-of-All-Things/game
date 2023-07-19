@@ -19,6 +19,7 @@ export class LocationStatsModalComponent implements OnInit {
     LocationStat.NPCEncounter,
     LocationStat.LocationFind,
     LocationStat.CollectibleFind,
+    LocationStat.ResourceFind,
   ];
 
   public readonly statNames: Record<LocationStat, string> = {
@@ -30,6 +31,7 @@ export class LocationStatsModalComponent implements OnInit {
     [LocationStat.NPCEncounter]: 'NPC Encounter Chance',
     [LocationStat.LocationFind]: 'Location Find Chance',
     [LocationStat.CollectibleFind]: 'Collectible Find Chance',
+    [LocationStat.ResourceFind]: 'Resource Find Chance',
   };
 
   public readonly statFormatters: Record<
@@ -44,6 +46,7 @@ export class LocationStatsModalComponent implements OnInit {
     [LocationStat.NPCEncounter]: (value) => `${value}%`,
     [LocationStat.LocationFind]: (value) => `${value}%`,
     [LocationStat.CollectibleFind]: (value) => `${value}%`,
+    [LocationStat.ResourceFind]: (value) => `${value}%`,
   };
 
   constructor(private modalController: ModalController) {}

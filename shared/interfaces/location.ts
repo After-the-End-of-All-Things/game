@@ -7,6 +7,7 @@ export enum LocationStat {
   NPCEncounter = 'npcEncounter',
   Wave = 'wave',
   CollectibleFind = 'collectibleFind',
+  ResourceFind = 'resourceFind',
 }
 
 export interface ILocationConnection {

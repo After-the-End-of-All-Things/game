@@ -1,5 +1,7 @@
 <app-icon
-  [spritesheet]="item.type === 'collectible' ? 'loot' : item.type"
+  [spritesheet]="
+    item.type === 'collectible' || item.type === 'resource' ? 'loot' : item.type
+  "
   [sprite]="item.sprite"
   [size]="size"
 ></app-icon>

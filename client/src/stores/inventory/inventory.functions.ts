@@ -6,7 +6,6 @@ import { ApplyInventoryPatches, SetInventory } from './inventory.actions';
 export const defaultStore: () => IInventoryStore = () => ({
   version: 0,
   inventory: {
-    inventory: {},
     equippedItems: {
       head: undefined,
       body: undefined,
@@ -19,6 +18,7 @@ export const defaultStore: () => IInventoryStore = () => ({
       accessory2: undefined,
       accessory3: undefined,
     },
+    resources: {},
   },
 });
 

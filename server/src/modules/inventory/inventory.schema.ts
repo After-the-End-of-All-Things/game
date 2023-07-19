@@ -23,6 +23,9 @@ export class Inventory implements IInventory {
   @Property()
   equippedItems: Record<ItemSlot, IEquipment | undefined>;
 
+  @Property()
+  resources: Record<string, number>;
+
   constructor(userId: string) {
     this.userId = userId;
 
@@ -38,5 +41,7 @@ export class Inventory implements IInventory {
       accessory2: undefined,
       accessory3: undefined,
     };
+
+    this.resources = {};
   }
 }

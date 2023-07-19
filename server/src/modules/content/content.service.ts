@@ -1,6 +1,13 @@
 import { Injectable } from '@nestjs/common';
 
-import { ICollectible, IEquipment, IItem, IJob, ILocation } from '@interfaces';
+import {
+  ICollectible,
+  IEquipment,
+  IItem,
+  IJob,
+  ILocation,
+  IResource,
+} from '@interfaces';
 import * as fs from 'fs-extra';
 import { Logger } from 'nestjs-pino';
 
@@ -15,7 +22,13 @@ export class ContentService {
     return censor;
   }
 
-  public content = { locations: {}, jobs: {}, collectibles: {}, equipment: {} };
+  public content = {
+    locations: {},
+    jobs: {},
+    collectibles: {},
+    equipment: {},
+    resources: {},
+  };
 
   private get locations(): Record<string, ILocation> {
     return this.content.locations;
@@ -31,6 +44,10 @@ export class ContentService {
 
   private get equipment(): Record<string, IEquipment> {
     return this.content.equipment;
+  }
+
+  private get resources(): Record<string, IResource> {
+    return this.content.resources;
   }
 
   constructor(private logger: Logger) {}
@@ -80,6 +97,14 @@ export class ContentService {
 
   public allCollectibles(): ICollectible[] {
     return Object.values(this.collectibles);
+  }
+
+  public allResources(): IResource[] {
+    return Object.values(this.resources);
+  }
+
+  public getResource(resourceId: string): IResource | undefined {
+    return this.resources[resourceId];
   }
 
   public getCollectible(collectibleId: string): ICollectible | undefined {

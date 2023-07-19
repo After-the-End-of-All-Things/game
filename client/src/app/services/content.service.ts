@@ -1,6 +1,13 @@
 import { Injectable } from '@angular/core';
 import { environment } from '@environment';
-import { ICollectible, IEquipment, IItem, IJob, ILocation } from '@interfaces';
+import {
+  ICollectible,
+  IEquipment,
+  IItem,
+  IJob,
+  ILocation,
+  IResource,
+} from '@interfaces';
 import { AssetService } from '@services/asset.service';
 
 @Injectable({
@@ -12,6 +19,7 @@ export class ContentService {
     jobs: {},
     collectibles: {},
     equipment: {},
+    resources: {},
   };
 
   public get maxPortraits() {
@@ -32,6 +40,10 @@ export class ContentService {
 
   public get collectibles(): Record<string, ICollectible> {
     return this.content.collectibles;
+  }
+
+  public get rseources(): Record<string, IResource> {
+    return this.content.resources;
   }
 
   public get equipment(): Record<string, IEquipment> {
@@ -66,6 +78,10 @@ export class ContentService {
 
   public getJob(job: string): IJob | undefined {
     return this.jobs[job];
+  }
+
+  public getResource(resource: string): IResource | undefined {
+    return this.rseources[resource];
   }
 
   public getCollectible(collectible: string): ICollectible | undefined {

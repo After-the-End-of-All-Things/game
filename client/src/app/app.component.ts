@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { Title } from '@angular/platform-browser';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { filter, map } from 'rxjs/operators';
 
 interface IMenuItem {
@@ -43,6 +43,11 @@ export class AppComponent {
       title: 'My Equipment',
       url: 'equipment',
       icon: 'shirt',
+    },
+    {
+      title: 'My Resources',
+      url: 'resources',
+      icon: 'leaf',
     },
     {
       title: 'My Collections',

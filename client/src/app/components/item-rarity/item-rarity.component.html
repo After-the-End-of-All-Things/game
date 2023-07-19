@@ -1,5 +1,5 @@
 <span>
-  <span class="rarity" [ngClass]="item.rarity.toLowerCase()">
+  <span class="rarity" [ngClass]="(item.rarity || 'Common').toLowerCase()">
     {{ item.rarity }}
   </span>
 

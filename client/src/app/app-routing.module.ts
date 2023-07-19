@@ -78,6 +78,15 @@ const routes: Routes = [
       ),
   },
   {
+    path: 'resources',
+    canActivate: [AuthGuard],
+    data: { title: 'Resources' },
+    loadChildren: () =>
+      import('./pages/resources/resources.module').then(
+        (m) => m.ResourcesPageModule,
+      ),
+  },
+  {
     path: '**',
     redirectTo: '',
     pathMatch: 'full',

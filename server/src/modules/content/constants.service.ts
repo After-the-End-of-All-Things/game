@@ -16,6 +16,7 @@ export class ConstantsService {
   public readonly wavePercentBoost: number = 0;
   public readonly itemFindPercentBoost: number = 0;
   public readonly collectibleFindPercentBoost: number = 0;
+  public readonly resourceFindPercentBoost: number = 0;
   public readonly locationFindPercentBoost: number = 0;
 
   constructor(private readonly configService: ConfigService) {
@@ -53,6 +54,10 @@ export class ConstantsService {
     );
     this.collectibleFindPercentBoost = +this.configService.get<number>(
       'COLLECTIBLE_FIND_PERCENT_BOOST',
+      0,
+    );
+    this.resourceFindPercentBoost = +this.configService.get<number>(
+      'RESOURCE_FIND_PERCENT_BOOST',
       0,
     );
     this.locationFindPercentBoost = +this.configService.get<number>(

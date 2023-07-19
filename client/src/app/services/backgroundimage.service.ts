@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import {
   BackgroundBlobImage,
   createBackgroundImage,
+  deleteBackgroundImage,
   readBackgroundImageByID,
   readBackgroundImagesByURL,
 } from '@services/backgroundimage.db';
@@ -70,16 +71,13 @@ export class BackgroundImageService {
     url: string,
     blob: Blob,
   ) {
-    if ((await readBackgroundImagesByURL(url)).length === 0) {
-      const blobImage = new BackgroundBlobImage(
-        name,
-        url,
-        hash,
-        blob,
-        blob.type,
-      );
-
-      createBackgroundImage(blobImage);
+    const oldImage = await readBackgroundImagesByURL(url);
+    if (oldImage) {
+      deleteBackgroundImage((oldImage as any).id);
     }
+
+    const blobImage = new BackgroundBlobImage(name, url, hash, blob, blob.type);
+
+    createBackgroundImage(blobImage);
   }
 }

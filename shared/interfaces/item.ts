@@ -28,7 +28,7 @@ export type Weapon =
 
 export type Accessory = 'jewelry' | 'wrist' | 'hands' | 'ammo';
 
-export type ItemType = Armor | Weapon | Accessory | 'collectible';
+export type ItemType = Armor | Weapon | Accessory | 'collectible' | 'resource';
 
 export type ItemSlot =
   | 'body'
@@ -79,6 +79,10 @@ export interface IItem {
 }
 
 export interface ICollectible extends IItem {
+  location: string;
+}
+
+export interface IResource extends IItem {
   location: string;
 }
 

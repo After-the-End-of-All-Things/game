@@ -237,6 +237,41 @@ export class PlayerService {
     });
   }
 
+  async handleFindResource(player: Player, location: ILocation): Promise<any> {
+    const resourceRarityCommonality: Record<Rarity, number> = {
+      Common: 100,
+      Uncommon: 75,
+      Unusual: 50,
+      Rare: 25,
+      Epic: 10,
+      Arcane: 5,
+      Divine: 3,
+      Masterful: 2,
+      Unique: 1,
+    };
+
+    const allResources = this.contentService
+      .allResources()
+      .filter((res) => res.location === location.name);
+
+    const allResourcesWithRarity = allResources
+      .map((res) => Array(resourceRarityCommonality[res.rarity] ?? 1).fill(res))
+      .flat();
+
+    const randomResourceForLocation = sample(allResourcesWithRarity);
+    if (!randomResourceForLocation) return;
+
+    this.setPlayerAction(player, {
+      text: 'Take',
+      action: 'resource',
+      actionData: {
+        item: randomResourceForLocation,
+      },
+      url: 'gameplay/item/take',
+      urlData: {},
+    });
+  }
+
   async handleFindCollectible(
     player: Player,
     location: ILocation,

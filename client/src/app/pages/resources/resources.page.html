@@ -1,0 +1,72 @@
+<ion-header [translucent]="true">
+  <app-header-bar></app-header-bar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <app-header-bar></app-header-bar>
+  </ion-header>
+
+  <ion-grid
+    *ngIf="{ player: player$ | async, resources: resources$ | async } as data"
+  >
+    <ion-row>
+      <ion-col>
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Resources</ion-card-title>
+          </ion-card-header>
+
+          <ion-card-content>
+            <ngx-datatable
+              class="dark"
+              [rows]="items"
+              [rowHeight]="64"
+              [columnMode]="'force'"
+              [sorts]="[{ prop: 'name', dir: 'asc' }]"
+            >
+              <ngx-datatable-column
+                name=""
+                [maxWidth]="100"
+                [minWidth]="100"
+                [sortable]="false"
+              >
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  <app-item-icon [item]="row" size="small"></app-item-icon>
+                </ng-template>
+              </ngx-datatable-column>
+
+              <ngx-datatable-column
+                name="Resource"
+                [prop]="'name'"
+                [cellClass]="'text-wrap-column'"
+              >
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  <div><strong>{{ row.name }}</strong></div>
+                </ng-template>
+              </ngx-datatable-column>
+
+              <ngx-datatable-column name="Rarity" [sortable]="false">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  <app-item-rarity [item]="row"></app-item-rarity>
+                </ng-template>
+              </ngx-datatable-column>
+
+              <ngx-datatable-column name="Quantity">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  {{ row.quantity | number }}
+                </ng-template>
+              </ngx-datatable-column>
+
+              <ngx-datatable-column name="Value" [comparator]="valueComparison">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  {{ getValueForItem(row) | number }}
+                </ng-template>
+              </ngx-datatable-column>
+            </ngx-datatable>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

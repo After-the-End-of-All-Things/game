@@ -4,6 +4,7 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import {
   BlobImage,
   createImage,
+  deleteImage,
   readImageByURL,
   readImagesByNameAndQuality,
 } from '@services/image.db';
@@ -70,17 +71,13 @@ export class ImageService {
     url: string,
     blob: Blob,
   ) {
-    if (!(await readImageByURL(url))) {
-      const blobImage = new BlobImage(
-        name,
-        hash,
-        quality,
-        url,
-        blob,
-        blob.type,
-      );
-
-      createImage(blobImage);
+    const oldImage = await readImageByURL(url);
+    if (oldImage) {
+      deleteImage((oldImage as any).id);
     }
+
+    const blobImage = new BlobImage(name, hash, quality, url, blob, blob.type);
+
+    createImage(blobImage);
   }
 }

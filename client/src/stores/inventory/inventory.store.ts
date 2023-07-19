@@ -32,4 +32,9 @@ export class InventoryStore {
   static equipped(state: IInventoryStore) {
     return state.inventory.equippedItems;
   }
+
+  @Selector()
+  static resources(state: IInventoryStore) {
+    return state.inventory.resources;
+  }
 }

@@ -20,7 +20,7 @@
               </ion-col>
 
               <ion-col>
-                {{ statFormatters[stat](location.baseStats[stat]) }}
+                {{ statFormatters[stat](location.baseStats[stat] || 0) }}
               </ion-col>
             </ion-row>
           </ion-label>

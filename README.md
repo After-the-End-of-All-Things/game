@@ -34,6 +34,7 @@ God, am I getting tired of typing that.
 - `WAVE_PERCENT_BOOST` - the percent boost to wave events happening (default: 0)
 - `ITEM_FIND_PERCENT_BOOST` - the percent boost to item find events happening (default: 0)
 - `COLLECTIBLE_FIND_PERCENT_BOOST` - the percent boost to collectible find events happening (default: 0)
+- `RESOURCE_FIND_PERCENT_BOOST` - the percent boost to resource find events happening (default: 0)
 - `LOCATION_FIND_PERCENT_BOOST` - the percent boost to location find events happening (default: 0)
 - `GAMEANALYTICS_KEY` - the game key for GameAnalytics
 - `GAMEANALYTICS_SECRET` - the secret key for GameAnalytics
