@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {
+  AllAccessories,
+  AllArmor,
+  AllWeapons,
   Armor,
   ICollectible,
   IDiscoveries,
@@ -32,34 +35,11 @@ export class InventoryPage implements OnInit {
     Record<ItemSlot, IEquipment>
   >;
 
-  public readonly basicEquipTypes = [
-    'body',
-    'feet',
-    'head',
-    'legs',
-    'shoulders',
-    'waist',
-  ];
+  public readonly basicEquipTypes = AllArmor;
 
-  public readonly weaponEquipTypes = [
-    'axe',
-    'bow',
-    'dagger',
-    'fist',
-    'gun',
-    'mace',
-    'spear',
-    'staff',
-    'sword',
-  ];
+  public readonly weaponEquipTypes = AllWeapons;
 
-  public readonly accessoryEquipTypes = [
-    'jewelry',
-    'wrist',
-    'hands',
-    'ammo',
-    'back',
-  ];
+  public readonly accessoryEquipTypes = AllAccessories;
 
   public items: IItem[] = [];
   public discoveries!: IDiscoveries;
