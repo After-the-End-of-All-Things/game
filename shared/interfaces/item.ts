@@ -26,7 +26,7 @@ export type Weapon =
   | 'staff'
   | 'sword';
 
-export type Accessory = 'jewelry' | 'wrist' | 'hands' | 'ammo';
+export type Accessory = 'jewelry' | 'wrist' | 'hands' | 'ammo' | 'back';
 
 export type ItemType = Armor | Weapon | Accessory | 'collectible' | 'resource';
 
@@ -66,6 +66,7 @@ export const AllAccessories: Accessory[] = [
   'wrist',
   'hands',
   'ammo',
+  'back',
 ];
 
 export interface IItem {
