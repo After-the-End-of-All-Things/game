@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { xpForCraftingLevel } from '@helpers/xp';
 import { IDiscoveries, IItem, IRecipe, RecipeType } from '@interfaces';
+import { AlertController } from '@ionic/angular';
 import { Select, Store } from '@ngxs/store';
 import { ContentService } from '@services/content.service';
 import { GameplayService } from '@services/gameplay.service';
@@ -45,6 +46,7 @@ export class CraftingPage implements OnInit {
 
   constructor(
     private store: Store,
+    private alert: AlertController,
     private gameplayService: GameplayService,
     private contentService: ContentService,
     private userService: UserService,
@@ -103,8 +105,30 @@ export class CraftingPage implements OnInit {
     return this.contentService.getItem(id);
   }
 
-  craft(recipe: IRecipe) {
-    this.gameplayService.craftItem(recipe.resultingItem).subscribe();
+  async craft(recipe: IRecipe) {
+    const realItem = this.contentService.getItem(recipe.resultingItem);
+    if (!realItem) return;
+
+    const alert = await this.alert.create({
+      header: 'Crafting',
+      message: `Are you sure you want to craft ${
+        realItem.name
+      }? It will take ${recipe.craftTime.toLocaleString()} seconds to finish and cannot be canceled.`,
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+        },
+        {
+          text: 'Craft',
+          handler: () => {
+            this.gameplayService.craftItem(recipe.resultingItem).subscribe();
+          },
+        },
+      ],
+    });
+
+    await alert.present();
   }
 
   collect() {
