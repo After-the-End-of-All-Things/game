@@ -101,13 +101,21 @@ export class InventoryService {
     await this.inventoryItems.create(item);
   }
 
-  async acquireResource(userId: string, itemId: string) {
-    const inventory = await this.getInventoryForUser(userId);
-    if (!inventory) return;
-
+  acquireResourceForInventory(
+    inventory: Inventory,
+    userId: string,
+    itemId: string,
+  ) {
     inventory.resources = {
       ...(inventory.resources || {}),
       [itemId]: (inventory.resources?.[itemId] ?? 0) + 1,
     };
+  }
+
+  async acquireResource(userId: string, itemId: string) {
+    const inventory = await this.getInventoryForUser(userId);
+    if (!inventory) return;
+
+    this.acquireResourceForInventory(inventory, userId, itemId);
   }
 }

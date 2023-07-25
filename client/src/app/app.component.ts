@@ -1,12 +1,17 @@
 import { Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { filter, map } from 'rxjs/operators';
+import { Store } from '@ngxs/store';
+import { Observable, timer } from 'rxjs';
+import { filter, map, switchMap } from 'rxjs/operators';
 
 interface IMenuItem {
   title: string;
   url: string;
   icon: string;
+  indicator?: Observable<
+    { icon: string; tooltip: string; color: string } | undefined
+  >;
 }
 
 @Component({
@@ -25,6 +30,20 @@ export class AppComponent {
       title: 'Town',
       url: 'town',
       icon: 'map',
+      indicator: timer(0, 1000).pipe(
+        switchMap(() =>
+          this.store.select((state) =>
+            state.crafting.crafting.currentlyCraftingDoneAt > 0 &&
+            state.crafting.crafting.currentlyCraftingDoneAt < Date.now()
+              ? {
+                  color: 'primary',
+                  icon: 'alert-circle-outline',
+                  tooltip: 'Crafting complete!',
+                }
+              : undefined,
+          ),
+        ),
+      ),
     },
   ];
 
@@ -57,6 +76,7 @@ export class AppComponent {
   ];
 
   constructor(
+    private store: Store,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private titleService: Title,

@@ -25,9 +25,9 @@ God, am I getting tired of typing that.
 
 ### Optional Server Environment Variables
 
-- `EXPLORE_SPEED_MULTIPLIER` - the multiplier for explore speed (default: 100)
-- `EXPLORE_XP_MULTIPLIER` - the multiplier for explore XP (default: 100)
-- `MAX_INVENTORY_SIZE` - the maximum inventory size per player (default: 100)
+- `EXPLORE_SPEED_MULTIPLIER` - the multiplier for explore speed [percent] (default: 100)
+- `EXPLORE_XP_MULTIPLIER` - the multiplier for explore XP [percent] (default: 100)
+- `MAX_INVENTORY_SIZE` - the maximum inventory size per player [percent] (default: 100)
 - `BASE_EXPLORE_XP` - the amount of XP gained per explore (default: 5)
 - `BASE_EXPLORE_COINS` - the amount of coins gained per explore (default: 3)
 - `BASE_EXPLORE_SPEED` - the cooldown between explores (default: 5)
@@ -36,6 +36,7 @@ God, am I getting tired of typing that.
 - `COLLECTIBLE_FIND_PERCENT_BOOST` - the percent boost to collectible find events happening (default: 0)
 - `RESOURCE_FIND_PERCENT_BOOST` - the percent boost to resource find events happening (default: 0)
 - `LOCATION_FIND_PERCENT_BOOST` - the percent boost to location find events happening (default: 0)
+- `CRAFTING_SPEED_MULTIPLIER` - the multiplier for crafting speed [percent] (default: 100)
 - `GAMEANALYTICS_KEY` - the game key for GameAnalytics
 - `GAMEANALYTICS_SECRET` - the secret key for GameAnalytics
 - `ROLLBAR_TOKEN` - the token for Rollbar

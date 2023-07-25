@@ -1,3 +1,4 @@
+import { isNotificationLive } from '@helpers/notifications';
 import { INotificationAction } from '@interfaces';
 import { EntityManager, EntityRepository, ObjectId } from '@mikro-orm/mongodb';
 import { InjectRepository } from '@mikro-orm/nestjs';
@@ -5,7 +6,6 @@ import { Notification } from '@modules/notification/notification.schema';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { fromEvent } from 'rxjs';
-
 @Injectable()
 export class NotificationService {
   private readonly events = new EventEmitter2();
@@ -75,7 +75,21 @@ export class NotificationService {
     const notifs = await this.notifications.find({ userId });
 
     notifs.forEach((notif) => {
+      if (!isNotificationLive(notif)) return;
       notif.read = true;
+    });
+  }
+
+  async clearAllNotificationActionsMatchingUrl(userId: string, url: string) {
+    const notifs = await this.notifications.find({ userId });
+
+    notifs.forEach((notif) => {
+      if (!isNotificationLive(notif)) return;
+
+      const actions = notif.actions ?? [];
+      if (!actions.some((a) => a.url?.includes(url))) return;
+
+      notif.actions = [];
     });
   }
 

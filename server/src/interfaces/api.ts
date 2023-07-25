@@ -1,6 +1,7 @@
 import * as jsonpatch from 'fast-json-patch';
 
 import { Achievements } from '@modules/achievements/achievements.schema';
+import { Crafting } from '@modules/crafting/crafting.schema';
 import { Discoveries } from '@modules/discoveries/discoveries.schema';
 import { Inventory } from '@modules/inventory/inventory.schema';
 import { InventoryItem } from '@modules/inventory/inventoryitem.schema';
@@ -19,6 +20,7 @@ export interface IFullUser {
   discoveries: Discoveries;
   achievements: Achievements;
   inventory: Inventory;
+  crafting: Crafting;
   items: InventoryItem[];
 
   actions: Array<{ type: string } & any>;
@@ -32,4 +34,5 @@ export interface IPatchUser {
   achievements: jsonpatch.Operation[];
   inventory: jsonpatch.Operation[];
   items: jsonpatch.Operation[];
+  crafting: jsonpatch.Operation[];
 }

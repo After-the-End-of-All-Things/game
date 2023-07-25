@@ -1,6 +1,7 @@
 export * from '../../../shared/interfaces';
 
 export * from './achievements';
+export * from './crafting';
 export * from './discoveries';
 export * from './inventory';
 export * from './ngxs';

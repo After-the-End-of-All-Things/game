@@ -5,7 +5,10 @@ import { environment } from '@environment';
 import { INotification, INotificationAction } from '@interfaces';
 import { Store } from '@ngxs/store';
 import { NotificationsService } from '@services/notifications.service';
-import { ClearNotificationActions } from '@stores/notifications/notifications.actions';
+import {
+  ClearNotificationActions,
+  ClearNotificationActionsMatchingUrl,
+} from '@stores/notifications/notifications.actions';
 
 @Injectable({
   providedIn: 'root',
@@ -22,6 +25,12 @@ export class ActionsService {
     if (action.url) {
       // we never send data here, it's inferred server side
       this.http.post(`${environment.apiUrl}/${action.url}`, {}).subscribe();
+    }
+
+    if (action.clearActionsForUrl) {
+      this.store.dispatch(
+        new ClearNotificationActionsMatchingUrl(action.clearActionsForUrl),
+      );
     }
 
     if (notification) {

@@ -2,6 +2,7 @@ import { IFullUser } from '@interfaces';
 import { EntityManager, EntityRepository } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { AchievementsService } from '@modules/achievements/achievements.service';
+import { CraftingService } from '@modules/crafting/crafting.service';
 import { DiscoveriesService } from '@modules/discoveries/discoveries.service';
 import { InventoryService } from '@modules/inventory/inventory.service';
 import { PlayerService } from '@modules/player/player.service';
@@ -22,6 +23,7 @@ export class UserService {
     private readonly discoveriesService: DiscoveriesService,
     private readonly achievementsService: AchievementsService,
     private readonly inventoryService: InventoryService,
+    private readonly craftingService: CraftingService,
   ) {}
 
   async createUser(user: User): Promise<User | undefined> {
@@ -79,6 +81,7 @@ export class UserService {
       userId,
     );
     const inventory = await this.inventoryService.getInventoryForUser(userId);
+    const crafting = await this.craftingService.getCraftingForUser(userId);
 
     const fullUser: IFullUser = {
       user,
@@ -87,6 +90,7 @@ export class UserService {
       discoveries,
       achievements,
       inventory,
+      crafting,
     } as IFullUser;
 
     await this.migrateAccount(fullUser);

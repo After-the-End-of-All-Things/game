@@ -9,6 +9,7 @@ import {
   Param,
   Patch,
   Post,
+  Put,
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
@@ -103,5 +104,31 @@ export class GameplayController {
       equipmentSlot,
       instanceId,
     );
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Craft an item' })
+  @Put('item/craft/start')
+  async craftItem(
+    @User() user,
+    @Body('itemId') itemId: string,
+  ): Promise<Partial<IFullUser | IPatchUser>> {
+    return this.gameplayService.craftItem(user.userId, itemId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Take a crafted item' })
+  @Post('item/craft/take')
+  async takeCraftItem(@User() user): Promise<Partial<IFullUser | IPatchUser>> {
+    return this.gameplayService.takeCraftedItem(user.userId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Take a crafted item (from notification)' })
+  @Post('item/craft/take/:id')
+  async takeCraftItemFromNotification(
+    @User() user,
+  ): Promise<Partial<IFullUser | IPatchUser>> {
+    return this.gameplayService.takeCraftedItem(user.userId);
   }
 }

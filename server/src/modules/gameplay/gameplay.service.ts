@@ -1,4 +1,6 @@
+import { getCraftingLevel, getCraftingXp } from '@helpers/crafting';
 import { itemSlotForItem, itemValue } from '@helpers/item';
+import { xpForCraftingLevel, xpGainedForCraftingItem } from '@helpers/xp';
 import {
   IEquipment,
   IFullUser,
@@ -13,6 +15,8 @@ import { AnalyticsService } from '@modules/content/analytics.service';
 import { ConstantsService } from '@modules/content/constants.service';
 import { ContentService } from '@modules/content/content.service';
 import { PlayerHelperService } from '@modules/content/playerhelper.service';
+import { Crafting } from '@modules/crafting/crafting.schema';
+import { CraftingService } from '@modules/crafting/crafting.service';
 import { Discoveries } from '@modules/discoveries/discoveries.schema';
 import { DiscoveriesService } from '@modules/discoveries/discoveries.service';
 import { Inventory } from '@modules/inventory/inventory.schema';
@@ -46,6 +50,7 @@ export class GameplayService {
     private readonly inventoryService: InventoryService,
     private readonly constantsService: ConstantsService,
     private readonly contentService: ContentService,
+    private readonly craftingService: CraftingService,
     private readonly analyticsService: AnalyticsService,
     private readonly events: EventEmitter2,
     private readonly notificationService: NotificationService,
@@ -622,7 +627,7 @@ export class GameplayService {
     userId: string,
     equipmentSlot: ItemSlot,
     instanceId: string,
-  ) {
+  ): Promise<Partial<IFullUser | IPatchUser>> {
     const inventory = await this.inventoryService.getInventoryForUser(userId);
     if (!inventory) throw new ForbiddenException('Inventory not found.');
 
@@ -636,6 +641,168 @@ export class GameplayService {
     inventory.equippedItems = {
       ...inventory.equippedItems,
       [equipmentSlot]: undefined,
+    };
+
+    return {};
+  }
+
+  async craftItem(
+    userId: string,
+    itemId: string,
+  ): Promise<Partial<IFullUser | IPatchUser>> {
+    const crafting = await this.craftingService.getCraftingForUser(userId);
+    if (!crafting) throw new ForbiddenException('Crafting not found.');
+
+    const inventory = await this.inventoryService.getInventoryForUser(userId);
+    if (!inventory) throw new ForbiddenException('Inventory not found.');
+
+    const recipe = this.contentService.getRecipe(itemId);
+    if (!recipe) throw new ForbiddenException('Recipe not found.');
+
+    const item = this.contentService.getItem(itemId);
+    if (!item) throw new ForbiddenException('Item not found.');
+
+    if (crafting.currentlyCrafting)
+      throw new ForbiddenException('You are already crafting an item.');
+
+    const currentLevelValue = getCraftingLevel(crafting, recipe.type);
+    if (currentLevelValue < recipe.requiredLevel)
+      throw new ForbiddenException(
+        'You are not high enough level to craft this item.',
+      );
+
+    if (!this.craftingService.hasResources(recipe, inventory.resources)) {
+      throw new ForbiddenException(
+        'You do not have enough resources to craft this item.',
+      );
+    }
+
+    const craftTime = recipe.craftTime;
+    const timeMultiplier = this.constantsService.craftingSpeedMultiplier;
+
+    const totalCraftTime = Math.floor(craftTime * (timeMultiplier / 100));
+    const craftEndsAt = Date.now() + totalCraftTime * 1000;
+
+    this.events.emit('notification.create', {
+      userId,
+      notification: {
+        liveAt: new Date(craftEndsAt),
+        text: `Your crafted ${item.name} has completed!`,
+        actions: [
+          {
+            text: 'Collect',
+            url: 'gameplay/item/craft/take',
+            clearActionsForUrl: 'gameplay/item/craft/take',
+          },
+        ],
+      },
+      expiresAfterHours: 24,
+    });
+
+    const craftingPatches = await getPatchesAfterPropChanges<Crafting>(
+      crafting,
+      async (craftingRef) => {
+        craftingRef.currentlyCrafting = recipe.resultingItem;
+        craftingRef.currentlyCraftingDoneAt = craftEndsAt;
+      },
+    );
+
+    const inventoryPatches = await getPatchesAfterPropChanges<Inventory>(
+      inventory,
+      async (inventoryRef) => {
+        const newResources = this.craftingService.takeResources(
+          recipe,
+          inventoryRef.resources,
+        );
+        inventoryRef.resources = { ...newResources };
+      },
+    );
+
+    return { inventory: inventoryPatches, crafting: craftingPatches };
+  }
+
+  async takeCraftedItem(
+    userId: string,
+  ): Promise<Partial<IFullUser | IPatchUser>> {
+    const crafting = await this.craftingService.getCraftingForUser(userId);
+    if (!crafting) throw new ForbiddenException('Crafting not found.');
+
+    const inventory = await this.inventoryService.getInventoryForUser(userId);
+    if (!inventory) throw new ForbiddenException('Inventory not found.');
+
+    const craftItem = crafting.currentlyCrafting;
+    if (!craftItem) throw new ForbiddenException('Crafting item not found.');
+
+    const recipe = this.contentService.getRecipe(craftItem);
+    if (!recipe) throw new ForbiddenException('Recipe not found.');
+
+    if (Date.now() < crafting.currentlyCraftingDoneAt)
+      throw new ForbiddenException('Crafting not done yet.');
+
+    const item = this.contentService.getItem(craftItem);
+    if (!item) throw new ForbiddenException('Item not found.');
+
+    if (
+      item.type !== 'resource' &&
+      (await this.inventoryService.isInventoryFull(userId))
+    )
+      throw new ForbiddenException('Inventory is full.');
+
+    const inventoryPatches = await getPatchesAfterPropChanges<Inventory>(
+      inventory,
+      async (inventoryRef) => {
+        if (item.type === 'resource') {
+          this.inventoryService.acquireResourceForInventory(
+            inventoryRef,
+            userId,
+            craftItem,
+          );
+        } else {
+          await this.inventoryService.acquireItem(userId, craftItem);
+        }
+      },
+    );
+
+    const craftingPatches = await getPatchesAfterPropChanges<Crafting>(
+      crafting,
+      async (craftingRef) => {
+        craftingRef.currentlyCrafting = '';
+        craftingRef.currentlyCraftingDoneAt = 0;
+
+        const type = recipe.type;
+        const xpKey = `${type}Xp`;
+        const levelKey = `${type}Level`;
+
+        const currentXpValue = getCraftingXp(craftingRef, type);
+        const currentLevelValue = getCraftingLevel(craftingRef, type);
+
+        if (currentLevelValue < recipe.maxLevel) {
+          const nextLevelXp = xpForCraftingLevel(currentLevelValue);
+
+          craftingRef[xpKey] = currentXpValue + xpGainedForCraftingItem(item);
+          if (craftingRef[xpKey] >= nextLevelXp) {
+            craftingRef[levelKey] = currentLevelValue + 1;
+            craftingRef[xpKey] = craftingRef[xpKey] - nextLevelXp;
+          }
+        }
+      },
+    );
+
+    await this.notificationService.clearAllNotificationActionsMatchingUrl(
+      userId,
+      'gameplay/item/craft/take',
+    );
+
+    return {
+      inventory: inventoryPatches,
+      crafting: craftingPatches,
+      actions: [
+        {
+          type: 'Notify',
+          messageType: 'success',
+          message: `You collected ${item.name}!`,
+        },
+      ],
     };
   }
 }

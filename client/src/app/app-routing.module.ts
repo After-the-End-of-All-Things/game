@@ -87,6 +87,15 @@ const routes: Routes = [
       ),
   },
   {
+    path: 'crafting',
+    canActivate: [AuthGuard],
+    data: { title: 'Crafting' },
+    loadChildren: () =>
+      import('./pages/crafting/crafting.module').then(
+        (m) => m.CraftingPageModule,
+      ),
+  },
+  {
     path: '**',
     redirectTo: '',
     pathMatch: 'full',

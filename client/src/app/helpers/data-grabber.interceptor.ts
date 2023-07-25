@@ -11,6 +11,10 @@ import {
   SetAchievements,
 } from '@stores/achievements/achievements.actions';
 import {
+  ApplyCraftingPatches,
+  SetCrafting,
+} from '@stores/crafting/crafting.actions';
+import {
   ApplyDiscoveriesPatches,
   SetDiscoveries,
 } from '@stores/discoveries/discoveries.actions';
@@ -89,6 +93,16 @@ export class DataGrabberInterceptor implements HttpInterceptor {
             }
           } else {
             this.store.dispatch(new SetDiscoveries(body.discoveries));
+          }
+        }
+
+        if (body.crafting) {
+          if (isArray(body.crafting)) {
+            if (body.crafting.length > 0) {
+              this.store.dispatch(new ApplyCraftingPatches(body.crafting));
+            }
+          } else {
+            this.store.dispatch(new SetCrafting(body.crafting));
           }
         }
 

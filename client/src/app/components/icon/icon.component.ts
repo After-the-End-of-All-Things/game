@@ -1,6 +1,7 @@
 import {
   Component,
   DestroyRef,
+  HostBinding,
   Input,
   OnChanges,
   OnInit,
@@ -24,7 +25,11 @@ export class IconComponent implements OnInit, OnChanges {
 
   @Input({ required: true }) spritesheet!: string;
   @Input({ required: true }) sprite!: number;
-  @Input() size: 'small' | 'normal' = 'normal';
+  @Input() size: 'xsmall' | 'small' | 'normal' = 'normal';
+
+  @HostBinding('class') get sizeClass() {
+    return this.size;
+  }
 
   private hasLoaded = false;
   private quality = 'medium';

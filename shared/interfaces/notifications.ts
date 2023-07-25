@@ -4,6 +4,7 @@ export interface INotificationAction {
   actionData: any;
   url?: string;
   urlData?: any;
+  clearActionsForUrl?: string;
 }
 
 export interface INotification {

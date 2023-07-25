@@ -1,4 +1,5 @@
 import { ContentModule } from '@modules/content/content.module';
+import { CraftingModule } from '@modules/crafting/crafting.module';
 import { DiscoveriesModule } from '@modules/discoveries/discoveries.module';
 import { GameplayController } from '@modules/gameplay/gameplay.controller';
 import { GameplayService } from '@modules/gameplay/gameplay.service';
@@ -17,6 +18,7 @@ import { Module } from '@nestjs/common';
     StatsModule,
     InventoryModule,
     PlayerModule,
+    CraftingModule,
   ],
   providers: [GameplayService],
   exports: [GameplayService],

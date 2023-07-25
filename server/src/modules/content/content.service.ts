@@ -6,6 +6,7 @@ import {
   IItem,
   IJob,
   ILocation,
+  IRecipe,
   IResource,
 } from '@interfaces';
 import * as fs from 'fs-extra';
@@ -28,6 +29,7 @@ export class ContentService {
     collectibles: {},
     equipment: {},
     resources: {},
+    recipes: {},
   };
 
   private get locations(): Record<string, ILocation> {
@@ -48,6 +50,10 @@ export class ContentService {
 
   private get resources(): Record<string, IResource> {
     return this.content.resources;
+  }
+
+  private get recipes(): Record<string, IRecipe> {
+    return this.content.recipes;
   }
 
   constructor(private logger: Logger) {}
@@ -121,5 +127,9 @@ export class ContentService {
 
   public getItem(item: string): IItem | undefined {
     return this.equipment[item] || this.collectibles[item];
+  }
+
+  public getRecipe(item: string): IRecipe | undefined {
+    return this.recipes[item];
   }
 }

@@ -86,4 +86,14 @@ export class GameplayService {
       },
     );
   }
+
+  craftItem(itemId: string) {
+    return this.http.put(`${environment.apiUrl}/gameplay/item/craft/start`, {
+      itemId,
+    });
+  }
+
+  takeCraftedItem() {
+    return this.http.post(`${environment.apiUrl}/gameplay/item/craft/take`, {});
+  }
 }

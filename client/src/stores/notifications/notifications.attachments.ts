@@ -2,6 +2,7 @@ import { IAttachment } from '../../interfaces';
 import {
   AddNotification,
   ClearNotificationActions,
+  ClearNotificationActionsMatchingUrl,
   MarkAllNotificationsRead,
   MarkNotificationRead,
   Notify,
@@ -10,6 +11,7 @@ import {
 import {
   addNotification,
   clearActions,
+  clearActionsMatchingUrl,
   markAllRead,
   markRead,
   notify,
@@ -21,6 +23,10 @@ export const attachments: IAttachment[] = [
   { action: MarkNotificationRead, handler: markRead },
   { action: MarkAllNotificationsRead, handler: markAllRead },
   { action: ClearNotificationActions, handler: clearActions },
+  {
+    action: ClearNotificationActionsMatchingUrl,
+    handler: clearActionsMatchingUrl,
+  },
   { action: AddNotification, handler: addNotification },
   { action: Notify, handler: notify },
 ];

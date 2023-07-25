@@ -24,6 +24,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { HttpExceptionFilter } from '@utils/http-exception.filter';
 import { GameplayModule } from './modules/gameplay/gameplay.module';
 import { UpdateAuthTimeInterceptor } from './utils/updatetime.interceptor';
+import { CraftingModule } from './modules/crafting/crafting.module';
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -80,6 +81,7 @@ const isProduction = process.env.NODE_ENV === 'production';
       }),
       global: true,
     },
+    CraftingModule,
   ],
   controllers: [AppController, GameplayController],
   providers: [

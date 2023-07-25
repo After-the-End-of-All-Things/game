@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { isNotificationLive } from '@helpers/notifications';
 import { xpForLevel } from '@helpers/xp';
 import { INotification, IPlayer } from '@interfaces';
 import { Select, Store } from '@ngxs/store';
@@ -22,8 +23,6 @@ export class HeaderBarComponent implements OnInit {
   @Select(NotificationsStore.notifications) notifications$!: Observable<
     INotification[]
   >;
-  @Select(NotificationsStore.notificationCount)
-  notificationCount$!: Observable<number>;
 
   constructor(
     private store: Store,
@@ -52,5 +51,14 @@ export class HeaderBarComponent implements OnInit {
 
     this.store.dispatch(new MarkNotificationRead(notification.id || ''));
     this.notificationService.markRead(notification.id || '').subscribe();
+  }
+
+  unreadNotificationCount(notifications: INotification[]) {
+    return this.filterNotifications(notifications).filter((n) => !n.read)
+      .length;
+  }
+
+  filterNotifications(notifications: INotification[]) {
+    return notifications.filter((n) => isNotificationLive(n));
   }
 }

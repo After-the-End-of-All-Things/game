@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, HostBinding, Input, OnInit } from '@angular/core';
 import { IItem } from '@interfaces';
 
 @Component({
@@ -8,7 +8,11 @@ import { IItem } from '@interfaces';
 })
 export class ItemIconComponent implements OnInit {
   @Input({ required: true }) item!: IItem;
-  @Input() size: 'small' | 'normal' = 'normal';
+  @Input() size: 'xsmall' | 'small' | 'normal' = 'normal';
+
+  @HostBinding('class') get sizeClass() {
+    return this.size;
+  }
 
   constructor() {}
 

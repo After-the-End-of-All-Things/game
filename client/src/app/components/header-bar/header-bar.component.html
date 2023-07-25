@@ -8,14 +8,14 @@
     </ion-button>
   </ion-buttons>
 
-  <ion-buttons slot="end">
+  <ion-buttons slot="end" *ngIf="notifications$ | async as notifications">
     <ion-button class="notifications" (click)="popover.present($event)">
       <ion-icon slot="icon-only" name="notifications"></ion-icon>
 
       <ion-badge
         class="number"
         color="secondary"
-        *ngIf="notificationCount$ | async as count"
+        *ngIf="unreadNotificationCount(notifications) as count"
       >
         {{ count }}
       </ion-badge>
@@ -53,7 +53,10 @@
         </ion-item>
 
         <ion-item
-          *ngFor="let notification of notifications; trackBy: trackBy"
+          *ngFor="
+            let notification of filterNotifications(notifications);
+            trackBy: trackBy
+          "
           class="notification"
           [class.unread]="!notification.read"
           (mouseover)="markNotificationRead(notification)"

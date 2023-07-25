@@ -6,6 +6,7 @@ import {
   IItem,
   IJob,
   ILocation,
+  IRecipe,
   IResource,
 } from '@interfaces';
 import { AssetService } from '@services/asset.service';
@@ -20,6 +21,7 @@ export class ContentService {
     collectibles: {},
     equipment: {},
     resources: {},
+    recipes: {},
   };
 
   public get maxPortraits() {
@@ -42,12 +44,16 @@ export class ContentService {
     return this.content.collectibles;
   }
 
-  public get rseources(): Record<string, IResource> {
+  public get resources(): Record<string, IResource> {
     return this.content.resources;
   }
 
   public get equipment(): Record<string, IEquipment> {
     return this.content.equipment;
+  }
+
+  public get recipes(): Record<string, IRecipe> {
+    return this.content.recipes;
   }
 
   constructor(private assetService: AssetService) {}
@@ -81,7 +87,7 @@ export class ContentService {
   }
 
   public getResource(resource: string): IResource | undefined {
-    return this.rseources[resource];
+    return this.resources[resource];
   }
 
   public getCollectible(collectible: string): ICollectible | undefined {
@@ -101,6 +107,14 @@ export class ContentService {
   }
 
   public getItem(item: string): IItem | undefined {
-    return this.getCollectible(item) || this.getEquipment(item);
+    return (
+      this.getCollectible(item) ||
+      this.getEquipment(item) ||
+      this.getResource(item)
+    );
+  }
+
+  public getRecipes(): IRecipe[] {
+    return Object.values(this.recipes);
   }
 }

@@ -1,3 +1,4 @@
+import { isNotificationLive } from '@helpers/notifications';
 import {
   IAttachmentHelpers,
   INotification,
@@ -9,6 +10,7 @@ import { uniqBy } from 'lodash';
 import {
   AddNotification,
   ClearNotificationActions,
+  ClearNotificationActionsMatchingUrl,
   MarkNotificationRead,
   Notify,
   SetNotifications,
@@ -31,12 +33,11 @@ export function setNotifications(
   ctx.patchState({ notifications: splicedNotifications });
 }
 
-export function markAllRead(
-  ctx: StateContext<INotificationsStore>,
-  { id }: MarkNotificationRead,
-) {
+export function markAllRead(ctx: StateContext<INotificationsStore>) {
   const currentNotifications = ctx.getState().notifications;
   currentNotifications.forEach((notification) => {
+    if (!isNotificationLive(notification)) return;
+
     notification.read = true;
   });
 
@@ -69,6 +70,18 @@ export function clearActions(
       ),
     }),
   );
+}
+
+export function clearActionsMatchingUrl(
+  ctx: StateContext<INotificationsStore>,
+  { url }: ClearNotificationActionsMatchingUrl,
+) {
+  const currentNotifications = ctx.getState().notifications;
+  const filteredNotifications = currentNotifications.filter((n) => {
+    return !n.actions?.some((a) => a.url?.includes(url));
+  });
+
+  ctx.patchState({ notifications: filteredNotifications });
 }
 
 export function addNotification(

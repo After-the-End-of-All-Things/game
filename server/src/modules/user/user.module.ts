@@ -1,5 +1,6 @@
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { AchievementsModule } from '@modules/achievements/achievements.module';
+import { CraftingModule } from '@modules/crafting/crafting.module';
 import { DiscoveriesModule } from '@modules/discoveries/discoveries.module';
 import { InventoryModule } from '@modules/inventory/inventory.module';
 import { PlayerModule } from '@modules/player/player.module';
@@ -18,6 +19,7 @@ import { Module } from '@nestjs/common';
     AchievementsModule,
     DiscoveriesModule,
     InventoryModule,
+    CraftingModule,
   ],
   providers: [UserService],
   exports: [UserService],

@@ -19,6 +19,8 @@ export class ConstantsService {
   public readonly resourceFindPercentBoost: number = 0;
   public readonly locationFindPercentBoost: number = 0;
 
+  public readonly craftingSpeedMultiplier: number = 100;
+
   constructor(private readonly configService: ConfigService) {
     this.exploreSpeedMultiplier = +this.configService.get<number>(
       'EXPLORE_SPEED_MULTIPLIER',
@@ -63,6 +65,11 @@ export class ConstantsService {
     this.locationFindPercentBoost = +this.configService.get<number>(
       'LOCATION_FIND_PERCENT_BOOST',
       0,
+    );
+
+    this.craftingSpeedMultiplier = +this.configService.get<number>(
+      'CRAFTING_SPEED_MULTIPLIER',
+      100,
     );
   }
 }

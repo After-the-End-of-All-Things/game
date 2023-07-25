@@ -1,0 +1,13 @@
+
+.ngx-datatable {
+  .icon-col {
+    .datatable-body-cell-label {
+      display: flex;
+      overflow: hidden;
+    }
+  }
+
+  .ingredients-col {
+    overflow-y: hidden;
+  }
+}

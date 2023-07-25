@@ -1,4 +1,5 @@
 export * from './achievements/achievements.store';
+export * from './crafting/crafting.store';
 export * from './discoveries/discoveries.store';
 export * from './inventory/inventory.store';
 export * from './notifications/notifications.store';

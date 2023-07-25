@@ -1,5 +1,6 @@
 import { MikroOrmModuleOptions } from '@mikro-orm/nestjs';
 import { Achievements } from '@modules/achievements/achievements.schema';
+import { Crafting } from '@modules/crafting/crafting.schema';
 import { Discoveries } from '@modules/discoveries/discoveries.schema';
 import { Inventory } from '@modules/inventory/inventory.schema';
 import { InventoryItem } from '@modules/inventory/inventoryitem.schema';
@@ -29,6 +30,7 @@ function mikroOrmConfigFactory(
       Achievements,
       Inventory,
       InventoryItem,
+      Crafting,
     ],
     dbName: process.env.NODE_ENV === 'production' ? 'ateoat' : 'ateoattest',
     type: 'mongo',

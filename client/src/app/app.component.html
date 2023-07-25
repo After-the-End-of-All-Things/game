@@ -24,7 +24,17 @@
                 [ios]="p.icon + '-outline'"
                 [md]="p.icon + '-sharp'"
               ></ion-icon>
+
               <ion-label>{{ p.title }}</ion-label>
+
+              <ng-container *ngIf="p.indicator | async as indicator">
+                <ion-icon
+                  slot="end"
+                  [color]="indicator.color"
+                  [icon]="indicator.icon"
+                  [ngxTippy]="indicator.tooltip"
+                ></ion-icon>
+              </ng-container>
             </ion-item>
           </ion-menu-toggle>
 
@@ -47,12 +57,23 @@
                 [ios]="p.icon + '-outline'"
                 [md]="p.icon + '-sharp'"
               ></ion-icon>
+
               <ion-label>{{ p.title }}</ion-label>
+
+              <ng-container *ngIf="p.indicator | async as indicator">
+                <ion-icon
+                  slot="end"
+                  [color]="indicator.color"
+                  [icon]="indicator.icon"
+                  [ngxTippy]="indicator.tooltip"
+                ></ion-icon>
+              </ng-container>
             </ion-item>
           </ion-menu-toggle>
         </ion-list>
       </ion-content>
     </ion-menu>
+
     <ion-router-outlet id="main-content"></ion-router-outlet>
   </ion-split-pane>
 </ion-app>

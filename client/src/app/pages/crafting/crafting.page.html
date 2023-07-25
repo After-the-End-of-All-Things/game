@@ -1,0 +1,212 @@
+<ion-header [translucent]="true">
+  <app-header-bar></app-header-bar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <app-header-bar></app-header-bar>
+  </ion-header>
+
+  <ng-container
+    *ngIf="{
+    armorer: armorer$ | async,
+    artisan: artisan$ | async,
+    smith: smith$ | async,
+    current: currentlyCrafting$ | async
+  } as craftData"
+  >
+    <ion-card class="crafting-card">
+      <ion-card-content>
+        <div *ngIf="craftData.current">
+          <ng-container
+            *ngIf="getItemById(craftData.current.item) as currentItem; else noCraft"
+          >
+            <div
+              class="craft-card-item"
+              *ngIf="isStillCrafting(craftData.current.endsAt); else doneCrafting"
+            >
+              <app-item-icon [item]="currentItem" size="small"></app-item-icon>
+              <span>
+                <strong
+                  [ngClass]="['rarity', currentItem.rarity.toLowerCase()]"
+                >
+                  {{ currentItem.name }}
+                </strong>
+                will be done in
+                <app-countdown
+                  [endsAt]="craftData.current.endsAt"
+                ></app-countdown>
+                ...
+              </span>
+            </div>
+
+            <ng-template #doneCrafting>
+              <div class="craft-card-item">
+                <app-item-icon
+                  [item]="currentItem"
+                  size="small"
+                ></app-item-icon>
+
+                <span class="expand">
+                  <strong
+                    [ngClass]="['rarity', currentItem.rarity.toLowerCase()]"
+                  >
+                    {{ currentItem.name }}
+                  </strong>
+                  is complete!
+                </span>
+
+                <ion-button color="primary" size="small" (click)="collect()">
+                  Collect
+                </ion-button>
+              </div>
+            </ng-template>
+          </ng-container>
+
+          <ng-template #noCraft>Not currently crafting any items.</ng-template>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Crafting</ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+        <ion-segment
+          value="armorer"
+          (ionChange)="selectDiscipline($event, craftData)"
+        >
+          <ion-segment-button value="armorer">
+            <ion-label>Armorer Lv.{{craftData.armorer?.level || 0 }}</ion-label>
+          </ion-segment-button>
+
+          <ion-segment-button value="artisan">
+            <ion-label>Artisan Lv.{{craftData.artisan?.level || 0 }}</ion-label>
+          </ion-segment-button>
+
+          <ion-segment-button value="smith">
+            <ion-label>Smith Lv.{{craftData.smith?.level || 0 }}</ion-label>
+          </ion-segment-button>
+        </ion-segment>
+
+        <div class="xp">
+          <ion-progress-bar
+            [ngxTippy]="(craftData[discipline]?.xp ?? 0) + ' / ' + nextCraftingLevelXp(craftData[discipline]?.level || 1) + ' XP'"
+            [tippyProps]="{ placement: 'bottom' }"
+            color="xp"
+            [value]="(craftData[discipline]?.xp ?? 0) / nextCraftingLevelXp(craftData[discipline]?.level || 1)"
+          ></ion-progress-bar>
+        </div>
+
+        <ngx-datatable
+          class="dark"
+          [rows]="recipes"
+          [rowHeight]="'auto'"
+          [columnMode]="'force'"
+          [sorts]="[{ prop: 'name', dir: 'asc' }]"
+        >
+          <ngx-datatable-column
+            name=""
+            [maxWidth]="80"
+            [minWidth]="80"
+            [sortable]="false"
+            [cellClass]="'icon-col'"
+          >
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <app-item-icon [item]="row.item" size="small"></app-item-icon>
+            </ng-template>
+          </ngx-datatable-column>
+
+          <ngx-datatable-column
+            name="Item"
+            [prop]="'item.name'"
+            [cellClass]="'text-wrap-column'"
+          >
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <div>
+                <strong [ngClass]="['rarity', row.item.rarity.toLowerCase()]">
+                  {{ row.item.name }}
+                </strong>
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+
+          <ngx-datatable-column
+            name="Item Level"
+            [prop]="'item.levelRequirement'"
+          >
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              Lv. {{ row.item.levelRequirement || 0 }}
+            </ng-template>
+          </ngx-datatable-column>
+
+          <ngx-datatable-column name="Crafting Time" [prop]="'craftTime'">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              {{ row.craftTime }}s
+            </ng-template>
+          </ngx-datatable-column>
+
+          <ngx-datatable-column
+            name="Ingredients"
+            [sortable]="false"
+            [cellClass]="'ingredients-col'"
+          >
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <div
+                *ngFor="let ing of row.ingredients"
+                class="ingredient-required"
+              >
+                <ng-container *ngIf="getItemById(ing.item) as item">
+                  <app-item-icon
+                    [item]="item"
+                    size="xsmall"
+                    [ngxTippy]="item.name"
+                    [tippyProps]="{ placement: 'left' }"
+                  ></app-item-icon>
+                </ng-container>
+
+                <span class="amount">
+                  x{{ ing.amount }} ({{ availableResources[ing.item] || 0 }})
+                </span>
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+
+          <ngx-datatable-column
+            name="Collected"
+            [maxWidth]="100"
+            [sortable]="false"
+            [cellClass]="'center-column icon-column'"
+          >
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <ion-icon
+                [name]="isDiscovered(row) ? 'checkmark-circle' : 'close-circle'"
+                [color]="isDiscovered(row) ? 'success' : 'danger'"
+              ></ion-icon>
+            </ng-template>
+          </ngx-datatable-column>
+
+          <ngx-datatable-column
+            name=""
+            [maxWidth]="100"
+            [sortable]="false"
+            [cellClass]="'center-column'"
+          >
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <ion-button
+                size="small"
+                color="secondary"
+                (click)="craft(row)"
+                [disabled]="!canCraft(row) || craftData.current?.endsAt"
+              >
+                Craft
+              </ion-button>
+            </ng-template>
+          </ngx-datatable-column>
+        </ngx-datatable>
+      </ion-card-content>
+    </ion-card>
+  </ng-container>
+</ion-content>

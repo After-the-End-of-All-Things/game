@@ -59,5 +59,25 @@
         </ion-card>
       </ion-col>
     </ion-row>
+
+    <ion-row>
+      <ion-col sizeXs="12" class="center-container">
+        <ion-card class="card-with-actions center-title-card actions-card">
+          <ion-card-header>
+            <ion-card-title>Town Actions</ion-card-title>
+          </ion-card-header>
+
+          <ion-card-content>
+            <ion-list>
+              <ion-item [routerLink]="['/crafting']">
+                <ion-icon slot="start" name="construct"></ion-icon>
+
+                Crafting
+              </ion-item>
+            </ion-list>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
   </ion-grid>
 </ion-content>

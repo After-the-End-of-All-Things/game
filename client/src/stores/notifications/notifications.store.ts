@@ -27,9 +27,4 @@ export class NotificationsStore {
   static notifications(state: INotificationsStore) {
     return state.notifications;
   }
-
-  @Selector()
-  static notificationCount(state: INotificationsStore) {
-    return state.notifications.filter((n) => !n.read).length;
-  }
 }

@@ -1,0 +1,27 @@
+
+.amount {
+  margin-left: 5px;
+}
+
+.ingredient-required {
+  display: flex;
+}
+
+.craft-card-item {
+  display: flex;
+  align-items: center;
+  min-height: 35px;
+
+  .expand {
+    flex: 1;
+  }
+
+  app-item-icon {
+    margin-right: 8px;
+  }
+}
+
+.xp {
+  margin-top: 2px;
+  margin-bottom: 16px;
+}
