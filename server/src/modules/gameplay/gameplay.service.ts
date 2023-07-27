@@ -538,6 +538,10 @@ export class GameplayService {
             item.name
           } for ${coinsGained.toLocaleString()} coins!`,
         },
+        {
+          type: 'RemoveInventoryItem',
+          instanceId,
+        },
       ],
     };
   }

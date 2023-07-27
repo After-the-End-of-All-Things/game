@@ -1,0 +1,159 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Steelrose Market</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="myListings()" [strong]="true" color="secondary">
+        My Listings
+      </ion-button>
+
+      <ion-button (click)="close()" [strong]="true">Close</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-row>
+    <ion-col size="4">
+      <ion-row>
+        <ion-col>
+          <ion-card>
+            <ion-card-header>
+              <ion-card-title>Rarities</ion-card-title>
+            </ion-card-header>
+
+            <ion-card-content>
+              <ion-row>
+                <ion-col size="4" *ngFor="let rarity of rarities">
+                  <ion-button
+                    expand="block"
+                    [color]="searchRarities[rarity] ? 'secondary' : 'medium'"
+                    (click)="toggleRarity(rarity)"
+                  >
+                    {{ rarity }}
+                  </ion-button>
+                </ion-col>
+              </ion-row>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-card>
+            <ion-card-header>
+              <ion-card-title>Item Types</ion-card-title>
+            </ion-card-header>
+
+            <ion-card-content>
+              <ion-row>
+                <ion-col size="4" *ngFor="let type of itemTypes">
+                  <ion-button
+                    expand="block"
+                    [color]="searchTypes[type] ? 'secondary' : 'medium'"
+                    (click)="toggleType(type)"
+                  >
+                    {{ type }}
+                  </ion-button>
+                </ion-col>
+              </ion-row>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-card>
+            <ion-card-header>
+              <ion-card-title>Filters</ion-card-title>
+            </ion-card-header>
+
+            <ion-card-content>
+              <ion-list>
+                <ion-item>
+                  <ion-input
+                    label="Item Name"
+                    labelPlacement="stacked"
+                    type="text"
+                    placeholder="Item Name"
+                    [(ngModel)]="searchName"
+                  ></ion-input>
+                </ion-item>
+
+                <ion-item>
+                  <ion-input
+                    label="Minimum Level"
+                    labelPlacement="stacked"
+                    type="number"
+                    placeholder="Minimum Level"
+                    [(ngModel)]="searchLevelMin"
+                  ></ion-input>
+                </ion-item>
+
+                <ion-item>
+                  <ion-input
+                    label="Maximum Level"
+                    labelPlacement="stacked"
+                    type="number"
+                    placeholder="Maximum Level"
+                    [(ngModel)]="searchLevelMax"
+                  ></ion-input>
+                </ion-item>
+
+                <ion-item>
+                  <ion-input
+                    label="Minimum Coin Cost"
+                    labelPlacement="stacked"
+                    type="number"
+                    placeholder="Minimum Coin Cost"
+                    [(ngModel)]="searchCostMin"
+                  ></ion-input>
+                </ion-item>
+
+                <ion-item>
+                  <ion-input
+                    label="Maximum Coin Cost"
+                    labelPlacement="stacked"
+                    type="number"
+                    placeholder="Maximum Coin Cost"
+                    [(ngModel)]="searchCostMax"
+                  ></ion-input>
+                </ion-item>
+              </ion-list>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-button expand="block" color="primary" (click)="search()">
+            Search
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-col>
+
+    <ion-col size="8">
+      <ion-row>
+        <ion-col>
+          <ion-card>
+            <ion-card-header>
+              <ion-card-title>Market Results</ion-card-title>
+            </ion-card-header>
+
+            <ion-card-content *ngIf="marketItems.length === 0">
+              There are no search results at this time.
+            </ion-card-content>
+
+            <ion-card-content *ngIf="marketItems.length > 0">
+              {{ marketItems | json }}
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-col>
+  </ion-row>
+</ion-content>

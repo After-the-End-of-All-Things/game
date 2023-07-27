@@ -141,6 +141,10 @@ export class DiscoveriesService {
           messageType: 'success',
           message: `You collected ${itemDefinition.name}!`,
         },
+        {
+          type: 'RemoveInventoryItem',
+          instanceId,
+        },
       ],
     };
   }
@@ -182,6 +186,10 @@ export class DiscoveriesService {
           type: 'Notify',
           messageType: 'success',
           message: `You collected ${itemDefinition.name}!`,
+        },
+        {
+          type: 'RemoveInventoryItem',
+          instanceId,
         },
       ],
     };
