@@ -119,7 +119,10 @@ export class MarketService {
     };
   }
 
-  async getItems(query: any): Promise<IPagination<IMarketItem>> {
+  async getItems(
+    askingUser: string,
+    query: any,
+  ): Promise<IPagination<IMarketItem>> {
     const { name, levelMin, levelMax, costMin, costMax, types, rarities } =
       query;
 
@@ -198,6 +201,7 @@ export class MarketService {
       ...filterCost,
       ...filterRarities,
       ...filterTypes,
+      userId: { $ne: askingUser },
     };
 
     const total = await this.marketItem.count(resultQuery);

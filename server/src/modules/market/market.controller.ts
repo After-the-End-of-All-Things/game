@@ -22,8 +22,11 @@ export class MarketController {
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Get a filtered item list from the market' })
   @Get('items')
-  async getItems(@Query() query: any): Promise<IPagination<IMarketItem>> {
-    return this.marketService.getItems(query);
+  async getItems(
+    @User() user,
+    @Query() query: any,
+  ): Promise<IPagination<IMarketItem>> {
+    return this.marketService.getItems(user.userId, query);
   }
 
   @UseGuards(JwtAuthGuard)
