@@ -1,6 +1,10 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Steelrose Market</ion-title>
+    <ion-title>
+      Steelrose Market
+
+      <small class="available-coins">{{ coins | number }} coins</small>
+    </ion-title>
 
     <ion-buttons slot="end">
       <ion-button (click)="myListings()" [strong]="true" color="secondary">
@@ -141,15 +145,108 @@
         <ion-col>
           <ion-card>
             <ion-card-header>
-              <ion-card-title>Market Results</ion-card-title>
+              <ion-card-title>
+                <ion-row>
+                  <ion-col size="3" class="title">Market Results</ion-col>
+
+                  <ion-col size="9" class="pagination-container">
+                    <ion-button
+                      size="small"
+                      (click)="changePage(marketResults.page - 1)"
+                      [disabled]="marketResults.page <= 0"
+                    >
+                      <ion-icon slot="icon-only" name="chevron-back"></ion-icon>
+                    </ion-button>
+
+                    <span class="text">
+                      Page {{ marketResults.page + 1 }} of
+                      {{ marketResults.lastPage }}
+                    </span>
+
+                    <ion-button
+                      size="small"
+                      (click)="changePage(marketResults.page + 1)"
+                      [disabled]="
+                        marketResults.page + 1 >= marketResults.lastPage
+                      "
+                    >
+                      <ion-icon
+                        slot="icon-only"
+                        name="chevron-forward"
+                      ></ion-icon>
+                    </ion-button>
+                  </ion-col>
+                </ion-row>
+              </ion-card-title>
             </ion-card-header>
 
-            <ion-card-content *ngIf="marketItems.length === 0">
+            <ion-card-content *ngIf="loading">
+              <ion-spinner></ion-spinner>
+            </ion-card-content>
+
+            <ion-card-content
+              *ngIf="!loading && marketResults.results.length === 0"
+            >
               There are no search results at this time.
             </ion-card-content>
 
-            <ion-card-content *ngIf="marketItems.length > 0">
-              {{ marketItems | json }}
+            <ion-card-content
+              *ngIf="!loading && marketResults.results.length > 0"
+            >
+              <ion-list>
+                <ion-item *ngFor="let item of marketResults.results">
+                  <div slot="start" class="icon-container">
+                    <app-item-icon
+                      [item]="item.itemData"
+                      size="small"
+                    ></app-item-icon>
+
+                    <ion-badge
+                      class="can-equip"
+                      color="success"
+                      *ngIf="canEquipItem(item.itemData)"
+                      [ngxTippy]="'Can equip!'"
+                    >
+                      <ion-icon name="checkmark"></ion-icon>
+                    </ion-badge>
+                  </div>
+
+                  <ion-label>
+                    <h2>{{ item.itemData.name }}</h2>
+                    <p>
+                      {{ item.itemData.type | titlecase }} &middot;
+                      {{ item.price | number }} coins
+                    </p>
+                    <p>
+                      <app-item-stats [item]="item.itemData"></app-item-stats>
+                    </p>
+                  </ion-label>
+
+                  <ion-button
+                    slot="end"
+                    color="secondary"
+                    (click)="compareItem(item.itemData)"
+                    *ngIf="
+                      isEquippableItemType(item.itemData) &&
+                      canCompare(item.itemData)
+                    "
+                  >
+                    <ion-icon name="podium"></ion-icon>
+
+                    &nbsp;Compare
+                  </ion-button>
+
+                  <ion-button
+                    slot="end"
+                    [disabled]="coins < item.price"
+                    (click)="buyItem(item)"
+                  >
+                    <ion-icon name="cart"></ion-icon>
+
+                    &nbsp;Buy
+                  </ion-button>
+                </ion-item>
+              </ion-list>
             </ion-card-content>
           </ion-card>
         </ion-col>

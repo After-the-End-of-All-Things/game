@@ -9,7 +9,7 @@ import { ObjectId } from '@mikro-orm/mongodb';
 
 @Entity()
 export class MarketItem implements IMarketItem {
-  @PrimaryKey({ hidden: true })
+  @PrimaryKey()
   _id!: ObjectId;
 
   @SerializedPrimaryKey({ hidden: true })

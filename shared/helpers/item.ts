@@ -71,9 +71,23 @@ export function itemSlotForItem(
 export function allArmorTypes() {
   return AllArmor;
 }
+
 export function allWeaponTypes() {
   return AllWeapons;
 }
+
 export function allAccessoryTypes() {
   return AllAccessories;
+}
+
+export function isArmor(item: IItem) {
+  return AllArmor.includes(item.type as Armor);
+}
+
+export function isWeapon(item: IItem) {
+  return AllWeapons.includes(item.type as Weapon);
+}
+
+export function isAccessory(item: IItem) {
+  return AllAccessories.includes(item.type as Accessory);
 }

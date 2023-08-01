@@ -4,7 +4,13 @@ import {
   allArmorTypes,
   allWeaponTypes,
 } from '@helpers/item';
-import { IEquipment, IFullUser, IMarketItem, IPatchUser } from '@interfaces';
+import {
+  IEquipment,
+  IFullUser,
+  IMarketItem,
+  IPagination,
+  IPatchUser,
+} from '@interfaces';
 import { EntityManager, EntityRepository } from '@mikro-orm/mongodb';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { ContentService } from '@modules/content/content.service';
@@ -72,7 +78,7 @@ export class MarketService {
 
     const dbItem = new MarketItem(
       userId,
-      instanceId,
+      item.itemId,
       validPrice,
       playerLocation.name,
       {
@@ -113,9 +119,11 @@ export class MarketService {
     };
   }
 
-  async getItems(query: any): Promise<IMarketItem[]> {
+  async getItems(query: any): Promise<IPagination<IMarketItem>> {
     const { name, levelMin, levelMax, costMin, costMax, types, rarities } =
       query;
+
+    const page = cleanNumber(query.page, 0, { round: true });
 
     const filterName = name
       ? { 'meta.name': { $regex: name, $options: 'i' } }
@@ -181,15 +189,30 @@ export class MarketService {
       };
     }
 
-    const items = await this.marketItem.find({
+    const limit = 25;
+
+    const resultQuery = {
       isSold: { $ne: true },
       ...filterName,
       ...filterLevel,
       ...filterCost,
       ...filterRarities,
       ...filterTypes,
+    };
+
+    const total = await this.marketItem.count(resultQuery);
+    const items = await this.marketItem.find(resultQuery, {
+      limit,
+      offset: page * limit,
+      fields: ['_id', 'itemId', 'price'],
     });
 
-    return items;
+    return {
+      total,
+      limit,
+      page: Math.min(page, Math.ceil(total / limit)),
+      lastPage: Math.ceil(total / limit),
+      results: items,
+    };
   }
 }

@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '@environment';
-import { IMarketItem } from '@interfaces';
+import { IMarketItem, IPagination } from '@interfaces';
 
 @Injectable({
   providedIn: 'root',
@@ -15,9 +15,12 @@ export class MarketService {
       return prev.set(key, filters[key]);
     }, new HttpParams());
 
-    return this.http.get<IMarketItem[]>(`${environment.apiUrl}/market/items`, {
-      params,
-    });
+    return this.http.get<IPagination<IMarketItem>>(
+      `${environment.apiUrl}/market/items`,
+      {
+        params,
+      },
+    );
   }
 
   sellItem(instanceId: string, price: number) {

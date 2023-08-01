@@ -9,4 +9,5 @@ export * from './market';
 export * from './notifications';
 export * from './player';
 export * from './stats';
+export * from './table';
 export * from './user';

@@ -1,4 +1,4 @@
-import { IFullUser, IMarketItem, IPatchUser } from '@interfaces';
+import { IFullUser, IMarketItem, IPagination, IPatchUser } from '@interfaces';
 import { JwtAuthGuard } from '@modules/auth/jwt.guard';
 import { MarketService } from '@modules/market/market.service';
 import {
@@ -22,7 +22,7 @@ export class MarketController {
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Get a filtered item list from the market' })
   @Get('items')
-  async getItems(@Query() query: any): Promise<IMarketItem[]> {
+  async getItems(@Query() query: any): Promise<IPagination<IMarketItem>> {
     return this.marketService.getItems(query);
   }
 
