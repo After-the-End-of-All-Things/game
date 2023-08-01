@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { IMarketItem, Rarity } from '@interfaces';
 import { ModalController } from '@ionic/angular';
+import { MarketService } from '@services/market.service';
 
 @Component({
   selector: 'app-market',
@@ -39,7 +40,10 @@ export class MarketModalComponent implements OnInit {
   public searchCostMin = 0;
   public searchCostMax = 0;
 
-  constructor(private modalCtrl: ModalController) {}
+  constructor(
+    private modalCtrl: ModalController,
+    private marketService: MarketService,
+  ) {}
 
   ngOnInit() {
     this.search();
@@ -59,5 +63,21 @@ export class MarketModalComponent implements OnInit {
 
   public myListings() {}
 
-  public search() {}
+  public search() {
+    this.marketService
+      .getItems({
+        name: this.searchName,
+        levelMin: this.searchLevelMin,
+        levelMax: this.searchLevelMax,
+        costMin: this.searchCostMin,
+        costMax: this.searchCostMax,
+        rarities: Object.keys(this.searchRarities).filter(
+          (r) => this.searchRarities[r],
+        ),
+        types: Object.keys(this.searchTypes).filter((t) => this.searchTypes[t]),
+      })
+      .subscribe((items) => {
+        this.marketItems = items;
+      });
+  }
 }

@@ -17,4 +17,6 @@ export interface IMarketItemMeta {
   level: number;
   type: string;
   rarity: Rarity;
+  listedBy: string;
+  listedById: string;
 }

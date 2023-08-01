@@ -67,3 +67,13 @@ export function itemSlotForItem(
 
   return undefined;
 }
+
+export function allArmorTypes() {
+  return AllArmor;
+}
+export function allWeaponTypes() {
+  return AllWeapons;
+}
+export function allAccessoryTypes() {
+  return AllAccessories;
+}

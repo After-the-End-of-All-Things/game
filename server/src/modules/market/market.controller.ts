@@ -1,4 +1,4 @@
-import { IFullUser, IPatchUser } from '@interfaces';
+import { IFullUser, IMarketItem, IPatchUser } from '@interfaces';
 import { JwtAuthGuard } from '@modules/auth/jwt.guard';
 import { MarketService } from '@modules/market/market.service';
 import {
@@ -8,6 +8,7 @@ import {
   Patch,
   Post,
   Put,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
@@ -21,15 +22,15 @@ export class MarketController {
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Get a filtered item list from the market' })
   @Get('items')
-  async getItems(@User() user): Promise<Partial<IFullUser | IPatchUser>> {
-    return {};
+  async getItems(@Query() query: any): Promise<IMarketItem[]> {
+    return this.marketService.getItems(query);
   }
 
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Get the current users listings' })
   @Get('listings')
-  async getMyListings(@User() user): Promise<Partial<IFullUser | IPatchUser>> {
-    return {};
+  async getMyListings(@User() user): Promise<IMarketItem[]> {
+    return [];
   }
 
   @UseGuards(JwtAuthGuard)
