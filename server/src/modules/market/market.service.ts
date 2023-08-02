@@ -21,6 +21,7 @@ import { Player } from '@modules/player/player.schema';
 import { PlayerService } from '@modules/player/player.service';
 import { UserService } from '@modules/user/user.service';
 import { BadRequestException, Injectable } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { getPatchesAfterPropChanges } from '@utils/patches';
 
 @Injectable()
@@ -34,6 +35,7 @@ export class MarketService {
     private readonly inventoryService: InventoryService,
     private readonly contentService: ContentService,
     private readonly playerHelper: PlayerHelperService,
+    private events: EventEmitter2,
   ) {}
 
   async listItem(
@@ -278,6 +280,18 @@ export class MarketService {
     } else {
       await this.inventoryService.acquireItem(userId, listing.itemId);
     }
+
+    this.events.emit('notification.create', {
+      userId: listing.userId,
+      notification: {
+        liveAt: new Date(),
+        text: `Your ${
+          itemRef.name
+        } sold for ${listing.price.toLocaleString()} coins!`,
+        actions: [],
+      },
+      expiresAfterHours: 1,
+    });
 
     return {
       player: playerPatches,
