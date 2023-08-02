@@ -5,6 +5,7 @@ import {
   Body,
   Controller,
   Get,
+  Param,
   Patch,
   Post,
   Put,
@@ -32,8 +33,8 @@ export class MarketController {
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Get the current users listings' })
   @Get('listings')
-  async getMyListings(@User() user): Promise<IMarketItem[]> {
-    return [];
+  async getMyListings(@User() user): Promise<IPagination<IMarketItem>> {
+    return this.marketService.getMyListings(user.userId);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -66,8 +67,11 @@ export class MarketController {
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Buy the listing for an item' })
   @Post('listings/:id/buy')
-  async buyListing(@User() user): Promise<Partial<IFullUser | IPatchUser>> {
-    return {};
+  async buyListing(
+    @User() user,
+    @Param('id') listingId: string,
+  ): Promise<Partial<IFullUser | IPatchUser>> {
+    return this.marketService.buyItem(user.userId, listingId);
   }
 
   @UseGuards(JwtAuthGuard)

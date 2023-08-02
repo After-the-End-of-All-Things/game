@@ -17,240 +17,245 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-  <ion-row>
-    <ion-col size="4">
-      <ion-row>
-        <ion-col>
-          <ion-card>
-            <ion-card-header>
-              <ion-card-title>Rarities</ion-card-title>
-            </ion-card-header>
+  <ng-container *ngIf="marketItems$ | async as marketResults">
+    <ion-row>
+      <ion-col size="4">
+        <ion-row>
+          <ion-col>
+            <ion-card>
+              <ion-card-header>
+                <ion-card-title>Rarities</ion-card-title>
+              </ion-card-header>
 
-            <ion-card-content>
-              <ion-row>
-                <ion-col size="4" *ngFor="let rarity of rarities">
-                  <ion-button
-                    expand="block"
-                    [color]="searchRarities[rarity] ? 'secondary' : 'medium'"
-                    (click)="toggleRarity(rarity)"
-                  >
-                    {{ rarity }}
-                  </ion-button>
-                </ion-col>
-              </ion-row>
-            </ion-card-content>
-          </ion-card>
-        </ion-col>
-      </ion-row>
-
-      <ion-row>
-        <ion-col>
-          <ion-card>
-            <ion-card-header>
-              <ion-card-title>Item Types</ion-card-title>
-            </ion-card-header>
-
-            <ion-card-content>
-              <ion-row>
-                <ion-col size="4" *ngFor="let type of itemTypes">
-                  <ion-button
-                    expand="block"
-                    [color]="searchTypes[type] ? 'secondary' : 'medium'"
-                    (click)="toggleType(type)"
-                  >
-                    {{ type }}
-                  </ion-button>
-                </ion-col>
-              </ion-row>
-            </ion-card-content>
-          </ion-card>
-        </ion-col>
-      </ion-row>
-
-      <ion-row>
-        <ion-col>
-          <ion-card>
-            <ion-card-header>
-              <ion-card-title>Filters</ion-card-title>
-            </ion-card-header>
-
-            <ion-card-content>
-              <ion-list>
-                <ion-item>
-                  <ion-input
-                    label="Item Name"
-                    labelPlacement="stacked"
-                    type="text"
-                    placeholder="Item Name"
-                    [(ngModel)]="searchName"
-                  ></ion-input>
-                </ion-item>
-
-                <ion-item>
-                  <ion-input
-                    label="Minimum Level"
-                    labelPlacement="stacked"
-                    type="number"
-                    placeholder="Minimum Level"
-                    [(ngModel)]="searchLevelMin"
-                  ></ion-input>
-                </ion-item>
-
-                <ion-item>
-                  <ion-input
-                    label="Maximum Level"
-                    labelPlacement="stacked"
-                    type="number"
-                    placeholder="Maximum Level"
-                    [(ngModel)]="searchLevelMax"
-                  ></ion-input>
-                </ion-item>
-
-                <ion-item>
-                  <ion-input
-                    label="Minimum Coin Cost"
-                    labelPlacement="stacked"
-                    type="number"
-                    placeholder="Minimum Coin Cost"
-                    [(ngModel)]="searchCostMin"
-                  ></ion-input>
-                </ion-item>
-
-                <ion-item>
-                  <ion-input
-                    label="Maximum Coin Cost"
-                    labelPlacement="stacked"
-                    type="number"
-                    placeholder="Maximum Coin Cost"
-                    [(ngModel)]="searchCostMax"
-                  ></ion-input>
-                </ion-item>
-              </ion-list>
-            </ion-card-content>
-          </ion-card>
-        </ion-col>
-      </ion-row>
-
-      <ion-row>
-        <ion-col>
-          <ion-button expand="block" color="primary" (click)="search()">
-            Search
-          </ion-button>
-        </ion-col>
-      </ion-row>
-    </ion-col>
-
-    <ion-col size="8">
-      <ion-row>
-        <ion-col>
-          <ion-card>
-            <ion-card-header>
-              <ion-card-title>
+              <ion-card-content>
                 <ion-row>
-                  <ion-col size="3" class="title">Market Results</ion-col>
-
-                  <ion-col size="9" class="pagination-container">
+                  <ion-col size="4" *ngFor="let rarity of rarities">
                     <ion-button
-                      size="small"
-                      (click)="changePage(marketResults.page - 1)"
-                      [disabled]="marketResults.page <= 0"
+                      expand="block"
+                      [color]="searchRarities[rarity] ? 'secondary' : 'medium'"
+                      (click)="toggleRarity(rarity)"
                     >
-                      <ion-icon slot="icon-only" name="chevron-back"></ion-icon>
-                    </ion-button>
-
-                    <span class="text">
-                      Page {{ marketResults.page + 1 }} of
-                      {{ marketResults.lastPage }}
-                    </span>
-
-                    <ion-button
-                      size="small"
-                      (click)="changePage(marketResults.page + 1)"
-                      [disabled]="
-                        marketResults.page + 1 >= marketResults.lastPage
-                      "
-                    >
-                      <ion-icon
-                        slot="icon-only"
-                        name="chevron-forward"
-                      ></ion-icon>
+                      {{ rarity }}
                     </ion-button>
                   </ion-col>
                 </ion-row>
-              </ion-card-title>
-            </ion-card-header>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+        </ion-row>
 
-            <ion-card-content *ngIf="loading">
-              <ion-spinner></ion-spinner>
-            </ion-card-content>
+        <ion-row>
+          <ion-col>
+            <ion-card>
+              <ion-card-header>
+                <ion-card-title>Item Types</ion-card-title>
+              </ion-card-header>
 
-            <ion-card-content
-              *ngIf="!loading && marketResults.results.length === 0"
-            >
-              There are no search results at this time.
-            </ion-card-content>
-
-            <ion-card-content
-              *ngIf="!loading && marketResults.results.length > 0"
-            >
-              <ion-list>
-                <ion-item *ngFor="let item of marketResults.results">
-                  <div slot="start" class="icon-container">
-                    <app-item-icon
-                      [item]="item.itemData"
-                      size="small"
-                    ></app-item-icon>
-
-                    <ion-badge
-                      class="can-equip"
-                      color="success"
-                      *ngIf="canEquipItem(item.itemData)"
-                      [ngxTippy]="'Can equip!'"
+              <ion-card-content>
+                <ion-row>
+                  <ion-col size="4" *ngFor="let type of itemTypes">
+                    <ion-button
+                      expand="block"
+                      [color]="searchTypes[type] ? 'secondary' : 'medium'"
+                      (click)="toggleType(type)"
                     >
-                      <ion-icon name="checkmark"></ion-icon>
-                    </ion-badge>
-                  </div>
+                      {{ type }}
+                    </ion-button>
+                  </ion-col>
+                </ion-row>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+        </ion-row>
 
-                  <ion-label>
-                    <h2>{{ item.itemData.name }}</h2>
-                    <p>
-                      {{ item.itemData.type | titlecase }} &middot;
-                      {{ item.price | number }} coins
-                    </p>
-                    <p>
-                      <app-item-stats [item]="item.itemData"></app-item-stats>
-                    </p>
-                  </ion-label>
+        <ion-row>
+          <ion-col>
+            <ion-card>
+              <ion-card-header>
+                <ion-card-title>Filters</ion-card-title>
+              </ion-card-header>
 
-                  <ion-button
-                    slot="end"
-                    color="secondary"
-                    (click)="compareItem(item.itemData)"
-                    *ngIf="
-                      isEquippableItemType(item.itemData) &&
-                      canCompare(item.itemData)
-                    "
-                  >
-                    <ion-icon name="podium"></ion-icon>
+              <ion-card-content>
+                <ion-list>
+                  <ion-item>
+                    <ion-input
+                      label="Item Name"
+                      labelPlacement="stacked"
+                      type="text"
+                      placeholder="Item Name"
+                      [(ngModel)]="searchName"
+                    ></ion-input>
+                  </ion-item>
 
-                    &nbsp;Compare
-                  </ion-button>
+                  <ion-item>
+                    <ion-input
+                      label="Minimum Level"
+                      labelPlacement="stacked"
+                      type="number"
+                      placeholder="Minimum Level"
+                      [(ngModel)]="searchLevelMin"
+                    ></ion-input>
+                  </ion-item>
 
-                  <ion-button
-                    slot="end"
-                    [disabled]="coins < item.price"
-                    (click)="buyItem(item)"
-                  >
-                    <ion-icon name="cart"></ion-icon>
+                  <ion-item>
+                    <ion-input
+                      label="Maximum Level"
+                      labelPlacement="stacked"
+                      type="number"
+                      placeholder="Maximum Level"
+                      [(ngModel)]="searchLevelMax"
+                    ></ion-input>
+                  </ion-item>
 
-                    &nbsp;Buy
-                  </ion-button>
-                </ion-item>
-              </ion-list>
-            </ion-card-content>
-          </ion-card>
-        </ion-col>
-      </ion-row>
-    </ion-col>
-  </ion-row>
+                  <ion-item>
+                    <ion-input
+                      label="Minimum Coin Cost"
+                      labelPlacement="stacked"
+                      type="number"
+                      placeholder="Minimum Coin Cost"
+                      [(ngModel)]="searchCostMin"
+                    ></ion-input>
+                  </ion-item>
+
+                  <ion-item>
+                    <ion-input
+                      label="Maximum Coin Cost"
+                      labelPlacement="stacked"
+                      type="number"
+                      placeholder="Maximum Coin Cost"
+                      [(ngModel)]="searchCostMax"
+                    ></ion-input>
+                  </ion-item>
+                </ion-list>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col>
+            <ion-button expand="block" color="primary" (click)="search()">
+              Search
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-col>
+
+      <ion-col size="8">
+        <ion-row>
+          <ion-col>
+            <ion-card>
+              <ion-card-header>
+                <ion-card-title>
+                  <ion-row>
+                    <ion-col size="3" class="title">Market Results</ion-col>
+
+                    <ion-col size="9" class="pagination-container">
+                      <ion-button
+                        size="small"
+                        (click)="changePage(marketResults.page - 1)"
+                        [disabled]="marketResults.page <= 0"
+                      >
+                        <ion-icon
+                          slot="icon-only"
+                          name="chevron-back"
+                        ></ion-icon>
+                      </ion-button>
+
+                      <span class="text">
+                        Page {{ marketResults.page + 1 }} of
+                        {{ marketResults.lastPage }}
+                      </span>
+
+                      <ion-button
+                        size="small"
+                        (click)="changePage(marketResults.page + 1)"
+                        [disabled]="
+                          marketResults.page + 1 >= marketResults.lastPage
+                        "
+                      >
+                        <ion-icon
+                          slot="icon-only"
+                          name="chevron-forward"
+                        ></ion-icon>
+                      </ion-button>
+                    </ion-col>
+                  </ion-row>
+                </ion-card-title>
+              </ion-card-header>
+
+              <ion-card-content *ngIf="loading">
+                <ion-spinner></ion-spinner>
+              </ion-card-content>
+
+              <ion-card-content
+                *ngIf="!loading && marketResults.results.length === 0"
+              >
+                There are no search results at this time.
+              </ion-card-content>
+
+              <ion-card-content
+                *ngIf="!loading && marketResults.results.length > 0"
+              >
+                <ion-list>
+                  <ion-item *ngFor="let item of marketResults.results">
+                    <div slot="start" class="icon-container">
+                      <app-item-icon
+                        [item]="item.itemData"
+                        size="small"
+                      ></app-item-icon>
+
+                      <ion-badge
+                        class="can-equip"
+                        color="success"
+                        *ngIf="canEquipItem(item.itemData)"
+                        [ngxTippy]="'Can equip!'"
+                      >
+                        <ion-icon name="checkmark"></ion-icon>
+                      </ion-badge>
+                    </div>
+
+                    <ion-label>
+                      <h2>{{ item.itemData.name }}</h2>
+                      <p>
+                        {{ item.itemData.type | titlecase }} &middot;
+                        {{ item.price | number }} coins
+                      </p>
+                      <p>
+                        <app-item-stats [item]="item.itemData"></app-item-stats>
+                      </p>
+                    </ion-label>
+
+                    <ion-button
+                      slot="end"
+                      color="secondary"
+                      (click)="compareItem(item.itemData)"
+                      *ngIf="
+                        isEquippableItemType(item.itemData) &&
+                        canCompare(item.itemData)
+                      "
+                    >
+                      <ion-icon name="podium"></ion-icon>
+
+                      &nbsp;Compare
+                    </ion-button>
+
+                    <ion-button
+                      slot="end"
+                      [disabled]="coins < item.price"
+                      (click)="buyItem(item)"
+                    >
+                      <ion-icon name="cart"></ion-icon>
+
+                      &nbsp;Buy
+                    </ion-button>
+                  </ion-item>
+                </ion-list>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+      </ion-col>
+    </ion-row>
+  </ng-container>
 </ion-content>

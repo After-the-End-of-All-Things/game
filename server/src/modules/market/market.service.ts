@@ -11,7 +11,7 @@ import {
   IPagination,
   IPatchUser,
 } from '@interfaces';
-import { EntityManager, EntityRepository } from '@mikro-orm/mongodb';
+import { EntityManager, EntityRepository, ObjectId } from '@mikro-orm/mongodb';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { ContentService } from '@modules/content/content.service';
 import { PlayerHelperService } from '@modules/content/playerhelper.service';
@@ -113,7 +113,8 @@ export class MarketService {
           } for ${validPrice.toLocaleString()} coins!`,
         },
         {
-          type: 'UpdateInventoryItems',
+          type: 'RemoveInventoryItem',
+          instanceId: item.instanceId,
         },
       ],
     };
@@ -217,6 +218,83 @@ export class MarketService {
       page: Math.min(page, Math.ceil(total / limit)),
       lastPage: Math.ceil(total / limit),
       results: items,
+    };
+  }
+
+  async getMyListings(userId: string): Promise<IPagination<IMarketItem>> {
+    return {
+      total: 0,
+      limit: 0,
+      page: 0,
+      lastPage: 0,
+      results: [],
+    };
+  }
+
+  async buyItem(
+    userId: string,
+    listingId: string,
+  ): Promise<Partial<IFullUser | IPatchUser>> {
+    const listing = await this.marketItem.findOne({
+      _id: new ObjectId(listingId),
+    });
+    if (!listing) throw new BadRequestException('Listing not found');
+
+    if (listing.meta.listedById === userId)
+      throw new BadRequestException('You cannot buy your own listing');
+
+    if (listing.isSold)
+      throw new BadRequestException('Listing is already sold');
+
+    const player = await this.playerService.getPlayerForUser(userId);
+    if (!player) throw new BadRequestException('Player not found');
+
+    const user = await this.userService.findUserById(userId);
+    if (!user) throw new BadRequestException('User not found');
+
+    const itemRef = this.contentService.getItem(listing.itemId);
+    if (!itemRef) throw new BadRequestException('Item not found');
+
+    const inventory = await this.inventoryService.getInventoryForUser(userId);
+    if (!inventory) throw new BadRequestException('Inventory not found');
+
+    if (!this.playerHelper.hasCoins(player, listing.price))
+      throw new BadRequestException('Not enough coins');
+
+    const isInventoryFull = await this.inventoryService.isInventoryFull(userId);
+    if (isInventoryFull) throw new BadRequestException('Inventory is full');
+
+    listing.isSold = true;
+
+    const playerPatches = await getPatchesAfterPropChanges<Player>(
+      player,
+      async (player) => {
+        this.playerHelper.spendCoins(player, listing.price);
+      },
+    );
+
+    if (listing.meta.type === 'resource') {
+      await this.inventoryService.acquireResource(userId, listing.itemId);
+    } else {
+      await this.inventoryService.acquireItem(userId, listing.itemId);
+    }
+
+    return {
+      player: playerPatches,
+      actions: [
+        {
+          type: 'RemoveMarketItem',
+          listingId,
+        },
+        { type: 'UpdateInventoryItems' },
+        {
+          type: 'Notify',
+          messageType: 'success',
+          message: `You bought ${
+            itemRef.name
+          } for ${listing.price.toLocaleString()} coins!`,
+        },
+      ],
     };
   }
 }

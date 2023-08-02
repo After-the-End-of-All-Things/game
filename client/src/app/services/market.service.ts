@@ -29,4 +29,11 @@ export class MarketService {
       price,
     });
   }
+
+  buyItem(listingId: string) {
+    return this.http.post(
+      `${environment.apiUrl}/market/listings/${listingId}/buy`,
+      {},
+    );
+  }
 }

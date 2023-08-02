@@ -1,4 +1,9 @@
-import { Rarity } from '@interfaces';
+import { IItem, Rarity } from '@interfaces';
+
+export type IMarketItemExpanded = IMarketItem & {
+  id: string;
+  itemData: IItem;
+};
 
 export interface IMarketItem {
   createdAt: Date;

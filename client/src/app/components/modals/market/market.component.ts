@@ -8,17 +8,19 @@ import {
   IEquipment,
   IItem,
   IMarketItem,
+  IMarketItemExpanded,
   IPagination,
   IPlayer,
   ItemSlot,
   Rarity,
   Weapon,
 } from '@interfaces';
-import { ModalController } from '@ionic/angular';
-import { Select } from '@ngxs/store';
+import { AlertController, ModalController } from '@ionic/angular';
+import { Select, Store } from '@ngxs/store';
 import { ContentService } from '@services/content.service';
 import { MarketService } from '@services/market.service';
-import { InventoryStore, PlayerStore } from '@stores';
+import { InventoryStore, MarketStore, PlayerStore } from '@stores';
+import { SetMarketItems } from '@stores/market/market.actions';
 import { Observable } from 'rxjs';
 @Component({
   selector: 'app-market',
@@ -29,6 +31,10 @@ export class MarketModalComponent implements OnInit {
   @Select(PlayerStore.player) player$!: Observable<IPlayer>;
   @Select(InventoryStore.equipped) equipped$!: Observable<
     Record<ItemSlot, IEquipment>
+  >;
+
+  @Select(MarketStore.marketData) marketItems$!: Observable<
+    IPagination<IMarketItemExpanded>
   >;
 
   private destroyRef = inject(DestroyRef);
@@ -53,14 +59,6 @@ export class MarketModalComponent implements OnInit {
     'Resources',
   ];
 
-  public marketResults: IPagination<IMarketItem & { itemData: IItem }> = {
-    limit: 25,
-    page: 0,
-    lastPage: 0,
-    results: [],
-    total: 0,
-  };
-
   public searchRarities: Record<string, boolean> = {};
   public searchTypes: Record<string, boolean> = {};
 
@@ -69,6 +67,8 @@ export class MarketModalComponent implements OnInit {
   public searchLevelMax = 0;
   public searchCostMin = 0;
   public searchCostMax = 0;
+
+  public searchPage = 0;
 
   public loading = false;
 
@@ -80,7 +80,9 @@ export class MarketModalComponent implements OnInit {
   }
 
   constructor(
+    private store: Store,
     private modalCtrl: ModalController,
+    private alertCtrl: AlertController,
     private contentService: ContentService,
     private marketService: MarketService,
   ) {}
@@ -113,14 +115,12 @@ export class MarketModalComponent implements OnInit {
     this.searchTypes[type] = !this.searchTypes[type];
   }
 
-  public myListings() {}
-
   public isEquippableItemType(item: IItem) {
     return item.type !== 'collectible' && item.type !== 'resource';
   }
 
   public changePage(newPage: number) {
-    this.marketResults.page = newPage;
+    this.searchPage = newPage;
 
     this.search();
   }
@@ -130,7 +130,7 @@ export class MarketModalComponent implements OnInit {
 
     this.marketService
       .getItems({
-        page: this.marketResults.page,
+        page: this.searchPage,
         name: this.searchName,
         levelMin: this.searchLevelMin,
         levelMax: this.searchLevelMax,
@@ -142,15 +142,19 @@ export class MarketModalComponent implements OnInit {
         types: Object.keys(this.searchTypes).filter((t) => this.searchTypes[t]),
       })
       .subscribe((results) => {
-        const itemResults = results.results.map((item) => ({
-          ...item,
-          itemData: this.contentService.getItem(item.itemId)!,
-        }));
+        const itemResults = (results.results as IMarketItemExpanded[]).map(
+          (item) => ({
+            ...item,
+            itemData: this.contentService.getItem(item.itemId)!,
+          }),
+        );
 
-        this.marketResults = {
-          ...results,
-          results: itemResults,
-        };
+        this.store.dispatch(
+          new SetMarketItems({
+            ...results,
+            results: itemResults,
+          }),
+        );
 
         this.loading = false;
       });
@@ -168,8 +172,29 @@ export class MarketModalComponent implements OnInit {
     );
   }
 
-  public buyItem(listing: Partial<IMarketItem & { id: string }>) {
-    console.log(listing);
+  public async buyItem(
+    listing: Partial<IMarketItem & { id: string; itemData: IItem }>,
+  ) {
+    const alert = await this.alertCtrl.create({
+      header: 'Buy Item',
+      message: `Are you sure you want to buy "${
+        listing.itemData?.name || 'this item'
+      }" for ${listing.price?.toLocaleString()} coins?`,
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+        },
+        {
+          text: 'Buy',
+          handler: async () => {
+            this.marketService.buyItem(listing.id!).subscribe();
+          },
+        },
+      ],
+    });
+
+    await alert.present();
   }
 
   public canCompare(item: IItem) {
@@ -211,4 +236,6 @@ export class MarketModalComponent implements OnInit {
     const currentItem = this.getEquippedItem(checkType, this.equipment);
     this.compareItems(item, currentItem, () => {});
   }
+
+  public myListings() {}
 }
