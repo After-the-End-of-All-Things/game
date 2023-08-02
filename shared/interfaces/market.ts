@@ -10,6 +10,7 @@ export interface IMarketItem {
   userId: string;
   itemId: string;
   price: number;
+  quantity: number;
   locality: string;
   isSold: boolean;
   isClaimed: boolean;

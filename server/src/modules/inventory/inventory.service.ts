@@ -101,21 +101,48 @@ export class InventoryService {
     await this.inventoryItems.create(item);
   }
 
+  async hasResource(userId: string, resourceId: string, amount: number) {
+    const inventory = await this.getInventoryForUser(userId);
+    if (!inventory) return;
+
+    return inventory.resources[resourceId] > amount;
+  }
+
   acquireResourceForInventory(
     inventory: Inventory,
     userId: string,
     itemId: string,
+    quantity = 1,
   ) {
     inventory.resources = {
       ...(inventory.resources || {}),
-      [itemId]: (inventory.resources?.[itemId] ?? 0) + 1,
+      [itemId]: (inventory.resources?.[itemId] ?? 0) + quantity,
     };
   }
 
-  async acquireResource(userId: string, itemId: string) {
+  async acquireResource(userId: string, itemId: string, quantity = 1) {
     const inventory = await this.getInventoryForUser(userId);
     if (!inventory) return;
 
-    this.acquireResourceForInventory(inventory, userId, itemId);
+    this.acquireResourceForInventory(inventory, userId, itemId, quantity);
+  }
+
+  removeResourceForInventory(
+    inventory: Inventory,
+    userId: string,
+    itemId: string,
+    quantity = 1,
+  ) {
+    inventory.resources = {
+      ...(inventory.resources || {}),
+      [itemId]: (inventory.resources?.[itemId] ?? 0) - quantity,
+    };
+  }
+
+  async removeResource(userId: string, itemId: string, quantity = 1) {
+    const inventory = await this.getInventoryForUser(userId);
+    if (!inventory) return;
+
+    this.removeResourceForInventory(inventory, userId, itemId, quantity);
   }
 }

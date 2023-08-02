@@ -25,3 +25,8 @@ export class RemoveInventoryItem {
   static type = 'RemoveInventoryItem';
   constructor(public instanceId: string) {}
 }
+
+export class RemoveInventoryResource {
+  static type = 'RemoveInventoryResource';
+  constructor(public itemId: string, public quantity: number) {}
+}

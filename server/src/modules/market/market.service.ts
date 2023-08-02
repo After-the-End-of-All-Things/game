@@ -7,6 +7,7 @@ import {
 import {
   IEquipment,
   IFullUser,
+  IItem,
   IMarketItem,
   IPagination,
   IPatchUser,
@@ -42,6 +43,7 @@ export class MarketService {
     userId: string,
     instanceId: string,
     price: number,
+    quantity = 1,
   ): Promise<Partial<IFullUser | IPatchUser>> {
     const player = await this.playerService.getPlayerForUser(userId);
     if (!player) throw new BadRequestException('Player not found');
@@ -49,18 +51,46 @@ export class MarketService {
     const user = await this.userService.findUserById(userId);
     if (!user) throw new BadRequestException('User not found');
 
-    const item = await this.inventoryService.getInventoryItemForUser(
+    const isResource = this.contentService.getResource(instanceId);
+    let itemRef: IItem | undefined;
+    let itemId = '';
+
+    if (isResource) {
+      itemRef = isResource;
+      itemId = isResource.itemId;
+    } else {
+      const inventoryItem = await this.inventoryService.getInventoryItemForUser(
+        userId,
+        instanceId,
+      );
+
+      if (!inventoryItem) throw new BadRequestException('Item not found');
+      if (inventoryItem.isInUse)
+        throw new BadRequestException('Item is in use');
+
+      itemRef = this.contentService.getItem(inventoryItem.itemId);
+      itemId = inventoryItem.itemId;
+    }
+
+    if (!itemRef || !itemId) throw new BadRequestException('Item not found');
+
+    const validQuantity = isResource
+      ? cleanNumber(quantity, 1, {
+          round: true,
+          abs: true,
+          min: 1,
+        })
+      : 1;
+
+    const hasResourceQuantity = await this.inventoryService.hasResource(
       userId,
       instanceId,
+      validQuantity,
     );
+    if (isResource && !hasResourceQuantity)
+      throw new BadRequestException('Not enough resources');
 
-    if (!item) throw new BadRequestException('Item not found');
-    if (item.isInUse) throw new BadRequestException('Item is in use');
-
-    const itemRef = this.contentService.getItem(item.itemId);
-    if (!itemRef) throw new BadRequestException('Item not found');
-
-    const validPrice = cleanNumber(price, 0, {
+    const validPrice = cleanNumber(price * validQuantity, 0, {
       round: true,
       abs: true,
       min: 0,
@@ -80,8 +110,9 @@ export class MarketService {
 
     const dbItem = new MarketItem(
       userId,
-      item.itemId,
+      itemId,
       validPrice,
+      validQuantity,
       playerLocation.name,
       {
         rarity: itemRef.rarity,
@@ -93,7 +124,15 @@ export class MarketService {
       },
     );
     await this.marketItem.create(dbItem);
-    await this.inventoryService.removeInventoryItemForUser(userId, instanceId);
+
+    if (isResource) {
+      await this.inventoryService.removeResource(userId, itemId, validQuantity);
+    } else {
+      await this.inventoryService.removeInventoryItemForUser(
+        userId,
+        instanceId,
+      );
+    }
 
     const playerPatches = await getPatchesAfterPropChanges<Player>(
       player,
@@ -112,13 +151,22 @@ export class MarketService {
           messageType: 'success',
           message: `You listed ${
             itemRef.name
-          } for ${validPrice.toLocaleString()} coins!`,
+          } x${validQuantity.toLocaleString()} for ${validPrice.toLocaleString()} coins!`,
         },
-        {
-          type: 'RemoveInventoryItem',
-          instanceId: item.instanceId,
-        },
-      ],
+        !isResource
+          ? {
+              type: 'RemoveInventoryItem',
+              instanceId,
+            }
+          : undefined,
+        isResource
+          ? {
+              type: 'RemoveInventoryResource',
+              itemId,
+              quantity: validQuantity,
+            }
+          : undefined,
+      ].filter(Boolean),
     };
   }
 
@@ -211,7 +259,7 @@ export class MarketService {
     const items = await this.marketItem.find(resultQuery, {
       limit,
       offset: page * limit,
-      fields: ['_id', 'itemId', 'price'],
+      fields: ['_id', 'itemId', 'price', 'quantity'],
     });
 
     return {
@@ -294,8 +342,11 @@ export class MarketService {
     const user = await this.userService.findUserById(userId);
     if (!user) throw new BadRequestException('User not found');
 
+    const isResource = this.contentService.getResource(listing.itemId);
+
     const itemRef = this.contentService.getItem(listing.itemId);
-    if (!itemRef) throw new BadRequestException('Item not found');
+    if (!itemRef && !isResource)
+      throw new BadRequestException('Item not found');
 
     const inventory = await this.inventoryService.getInventoryForUser(userId);
     if (!inventory) throw new BadRequestException('Inventory not found');
@@ -304,7 +355,8 @@ export class MarketService {
       throw new BadRequestException('Not enough coins');
 
     const isInventoryFull = await this.inventoryService.isInventoryFull(userId);
-    if (isInventoryFull) throw new BadRequestException('Inventory is full');
+    if (isInventoryFull && !isResource)
+      throw new BadRequestException('Inventory is full');
 
     listing.isSold = true;
 
@@ -316,7 +368,11 @@ export class MarketService {
     );
 
     if (listing.meta.type === 'resource') {
-      await this.inventoryService.acquireResource(userId, listing.itemId);
+      await this.inventoryService.acquireResource(
+        userId,
+        listing.itemId,
+        listing.quantity,
+      );
     } else {
       await this.inventoryService.acquireItem(userId, listing.itemId);
     }
@@ -325,8 +381,8 @@ export class MarketService {
       userId: listing.userId,
       notification: {
         liveAt: new Date(),
-        text: `Your ${
-          itemRef.name
+        text: `Your ${listing.meta.name} x${
+          listing.quantity
         } sold for ${listing.price.toLocaleString()} coins!`,
         actions: [],
       },
@@ -344,8 +400,8 @@ export class MarketService {
         {
           type: 'Notify',
           messageType: 'success',
-          message: `You bought ${
-            itemRef.name
+          message: `You bought ${listing.meta.name} x${
+            listing.quantity
           } for ${listing.price.toLocaleString()} coins!`,
         },
       ],

@@ -5,6 +5,7 @@ import { applyPatch } from 'fast-json-patch';
 import {
   ApplyInventoryPatches,
   RemoveInventoryItem,
+  RemoveInventoryResource,
   SetInventory,
   UpdateInventoryItems,
 } from './inventory.actions';
@@ -73,5 +74,20 @@ export function removeInventoryItem(
 ) {
   ctx.setState(
     patch({ items: removeItem((i: IItem) => i.instanceId === instanceId) }),
+  );
+}
+
+export function removeInventoryResource(
+  ctx: StateContext<IInventoryStore>,
+  { itemId, quantity }: RemoveInventoryResource,
+) {
+  ctx.setState(
+    patch({
+      inventory: patch({
+        resources: patch({
+          [itemId]: (current: number) => current - quantity,
+        }),
+      }),
+    }),
   );
 }

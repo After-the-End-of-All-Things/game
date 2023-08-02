@@ -44,8 +44,14 @@ export class MarketController {
     @User() user,
     @Body('instanceId') instanceId: string,
     @Body('price') price: number,
+    @Body('quantity') quantity: number,
   ): Promise<Partial<IFullUser | IPatchUser>> {
-    return this.marketService.listItem(user.userId, instanceId, price);
+    return this.marketService.listItem(
+      user.userId,
+      instanceId,
+      price,
+      quantity,
+    );
   }
 
   @UseGuards(JwtAuthGuard)

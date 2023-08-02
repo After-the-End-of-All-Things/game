@@ -28,6 +28,9 @@ export class MarketItem implements IMarketItem {
   price: number;
 
   @Property()
+  quantity: number;
+
+  @Property()
   locality: string;
 
   @Property()
@@ -43,6 +46,7 @@ export class MarketItem implements IMarketItem {
     userId: string,
     itemId: string,
     price: number,
+    quantity: number,
     locality: string,
     meta: IMarketItemMeta,
   ) {
@@ -51,6 +55,7 @@ export class MarketItem implements IMarketItem {
     this.userId = userId;
     this.itemId = itemId;
     this.price = price;
+    this.quantity = quantity;
     this.locality = locality;
 
     this.isSold = false;

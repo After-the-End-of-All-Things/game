@@ -225,7 +225,12 @@
                     </div>
 
                     <ion-label>
-                      <h2>{{ item.itemData.name }}</h2>
+                      <h2>
+                        {{ item.itemData.name }}
+                        <span *ngIf="item.quantity > 0">
+                          x{{ item.quantity }}
+                        </span>
+                      </h2>
                       <p>
                         {{ item.itemData.type | titlecase }} &middot;
                         {{ item.price | number }} coins

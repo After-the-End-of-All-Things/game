@@ -183,7 +183,7 @@ export class MarketModalComponent implements OnInit {
       header: 'Buy Item',
       message: `Are you sure you want to buy "${
         listing.itemData?.name || 'this item'
-      }" for ${listing.price?.toLocaleString()} coins?`,
+      }" x${listing.quantity} for ${listing.price?.toLocaleString()} coins?`,
       buttons: [
         {
           text: 'Cancel',
@@ -243,7 +243,6 @@ export class MarketModalComponent implements OnInit {
 
   public checkUnclaimedCoins() {
     this.marketService.getClaimCoins().subscribe((result) => {
-      console.log({ result });
       this.unclaimed = result as number;
     });
   }

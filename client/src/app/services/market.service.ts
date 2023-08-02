@@ -23,10 +23,11 @@ export class MarketService {
     );
   }
 
-  sellItem(instanceId: string, price: number) {
+  sellItem(instanceId: string, price: number, quantity = 1) {
     return this.http.put(`${environment.apiUrl}/market/listings`, {
       instanceId,
       price,
+      quantity,
     });
   }
 
