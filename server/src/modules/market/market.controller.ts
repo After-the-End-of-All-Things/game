@@ -75,11 +75,18 @@ export class MarketController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Get the total unclaimed coin value for a player' })
+  @Get('listings/claims')
+  async getTotalUnclaimedValue(@User() user): Promise<number> {
+    return this.marketService.getMyValue(user.userId);
+  }
+
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Claim the listing value for an item post-sell' })
-  @Post('listings/:id/claim')
-  async claimListingValue(
+  @Post('listings/claims')
+  async claimListingCoins(
     @User() user,
   ): Promise<Partial<IFullUser | IPatchUser>> {
-    return {};
+    return this.marketService.claimMyValue(user.userId);
   }
 }

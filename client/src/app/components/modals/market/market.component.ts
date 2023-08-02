@@ -79,6 +79,8 @@ export class MarketModalComponent implements OnInit {
     return this.player?.currencies[Currency.Coins] ?? 0;
   }
 
+  public unclaimed = 0;
+
   constructor(
     private store: Store,
     private modalCtrl: ModalController,
@@ -88,6 +90,8 @@ export class MarketModalComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.checkUnclaimedCoins();
+
     this.search();
 
     this.player$
@@ -235,6 +239,19 @@ export class MarketModalComponent implements OnInit {
     const checkType = isItemWeapon ? 'weapon' : item.type;
     const currentItem = this.getEquippedItem(checkType, this.equipment);
     this.compareItems(item, currentItem, () => {});
+  }
+
+  public checkUnclaimedCoins() {
+    this.marketService.getClaimCoins().subscribe((result) => {
+      console.log({ result });
+      this.unclaimed = result as number;
+    });
+  }
+
+  public claimCoins() {
+    this.marketService.claimCoins().subscribe(() => {
+      this.unclaimed = 0;
+    });
   }
 
   public myListings() {}

@@ -233,6 +233,46 @@ export class MarketService {
     };
   }
 
+  async getMyValue(userId: string): Promise<number> {
+    const allSoldListings = await this.marketItem.find({
+      userId,
+      isSold: true,
+    });
+
+    return allSoldListings.reduce((prev, curr) => prev + curr.price, 0);
+  }
+
+  async claimMyValue(userId: string): Promise<Partial<IFullUser | IPatchUser>> {
+    const totalValue = await this.getMyValue(userId);
+    if (totalValue <= 0) throw new BadRequestException('No value to claim');
+
+    const player = await this.playerService.getPlayerForUser(userId);
+    if (!player) throw new BadRequestException('Player not found');
+
+    const playerPatches = await getPatchesAfterPropChanges<Player>(
+      player,
+      async (player) => {
+        this.playerHelper.gainCoins(player, totalValue);
+      },
+    );
+
+    await this.em.nativeDelete<MarketItem>(MarketItem, {
+      userId,
+      isSold: true,
+    });
+
+    return {
+      player: playerPatches,
+      actions: [
+        {
+          type: 'Notify',
+          messageType: 'success',
+          message: `You claimed ${totalValue.toLocaleString()} coins!`,
+        },
+      ],
+    };
+  }
+
   async buyItem(
     userId: string,
     listingId: string,

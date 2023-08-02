@@ -7,6 +7,15 @@
     </ion-title>
 
     <ion-buttons slot="end">
+      <ion-button
+        (click)="claimCoins()"
+        [strong]="true"
+        color="primary"
+        *ngIf="unclaimed > 0"
+      >
+        Claim {{ unclaimed | number }} coins
+      </ion-button>
+
       <ion-button (click)="myListings()" [strong]="true" color="secondary">
         My Listings
       </ion-button>

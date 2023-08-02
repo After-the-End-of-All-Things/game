@@ -36,4 +36,12 @@ export class MarketService {
       {},
     );
   }
+
+  getClaimCoins() {
+    return this.http.get(`${environment.apiUrl}/market/listings/claims`);
+  }
+
+  claimCoins() {
+    return this.http.post(`${environment.apiUrl}/market/listings/claims`, {});
+  }
 }
