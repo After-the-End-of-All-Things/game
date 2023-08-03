@@ -16,6 +16,7 @@ export class Notification implements INotification {
   @SerializedPrimaryKey()
   id!: string;
 
+  @Index()
   @Property({ hidden: true })
   userId: string;
 

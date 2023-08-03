@@ -1,6 +1,7 @@
 import { IInventoryItem } from '@interfaces';
 import {
   Entity,
+  Index,
   PrimaryKey,
   Property,
   SerializedPrimaryKey,
@@ -15,6 +16,7 @@ export class InventoryItem implements IInventoryItem {
   @SerializedPrimaryKey({ hidden: true })
   id!: string;
 
+  @Index()
   @Property({ hidden: true })
   userId: string;
 

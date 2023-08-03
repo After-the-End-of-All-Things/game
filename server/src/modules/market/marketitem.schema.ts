@@ -1,6 +1,7 @@
 import { IMarketItem, IMarketItemMeta } from '@interfaces';
 import {
   Entity,
+  Index,
   PrimaryKey,
   Property,
   SerializedPrimaryKey,
@@ -18,6 +19,7 @@ export class MarketItem implements IMarketItem {
   @Property()
   createdAt: Date;
 
+  @Index()
   @Property({ hidden: true })
   userId: string;
 
