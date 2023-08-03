@@ -5,6 +5,7 @@ import { Discoveries } from '@modules/discoveries/discoveries.schema';
 import { Inventory } from '@modules/inventory/inventory.schema';
 import { InventoryItem } from '@modules/inventory/inventoryitem.schema';
 import { MarketItem } from '@modules/market/marketitem.schema';
+import { MarketSale } from '@modules/market/marketsale.schema';
 import { Notification } from '@modules/notification/notification.schema';
 import { Player } from '@modules/player/player.schema';
 import { Stats } from '@modules/stats/stats.schema';
@@ -33,6 +34,7 @@ function mikroOrmConfigFactory(
       InventoryItem,
       Crafting,
       MarketItem,
+      MarketSale,
     ],
     dbName: process.env.NODE_ENV === 'production' ? 'ateoat' : 'ateoattest',
     type: 'mongo',

@@ -26,3 +26,14 @@ export interface IMarketItemMeta {
   listedBy: string;
   listedById: string;
 }
+
+export interface IMarketSale {
+  createdAt: Date;
+  seller: string;
+  buyer: string;
+  itemId: string;
+  price: number;
+  quantity: number;
+  locality: string;
+  expiresAt: Date;
+}

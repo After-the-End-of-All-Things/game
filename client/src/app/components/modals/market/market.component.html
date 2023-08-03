@@ -263,6 +263,16 @@
 
                         &nbsp;Compare
                       </ion-button>
+
+                      <ion-button
+                        slot="end"
+                        [disabled]="coins < item.price"
+                        (click)="buyItem(item)"
+                      >
+                        <ion-icon name="cart"></ion-icon>
+
+                        &nbsp;Buy
+                      </ion-button>
                     </ng-container>
 
                     <ng-container *ngIf="showingMyListings">

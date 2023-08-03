@@ -18,6 +18,7 @@ import { ContentService } from '@modules/content/content.service';
 import { PlayerHelperService } from '@modules/content/playerhelper.service';
 import { InventoryService } from '@modules/inventory/inventory.service';
 import { MarketItem } from '@modules/market/marketitem.schema';
+import { MarketSale } from '@modules/market/marketsale.schema';
 import { Player } from '@modules/player/player.schema';
 import { PlayerService } from '@modules/player/player.service';
 import { UserService } from '@modules/user/user.service';
@@ -31,6 +32,8 @@ export class MarketService {
     private readonly em: EntityManager,
     @InjectRepository(MarketItem)
     private readonly marketItem: EntityRepository<MarketItem>,
+    @InjectRepository(MarketSale)
+    private readonly marketSale: EntityRepository<MarketSale>,
     private readonly userService: UserService,
     private readonly playerService: PlayerService,
     private readonly inventoryService: InventoryService,
@@ -380,6 +383,8 @@ export class MarketService {
       expiresAfterHours: 1,
     });
 
+    await this.recordSale(userId, listing);
+
     return {
       player: playerPatches,
       actions: [
@@ -519,5 +524,18 @@ export class MarketService {
         },
       ],
     };
+  }
+
+  private async recordSale(buyer: string, listing: MarketItem) {
+    const dbItem = new MarketSale(
+      listing.userId,
+      buyer,
+      listing.itemId,
+      listing.price,
+      listing.quantity,
+      listing.locality,
+    );
+
+    await this.marketSale.create(dbItem);
   }
 }
