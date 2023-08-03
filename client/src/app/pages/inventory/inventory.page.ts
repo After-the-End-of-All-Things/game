@@ -118,6 +118,8 @@ export class InventoryPage implements OnInit {
           name: 'price',
           type: 'number',
           placeholder: 'Price',
+          min: itemValue(item),
+          value: itemValue(item),
         },
       ],
       buttons: [

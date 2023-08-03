@@ -1,7 +1,11 @@
 import { IMarketItemExpanded, IMarketStore } from '@interfaces';
 import { StateContext } from '@ngxs/store';
-import { patch, removeItem } from '@ngxs/store/operators';
-import { RemoveMarketItem, SetMarketItems } from './market.actions';
+import { patch, removeItem, updateItem } from '@ngxs/store/operators';
+import {
+  RemoveMarketItem,
+  RepriceMarketItem,
+  SetMarketItems,
+} from './market.actions';
 
 export const defaultStore: () => IMarketStore = () => ({
   version: 0,
@@ -34,6 +38,24 @@ export function removeMarketItem(
       marketData: patch({
         results: removeItem<IMarketItemExpanded>(
           (item) => item.id === listingId,
+        ),
+      }),
+    }),
+  );
+}
+
+export function repriceMarketItem(
+  ctx: StateContext<IMarketStore>,
+  { listingId, newPrice }: RepriceMarketItem,
+) {
+  ctx.setState(
+    patch({
+      marketData: patch({
+        results: updateItem<IMarketItemExpanded>(
+          (item) => item.id === listingId,
+          patch({
+            price: newPrice,
+          }),
         ),
       }),
     }),

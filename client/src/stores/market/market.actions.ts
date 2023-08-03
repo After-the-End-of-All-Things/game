@@ -9,3 +9,8 @@ export class RemoveMarketItem {
   static type = 'RemoveMarketItem';
   constructor(public listingId: string) {}
 }
+
+export class RepriceMarketItem {
+  static type = 'RepriceMarketItem';
+  constructor(public listingId: string, public newPrice: number) {}
+}

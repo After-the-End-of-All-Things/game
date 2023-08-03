@@ -1,7 +1,7 @@
 import { Component, DestroyRef, OnInit, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CompareItemsModalComponent } from '@components/modals/compare-items/compare-items.component';
-import { isAccessory, isWeapon } from '@helpers/item';
+import { isAccessory, isWeapon, itemValue } from '@helpers/item';
 import {
   Armor,
   Currency,
@@ -12,6 +12,7 @@ import {
   IPagination,
   IPlayer,
   ItemSlot,
+  LocationStat,
   Rarity,
   Weapon,
 } from '@interfaces';
@@ -71,6 +72,7 @@ export class MarketModalComponent implements OnInit {
   public searchPage = 0;
 
   public loading = false;
+  public showingMyListings = false;
 
   public player!: IPlayer;
   public equipment!: Record<ItemSlot, IEquipment>;
@@ -123,6 +125,13 @@ export class MarketModalComponent implements OnInit {
     return item.type !== 'collectible' && item.type !== 'resource';
   }
 
+  public changeMyListings() {
+    this.showingMyListings = !this.showingMyListings;
+    this.searchPage = 0;
+
+    this.search();
+  }
+
   public changePage(newPage: number) {
     this.searchPage = newPage;
 
@@ -133,18 +142,23 @@ export class MarketModalComponent implements OnInit {
     this.loading = true;
 
     this.marketService
-      .getItems({
-        page: this.searchPage,
-        name: this.searchName,
-        levelMin: this.searchLevelMin,
-        levelMax: this.searchLevelMax,
-        costMin: this.searchCostMin,
-        costMax: this.searchCostMax,
-        rarities: Object.keys(this.searchRarities).filter(
-          (r) => this.searchRarities[r],
-        ),
-        types: Object.keys(this.searchTypes).filter((t) => this.searchTypes[t]),
-      })
+      .getItems(
+        {
+          page: this.searchPage,
+          name: this.searchName,
+          levelMin: this.searchLevelMin,
+          levelMax: this.searchLevelMax,
+          costMin: this.searchCostMin,
+          costMax: this.searchCostMax,
+          rarities: Object.keys(this.searchRarities).filter(
+            (r) => this.searchRarities[r],
+          ),
+          types: Object.keys(this.searchTypes).filter(
+            (t) => this.searchTypes[t],
+          ),
+        },
+        this.showingMyListings,
+      )
       .subscribe((results) => {
         const itemResults = (results.results as IMarketItemExpanded[]).map(
           (item) => ({
@@ -253,5 +267,93 @@ export class MarketModalComponent implements OnInit {
     });
   }
 
-  public myListings() {}
+  public async repriceItem(listing: IMarketItemExpanded) {
+    const alert = await this.alertCtrl.create({
+      header: 'Reprice Item',
+      message: 'Enter the price you want to sell this item for.',
+      inputs: [
+        {
+          name: 'price',
+          type: 'number',
+          placeholder: 'Price',
+          value: listing.price,
+          min: itemValue(listing.itemData),
+        },
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+        },
+        {
+          text: 'Reprice',
+          handler: async ({ price }) => {
+            this.store
+              .selectOnce(PlayerStore.player)
+              .subscribe(async (player) => {
+                const location = player.location.current;
+                const locationData = this.contentService.getLocation(location);
+                if (!locationData) return;
+
+                const quantity = listing.quantity ?? 1;
+
+                const realPrice = Math.floor(price);
+                const realPriceQtyAdjusted = Math.floor(realPrice * quantity);
+
+                const taxPrice = Math.floor(
+                  realPriceQtyAdjusted *
+                    (locationData.baseStats[LocationStat.TaxRate] / 100),
+                );
+
+                const confirm = await this.alertCtrl.create({
+                  header: 'Confirm Reprice',
+                  message: `Are you sure you want to reprice this item at ${realPrice.toLocaleString()} coins? It will cost ${taxPrice.toLocaleString()} coins to reprice it.`,
+                  buttons: [
+                    {
+                      text: 'Cancel',
+                      role: 'cancel',
+                    },
+                    {
+                      text: 'Reprice',
+                      handler: async () => {
+                        this.marketService
+                          .repriceItem(listing, realPrice)
+                          .subscribe(() => {});
+                      },
+                    },
+                  ],
+                });
+
+                await confirm.present();
+              });
+          },
+        },
+      ],
+    });
+
+    await alert.present();
+  }
+
+  public async unlistItem(listing: IMarketItemExpanded) {
+    const alert = await this.alertCtrl.create({
+      header: 'Unlist Item',
+      message: `Are you sure you want to unlist "${
+        listing.itemData?.name || 'this item'
+      }" x${listing.quantity}? You will not get your paid tax back.`,
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+        },
+        {
+          text: 'Unlist',
+          handler: async () => {
+            this.marketService.unsellItem(listing).subscribe();
+          },
+        },
+      ],
+    });
+
+    await alert.present();
+  }
 }

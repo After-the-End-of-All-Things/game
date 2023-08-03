@@ -173,6 +173,7 @@ export class MarketService {
   async getItems(
     askingUser: string,
     query: any,
+    getMyItems = false,
   ): Promise<IPagination<IMarketItem>> {
     const { name, levelMin, levelMax, costMin, costMax, types, rarities } =
       query;
@@ -247,12 +248,12 @@ export class MarketService {
 
     const resultQuery = {
       isSold: { $ne: true },
+      userId: getMyItems ? askingUser : { $ne: askingUser },
       ...filterName,
       ...filterLevel,
       ...filterCost,
       ...filterRarities,
       ...filterTypes,
-      userId: { $ne: askingUser },
     };
 
     const total = await this.marketItem.count(resultQuery);
@@ -268,16 +269,6 @@ export class MarketService {
       page: Math.min(page, Math.ceil(total / limit)),
       lastPage: Math.ceil(total / limit),
       results: items,
-    };
-  }
-
-  async getMyListings(userId: string): Promise<IPagination<IMarketItem>> {
-    return {
-      total: 0,
-      limit: 0,
-      page: 0,
-      lastPage: 0,
-      results: [],
     };
   }
 
@@ -403,6 +394,128 @@ export class MarketService {
           message: `You bought ${listing.meta.name} x${
             listing.quantity
           } for ${listing.price.toLocaleString()} coins!`,
+        },
+      ],
+    };
+  }
+
+  async repriceItem(
+    userId: string,
+    listingId: string,
+    price: number,
+  ): Promise<Partial<IFullUser | IPatchUser>> {
+    const player = await this.playerService.getPlayerForUser(userId);
+    if (!player) throw new BadRequestException('Player not found');
+
+    const user = await this.userService.findUserById(userId);
+    if (!user) throw new BadRequestException('User not found');
+
+    const listing = await this.marketItem.findOne({
+      _id: new ObjectId(listingId),
+    });
+    if (!listing) throw new BadRequestException('Listing not found');
+
+    if (listing.userId !== userId)
+      throw new BadRequestException('You cannot reprice this listing');
+
+    const quantity = listing.quantity ?? 1;
+    const validPrice = cleanNumber(price * quantity, 0, {
+      round: true,
+      abs: true,
+      min: 0,
+    });
+    if (validPrice < 1) throw new BadRequestException('Invalid price');
+
+    if (listing.price === validPrice)
+      throw new BadRequestException('Price is the same');
+
+    const playerLocation = this.contentService.getLocation(
+      player.location.current,
+    );
+    if (!playerLocation) throw new BadRequestException('Location not found');
+
+    const taxRate = playerLocation.baseStats.taxRate ?? 5;
+    const tax = Math.floor(validPrice * (taxRate / 100));
+
+    if (!this.playerHelper.hasCoins(player, tax))
+      throw new BadRequestException('Not enough coins');
+
+    const playerPatches = await getPatchesAfterPropChanges<Player>(
+      player,
+      async (player) => {
+        this.playerHelper.spendCoins(player, tax);
+      },
+    );
+
+    listing.price = validPrice;
+
+    return {
+      player: playerPatches,
+      actions: [
+        {
+          type: 'RepriceMarketItem',
+          listingId,
+          newPrice: validPrice,
+        },
+        {
+          type: 'Notify',
+          messageType: 'success',
+          message: `You repriced ${
+            listing.meta.name
+          } x${quantity.toLocaleString()} for ${validPrice.toLocaleString()} coins!`,
+        },
+      ],
+    };
+  }
+
+  async unlistItem(
+    userId: string,
+    listingId: string,
+  ): Promise<Partial<IFullUser | IPatchUser>> {
+    const player = await this.playerService.getPlayerForUser(userId);
+    if (!player) throw new BadRequestException('Player not found');
+
+    const user = await this.userService.findUserById(userId);
+    if (!user) throw new BadRequestException('User not found');
+
+    const listing = await this.marketItem.findOne({
+      _id: new ObjectId(listingId),
+    });
+    if (!listing) throw new BadRequestException('Listing not found');
+
+    if (listing.userId !== userId)
+      throw new BadRequestException('You cannot remove this listing');
+
+    const isResource = this.contentService.getResource(listing.itemId);
+    const isInventoryFull = await this.inventoryService.isInventoryFull(userId);
+    if (!isResource && isInventoryFull)
+      throw new BadRequestException('Inventory is full');
+
+    if (listing.meta.type === 'resource') {
+      await this.inventoryService.acquireResource(
+        userId,
+        listing.itemId,
+        listing.quantity,
+      );
+    } else {
+      await this.inventoryService.acquireItem(userId, listing.itemId);
+    }
+
+    await this.em.nativeDelete<MarketItem>(MarketItem, {
+      _id: new ObjectId(listingId),
+    });
+
+    return {
+      actions: [
+        {
+          type: 'RemoveMarketItem',
+          listingId,
+        },
+        { type: 'UpdateInventoryItems' },
+        {
+          type: 'Notify',
+          messageType: 'success',
+          message: `You unlisted ${listing.meta.name} x${listing.quantity}!`,
         },
       ],
     };

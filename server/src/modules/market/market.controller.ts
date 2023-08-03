@@ -4,6 +4,7 @@ import { MarketService } from '@modules/market/market.service';
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
@@ -33,8 +34,11 @@ export class MarketController {
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Get the current users listings' })
   @Get('listings')
-  async getMyListings(@User() user): Promise<IPagination<IMarketItem>> {
-    return this.marketService.getMyListings(user.userId);
+  async getMyListings(
+    @User() user,
+    @Query() query: any,
+  ): Promise<IPagination<IMarketItem>> {
+    return this.marketService.getItems(user.userId, query, true);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -59,15 +63,20 @@ export class MarketController {
   @Patch('listings/:id')
   async updateListingPrice(
     @User() user,
+    @Param('id') listingId: string,
+    @Body('price') price: number,
   ): Promise<Partial<IFullUser | IPatchUser>> {
-    return {};
+    return this.marketService.repriceItem(user.userId, listingId, price);
   }
 
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Remove the listing for an item' })
-  @Post('listings/:id/unsell')
-  async removeListing(@User() user): Promise<Partial<IFullUser | IPatchUser>> {
-    return {};
+  @Delete('listings/:id')
+  async removeListing(
+    @User() user,
+    @Param('id') listingId: string,
+  ): Promise<Partial<IFullUser | IPatchUser>> {
+    return this.marketService.unlistItem(user.userId, listingId);
   }
 
   @UseGuards(JwtAuthGuard)

@@ -16,8 +16,12 @@
         Claim {{ unclaimed | number }} coins
       </ion-button>
 
-      <ion-button (click)="myListings()" [strong]="true" color="secondary">
-        My Listings
+      <ion-button
+        (click)="changeMyListings()"
+        [strong]="true"
+        color="secondary"
+      >
+        {{ showingMyListings ? 'General Market' : 'My Listings' }}
       </ion-button>
 
       <ion-button (click)="close()" [strong]="true">Close</ion-button>
@@ -157,7 +161,12 @@
               <ion-card-header>
                 <ion-card-title>
                   <ion-row>
-                    <ion-col size="3" class="title">Market Results</ion-col>
+                    <ion-col size="3" class="title" *ngIf="!showingMyListings">
+                      Market Results
+                    </ion-col>
+                    <ion-col size="3" class="title" *ngIf="showingMyListings">
+                      My Market Listings
+                    </ion-col>
 
                     <ion-col size="9" class="pagination-container">
                       <ion-button
@@ -233,36 +242,50 @@
                       </h2>
                       <p>
                         {{ item.itemData.type | titlecase }} &middot;
-                        {{ item.price | number }} coins
+                        <strong>{{ item.price | number }} coins</strong>
                       </p>
                       <p>
                         <app-item-stats [item]="item.itemData"></app-item-stats>
                       </p>
                     </ion-label>
 
-                    <ion-button
-                      slot="end"
-                      color="secondary"
-                      (click)="compareItem(item.itemData)"
-                      *ngIf="
-                        isEquippableItemType(item.itemData) &&
-                        canCompare(item.itemData)
-                      "
-                    >
-                      <ion-icon name="podium"></ion-icon>
+                    <ng-container *ngIf="!showingMyListings">
+                      <ion-button
+                        slot="end"
+                        color="secondary"
+                        (click)="compareItem(item.itemData)"
+                        *ngIf="
+                          isEquippableItemType(item.itemData) &&
+                          canCompare(item.itemData)
+                        "
+                      >
+                        <ion-icon name="podium"></ion-icon>
 
-                      &nbsp;Compare
-                    </ion-button>
+                        &nbsp;Compare
+                      </ion-button>
+                    </ng-container>
 
-                    <ion-button
-                      slot="end"
-                      [disabled]="coins < item.price"
-                      (click)="buyItem(item)"
-                    >
-                      <ion-icon name="cart"></ion-icon>
+                    <ng-container *ngIf="showingMyListings">
+                      <ion-button
+                        slot="end"
+                        color="secondary"
+                        (click)="repriceItem(item)"
+                      >
+                        <ion-icon name="repeat"></ion-icon>
 
-                      &nbsp;Buy
-                    </ion-button>
+                        &nbsp;Reprice
+                      </ion-button>
+
+                      <ion-button
+                        slot="end"
+                        color="danger"
+                        (click)="unlistItem(item)"
+                      >
+                        <ion-icon name="archive"></ion-icon>
+
+                        &nbsp;Unlist
+                      </ion-button>
+                    </ng-container>
                   </ion-item>
                 </ion-list>
               </ion-card-content>
