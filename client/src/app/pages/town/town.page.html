@@ -72,7 +72,22 @@
               <ion-item [routerLink]="['/crafting']">
                 <ion-icon slot="start" name="construct"></ion-icon>
 
-                Crafting
+                <ion-label>
+                  <h3>Crafting</h3>
+                  <p>Create new items from resources you've found.</p>
+                </ion-label>
+              </ion-item>
+
+              <ion-item
+                class="ion-activatable cursor-pointer"
+                (click)="openMarket()"
+              >
+                <ion-icon slot="start" name="cart"></ion-icon>
+
+                <ion-label>
+                  <h3>Market</h3>
+                  <p>Buy and sell items with other players.</p>
+                </ion-label>
               </ion-item>
             </ion-list>
           </ion-card-content>

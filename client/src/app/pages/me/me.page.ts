@@ -132,7 +132,7 @@ export class MePage implements OnInit {
 
   async changeLongBio(defaultValue: string) {
     const alert = await this.alert.create({
-      header: 'Change Tagline',
+      header: 'Change Bio',
       inputs: [
         {
           placeholder: 'Bio',

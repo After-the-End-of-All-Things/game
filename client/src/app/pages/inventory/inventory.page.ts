@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { CompareItemsModalComponent } from '@components/modals/compare-items/compare-items.component';
+import { itemValue } from '@helpers/item';
 import {
   AllAccessories,
   AllArmor,
@@ -10,19 +13,19 @@ import {
   IItem,
   IPlayer,
   ItemSlot,
+  LocationStat,
   Weapon,
 } from '@interfaces';
-import { ContentService } from '@services/content.service';
-import { PlayerService } from '@services/player.service';
-
-import { CompareItemsModalComponent } from '@components/modals/compare-items/compare-items.component';
-import { itemValue } from '@helpers/item';
-import { ModalController } from '@ionic/angular';
+import { AlertController, ModalController } from '@ionic/angular';
 import { Select, Store } from '@ngxs/store';
+import { ContentService } from '@services/content.service';
 import { GameplayService } from '@services/gameplay.service';
+import { MarketService } from '@services/market.service';
+import { PlayerService } from '@services/player.service';
 import { UserService } from '@services/user.service';
 import { InventoryStore, PlayerStore } from '@stores';
-import { Observable } from 'dexie';
+import { UpdateInventoryItems } from '@stores/inventory/inventory.actions';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-inventory',
@@ -30,10 +33,13 @@ import { Observable } from 'dexie';
   styleUrls: ['./inventory.page.scss'],
 })
 export class InventoryPage implements OnInit {
+  private destroyRef = inject(DestroyRef);
+
   @Select(PlayerStore.player) player$!: Observable<IPlayer>;
   @Select(InventoryStore.equipped) equipped$!: Observable<
     Record<ItemSlot, IEquipment>
   >;
+  @Select(InventoryStore.items) items$!: Observable<IItem[]>;
 
   public readonly basicEquipTypes = AllArmor;
 
@@ -46,26 +52,29 @@ export class InventoryPage implements OnInit {
 
   constructor(
     private store: Store,
+    private alertCtrl: AlertController,
     public playerService: PlayerService,
     public contentService: ContentService,
     private modalController: ModalController,
     private gameplayService: GameplayService,
+    private marketService: MarketService,
     private userService: UserService,
   ) {}
 
   ngOnInit() {
+    this.watchItems();
+
     this.updateItems();
     this.updateDiscoveries();
   }
 
   updateItems() {
-    this.playerService.getInventoryItems().subscribe((res: any) => {
-      this.items = res.items
-        .filter((i: any) => !i.isInUse)
-        .map((i: any) => ({
-          ...this.contentService.getItem(i.itemId),
-          instanceId: i.instanceId,
-        })) as IItem[];
+    this.store.dispatch(new UpdateInventoryItems());
+  }
+
+  watchItems() {
+    this.items$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((items) => {
+      this.items = items;
     });
   }
 
@@ -97,25 +106,89 @@ export class InventoryPage implements OnInit {
   sellItem(item: IItem) {
     if (!item.instanceId) return;
 
-    this.gameplayService.sellItem(item.instanceId).subscribe(() => {
-      this.items = this.items.filter((i) => i !== item);
+    this.gameplayService.sellItem(item.instanceId).subscribe(() => {});
+  }
+
+  async listItem(item: IItem) {
+    const alert = await this.alertCtrl.create({
+      header: 'Sell Item',
+      message: 'Enter the price you want to sell this item for.',
+      inputs: [
+        {
+          name: 'price',
+          type: 'number',
+          placeholder: 'Price',
+          min: itemValue(item),
+          value: itemValue(item),
+        },
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+        },
+        {
+          text: 'Sell',
+          handler: async ({ price }) => {
+            if (!item.instanceId) return;
+
+            this.store
+              .selectOnce(PlayerStore.player)
+              .subscribe(async (player) => {
+                const location = player.location.current;
+                const locationData = this.contentService.getLocation(location);
+                if (!locationData) return;
+
+                const realPrice = Math.floor(price);
+
+                const taxPrice = Math.floor(
+                  realPrice *
+                    (locationData.baseStats[LocationStat.TaxRate] / 100),
+                );
+
+                const confirm = await this.alertCtrl.create({
+                  header: 'Confirm Sale',
+                  message: `Are you sure you want to list this item for ${realPrice.toLocaleString()} coins? It will cost ${taxPrice.toLocaleString()} coins to list.`,
+                  buttons: [
+                    {
+                      text: 'Cancel',
+                      role: 'cancel',
+                    },
+                    {
+                      text: 'List',
+                      handler: async () => {
+                        if (!item.instanceId) return;
+
+                        this.marketService
+                          .sellItem(item.instanceId, realPrice)
+                          .subscribe(() => {});
+                      },
+                    },
+                  ],
+                });
+
+                await confirm.present();
+              });
+          },
+        },
+      ],
     });
+
+    await alert.present();
   }
 
   discoverCollectible(item: ICollectible) {
     if (!item.instanceId) return;
 
-    this.gameplayService.discoverCollectible(item.instanceId).subscribe(() => {
-      this.items = this.items.filter((i) => i !== item);
-    });
+    this.gameplayService
+      .discoverCollectible(item.instanceId)
+      .subscribe(() => {});
   }
 
   discoverEquipment(item: IEquipment) {
     if (!item.instanceId) return;
 
-    this.gameplayService.discoverEquipment(item.instanceId).subscribe(() => {
-      this.items = this.items.filter((i) => i !== item);
-    });
+    this.gameplayService.discoverEquipment(item.instanceId).subscribe(() => {});
   }
 
   isDiscovered(item: IItem) {

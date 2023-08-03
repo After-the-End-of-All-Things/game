@@ -538,6 +538,10 @@ export class GameplayService {
             item.name
           } for ${coinsGained.toLocaleString()} coins!`,
         },
+        {
+          type: 'RemoveInventoryItem',
+          instanceId,
+        },
       ],
     };
   }
@@ -671,7 +675,9 @@ export class GameplayService {
         'You are not high enough level to craft this item.',
       );
 
-    if (!this.craftingService.hasResources(recipe, inventory.resources)) {
+    if (
+      !this.craftingService.hasResourcesForRecipe(recipe, inventory.resources)
+    ) {
       throw new ForbiddenException(
         'You do not have enough resources to craft this item.',
       );
@@ -710,7 +716,7 @@ export class GameplayService {
     const inventoryPatches = await getPatchesAfterPropChanges<Inventory>(
       inventory,
       async (inventoryRef) => {
-        const newResources = this.craftingService.takeResources(
+        const newResources = this.craftingService.takeResourcesForRecipe(
           recipe,
           inventoryRef.resources,
         );

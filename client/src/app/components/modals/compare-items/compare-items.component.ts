@@ -10,6 +10,7 @@ import { ModalController } from '@ionic/angular';
 export class CompareItemsModalComponent implements OnInit {
   @Input() item1!: IEquipment;
   @Input() item2!: IEquipment | undefined;
+  @Input() canEquip = true;
 
   public commonStats: Stat[] = [];
 

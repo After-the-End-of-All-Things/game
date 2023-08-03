@@ -37,4 +37,9 @@ export class InventoryStore {
   static resources(state: IInventoryStore) {
     return state.inventory.resources;
   }
+
+  @Selector()
+  static items(state: IInventoryStore) {
+    return state.items ?? [];
+  }
 }

@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { AvatarComponent } from '@components/avatar/avatar.component';
 import { BackgroundArtComponent } from '@components/background-art/background-art.component';
@@ -16,6 +17,7 @@ import { LocationStatsButtonComponent } from '@components/location-stats-button/
 import { ChooseAvatarModalComponent } from '@components/modals/choose-avatar/choose-avatar.component';
 import { CompareItemsModalComponent } from '@components/modals/compare-items/compare-items.component';
 import { LocationStatsModalComponent } from '@components/modals/location-stats/location-stats.component';
+import { MarketModalComponent } from '@components/modals/market/market.component';
 import { StoreTextComponent } from '@components/store-text/store-text.component';
 import { RelativeTimePipe } from '@helpers/relativetime.pipe';
 import { IonicModule } from '@ionic/angular';
@@ -28,6 +30,7 @@ const components = [
   HeroComponent,
   ChooseAvatarModalComponent,
   CompareItemsModalComponent,
+  MarketModalComponent,
   LocationStatsButtonComponent,
   LocationStatsModalComponent,
   HeaderBarComponent,
@@ -44,6 +47,12 @@ const components = [
 @NgModule({
   declarations: components,
   exports: components,
-  imports: [CommonModule, IonicModule, RouterModule, NgxTippyModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    IonicModule,
+    RouterModule,
+    NgxTippyModule,
+  ],
 })
 export class SharedModule {}

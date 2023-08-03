@@ -22,9 +22,10 @@ import { JWT_CONFIG } from '@modules/config/jwt-config';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { JwtModule } from '@nestjs/jwt';
 import { HttpExceptionFilter } from '@utils/http-exception.filter';
-import { GameplayModule } from './modules/gameplay/gameplay.module';
-import { UpdateAuthTimeInterceptor } from './utils/updatetime.interceptor';
 import { CraftingModule } from './modules/crafting/crafting.module';
+import { GameplayModule } from './modules/gameplay/gameplay.module';
+import { MarketModule } from './modules/market/market.module';
+import { UpdateAuthTimeInterceptor } from './utils/updatetime.interceptor';
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -82,6 +83,7 @@ const isProduction = process.env.NODE_ENV === 'production';
       global: true,
     },
     CraftingModule,
+    MarketModule,
   ],
   controllers: [AppController, GameplayController],
   providers: [

@@ -17,6 +17,7 @@ export class ItemStatsComponent implements OnInit {
     const stats = (this.item as IEquipment).stats || {};
 
     Object.keys(stats).forEach((key) => {
+      if (!stats[key as Stat]) return;
       this.stats.push({ key, value: stats[key as Stat] });
     });
   }

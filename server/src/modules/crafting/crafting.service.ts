@@ -37,13 +37,16 @@ export class CraftingService {
     return crafting;
   }
 
-  hasResources(recipe: IRecipe, resources: Record<string, number>): boolean {
+  hasResourcesForRecipe(
+    recipe: IRecipe,
+    resources: Record<string, number>,
+  ): boolean {
     return recipe.ingredients.every((ing) => {
       return resources[ing.item] >= ing.amount;
     });
   }
 
-  takeResources(
+  takeResourcesForRecipe(
     recipe: IRecipe,
     resources: Record<string, number>,
   ): Record<string, number> {

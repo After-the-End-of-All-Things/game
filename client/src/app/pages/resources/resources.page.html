@@ -64,6 +64,47 @@
                   {{ getValueForItem(row) | number }}
                 </ng-template>
               </ngx-datatable-column>
+
+              <ngx-datatable-column
+                name=""
+                [maxWidth]="90"
+                [sortable]="false"
+                [cellClass]="'center-column'"
+              >
+                <ng-template
+                  let-row="row"
+                  let-rowIndex="rowIndex"
+                  ngx-datatable-cell-template
+                >
+                  <ion-button
+                    class="icon-only"
+                    size="small"
+                    color="tertiary"
+                    (click)="popover.present($event)"
+                  >
+                    <ion-icon name="ellipsis-vertical"></ion-icon>
+                  </ion-button>
+
+                  <ion-popover
+                    #popover
+                    [showBackdrop]="false"
+                    class="inventory-item-actions"
+                  >
+                    <ng-template>
+                      <ion-content>
+                        <ion-list class="action-list">
+                          <ion-item
+                            class="cursor-pointer"
+                            (click)="listItem(row); popover.dismiss()"
+                          >
+                            List on Market
+                          </ion-item>
+                        </ion-list>
+                      </ion-content>
+                    </ng-template>
+                  </ion-popover>
+                </ng-template>
+              </ngx-datatable-column>
             </ngx-datatable>
           </ion-card-content>
         </ion-card>

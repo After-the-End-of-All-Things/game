@@ -8,6 +8,7 @@ export enum LocationStat {
   Wave = 'wave',
   CollectibleFind = 'collectibleFind',
   ResourceFind = 'resourceFind',
+  TaxRate = 'taxRate',
 }
 
 export interface ILocationConnection {

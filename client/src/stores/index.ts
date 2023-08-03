@@ -2,6 +2,7 @@ export * from './achievements/achievements.store';
 export * from './crafting/crafting.store';
 export * from './discoveries/discoveries.store';
 export * from './inventory/inventory.store';
+export * from './market/market.store';
 export * from './notifications/notifications.store';
 export * from './options/options.store';
 export * from './player/player.store';

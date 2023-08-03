@@ -32,6 +32,7 @@ export class LocationStatsModalComponent implements OnInit {
     [LocationStat.LocationFind]: 'Location Find Chance',
     [LocationStat.CollectibleFind]: 'Collectible Find Chance',
     [LocationStat.ResourceFind]: 'Resource Find Chance',
+    [LocationStat.TaxRate]: 'Tax Rate',
   };
 
   public readonly statFormatters: Record<
@@ -47,6 +48,7 @@ export class LocationStatsModalComponent implements OnInit {
     [LocationStat.LocationFind]: (value) => `${value}%`,
     [LocationStat.CollectibleFind]: (value) => `${value}%`,
     [LocationStat.ResourceFind]: (value) => `${value}%`,
+    [LocationStat.TaxRate]: (value) => `${value}%`,
   };
 
   constructor(private modalController: ModalController) {}
