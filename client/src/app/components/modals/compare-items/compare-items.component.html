@@ -5,7 +5,12 @@
     <ion-title>Compare Items</ion-title>
 
     <ion-buttons slot="end">
-      <ion-button (click)="dismiss(true)" [strong]="true" *ngIf="canEquip">
+      <ion-button
+        (click)="dismiss(true)"
+        [strong]="true"
+        *ngIf="canEquip"
+        color="primary"
+      >
         Equip
       </ion-button>
       <ion-button color="medium" (click)="dismiss()">Close</ion-button>

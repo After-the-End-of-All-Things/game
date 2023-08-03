@@ -1,7 +1,7 @@
 import { Component, DestroyRef, OnInit, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CompareItemsModalComponent } from '@components/modals/compare-items/compare-items.component';
-import { itemValue } from '@helpers/item';
+import { isAccessory, itemValue } from '@helpers/item';
 import {
   AllAccessories,
   AllArmor,
@@ -211,9 +211,10 @@ export class InventoryPage implements OnInit {
     const playerRef = player as IPlayer;
     const playerJob = this.contentService.getJob(playerRef.job);
     return (
-      playerRef.level >= item.levelRequirement &&
-      (playerJob?.armorSlots[item.type as Armor] ||
-        playerJob?.weapons[item.type as Weapon])
+      (playerRef.level >= item.levelRequirement &&
+        (playerJob?.armorSlots[item.type as Armor] ||
+          playerJob?.weapons[item.type as Weapon])) ||
+      isAccessory(item)
     );
   }
 
