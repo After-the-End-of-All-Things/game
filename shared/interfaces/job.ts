@@ -1,5 +1,5 @@
-import { Armor, Weapon } from '@interfaces';
-import { Stat } from './player';
+import { Stat } from './buildingblocks';
+import { Armor, Weapon } from './item';
 
 export interface IJob {
   name: string;

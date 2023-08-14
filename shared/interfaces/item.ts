@@ -1,17 +1,4 @@
-import { Stat } from '@interfaces';
-
-export type Rarity =
-  | 'Common'
-  | 'Uncommon'
-  | 'Unusual'
-  | 'Rare'
-  | 'Masterful'
-  | 'Arcane'
-  | 'Epic'
-  | 'Divine'
-  | 'Unique';
-
-export type Element = 'fire' | 'water' | 'earth' | 'air' | 'light' | 'dark';
+import { Rarity, Stat } from './buildingblocks';
 
 export type Armor = 'body' | 'feet' | 'head' | 'legs' | 'shoulders' | 'waist';
 

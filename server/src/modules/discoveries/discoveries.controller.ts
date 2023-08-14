@@ -43,7 +43,7 @@ export class DiscoveriesController {
     @User() user,
     @Body('portrait') portrait: number,
   ): Promise<Partial<IFullUser | IPatchUser>> {
-    const portraitId = Math.round(Math.min(107, Math.max(0, portrait)));
+    const portraitId = Math.round(Math.min(106, Math.max(0, portrait)));
 
     // Fetch the player's discoveries
     const discoveries = await this.discoveriesService.getDiscoveriesForUser(
