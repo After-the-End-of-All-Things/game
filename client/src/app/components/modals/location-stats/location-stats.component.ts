@@ -13,6 +13,7 @@ export class LocationStatsModalComponent implements OnInit {
   public readonly displayStats: LocationStat[] = [
     LocationStat.XPGain,
     LocationStat.CoinGain,
+    LocationStat.TaxRate,
     LocationStat.ExploreSpeed,
     LocationStat.ItemFind,
     LocationStat.Wave,
@@ -20,6 +21,7 @@ export class LocationStatsModalComponent implements OnInit {
     LocationStat.LocationFind,
     LocationStat.CollectibleFind,
     LocationStat.ResourceFind,
+    LocationStat.MonsterFind,
   ];
 
   public readonly statNames: Record<LocationStat, string> = {
@@ -32,6 +34,7 @@ export class LocationStatsModalComponent implements OnInit {
     [LocationStat.LocationFind]: 'Location Find Chance',
     [LocationStat.CollectibleFind]: 'Collectible Find Chance',
     [LocationStat.ResourceFind]: 'Resource Find Chance',
+    [LocationStat.MonsterFind]: 'Monster Find Chance',
     [LocationStat.TaxRate]: 'Tax Rate',
   };
 
@@ -48,6 +51,7 @@ export class LocationStatsModalComponent implements OnInit {
     [LocationStat.LocationFind]: (value) => `${value}%`,
     [LocationStat.CollectibleFind]: (value) => `${value}%`,
     [LocationStat.ResourceFind]: (value) => `${value}%`,
+    [LocationStat.MonsterFind]: (value) => `${value}%`,
     [LocationStat.TaxRate]: (value) => `${value}%`,
   };
 

@@ -19,6 +19,7 @@ import { StatsModule } from './modules/stats/stats.module';
 import { UserModule } from './modules/user/user.module';
 
 import { JWT_CONFIG } from '@modules/config/jwt-config';
+import { FightModule } from '@modules/fight/fight.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { JwtModule } from '@nestjs/jwt';
 import { HttpExceptionFilter } from '@utils/http-exception.filter';
@@ -70,6 +71,7 @@ const isProduction = process.env.NODE_ENV === 'production';
     AchievementsModule,
     ContentModule,
     InventoryModule,
+    FightModule,
     EventEmitterModule.forRoot(),
     GameplayModule,
     {

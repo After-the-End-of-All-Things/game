@@ -3,6 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { INotificationAction, IPlayerLocation } from '@interfaces';
 import { Select } from '@ngxs/store';
 import { ActionsService } from '@services/actions.service';
+import { ContentService } from '@services/content.service';
 import { GameplayService } from '@services/gameplay.service';
 import { VisualService } from '@services/visual.service';
 import { PlayerStore } from '@stores';
@@ -28,6 +29,7 @@ export class ExplorePage implements OnInit {
 
   constructor(
     private gameplayService: GameplayService,
+    private contentService: ContentService,
     public actionsService: ActionsService,
     public visualService: VisualService,
   ) {}
@@ -55,5 +57,9 @@ export class ExplorePage implements OnInit {
 
   explore() {
     this.gameplayService.explore().subscribe();
+  }
+
+  getMonster(monsterId: string) {
+    return this.contentService.getMonster(monsterId)!;
   }
 }

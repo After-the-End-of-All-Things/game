@@ -216,7 +216,7 @@ export class PlayerService {
     return found[0];
   }
 
-  async handleRandomWave(player: Player) {
+  async handleRandomWave(player: Player): Promise<void> {
     const randomPlayer = await this.getRandomOnlinePlayerAtLocation(
       player.userId,
       player.location.current,
@@ -237,7 +237,7 @@ export class PlayerService {
     });
   }
 
-  async handleFindResource(player: Player, location: ILocation): Promise<any> {
+  async handleFindResource(player: Player, location: ILocation): Promise<void> {
     const resourceRarityCommonality: Record<Rarity, number> = {
       Common: 100,
       Uncommon: 75,
@@ -275,7 +275,7 @@ export class PlayerService {
   async handleFindCollectible(
     player: Player,
     location: ILocation,
-  ): Promise<any> {
+  ): Promise<void> {
     const collectibleRarityCommonality: Record<Rarity, number> = {
       Common: 100,
       Uncommon: 75,
@@ -312,7 +312,7 @@ export class PlayerService {
     });
   }
 
-  async handleFindItem(player: Player, location: ILocation): Promise<any> {
+  async handleFindItem(player: Player, location: ILocation): Promise<void> {
     const randomItemForLocation = sample(
       this.contentService
         .allEquipment()
@@ -333,6 +333,27 @@ export class PlayerService {
         item: randomItemForLocation,
       },
       url: 'gameplay/item/take',
+      urlData: {},
+    });
+  }
+
+  async handleFindMonster(player: Player, location: ILocation): Promise<void> {
+    const randomFormationForLocation = sample(
+      this.contentService
+        .allFormations()
+        .filter((formation) => formation.location === location.name),
+    );
+
+    if (!randomFormationForLocation) return;
+
+    this.setPlayerAction(player, {
+      text: 'Fight',
+      action: 'fight',
+      actionData: {
+        formation: randomFormationForLocation,
+        stopExplore: true,
+      },
+      url: 'gameplay/fight',
       urlData: {},
     });
   }

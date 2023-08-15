@@ -2,10 +2,13 @@ import { Injectable } from '@angular/core';
 import { environment } from '@environment';
 import {
   ICollectible,
+  ICombatAbility,
   IEquipment,
   IItem,
   IJob,
   ILocation,
+  IMonster,
+  IMonsterFormation,
   IRecipe,
   IResource,
 } from '@interfaces';
@@ -22,6 +25,9 @@ export class ContentService {
     equipment: {},
     resources: {},
     recipes: {},
+    abilities: {},
+    monsters: {},
+    formations: {},
   };
 
   public get maxPortraits() {
@@ -54,6 +60,18 @@ export class ContentService {
 
   public get recipes(): Record<string, IRecipe> {
     return this.content.recipes;
+  }
+
+  public get abilities(): Record<string, ICombatAbility> {
+    return this.content.abilities;
+  }
+
+  public get monsters(): Record<string, IMonster> {
+    return this.content.monsters;
+  }
+
+  public get formations(): Record<string, IMonsterFormation> {
+    return this.content.formations;
   }
 
   constructor(private assetService: AssetService) {}
@@ -116,5 +134,17 @@ export class ContentService {
 
   public getRecipes(): IRecipe[] {
     return Object.values(this.recipes);
+  }
+
+  public getFormation(formation: string): IMonsterFormation | undefined {
+    return this.formations[formation];
+  }
+
+  public getMonster(monster: string): IMonster | undefined {
+    return this.monsters[monster];
+  }
+
+  public getAbility(ability: string): ICombatAbility | undefined {
+    return this.abilities[ability];
   }
 }

@@ -36,6 +36,7 @@ God, am I getting tired of typing that.
 - `COLLECTIBLE_FIND_PERCENT_BOOST` - the percent boost to collectible find events happening (default: 0)
 - `RESOURCE_FIND_PERCENT_BOOST` - the percent boost to resource find events happening (default: 0)
 - `LOCATION_FIND_PERCENT_BOOST` - the percent boost to location find events happening (default: 0)
+- `MONSTER_FIND_PERCENT_BOOST` - the percent boost to monster find events happening (default: 0)
 - `CRAFTING_SPEED_MULTIPLIER` - the multiplier for crafting speed [percent] (default: 100)
 - `GAMEANALYTICS_KEY` - the game key for GameAnalytics
 - `GAMEANALYTICS_SECRET` - the secret key for GameAnalytics

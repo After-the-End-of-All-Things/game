@@ -1,4 +1,4 @@
-import { Rarity, Stat } from './buildingblocks';
+import { Element, Rarity, Stat } from './buildingblocks';
 
 export type Armor = 'body' | 'feet' | 'head' | 'legs' | 'shoulders' | 'waist';
 

@@ -18,6 +18,7 @@ export class ConstantsService {
   public readonly collectibleFindPercentBoost: number = 0;
   public readonly resourceFindPercentBoost: number = 0;
   public readonly locationFindPercentBoost: number = 0;
+  public readonly monsterFindPercentBoost: number = 0;
 
   public readonly craftingSpeedMultiplier: number = 100;
 
@@ -64,6 +65,10 @@ export class ConstantsService {
     );
     this.locationFindPercentBoost = +this.configService.get<number>(
       'LOCATION_FIND_PERCENT_BOOST',
+      0,
+    );
+    this.monsterFindPercentBoost = +this.configService.get<number>(
+      'MONSTER_FIND_PERCENT_BOOST',
       0,
     );
 

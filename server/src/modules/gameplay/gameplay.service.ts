@@ -19,6 +19,7 @@ import { Crafting } from '@modules/crafting/crafting.schema';
 import { CraftingService } from '@modules/crafting/crafting.service';
 import { Discoveries } from '@modules/discoveries/discoveries.schema';
 import { DiscoveriesService } from '@modules/discoveries/discoveries.service';
+import { FightService } from '@modules/fight/fight.service';
 import { Inventory } from '@modules/inventory/inventory.schema';
 import { InventoryService } from '@modules/inventory/inventory.service';
 import { NotificationService } from '@modules/notification/notification.service';
@@ -36,7 +37,8 @@ type ExploreResult =
   | 'Item'
   | 'Discovery'
   | 'Collectible'
-  | 'Resource';
+  | 'Resource'
+  | 'Monster';
 
 const createFilledArray = (length: number, fill: ExploreResult) =>
   Array(length).fill(fill);
@@ -55,6 +57,7 @@ export class GameplayService {
     private readonly events: EventEmitter2,
     private readonly notificationService: NotificationService,
     private readonly playerHelper: PlayerHelperService,
+    private readonly fights: FightService,
   ) {}
 
   async explore(userId: string): Promise<Partial<IFullUser | IPatchUser>> {
@@ -63,6 +66,10 @@ export class GameplayService {
 
     if (player.location.cooldown > Date.now())
       return { player: [], discoveries: [] };
+
+    if (player.action?.actionData?.stopExplore) {
+      throw new ForbiddenException("You can't explore right now!");
+    }
 
     const discoveries = await this.discoveriesService.getDiscoveriesForUser(
       userId,
@@ -105,9 +112,14 @@ export class GameplayService {
           'Collectible',
         ),
         ...createFilledArray(
-          this.constantsService.collectibleFindPercentBoost +
+          this.constantsService.resourceFindPercentBoost +
             foundLocation.baseStats.resourceFind || 0,
           'Resource',
+        ),
+        ...createFilledArray(
+          this.constantsService.monsterFindPercentBoost +
+            foundLocation.baseStats.monsterFind || 0,
+          'Monster',
         ),
       ];
 
@@ -209,6 +221,10 @@ export class GameplayService {
 
         if (exploreResult === 'Item') {
           await this.playerService.handleFindItem(playerRef, foundLocation);
+        }
+
+        if (exploreResult === 'Monster') {
+          await this.playerService.handleFindMonster(playerRef, foundLocation);
         }
       },
     );
@@ -496,6 +512,13 @@ export class GameplayService {
     );
 
     return { player: playerPatches, inventory: inventoryPatches };
+  }
+
+  async startFight(userId: string): Promise<Partial<IFullUser | IPatchUser>> {
+    // this.fights.startFight(userId);
+    // TODO: start fight
+
+    return {};
   }
 
   async sellItem(

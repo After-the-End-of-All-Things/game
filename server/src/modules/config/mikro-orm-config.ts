@@ -2,6 +2,7 @@ import { MikroOrmModuleOptions } from '@mikro-orm/nestjs';
 import { Achievements } from '@modules/achievements/achievements.schema';
 import { Crafting } from '@modules/crafting/crafting.schema';
 import { Discoveries } from '@modules/discoveries/discoveries.schema';
+import { Fight } from '@modules/fight/fight.schema';
 import { Inventory } from '@modules/inventory/inventory.schema';
 import { InventoryItem } from '@modules/inventory/inventoryitem.schema';
 import { MarketItem } from '@modules/market/marketitem.schema';
@@ -35,6 +36,7 @@ function mikroOrmConfigFactory(
       Crafting,
       MarketItem,
       MarketSale,
+      Fight,
     ],
     dbName: process.env.NODE_ENV === 'production' ? 'ateoat' : 'ateoattest',
     type: 'mongo',

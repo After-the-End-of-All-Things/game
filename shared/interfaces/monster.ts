@@ -17,7 +17,6 @@ export interface IMonsterReward {
 
 export interface IMonster {
   itemId: string;
-  location: string;
   job: string;
   level: number;
   sprite: number;
@@ -25,4 +24,15 @@ export interface IMonster {
   resistances: Record<Element, number>;
   abilities: ICombatMonsterAbility[];
   rewards: IMonsterReward;
+}
+
+export interface IMonsterGroup {
+  monster: string;
+}
+
+export interface IMonsterFormation {
+  name: string;
+  itemId: string;
+  location: string;
+  monsters: IMonsterGroup[];
 }

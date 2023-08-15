@@ -82,6 +82,13 @@ export class GameplayController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Explore Event: Fight monsters' })
+  @Post('fight')
+  async fight(@User() user): Promise<Partial<IFullUser | IPatchUser>> {
+    return this.gameplayService.startFight(user.userId);
+  }
+
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Sell an item' })
   @Post('item/sell')
   async sellItem(

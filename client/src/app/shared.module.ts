@@ -18,6 +18,7 @@ import { ChooseAvatarModalComponent } from '@components/modals/choose-avatar/cho
 import { CompareItemsModalComponent } from '@components/modals/compare-items/compare-items.component';
 import { LocationStatsModalComponent } from '@components/modals/location-stats/location-stats.component';
 import { MarketModalComponent } from '@components/modals/market/market.component';
+import { MonsterIconComponent } from '@components/monster-icon/monster-icon.component';
 import { StoreTextComponent } from '@components/store-text/store-text.component';
 import { RelativeTimePipe } from '@helpers/relativetime.pipe';
 import { IonicModule } from '@ionic/angular';
@@ -36,6 +37,7 @@ const components = [
   HeaderBarComponent,
   AvatarComponent,
   ItemIconComponent,
+  MonsterIconComponent,
   ItemRarityComponent,
   ItemStatsComponent,
   ItemElementsComponent,

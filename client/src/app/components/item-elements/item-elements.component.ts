@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { IEquipment, IItem } from '@interfaces';
+import { Element, IEquipment, IItem } from '@interfaces';
 
 @Component({
   selector: 'app-item-elements',
@@ -7,7 +7,7 @@ import { IEquipment, IItem } from '@interfaces';
   styleUrls: ['./item-elements.component.scss'],
 })
 export class ItemElementsComponent implements OnInit {
-  public elements: string[] = [];
+  public elements: Element[] = [];
 
   @Input({ required: true }) item!: IItem;
 

@@ -17,3 +17,27 @@ export interface ICombatAbility {
   elements: Element[];
   statScaling: Partial<Record<Stat, number>>;
 }
+
+export interface IFightTile {
+  containedCharacters: string[];
+}
+
+export interface IFightCharacter {
+  userId?: string;
+  monsterId?: string;
+  characterId: string;
+  modifiedStats: Record<Stat, number>;
+}
+
+export interface IFight {
+  id: string;
+  involvedPlayers: string[];
+  attackers: IFightCharacter[];
+  defenders: IFightCharacter[];
+  tiles: IFightTile[][];
+}
+
+export interface IFightStore {
+  version: number;
+  fight: IFight;
+}
