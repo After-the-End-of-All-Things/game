@@ -18,7 +18,11 @@ import {
   ApplyDiscoveriesPatches,
   SetDiscoveries,
 } from '@stores/discoveries/discoveries.actions';
-import { ApplyFightPatches, SetFight } from '@stores/fight/fight.actions';
+import {
+  ApplyFightPatches,
+  ClearFight,
+  SetFight,
+} from '@stores/fight/fight.actions';
 import {
   ApplyInventoryPatches,
   SetInventory,
@@ -125,6 +129,8 @@ export class DataGrabberInterceptor implements HttpInterceptor {
           } else {
             this.store.dispatch(new SetFight(body.fight));
           }
+        } else if (body.fight === null) {
+          this.store.dispatch(new ClearFight());
         }
 
         if (body.notifications) {

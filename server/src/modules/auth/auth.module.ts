@@ -1,3 +1,4 @@
+import { AggregatorModule } from '@modules/aggregator/aggregator.module';
 import { ContentModule } from '@modules/content/content.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '../config/config.module';
@@ -7,7 +8,7 @@ import { AuthService } from './auth.service';
 import { JwtStrategy } from './jwt.strategy';
 
 @Module({
-  imports: [UserModule, ConfigModule, ContentModule],
+  imports: [UserModule, AggregatorModule, ConfigModule, ContentModule],
   providers: [AuthService, JwtStrategy],
   controllers: [AuthController],
   exports: [AuthService],

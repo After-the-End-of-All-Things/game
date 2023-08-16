@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { isNotificationLive } from '@helpers/notifications';
 import { xpForLevel } from '@helpers/xp';
-import { INotification, IPlayer } from '@interfaces';
+import { IFight, INotification, IPlayer } from '@interfaces';
 import { Select, Store } from '@ngxs/store';
 import { ActionsService } from '@services/actions.service';
 import { NotificationsService } from '@services/notifications.service';
-import { NotificationsStore, PlayerStore } from '@stores';
+import { FightStore, NotificationsStore, PlayerStore } from '@stores';
 import {
   MarkAllNotificationsRead,
   MarkNotificationRead,
@@ -23,6 +23,7 @@ export class HeaderBarComponent implements OnInit {
   @Select(NotificationsStore.notifications) notifications$!: Observable<
     INotification[]
   >;
+  @Select(FightStore.fight) fight$!: Observable<IFight>;
 
   constructor(
     private store: Store,

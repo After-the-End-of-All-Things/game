@@ -1,11 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '@environment';
-import { INotification } from '@interfaces';
-import { Select, Store } from '@ngxs/store';
-import { NotificationsStore } from '@stores';
+import { Store } from '@ngxs/store';
 import { AddNotification } from '@stores/notifications/notifications.actions';
-import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -14,10 +11,6 @@ export class NotificationsService {
   readonly intervalMinutes = 1;
 
   private notificationEvents!: EventSource;
-
-  @Select(NotificationsStore.notifications) notifications$!: Observable<
-    INotification[]
-  >;
 
   constructor(private store: Store, private http: HttpClient) {}
 

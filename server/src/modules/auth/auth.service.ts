@@ -8,6 +8,7 @@ import * as bcrypt from 'bcrypt';
 import { sample } from 'lodash';
 
 import { IFullUser, IHasAccessToken } from '@interfaces';
+import { AggregatorService } from '@modules/aggregator/aggregator.service';
 import { ContentService } from '@modules/content/content.service';
 import { User } from '../user/user.schema';
 import { UserService } from '../user/user.service';
@@ -15,6 +16,7 @@ import { UserService } from '../user/user.service';
 @Injectable()
 export class AuthService {
   constructor(
+    private readonly aggregatorService: AggregatorService,
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
     private readonly contentService: ContentService,
@@ -57,7 +59,9 @@ export class AuthService {
 
     if (!createdUser) throw new BadRequestException('Failed to create user.');
 
-    return this.userService.getAllUserInformation(createdUser._id.toString());
+    return this.aggregatorService.getAllUserInformation(
+      createdUser._id.toString(),
+    );
   }
 
   async signIn(
@@ -83,7 +87,9 @@ export class AuthService {
     };
 
     return {
-      ...(await this.userService.getAllUserInformation(user._id.toString())),
+      ...(await this.aggregatorService.getAllUserInformation(
+        user._id.toString(),
+      )),
       access_token: await this.jwtService.signAsync(jwtPayload),
     };
   }

@@ -12,7 +12,7 @@ export class Fight implements IFight {
   @PrimaryKey({ hidden: true })
   _id!: ObjectId;
 
-  @SerializedPrimaryKey({ hidden: true })
+  @SerializedPrimaryKey()
   id!: string;
 
   @Property({ hidden: true })
@@ -27,6 +27,12 @@ export class Fight implements IFight {
   @Property()
   tiles: IFightTile[][];
 
+  @Property()
+  currentTurn: string;
+
+  @Property()
+  generatedElements: Partial<Record<string, number>>;
+
   constructor(
     involvedPlayers: string[],
     attackers: IFightCharacter[],
@@ -37,5 +43,7 @@ export class Fight implements IFight {
     this.attackers = attackers;
     this.defenders = defenders;
     this.tiles = tiles;
+    this.currentTurn = attackers[0].characterId;
+    this.generatedElements = {};
   }
 }

@@ -96,6 +96,14 @@ const routes: Routes = [
       ),
   },
   {
+    path: 'combat',
+    canActivate: [AuthGuard],
+    data: { title: 'Combat' },
+    loadChildren: () =>
+      import('./pages/combat/combat.module').then((m) => m.CombatPageModule),
+  },
+
+  {
     path: '**',
     redirectTo: '',
     pathMatch: 'full',

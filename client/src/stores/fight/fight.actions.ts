@@ -6,6 +6,11 @@ export class SetFight {
   constructor(public fight: IFight) {}
 }
 
+export class ClearFight {
+  static type = '[Fight] Clear';
+  constructor() {}
+}
+
 export class ApplyFightPatches {
   static type = '[Fight] Apply Patches';
   constructor(public patches: jsonpatch.Operation[]) {}

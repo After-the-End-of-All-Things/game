@@ -515,10 +515,37 @@ export class GameplayService {
   }
 
   async startFight(userId: string): Promise<Partial<IFullUser | IPatchUser>> {
-    // this.fights.startFight(userId);
-    // TODO: start fight
+    const player = await this.playerService.getPlayerForUser(userId);
+    if (!player) throw new ForbiddenException('Player not found');
 
-    return {};
+    const existingFight = await this.fights.getFightForUser(userId);
+    if (existingFight)
+      throw new ForbiddenException('Fight already in progress');
+
+    const formationId = player.action?.actionData.formation.itemId;
+    const formation = this.contentService.getFormation(formationId);
+    if (!formation) throw new ForbiddenException('Formation not found');
+
+    const fight = await this.fights.createPvEFightForSinglePlayer(
+      player,
+      formation,
+    );
+    if (!fight) throw new ForbiddenException('Fight not created');
+
+    return {
+      fight,
+      actions: [
+        {
+          type: 'Notify',
+          messageType: 'success',
+          message: `You started a fight with ${formation.name}!`,
+        },
+        {
+          type: 'ChangePage',
+          newPage: 'combat',
+        },
+      ],
+    };
   }
 
   async sellItem(

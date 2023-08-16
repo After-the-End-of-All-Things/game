@@ -79,4 +79,5 @@ export interface IEquipment extends IItem {
   attackElements: Element[];
   defenseElements: Element[];
   levelRequirement: number;
+  abilities?: string[];
 }

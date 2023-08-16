@@ -17,6 +17,7 @@ export interface IMonsterReward {
 
 export interface IMonster {
   itemId: string;
+  name: string;
   job: string;
   level: number;
   sprite: number;

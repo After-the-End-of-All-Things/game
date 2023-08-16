@@ -11,11 +11,17 @@ export const defaultStore: () => IFightStore = () => ({
     defenders: [],
     involvedPlayers: [],
     tiles: [],
+    currentTurn: '',
+    generatedElements: {},
   },
 });
 
 export function setFight(ctx: StateContext<IFightStore>, { fight }: SetFight) {
   ctx.patchState({ fight });
+}
+
+export function clearFight(ctx: StateContext<IFightStore>) {
+  ctx.patchState({ fight: defaultStore().fight });
 }
 
 export function applyFightPatches(

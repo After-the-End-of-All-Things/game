@@ -23,7 +23,7 @@ export interface IFullUser {
   inventory: Inventory;
   crafting: Crafting;
   items: InventoryItem[];
-  currentFight: Fight;
+  fight: Fight;
 
   actions: Array<{ type: string } & any>;
 }

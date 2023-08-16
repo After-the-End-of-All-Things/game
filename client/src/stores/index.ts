@@ -1,6 +1,7 @@
 export * from './achievements/achievements.store';
 export * from './crafting/crafting.store';
 export * from './discoveries/discoveries.store';
+export * from './fight/fight.store';
 export * from './inventory/inventory.store';
 export * from './market/market.store';
 export * from './notifications/notifications.store';

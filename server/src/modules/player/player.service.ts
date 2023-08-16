@@ -1,9 +1,12 @@
+import { zeroResistances, zeroStats } from '@helpers/stats';
 import {
+  Element,
   IFullUser,
   ILocation,
   INotificationAction,
   IPatchUser,
   Rarity,
+  Stat,
 } from '@interfaces';
 import { EntityManager, EntityRepository } from '@mikro-orm/mongodb';
 import { InjectRepository } from '@mikro-orm/nestjs';
@@ -356,5 +359,15 @@ export class PlayerService {
       url: 'gameplay/fight',
       urlData: {},
     });
+  }
+
+  getTotalStats(player: Player): Record<Stat, number> {
+    const base = zeroStats();
+    return base;
+  }
+
+  getTotalResistances(player: Player): Record<Element, number> {
+    const base = zeroResistances();
+    return base;
   }
 }
