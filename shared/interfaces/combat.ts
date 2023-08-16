@@ -31,6 +31,7 @@ export interface IFightCharacter {
   userId?: string;
   monsterId?: string;
   characterId: string;
+  sprite: number;
   name: string;
   level: number;
   job: string;
