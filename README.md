@@ -7,6 +7,7 @@ God, am I getting tired of typing that.
 - use Node 18.15 or higher
 - `npm i` - install dependencies and run setup scripts
 - `npm start` - start the client and server
+- Install MongoDB
 - Install recommended VSCode extensions
 
 ## Useful Scripts
