@@ -18,5 +18,9 @@
     width: 64px;
     height: 64px;
     transform: scale(0.5);
+
+    &.no-scale {
+      transform: scale(1);
+    }
   }
 }

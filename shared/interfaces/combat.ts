@@ -14,6 +14,7 @@ export interface ICombatAbility {
   itemId: string;
   sprite: number;
   cooldown: number;
+  castTime: number;
   targetting: ICombatAbilityTargetting;
   pattern: ICombatAbilityPattern;
   description: string;

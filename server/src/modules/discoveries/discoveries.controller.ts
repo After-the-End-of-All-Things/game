@@ -1,9 +1,11 @@
 import { IFullUser, IPatchUser } from '@interfaces';
 import { DiscoveriesService } from '@modules/discoveries/discoveries.service';
+import { FightService } from '@modules/fight/fight.service';
 import { PlayerService } from '@modules/player/player.service';
 import {
   Body,
   Controller,
+  ForbiddenException,
   Get,
   NotFoundException,
   Patch,
@@ -20,6 +22,7 @@ export class DiscoveriesController {
   constructor(
     private readonly discoveriesService: DiscoveriesService,
     private readonly playerService: PlayerService,
+    private readonly fightsService: FightService,
   ) {}
 
   @UseGuards(JwtAuthGuard)
@@ -43,6 +46,10 @@ export class DiscoveriesController {
     @User() user,
     @Body('portrait') portrait: number,
   ): Promise<Partial<IFullUser | IPatchUser>> {
+    const fight = await this.fightsService.getFightForUser(user.userId);
+    if (fight)
+      throw new ForbiddenException('Cannot change portrait while in combat.');
+
     const portraitId = Math.round(Math.min(106, Math.max(0, portrait)));
 
     // Fetch the player's discoveries

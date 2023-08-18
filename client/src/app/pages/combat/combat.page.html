@@ -7,5 +7,71 @@
     <app-header-bar></app-header-bar>
   </ion-header>
 
+  <ion-card>
+    <ion-card-content></ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-content>
+      <div class="fight">
+        <ion-row *ngFor="let row of fight.tiles" class="tile-row">
+          <ion-col *ngFor="let col of row; let i = index" class="tile-col">
+            <div class="tile" [class.enemy]="i > 3" [class.friendly]="i <= 3">
+              <div
+                class="avatar-container"
+                [class.small]="col.containedCharacters.length > 1"
+                *ngFor="let char of col.containedCharacters"
+              >
+                <app-avatar
+                  *ngIf="fightCharacters[char].userId"
+                  [avatar]="fightCharacters[char].sprite"
+                  size="small"
+                  [padding]="0"
+                  [noScale]="true"
+                ></app-avatar>
+
+                <app-monster-icon
+                  *ngIf="fightCharacters[char].monsterId as monsterId"
+                  [monster]="getMonster(monsterId)"
+                ></app-monster-icon>
+              </div>
+            </div>
+          </ion-col>
+        </ion-row>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-content>
+      <div class="elements">
+        <app-element-icon
+          element="fire"
+          [count]="fight.generatedElements.fire || 0"
+        ></app-element-icon>
+        <app-element-icon
+          element="water"
+          [count]="fight.generatedElements.water || 0"
+        ></app-element-icon>
+        <app-element-icon
+          element="earth"
+          [count]="fight.generatedElements.earth || 0"
+        ></app-element-icon>
+        <app-element-icon
+          element="air"
+          [count]="fight.generatedElements.air || 0"
+        ></app-element-icon>
+        <app-element-icon
+          element="light"
+          [count]="fight.generatedElements.light || 0"
+        ></app-element-icon>
+        <app-element-icon
+          element="dark"
+          [count]="fight.generatedElements.dark || 0"
+        ></app-element-icon>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
   {{ fight | json }}
 </ion-content>

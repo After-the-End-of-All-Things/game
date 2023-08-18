@@ -1,0 +1,50 @@
+
+.fight {
+  .tile-row {
+    justify-content: center;
+
+    .tile-col {
+      max-height: 64px;
+      max-width: 64px;
+    }
+  }
+
+  .tile {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 64px;
+    height: 64px;
+    outline: 1px solid #fff;
+    object-fit: contain;
+    background-size: cover;
+
+    &.enemy {
+      background-color: #400;
+
+      .avatar-container {
+        transform: scaleX(-1);
+      }
+    }
+
+    &.friendly {
+      background-color: #040;
+    }
+  }
+}
+
+.elements {
+  display: flex;
+  justify-content: center;
+
+  app-element-icon {
+    margin-left: 8px;
+    margin-right: 8px;
+  }
+}
+
+.avatar-container {
+  max-width: 64px;
+  max-height: 64px;
+}

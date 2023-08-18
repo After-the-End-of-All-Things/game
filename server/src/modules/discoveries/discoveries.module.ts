@@ -1,6 +1,7 @@
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { ContentModule } from '@modules/content/content.module';
 import { Discoveries } from '@modules/discoveries/discoveries.schema';
+import { FightModule } from '@modules/fight/fight.module';
 import { InventoryModule } from '@modules/inventory/inventory.module';
 import { PlayerModule } from '@modules/player/player.module';
 import { Module } from '@nestjs/common';
@@ -13,6 +14,7 @@ import { DiscoveriesService } from './discoveries.service';
     ContentModule,
     InventoryModule,
     PlayerModule,
+    FightModule,
   ],
   controllers: [DiscoveriesController],
   providers: [DiscoveriesService],

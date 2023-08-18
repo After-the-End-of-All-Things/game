@@ -607,6 +607,10 @@ export class GameplayService {
     const inventory = await this.inventoryService.getInventoryForUser(userId);
     if (!inventory) throw new ForbiddenException('Inventory not found.');
 
+    const fight = await this.fights.getFightForUser(userId);
+    if (fight)
+      throw new ForbiddenException('Cannot equip items while in combat.');
+
     const item = await this.inventoryService.getInventoryItemForUser(
       userId,
       instanceId,

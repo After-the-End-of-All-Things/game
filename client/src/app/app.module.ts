@@ -12,6 +12,7 @@ import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { NgxsStoragePluginModule, StorageOption } from '@ngxs/storage-plugin';
 import { NgxsModule } from '@ngxs/store';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { AppRoutingModule } from './app-routing.module';
@@ -48,6 +49,7 @@ export function getAuthToken() {
     HttpClientModule,
     NgxTippyModule,
     SharedModule,
+    AngularSvgIconModule.forRoot(),
     JwtModule.forRoot({
       config: {
         tokenGetter: getAuthToken,

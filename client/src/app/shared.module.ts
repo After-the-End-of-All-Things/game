@@ -6,6 +6,7 @@ import { AvatarComponent } from '@components/avatar/avatar.component';
 import { BackgroundArtComponent } from '@components/background-art/background-art.component';
 import { CardOnlineUsersComponent } from '@components/card-online-users/card-online-users.component';
 import { CountdownComponent } from '@components/countdown/countdown.component';
+import { ElementIconComponent } from '@components/element-icon/element-icon.component';
 import { HeaderBarComponent } from '@components/header-bar/header-bar.component';
 import { HeroComponent } from '@components/hero/hero.component';
 import { IconComponent } from '@components/icon/icon.component';
@@ -22,6 +23,7 @@ import { MonsterIconComponent } from '@components/monster-icon/monster-icon.comp
 import { StoreTextComponent } from '@components/store-text/store-text.component';
 import { RelativeTimePipe } from '@helpers/relativetime.pipe';
 import { IonicModule } from '@ionic/angular';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NgxTippyModule } from 'ngx-tippy-wrapper';
 
 const components = [
@@ -44,6 +46,7 @@ const components = [
   BackgroundArtComponent,
   CountdownComponent,
   RelativeTimePipe,
+  ElementIconComponent,
 ];
 
 @NgModule({
@@ -54,6 +57,7 @@ const components = [
     FormsModule,
     IonicModule,
     RouterModule,
+    AngularSvgIconModule,
     NgxTippyModule,
   ],
 })

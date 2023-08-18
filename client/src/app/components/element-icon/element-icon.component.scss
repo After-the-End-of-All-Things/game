@@ -1,0 +1,54 @@
+
+.element-container {
+  position: relative;
+}
+
+.element-count-container {
+  position: absolute;
+  display: flex;
+  flex-wrap: wrap;
+
+  .element-count {
+    border-radius: 50%;
+    border: 1px solid #000;
+    background-color: #fff;
+    width: 8px;
+    height: 8px;
+    z-index: 5;
+    opacity: 0.9;
+  }
+}
+
+.element-icon {
+
+  svg {
+    width: 48px;
+    height: 48px;
+
+    filter: drop-shadow(1px 0 0 #000) drop-shadow(-1px 0 0 #000) drop-shadow(0 1px 0 #000) drop-shadow(0 -1px 0 #000);
+  }
+
+  &.fire svg {
+    fill: #f00;
+  }
+
+  &.water svg {
+    fill: #0af;
+  }
+
+  &.earth svg {
+    fill: #a0522d;
+  }
+
+  &.air svg {
+    fill: #0f0;
+  }
+
+  &.dark svg {
+    fill: #f0f;
+  }
+
+  &.light svg {
+    fill: #ff0;
+  }
+}

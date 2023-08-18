@@ -1,0 +1,11 @@
+<div class="element-container">
+  <div class="element-count-container">
+    <div class="element-count" *ngFor="let count of countArray"></div>
+  </div>
+
+  <svg-icon
+    class="element-icon"
+    [src]="'assets/elements/' + element + '.svg'"
+    [class]="[element]"
+  ></svg-icon>
+</div>
