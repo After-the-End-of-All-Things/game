@@ -1,6 +1,6 @@
 import { Component, DestroyRef, OnInit, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { IFight, IFightCharacter, IMonster } from '@interfaces';
+import { Element, IFight, IFightCharacter, IMonster } from '@interfaces';
 import { Select, Store } from '@ngxs/store';
 import { ContentService } from '@services/content.service';
 import { FightStore } from '@stores';
@@ -16,6 +16,15 @@ export class CombatPage implements OnInit {
   private destroyRef = inject(DestroyRef);
 
   @Select(FightStore.fight) fight$!: Observable<IFight>;
+
+  public readonly elements: Element[] = [
+    'fire',
+    'water',
+    'earth',
+    'air',
+    'light',
+    'dark',
+  ];
 
   public fight!: IFight;
   public fightCharacters: Record<string, IFightCharacter> = {};

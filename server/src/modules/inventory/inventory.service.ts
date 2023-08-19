@@ -1,4 +1,4 @@
-import { IFullUser, IPatchUser, Stat } from '@interfaces';
+import { IEquipment, IFullUser, IPatchUser, ItemSlot, Stat } from '@interfaces';
 import { EntityManager, EntityRepository } from '@mikro-orm/mongodb';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { ConstantsService } from '@modules/content/constants.service';
@@ -144,5 +144,14 @@ export class InventoryService {
     if (!inventory) return;
 
     this.removeResourceForInventory(inventory, userId, itemId, quantity);
+  }
+
+  async getEquipmentFor(
+    userId: string,
+  ): Promise<Record<ItemSlot, IEquipment | undefined>> {
+    const inventory = await this.getInventoryForUser(userId);
+    if (!inventory) throw new ForbiddenException('Inventory not found.');
+
+    return inventory.equippedItems;
   }
 }

@@ -11,6 +11,7 @@ import {
 import { EntityManager, EntityRepository } from '@mikro-orm/mongodb';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { ContentService } from '@modules/content/content.service';
+import { InventoryService } from '@modules/inventory/inventory.service';
 import { Player } from '@modules/player/player.schema';
 import {
   BadRequestException,
@@ -27,6 +28,7 @@ export class PlayerService {
     @InjectRepository(Player)
     private readonly players: EntityRepository<Player>,
     private readonly contentService: ContentService,
+    private readonly inventoryService: InventoryService,
   ) {}
 
   async getPlayerForUser(userId: string): Promise<Player | undefined> {
@@ -361,13 +363,42 @@ export class PlayerService {
     });
   }
 
-  getTotalStats(player: Player): Record<Stat, number> {
+  async getTotalStats(player: Player): Promise<Record<Stat, number>> {
     const base = zeroStats();
+    const equipment = await this.inventoryService.getEquipmentFor(
+      player.userId,
+    );
+
+    Object.values(equipment)
+      .filter(Boolean)
+      .forEach((item) => {
+        if (!item) return;
+
+        Object.entries(item.stats).forEach(([stat, value]) => {
+          base[stat as Stat] += value;
+        });
+      });
+
     return base;
   }
 
-  getTotalResistances(player: Player): Record<Element, number> {
+  async getTotalResistances(player: Player): Promise<Record<Element, number>> {
     const base = zeroResistances();
+    const equipment = await this.inventoryService.getEquipmentFor(
+      player.userId,
+    );
+
+    Object.values(equipment)
+      .filter(Boolean)
+      .forEach((item) => {
+        if (!item) return;
+
+        // 10% resistance per element in defense elements
+        (item.defenseElements || []).forEach((element) => {
+          base[element] -= 0.1;
+        });
+      });
+
     return base;
   }
 }

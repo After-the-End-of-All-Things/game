@@ -56,6 +56,11 @@ export class FightService {
     );
     if (!inventory) throw new Error('Inventory not found');
 
+    const totalStats = await this.playerService.getTotalStats(player);
+    const totalResistances = await this.playerService.getTotalResistances(
+      player,
+    );
+
     return {
       userId: player.userId,
       characterId: uuid(),
@@ -63,9 +68,10 @@ export class FightService {
       sprite: player.cosmetics.portrait,
       level: player.level,
       job: player.job,
-      baseStats: this.playerService.getTotalStats(player),
+      health: { current: totalStats.health, max: totalStats.health },
+      baseStats: totalStats,
       modifiedStats: zeroStats(),
-      resistances: this.playerService.getTotalResistances(player),
+      resistances: totalResistances,
       equipment: inventory.equippedItems,
       cooldowns: {},
     };
@@ -79,6 +85,10 @@ export class FightService {
       sprite: monster.sprite,
       level: monster.level,
       job: monster.job,
+      health: {
+        current: monster.statBoosts.health,
+        max: monster.statBoosts.health,
+      },
       baseStats: monster.statBoosts,
       modifiedStats: zeroStats(),
       resistances: monster.resistances,

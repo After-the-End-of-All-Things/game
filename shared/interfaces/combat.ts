@@ -36,6 +36,7 @@ export interface IFightCharacter {
   name: string;
   level: number;
   job: string;
+  health: { current: number; max: number };
   baseStats: Record<Stat, number>;
   modifiedStats: Record<Stat, number>;
   resistances: Record<Element, number>;
