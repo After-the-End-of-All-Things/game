@@ -1,4 +1,10 @@
-import { Component, DestroyRef, OnInit, inject } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  OnInit,
+  ViewChild,
+  inject,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   Element,
@@ -6,11 +12,13 @@ import {
   IFight,
   IFightCharacter,
   IMonster,
+  IPlayer,
   IUser,
 } from '@interfaces';
+import { IonModal } from '@ionic/angular';
 import { Select, Store } from '@ngxs/store';
 import { ContentService } from '@services/content.service';
-import { FightStore, UserStore } from '@stores';
+import { FightStore, PlayerStore, UserStore } from '@stores';
 import { ChangePage } from '@stores/user/user.actions';
 import { Observable, combineLatest } from 'rxjs';
 
@@ -22,8 +30,11 @@ import { Observable, combineLatest } from 'rxjs';
 export class CombatPage implements OnInit {
   private destroyRef = inject(DestroyRef);
 
+  @Select(PlayerStore.player) player$!: Observable<IPlayer>;
   @Select(UserStore.user) user$!: Observable<IUser>;
   @Select(FightStore.fight) fight$!: Observable<IFight>;
+
+  @ViewChild('abilitiesModal') abilitiesModal!: IonModal;
 
   public readonly elements: Element[] = [
     'fire',
@@ -37,6 +48,8 @@ export class CombatPage implements OnInit {
   public fight!: IFight;
   public fightCharacters: Record<string, IFightCharacter> = {};
   public myCharacterId = '';
+  public myCharacterJob = '';
+  public myCharacterLevel = 0;
   public selectedAbility: ICombatAbility | undefined;
 
   public get myCharacter(): IFightCharacter {
@@ -46,9 +59,9 @@ export class CombatPage implements OnInit {
   constructor(private store: Store, private contentService: ContentService) {}
 
   ngOnInit() {
-    combineLatest([this.user$, this.fight$])
+    combineLatest([this.user$, this.player$, this.fight$])
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(([user, fight]) => {
+      .subscribe(([user, player, fight]) => {
         if (!fight) {
           this.store.dispatch(new ChangePage('home'));
           return;
@@ -64,6 +77,9 @@ export class CombatPage implements OnInit {
             this.myCharacterId = character.characterId;
           }
         });
+
+        this.myCharacterJob = player.job;
+        this.myCharacterLevel = player.level;
       });
   }
 
@@ -72,7 +88,7 @@ export class CombatPage implements OnInit {
   }
 
   getAbilities(): ICombatAbility[] {
-    const allAbilities = [
+    const itemAbilities = [
       this.contentService.getAbilityByName('Unarmed Attack'),
       ...Object.values(this.myCharacter.equipment)
         .filter(Boolean)
@@ -84,12 +100,23 @@ export class CombatPage implements OnInit {
         .flat(),
     ];
 
-    // TODO: job abilities
+    const jobAbilities = Object.values(this.contentService.abilities).filter(
+      (ability) => {
+        return (
+          ability.requiredJob === this.myCharacterJob &&
+          ability.requiredLevel <= this.myCharacterLevel
+        );
+      },
+    );
 
-    return allAbilities.filter(Boolean) as ICombatAbility[];
+    return [...itemAbilities, ...jobAbilities].filter(
+      Boolean,
+    ) as ICombatAbility[];
   }
 
   selectAbility(ability: ICombatAbility) {
     this.selectedAbility = ability;
+
+    this.abilitiesModal.dismiss();
   }
 }

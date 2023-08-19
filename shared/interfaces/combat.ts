@@ -21,6 +21,7 @@ export interface ICombatAbility {
   requiredJob: string;
   requiredLevel: number;
   elements: Element[];
+  generatedElements: Element[];
   statScaling: Partial<Record<Stat, number>>;
 }
 

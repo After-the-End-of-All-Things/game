@@ -79,16 +79,22 @@
   }
 }
 
+.ability-modal {
+  --padding-top: 0;
+}
+
 .ability-list {
   --ion-background-color: transparent;
   --ion-item-background: transparent;
+  overflow-y: auto;
+  max-height: 574px;
 
 
   .ability {
     cursor: pointer;
 
     &:hover {
-      outline: 1px solid #000;
+      background: #222;
     }
   }
 }

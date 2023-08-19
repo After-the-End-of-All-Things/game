@@ -88,6 +88,7 @@
   trigger="abilitiesModal"
   [initialBreakpoint]="0.5"
   [breakpoints]="[0, 0.5, 1]"
+  #abilitiesModal
 >
   <ng-template>
     <ion-header>
@@ -96,7 +97,7 @@
       </ion-toolbar>
     </ion-header>
 
-    <ion-content>
+    <ion-content class="ability-modal">
       <ion-list class="ability-list">
         <ion-item
           lines="none"
