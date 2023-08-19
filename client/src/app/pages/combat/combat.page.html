@@ -2,13 +2,33 @@
   <app-header-bar></app-header-bar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" id="combat-abilities">
   <ion-header collapse="condense">
     <app-header-bar></app-header-bar>
   </ion-header>
 
   <ion-card>
-    <ion-card-content></ion-card-content>
+    <ion-card-content>
+      <ion-row>
+        <ion-col class="action-container">
+          <ion-button class="action-button" id="abilitiesModal">
+            Attack
+          </ion-button>
+        </ion-col>
+
+        <ion-col class="action-container">
+          <ion-button class="action-button">Move</ion-button>
+        </ion-col>
+
+        <ion-col class="action-container">
+          <ion-button class="action-button" disabled>Item</ion-button>
+        </ion-col>
+
+        <ion-col class="action-container">
+          <ion-button class="action-button">Run Away</ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-card-content>
   </ion-card>
 
   <ion-card>
@@ -62,6 +82,31 @@
       </div>
     </ion-card-content>
   </ion-card>
-
-  {{ fight | json }}
 </ion-content>
+
+<ion-modal
+  trigger="abilitiesModal"
+  [initialBreakpoint]="0.5"
+  [breakpoints]="[0, 0.5, 1]"
+>
+  <ng-template>
+    <ion-header>
+      <ion-toolbar color="primary">
+        <ion-title>Abilities</ion-title>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content>
+      <ion-list class="ability-list">
+        <ion-item
+          lines="none"
+          class="ability"
+          *ngFor="let ability of getAbilities()"
+          (click)="selectAbility(ability)"
+        >
+          <app-combat-ability [ability]="ability"></app-combat-ability>
+        </ion-item>
+      </ion-list>
+    </ion-content>
+  </ng-template>
+</ion-modal>

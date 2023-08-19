@@ -6,6 +6,7 @@ import { ApplyUserPatches, ChangePage, SetUser } from './user.actions';
 export const defaultStore: () => IUserStore = () => ({
   version: 0,
   user: {
+    id: '',
     createdAt: new Date(),
     discriminator: '',
     email: '',

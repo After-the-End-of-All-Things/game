@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 import { AvatarComponent } from '@components/avatar/avatar.component';
 import { BackgroundArtComponent } from '@components/background-art/background-art.component';
 import { CardOnlineUsersComponent } from '@components/card-online-users/card-online-users.component';
+import { CombatAbilityComponent } from '@components/combat-ability/combat-ability.component';
 import { CountdownComponent } from '@components/countdown/countdown.component';
 import { ElementIconComponent } from '@components/element-icon/element-icon.component';
 import { HeaderBarComponent } from '@components/header-bar/header-bar.component';
@@ -47,6 +48,7 @@ const components = [
   CountdownComponent,
   RelativeTimePipe,
   ElementIconComponent,
+  CombatAbilityComponent,
 ];
 
 @NgModule({

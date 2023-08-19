@@ -69,3 +69,26 @@
     height: 3px;
   }
 }
+
+.action-container {
+  display: flex;
+  justify-content: center;
+
+  .action-button {
+    width: 150px;
+  }
+}
+
+.ability-list {
+  --ion-background-color: transparent;
+  --ion-item-background: transparent;
+
+
+  .ability {
+    cursor: pointer;
+
+    &:hover {
+      outline: 1px solid #000;
+    }
+  }
+}

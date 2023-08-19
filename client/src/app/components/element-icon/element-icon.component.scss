@@ -1,6 +1,13 @@
 
 .element-container {
   position: relative;
+
+  &.inline {
+    .element-icon {
+      width: 16px;
+      height: 16px;
+    }
+  }
 }
 
 .element-count-container {

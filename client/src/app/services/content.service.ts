@@ -144,6 +144,12 @@ export class ContentService {
     return this.monsters[monster];
   }
 
+  public getAbilityByName(abilityName: string): ICombatAbility | undefined {
+    return Object.values(this.abilities).find(
+      (ability) => ability.name === abilityName,
+    );
+  }
+
   public getAbility(ability: string): ICombatAbility | undefined {
     return this.abilities[ability];
   }

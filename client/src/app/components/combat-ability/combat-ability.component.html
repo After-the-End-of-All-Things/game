@@ -1,0 +1,26 @@
+<ion-row>
+  <ion-col class="target-image">
+    <div class="target-image-container">
+      <ion-img
+        [src]="'assets/combat/targetting/' + imageName + '.png'"
+      ></ion-img>
+    </div>
+  </ion-col>
+
+  <ion-col>
+    <h3>
+      {{ ability.name }}
+
+      <app-element-icon
+        *ngFor="let element of ability.elements"
+        [element]="element"
+        [inline]="true"
+      ></app-element-icon>
+    </h3>
+
+    <p>
+      {{ ability.description }}
+      <strong>{{ abilityDamage() }} damage</strong>
+    </p>
+  </ion-col>
+</ion-row>

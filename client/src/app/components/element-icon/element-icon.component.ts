@@ -10,6 +10,7 @@ export class ElementIconComponent implements OnInit {
   @Input({ required: true }) element!: Element;
   @Input() count = 0;
   @Input() colored = true;
+  @Input() inline = false;
 
   public countArray: number[] = [];
 
