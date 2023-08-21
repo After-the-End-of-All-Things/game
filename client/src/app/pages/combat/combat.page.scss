@@ -51,6 +51,18 @@
   position: relative;
 }
 
+.name {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  z-index: 12;
+  width: 100%;
+  font-size: 10px;
+  text-align: center;
+  color: #fff;
+  text-shadow: 1px 1px 1px #000;
+}
+
 .health-bar {
   position: absolute;
   top: -10;

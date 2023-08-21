@@ -79,11 +79,14 @@ export class FightService {
     };
   }
 
-  private convertMonsterToFightCharacter(monster: IMonster): IFightCharacter {
+  private convertMonsterToFightCharacter(
+    monster: IMonster,
+    indexForLetter: number,
+  ): IFightCharacter {
     return {
       monsterId: monster.itemId,
       characterId: uuid(),
-      name: monster.name,
+      name: `${monster.name} ${String.fromCharCode(65 + indexForLetter)}`,
       sprite: monster.sprite,
       level: monster.level,
       job: monster.job,
@@ -143,11 +146,11 @@ export class FightService {
   ): Promise<Fight> {
     const playerCharacters = [await this.convertPlayerToFightCharacter(player)];
     const monsterCharacters = formation.monsters
-      .map(({ monster }) => {
+      .map(({ monster }, index) => {
         const monsterData = this.contentService.getMonster(monster);
         if (!monsterData) return null;
 
-        return this.convertMonsterToFightCharacter(monsterData);
+        return this.convertMonsterToFightCharacter(monsterData, index);
       })
       .filter(Boolean) as IFightCharacter[];
 

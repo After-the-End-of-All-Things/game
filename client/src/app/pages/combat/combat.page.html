@@ -42,6 +42,8 @@
                 [class.small]="col.containedCharacters.length > 1"
                 *ngFor="let char of col.containedCharacters"
               >
+                <div class="name">{{ fightCharacters[char].name }}</div>
+
                 <div class="health-bar">
                   <div
                     class="current-health"
