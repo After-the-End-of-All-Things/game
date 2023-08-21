@@ -108,6 +108,16 @@ export class InventoryService {
     return inventory.resources[resourceId] > amount;
   }
 
+  async updateEquippedItem(userId: string, slot: ItemSlot, item: IEquipment) {
+    const inventory = await this.getInventoryForUser(userId);
+    if (!inventory) return;
+
+    inventory.equippedItems = {
+      ...inventory.equippedItems,
+      [slot]: item,
+    };
+  }
+
   acquireResourceForInventory(
     inventory: Inventory,
     userId: string,

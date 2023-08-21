@@ -1,4 +1,5 @@
 import { AchievementsModule } from '@modules/achievements/achievements.module';
+import { ContentModule } from '@modules/content/content.module';
 import { CraftingModule } from '@modules/crafting/crafting.module';
 import { DiscoveriesModule } from '@modules/discoveries/discoveries.module';
 import { FightModule } from '@modules/fight/fight.module';
@@ -11,6 +12,7 @@ import { AggregatorService } from './aggregator.service';
 
 @Module({
   imports: [
+    ContentModule,
     PlayerModule,
     StatsModule,
     AchievementsModule,
