@@ -365,6 +365,16 @@ export class PlayerService {
 
   async getTotalStats(player: Player): Promise<Record<Stat, number>> {
     const base = zeroStats();
+
+    // get job stats
+    const job = this.contentService.getJob(player.job);
+    if (!job) return base;
+
+    Object.keys(job.statGainsPerLevel).forEach((stat) => {
+      base[stat as Stat] += job.statGainsPerLevel[stat as Stat] * player.level;
+    });
+
+    // get equipment stats
     const equipment = await this.inventoryService.getEquipmentFor(
       player.userId,
     );
