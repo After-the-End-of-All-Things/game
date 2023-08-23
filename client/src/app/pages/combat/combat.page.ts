@@ -56,6 +56,10 @@ export class CombatPage implements OnInit {
     return this.fightCharacters[this.myCharacterId];
   }
 
+  public get isMyCharacterActive(): boolean {
+    return this.fight.currentTurn === this.myCharacterId;
+  }
+
   constructor(private store: Store, private contentService: ContentService) {}
 
   ngOnInit() {

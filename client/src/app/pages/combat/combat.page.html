@@ -11,21 +11,34 @@
     <ion-card-content>
       <ion-row>
         <ion-col class="action-container">
-          <ion-button class="action-button" id="abilitiesModal">
+          <ion-button
+            class="action-button"
+            id="abilitiesModal"
+            [disabled]="!isMyCharacterActive"
+          >
             Attack
           </ion-button>
         </ion-col>
 
         <ion-col class="action-container">
-          <ion-button class="action-button">Move</ion-button>
+          <ion-button class="action-button" [disabled]="!isMyCharacterActive">
+            Move
+          </ion-button>
         </ion-col>
 
         <ion-col class="action-container">
-          <ion-button class="action-button" disabled>Item</ion-button>
+          <ion-button
+            class="action-button"
+            [disabled]="!isMyCharacterActive || true"
+          >
+            Item
+          </ion-button>
         </ion-col>
 
         <ion-col class="action-container">
-          <ion-button class="action-button">Run Away</ion-button>
+          <ion-button class="action-button" [disabled]="!isMyCharacterActive">
+            Run Away
+          </ion-button>
         </ion-col>
       </ion-row>
     </ion-card-content>
@@ -39,6 +52,7 @@
             <div class="tile" [class.enemy]="i > 3" [class.friendly]="i <= 3">
               <div
                 class="character-container"
+                [class.active]="isMyCharacterActive"
                 [class.small]="col.containedCharacters.length > 1"
                 *ngFor="let char of col.containedCharacters"
               >
@@ -58,6 +72,7 @@
                     size="small"
                     [padding]="0"
                     [noScale]="true"
+                    [active]="isMyCharacterActive"
                   ></app-avatar>
 
                   <app-monster-icon

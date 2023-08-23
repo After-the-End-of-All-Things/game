@@ -10,6 +10,7 @@ export class AvatarComponent implements OnInit {
   @Input() padding = 32;
   @Input() noScale = false;
   @Input() size: 'normal' | 'small' = 'normal';
+  @Input() active = false;
 
   constructor() {}
 
