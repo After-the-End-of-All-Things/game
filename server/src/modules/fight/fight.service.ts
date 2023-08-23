@@ -61,8 +61,6 @@ export class FightService {
       player,
     );
 
-    console.log();
-
     return {
       userId: player.userId,
       characterId: uuid(),
