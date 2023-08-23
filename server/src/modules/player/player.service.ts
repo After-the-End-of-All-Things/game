@@ -1,12 +1,11 @@
 import { zeroResistances, zeroStats } from '@helpers/stats';
 import {
   Element,
-  IFullUser,
   ILocation,
   INotificationAction,
-  IPatchUser,
   Rarity,
   Stat,
+  UserResponse,
 } from '@interfaces';
 import { EntityManager, EntityRepository } from '@mikro-orm/mongodb';
 import { InjectRepository } from '@mikro-orm/nestjs';
@@ -59,7 +58,7 @@ export class PlayerService {
   async updatePortraitForPlayer(
     userId: string,
     portrait: number,
-  ): Promise<Partial<IFullUser | IPatchUser>> {
+  ): Promise<UserResponse> {
     const player = await this.getPlayerForUser(userId);
     if (!player) throw new ForbiddenException('Player not found');
 
@@ -85,7 +84,7 @@ export class PlayerService {
   async updateShortBioForPlayer(
     userId: string,
     shortBio: string,
-  ): Promise<Partial<IFullUser | IPatchUser>> {
+  ): Promise<UserResponse> {
     const player = await this.getPlayerForUser(userId);
     if (!player) throw new ForbiddenException('Player not found');
 
@@ -117,7 +116,7 @@ export class PlayerService {
   async updateLongBioForPlayer(
     userId: string,
     longBio: string,
-  ): Promise<Partial<IFullUser | IPatchUser>> {
+  ): Promise<UserResponse> {
     const player = await this.getPlayerForUser(userId);
     if (!player) throw new ForbiddenException('Player not found');
 

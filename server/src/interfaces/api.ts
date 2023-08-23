@@ -23,7 +23,7 @@ export interface IFullUser {
   inventory: Inventory;
   crafting: Crafting;
   items: InventoryItem[];
-  fight: Fight;
+  fight: Fight | null;
 
   actions: Array<{ type: string } & any>;
 }
@@ -39,3 +39,5 @@ export interface IPatchUser {
   crafting: jsonpatch.Operation[];
   fight: jsonpatch.Operation[];
 }
+
+export type UserResponse = Partial<IFullUser | IPatchUser>;

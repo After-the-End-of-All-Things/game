@@ -1,4 +1,4 @@
-import { IFullUser, IPatchUser } from '@interfaces';
+import { UserResponse } from '@interfaces';
 import { DiscoveriesService } from '@modules/discoveries/discoveries.service';
 import { FightService } from '@modules/fight/fight.service';
 import { PlayerService } from '@modules/player/player.service';
@@ -28,9 +28,7 @@ export class DiscoveriesController {
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Get my discoveries' })
   @Get('mine')
-  async getMyDiscoveries(
-    @User() user,
-  ): Promise<Partial<IFullUser | IPatchUser>> {
+  async getMyDiscoveries(@User() user): Promise<UserResponse> {
     const discoveries = await this.discoveriesService.getDiscoveriesForUser(
       user.userId,
     );
@@ -45,7 +43,7 @@ export class DiscoveriesController {
   async changePortrait(
     @User() user,
     @Body('portrait') portrait: number,
-  ): Promise<Partial<IFullUser | IPatchUser>> {
+  ): Promise<UserResponse> {
     const fight = await this.fightsService.getFightForUser(user.userId);
     if (fight)
       throw new ForbiddenException('Cannot change portrait while in combat.');
@@ -75,7 +73,7 @@ export class DiscoveriesController {
   async discoverCollectible(
     @User() user,
     @Body('instanceId') instanceId: string,
-  ): Promise<Partial<IFullUser | IPatchUser>> {
+  ): Promise<UserResponse> {
     return this.discoveriesService.discoverCollectible(user.userId, instanceId);
   }
 
@@ -85,7 +83,7 @@ export class DiscoveriesController {
   async discoverEquipment(
     @User() user,
     @Body('instanceId') instanceId: string,
-  ): Promise<Partial<IFullUser | IPatchUser>> {
+  ): Promise<UserResponse> {
     return this.discoveriesService.discoverEquipment(user.userId, instanceId);
   }
 
@@ -94,36 +92,28 @@ export class DiscoveriesController {
     summary: 'Claim rewards for discovering unique collectibles',
   })
   @Post('claim/unique/collectible')
-  async claimUniqueCollectible(
-    @User() user,
-  ): Promise<Partial<IFullUser | IPatchUser>> {
+  async claimUniqueCollectible(@User() user): Promise<UserResponse> {
     return this.discoveriesService.claimUniqueCollectibleReward(user.userId);
   }
 
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Claim rewards for discovering collectibles' })
   @Post('claim/total/collectible')
-  async claimTotalCollectible(
-    @User() user,
-  ): Promise<Partial<IFullUser | IPatchUser>> {
+  async claimTotalCollectible(@User() user): Promise<UserResponse> {
     return this.discoveriesService.claimTotalCollectibleReward(user.userId);
   }
 
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Claim rewards for discovering unique equipment' })
   @Post('claim/unique/equipment')
-  async claimUniqueEquipment(
-    @User() user,
-  ): Promise<Partial<IFullUser | IPatchUser>> {
+  async claimUniqueEquipment(@User() user): Promise<UserResponse> {
     return this.discoveriesService.claimUniqueEquipmentReward(user.userId);
   }
 
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Claim rewards for discovering equipment' })
   @Post('claim/total/equipment')
-  async claimTotalEquipment(
-    @User() user,
-  ): Promise<Partial<IFullUser | IPatchUser>> {
+  async claimTotalEquipment(@User() user): Promise<UserResponse> {
     return this.discoveriesService.claimTotalEquipmentReward(user.userId);
   }
 }

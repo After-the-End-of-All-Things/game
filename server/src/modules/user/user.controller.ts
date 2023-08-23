@@ -1,4 +1,4 @@
-import { IFullUser, IPatchUser } from '@interfaces';
+import { UserResponse } from '@interfaces';
 import {
   Controller,
   Get,
@@ -25,7 +25,7 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Get my user profile' })
   @Get('profile/mine')
-  async getMyProfile(@User() user): Promise<Partial<IFullUser | IPatchUser>> {
+  async getMyProfile(@User() user): Promise<UserResponse> {
     const userRef = await this.userService.findUserById(user.userId);
     if (!userRef) throw new NotFoundException('User not found');
 
@@ -35,9 +35,7 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Get a specific user profile' })
   @Get('profile/:id')
-  async getProfile(
-    @Param('id') id: string,
-  ): Promise<Partial<IFullUser | IPatchUser>> {
+  async getProfile(@Param('id') id: string): Promise<UserResponse> {
     const userRef = await this.userService.findUserById(id);
     if (!userRef) throw new NotFoundException('User not found');
 

@@ -4,8 +4,9 @@ import {
   IFightTile,
   IMonster,
   IMonsterFormation,
+  UserResponse,
 } from '@interfaces';
-import { EntityManager, EntityRepository } from '@mikro-orm/mongodb';
+import { EntityManager, EntityRepository, ObjectId } from '@mikro-orm/mongodb';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { ContentService } from '@modules/content/content.service';
 import { Fight } from '@modules/fight/fight.schema';
@@ -37,12 +38,19 @@ export class FightService {
     return fromEvent(this.events, channel);
   }
 
-  public emit(channel: string, data: any = {}) {
+  public emit(channel: string, data: UserResponse = {}) {
     this.events.emit(channel, { data });
   }
 
   public async getFightForUser(userId: string): Promise<Fight | null> {
     return this.fights.findOne({ involvedPlayers: userId });
+  }
+
+  public async removeFight(fightId: string) {
+    const fight = await this.fights.findOne({ _id: new ObjectId(fightId) });
+    if (!fight) throw new Error('Fight not found');
+
+    return this.em.remove<Fight>(fight);
   }
 
   private async convertPlayerToFightCharacter(
@@ -187,5 +195,34 @@ export class FightService {
     await this.em.flush();
 
     return fight;
+  }
+
+  async flee(userId: string): Promise<void> {
+    const fight = await this.getFightForUser(userId);
+    if (!fight) throw new Error('Fight not found');
+
+    await this.removeFight(fight._id.toHexString());
+
+    await Promise.all(
+      fight.involvedPlayers.map(async (playerId) => {
+        const player = await this.playerService.getPlayerForUser(playerId);
+        if (!player) throw new Error('Player not found');
+
+        this.playerService.setPlayerAction(player, undefined);
+
+        this.emit(playerId, {
+          fight: null,
+          player,
+          actions: [
+            {
+              type: 'Notify',
+              messageType: 'success',
+              message: `You fled from combat!`,
+            },
+          ],
+        });
+        await this.em.flush();
+      }),
+    );
   }
 }

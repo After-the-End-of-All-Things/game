@@ -15,9 +15,10 @@ import {
   IPlayer,
   IUser,
 } from '@interfaces';
-import { IonModal } from '@ionic/angular';
+import { AlertController, IonModal } from '@ionic/angular';
 import { Select, Store } from '@ngxs/store';
 import { ContentService } from '@services/content.service';
+import { FightService } from '@services/fight.service';
 import { FightStore, PlayerStore, UserStore } from '@stores';
 import { ChangePage } from '@stores/user/user.actions';
 import { Observable, combineLatest } from 'rxjs';
@@ -60,7 +61,12 @@ export class CombatPage implements OnInit {
     return this.fight.currentTurn === this.myCharacterId;
   }
 
-  constructor(private store: Store, private contentService: ContentService) {}
+  constructor(
+    private store: Store,
+    private contentService: ContentService,
+    private fightService: FightService,
+    private alertCtrl: AlertController,
+  ) {}
 
   ngOnInit() {
     combineLatest([this.user$, this.player$, this.fight$])
@@ -122,5 +128,26 @@ export class CombatPage implements OnInit {
     this.selectedAbility = ability;
 
     this.abilitiesModal.dismiss();
+  }
+
+  async flee() {
+    const confirm = await this.alertCtrl.create({
+      header: 'Confirm Flee',
+      message: `Are you sure you want to flee this combat?`,
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+        },
+        {
+          text: 'Flee',
+          handler: async () => {
+            this.fightService.flee().subscribe(() => {});
+          },
+        },
+      ],
+    });
+
+    await confirm.present();
   }
 }

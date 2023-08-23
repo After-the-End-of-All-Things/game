@@ -1,4 +1,4 @@
-import { IFullUser, IPatchUser, ItemSlot } from '@interfaces';
+import { ItemSlot, UserResponse } from '@interfaces';
 import { JwtAuthGuard } from '@modules/auth/jwt.guard';
 import { GameplayService } from '@modules/gameplay/gameplay.service';
 import { InventoryService } from '@modules/inventory/inventory.service';
@@ -26,7 +26,7 @@ export class GameplayController {
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Explore the current location' })
   @Post('explore')
-  async explore(@User() user): Promise<Partial<IFullUser | IPatchUser>> {
+  async explore(@User() user): Promise<UserResponse> {
     return this.gameplayService.explore(user.userId);
   }
 
@@ -36,7 +36,7 @@ export class GameplayController {
   async walk(
     @User() user,
     @Body('location') location: string,
-  ): Promise<Partial<IFullUser | IPatchUser>> {
+  ): Promise<UserResponse> {
     return this.gameplayService.walkToLocation(user.userId, location);
   }
 
@@ -46,14 +46,14 @@ export class GameplayController {
   async travel(
     @User() user,
     @Body('location') location: string,
-  ): Promise<Partial<IFullUser | IPatchUser>> {
+  ): Promise<UserResponse> {
     return this.gameplayService.travelToLocation(user.userId, location);
   }
 
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Explore Event: Wave at another player' })
   @Post('wave')
-  async wave(@User() user): Promise<Partial<IFullUser | IPatchUser>> {
+  async wave(@User() user): Promise<UserResponse> {
     return this.gameplayService.waveToPlayerFromExplore(user.userId);
   }
 
@@ -63,7 +63,7 @@ export class GameplayController {
   async waveFromNotification(
     @User() user,
     @Param('id') notificationId: string,
-  ): Promise<Partial<IFullUser | IPatchUser>> {
+  ): Promise<UserResponse> {
     return this.gameplayService.waveToPlayerFromNotification(
       user.userId,
       notificationId,
@@ -73,7 +73,7 @@ export class GameplayController {
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Explore Event: Take an item' })
   @Post('item/take')
-  async takeItem(@User() user): Promise<Partial<IFullUser | IPatchUser>> {
+  async takeItem(@User() user): Promise<UserResponse> {
     if (await this.inventoryService.isInventoryFull(user.userId)) {
       throw new BadRequestException('Inventory is full.');
     }
@@ -84,7 +84,7 @@ export class GameplayController {
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Explore Event: Fight monsters' })
   @Post('fight')
-  async fight(@User() user): Promise<Partial<IFullUser | IPatchUser>> {
+  async fight(@User() user): Promise<UserResponse> {
     return this.gameplayService.startFight(user.userId);
   }
 
@@ -94,7 +94,7 @@ export class GameplayController {
   async sellItem(
     @User() user,
     @Body('instanceId') instanceId: string,
-  ): Promise<Partial<IFullUser | IPatchUser>> {
+  ): Promise<UserResponse> {
     return this.gameplayService.sellItem(user.userId, instanceId);
   }
 
@@ -105,7 +105,7 @@ export class GameplayController {
     @User() user,
     @Param('slot') equipmentSlot: ItemSlot,
     @Body('instanceId') instanceId: string,
-  ): Promise<Partial<IFullUser | IPatchUser>> {
+  ): Promise<UserResponse> {
     return this.gameplayService.equipItem(
       user.userId,
       equipmentSlot,
@@ -119,23 +119,21 @@ export class GameplayController {
   async craftItem(
     @User() user,
     @Body('itemId') itemId: string,
-  ): Promise<Partial<IFullUser | IPatchUser>> {
+  ): Promise<UserResponse> {
     return this.gameplayService.craftItem(user.userId, itemId);
   }
 
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Take a crafted item' })
   @Post('item/craft/take')
-  async takeCraftItem(@User() user): Promise<Partial<IFullUser | IPatchUser>> {
+  async takeCraftItem(@User() user): Promise<UserResponse> {
     return this.gameplayService.takeCraftedItem(user.userId);
   }
 
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Take a crafted item (from notification)' })
   @Post('item/craft/take/:id')
-  async takeCraftItemFromNotification(
-    @User() user,
-  ): Promise<Partial<IFullUser | IPatchUser>> {
+  async takeCraftItemFromNotification(@User() user): Promise<UserResponse> {
     return this.gameplayService.takeCraftedItem(user.userId);
   }
 }

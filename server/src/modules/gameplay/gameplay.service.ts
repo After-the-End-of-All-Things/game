@@ -3,13 +3,12 @@ import { itemSlotForItem, itemValue } from '@helpers/item';
 import { xpForCraftingLevel, xpGainedForCraftingItem } from '@helpers/xp';
 import {
   IEquipment,
-  IFullUser,
   IItem,
   ILocation,
   INotificationAction,
-  IPatchUser,
   ItemSlot,
   TrackedStat,
+  UserResponse,
 } from '@interfaces';
 import { AnalyticsService } from '@modules/content/analytics.service';
 import { ConstantsService } from '@modules/content/constants.service';
@@ -60,7 +59,7 @@ export class GameplayService {
     private readonly fights: FightService,
   ) {}
 
-  async explore(userId: string): Promise<Partial<IFullUser | IPatchUser>> {
+  async explore(userId: string): Promise<UserResponse> {
     const player = await this.playerService.getPlayerForUser(userId);
     if (!player) throw new ForbiddenException('Player not found');
 
@@ -250,7 +249,7 @@ export class GameplayService {
   async walkToLocation(
     userId: string,
     locationName: string,
-  ): Promise<Partial<IFullUser | IPatchUser>> {
+  ): Promise<UserResponse> {
     const player = await this.playerService.getPlayerForUser(userId);
     if (!player) throw new ForbiddenException('Player not found');
 
@@ -301,7 +300,7 @@ export class GameplayService {
   async travelToLocation(
     userId: string,
     locationName: string,
-  ): Promise<Partial<IFullUser | IPatchUser>> {
+  ): Promise<UserResponse> {
     const player = await this.playerService.getPlayerForUser(userId);
     if (!player) throw new ForbiddenException('Player not found');
 
@@ -354,9 +353,7 @@ export class GameplayService {
     return { player: playerPatches };
   }
 
-  async waveToPlayerFromExplore(
-    userId: string,
-  ): Promise<Partial<IFullUser | IPatchUser>> {
+  async waveToPlayerFromExplore(userId: string): Promise<UserResponse> {
     const player = await this.playerService.getPlayerForUser(userId);
     if (!player) throw new ForbiddenException('Player not found');
 
@@ -368,7 +365,7 @@ export class GameplayService {
   async waveToPlayerFromNotification(
     userId: string,
     notificationId: string,
-  ): Promise<Partial<IFullUser | IPatchUser>> {
+  ): Promise<UserResponse> {
     const player = await this.playerService.getPlayerForUser(userId);
     if (!player) throw new ForbiddenException('Player not found');
 
@@ -470,7 +467,7 @@ export class GameplayService {
     return { player: playerPatches };
   }
 
-  async takeItem(userId: string): Promise<Partial<IFullUser | IPatchUser>> {
+  async takeItem(userId: string): Promise<UserResponse> {
     const player = await this.playerService.getPlayerForUser(userId);
     if (!player) throw new ForbiddenException('Player not found');
 
@@ -514,7 +511,7 @@ export class GameplayService {
     return { player: playerPatches, inventory: inventoryPatches };
   }
 
-  async startFight(userId: string): Promise<Partial<IFullUser | IPatchUser>> {
+  async startFight(userId: string): Promise<UserResponse> {
     const player = await this.playerService.getPlayerForUser(userId);
     if (!player) throw new ForbiddenException('Player not found');
 
@@ -548,10 +545,7 @@ export class GameplayService {
     };
   }
 
-  async sellItem(
-    userId: string,
-    instanceId: string,
-  ): Promise<Partial<IFullUser | IPatchUser>> {
+  async sellItem(userId: string, instanceId: string): Promise<UserResponse> {
     if (!instanceId) throw new ForbiddenException('Item instance not found!');
 
     const player = await this.playerService.getPlayerForUser(userId);
@@ -600,7 +594,7 @@ export class GameplayService {
     userId: string,
     equipmentSlot: ItemSlot,
     instanceId: string,
-  ): Promise<Partial<IFullUser | IPatchUser>> {
+  ): Promise<UserResponse> {
     const player = await this.playerService.getPlayerForUser(userId);
     if (!player) throw new ForbiddenException('Player not found.');
 
@@ -685,7 +679,7 @@ export class GameplayService {
     userId: string,
     equipmentSlot: ItemSlot,
     instanceId: string,
-  ): Promise<Partial<IFullUser | IPatchUser>> {
+  ): Promise<UserResponse> {
     const inventory = await this.inventoryService.getInventoryForUser(userId);
     if (!inventory) throw new ForbiddenException('Inventory not found.');
 
@@ -704,10 +698,7 @@ export class GameplayService {
     return {};
   }
 
-  async craftItem(
-    userId: string,
-    itemId: string,
-  ): Promise<Partial<IFullUser | IPatchUser>> {
+  async craftItem(userId: string, itemId: string): Promise<UserResponse> {
     const crafting = await this.craftingService.getCraftingForUser(userId);
     if (!crafting) throw new ForbiddenException('Crafting not found.');
 
@@ -781,9 +772,7 @@ export class GameplayService {
     return { inventory: inventoryPatches, crafting: craftingPatches };
   }
 
-  async takeCraftedItem(
-    userId: string,
-  ): Promise<Partial<IFullUser | IPatchUser>> {
+  async takeCraftedItem(userId: string): Promise<UserResponse> {
     const crafting = await this.craftingService.getCraftingForUser(userId);
     if (!crafting) throw new ForbiddenException('Crafting not found.');
 

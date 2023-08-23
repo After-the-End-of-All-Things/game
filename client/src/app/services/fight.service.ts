@@ -1,5 +1,8 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '@environment';
+import { Store } from '@ngxs/store';
+import { GrabData } from '@stores/user/user.actions';
 
 @Injectable({
   providedIn: 'root',
@@ -7,7 +10,7 @@ import { environment } from '@environment';
 export class FightService {
   private fightEvents!: EventSource;
 
-  constructor() {}
+  constructor(private store: Store, private http: HttpClient) {}
 
   init() {
     this.initEvents();
@@ -24,7 +27,12 @@ export class FightService {
     this.fightEvents.onmessage = (data) => {
       if (!data.data) return;
 
-      console.log('FIGHT DATA', data);
+      const grabData = JSON.parse(data.data);
+      this.store.dispatch(new GrabData(grabData));
     };
+  }
+
+  flee() {
+    return this.http.post(`${environment.apiUrl}/fight/action/flee`, {});
   }
 }

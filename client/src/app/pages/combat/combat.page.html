@@ -36,7 +36,11 @@
         </ion-col>
 
         <ion-col class="action-container">
-          <ion-button class="action-button" [disabled]="!isMyCharacterActive">
+          <ion-button
+            class="action-button"
+            [disabled]="!isMyCharacterActive"
+            (click)="flee()"
+          >
             Run Away
           </ion-button>
         </ion-col>

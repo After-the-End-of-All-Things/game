@@ -1,7 +1,16 @@
+import { JwtAuthGuard } from '@modules/auth/jwt.guard';
 import { FightService } from '@modules/fight/fight.service';
-import { BadRequestException, Controller, Param, Sse } from '@nestjs/common';
+import {
+  BadRequestException,
+  Controller,
+  Param,
+  Post,
+  Sse,
+  UseGuards,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ApiOperation } from '@nestjs/swagger';
+import { User } from '@utils/user.decorator';
 
 @Controller('fight')
 export class FightController {
@@ -19,5 +28,14 @@ export class FightController {
     if (!data) throw new BadRequestException('Invalid token');
 
     return this.fightService.subscribe(data.sub);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('/action/flee')
+  @ApiOperation({
+    summary: 'Flee from combat',
+  })
+  async flee(@User('token') user) {
+    return this.fightService.flee(user.userId);
   }
 }
