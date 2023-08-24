@@ -221,6 +221,7 @@ export class FightService {
             },
           ],
         });
+
         await this.em.flush();
       }),
     );

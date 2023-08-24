@@ -67,6 +67,7 @@ export function getAuthToken() {
     }),
     NgxsLoggerPluginModule.forRoot({
       disabled: !isDevMode(),
+      filter: (action) => !action.constructor.name.includes('GrabData'),
     }),
     NgxsStoragePluginModule.forRoot({
       key: allStores,
