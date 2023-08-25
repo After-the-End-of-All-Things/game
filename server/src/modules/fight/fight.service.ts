@@ -184,8 +184,13 @@ export class FightService {
       tile.containedCharacters = [monsterCharacters[index].characterId];
     });
 
+    const turnOrder = [...playerCharacters, ...monsterCharacters].map(
+      (c) => c.characterId,
+    );
+
     const fight = new Fight(
       [player.userId],
+      turnOrder,
       playerCharacters,
       monsterCharacters,
       joinedTiles,

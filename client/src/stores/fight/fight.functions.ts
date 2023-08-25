@@ -9,6 +9,7 @@ export const defaultStore: () => IFightStore = () => ({
     id: '',
     attackers: [],
     defenders: [],
+    turnOrder: [],
     involvedPlayers: [],
     tiles: [],
     currentTurn: '',

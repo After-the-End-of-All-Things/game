@@ -19,6 +19,9 @@ export class Fight implements IFight {
   involvedPlayers: string[];
 
   @Property()
+  turnOrder: string[];
+
+  @Property()
   attackers: IFightCharacter[];
 
   @Property()
@@ -35,11 +38,13 @@ export class Fight implements IFight {
 
   constructor(
     involvedPlayers: string[],
+    turnOrder: string[],
     attackers: IFightCharacter[],
     defenders: IFightCharacter[],
     tiles: IFightTile[][],
   ) {
     this.involvedPlayers = involvedPlayers;
+    this.turnOrder = turnOrder;
     this.attackers = attackers;
     this.defenders = defenders;
     this.tiles = tiles;

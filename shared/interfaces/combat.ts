@@ -1,7 +1,7 @@
 import { IEquipment, ItemSlot } from '@interfaces';
 import { Element, Stat } from './buildingblocks';
 
-export type ICombatAbilityTargetting = 'Creature' | 'Ground';
+export type ICombatAbilityTargetting = 'Creature' | 'Ground' | 'Self';
 
 export type ICombatAbilityPattern =
   | 'Single'
@@ -48,6 +48,7 @@ export interface IFightCharacter {
 export interface IFight {
   id: string;
   involvedPlayers: string[];
+  turnOrder: string[];
   attackers: IFightCharacter[];
   defenders: IFightCharacter[];
   tiles: IFightTile[][];
