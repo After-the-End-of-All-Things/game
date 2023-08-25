@@ -217,7 +217,7 @@ export class FightService {
       }
 
       default: {
-        console.log('default action', action);
+        console.log('default action', action, targetParams);
       }
     }
   }

@@ -21,7 +21,11 @@
         </ion-col>
 
         <ion-col class="action-container">
-          <ion-button class="action-button" [disabled]="!isMyCharacterActive">
+          <ion-button
+            class="action-button"
+            [disabled]="!isMyCharacterActive"
+            (click)="startMoving()"
+          >
             Move
           </ion-button>
         </ion-col>
@@ -51,9 +55,21 @@
   <ion-card>
     <ion-card-content>
       <div class="fight">
-        <ion-row *ngFor="let row of fight.tiles" class="tile-row">
-          <ion-col *ngFor="let col of row; let i = index" class="tile-col">
-            <div class="tile" [class.enemy]="i > 3" [class.friendly]="i <= 3">
+        <ion-row
+          *ngFor="let row of fight.tiles; let y = index"
+          class="tile-row"
+        >
+          <ion-col *ngFor="let col of row; let x = index" class="tile-col">
+            <div
+              class="tile"
+              [class.enemy]="x > 3"
+              [class.friendly]="x <= 3"
+              [class.glowing]="isTileActive(x, y)"
+              [ngClass]="['x-' + x, 'y-' + y]"
+              (mouseenter)="selectTilesOnHover(x, y)"
+              (contextmenu)="resetAbilityAndSelection(); $event.preventDefault()"
+              (click)="clickTile(col, x, y)"
+            >
               <div
                 class="character-container"
                 [class.active]="isMyCharacterActive"
@@ -76,7 +92,7 @@
                     size="small"
                     [padding]="0"
                     [noScale]="true"
-                    [active]="isMyCharacterActive"
+                    [active]="isMyCharacterActive && !selectedAbility"
                   ></app-avatar>
 
                   <app-monster-icon
@@ -102,6 +118,10 @@
         ></app-element-icon>
       </div>
     </ion-card-content>
+  </ion-card>
+
+  <ion-card *ngIf="selectedAbility">
+    <ion-card-content>{{ selectedAbility | json }}</ion-card-content>
   </ion-card>
 </ion-content>
 

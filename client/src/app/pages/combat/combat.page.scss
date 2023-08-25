@@ -31,6 +31,25 @@
     &.friendly {
       background-color: #040;
     }
+
+    &.glowing {
+      --glow-color-start: #099;
+      --glow-color-end: #0cc;
+
+      cursor: pointer;
+
+      animation: glow 1s ease-in-out infinite alternate;
+    }
+
+    @keyframes glow {
+      0% {
+        background-color: var(--glow-color-start);
+      }
+
+      100% {
+        background-color: var(--glow-color-end);
+      }
+    }
   }
 }
 

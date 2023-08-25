@@ -6,6 +6,7 @@ export type ICombatAbilityTargetting = 'Creature' | 'Ground' | 'Self';
 export type ICombatAbilityPattern =
   | 'Single'
   | 'Cross'
+  | 'CrossNoCenter'
   | 'ThreeVertical'
   | 'TwoHorizontal';
 

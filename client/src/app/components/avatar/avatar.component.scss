@@ -23,16 +23,17 @@
       transform: scale(1);
     }
   }
+
   &.active {
     --glow-color-start: #033;
     --glow-color-end: #0ff;
+
+    animation: glow 1s ease-in-out infinite alternate;
 
     filter: drop-shadow(1px 1px 0 var(--glow-color-start))
             drop-shadow(-1px 1px 0 var(--glow-color-start))
             drop-shadow(1px -1px 0 var(--glow-color-start))
             drop-shadow(-1px -1px 0 var(--glow-color-start));
-
-    animation: glow 1s ease-in-out infinite alternate;
 
     @keyframes glow {
       0% {

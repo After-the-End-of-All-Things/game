@@ -9,8 +9,11 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   Element,
   ICombatAbility,
+  ICombatAbilityPattern,
+  ICombatTargetParams,
   IFight,
   IFightCharacter,
+  IFightTile,
   IMonster,
   IPlayer,
   IUser,
@@ -52,6 +55,7 @@ export class CombatPage implements OnInit {
   public myCharacterJob = '';
   public myCharacterLevel = 0;
   public selectedAbility: ICombatAbility | undefined;
+  public staticSelectedTiles: Record<string, boolean> = {};
 
   public get myCharacter(): IFightCharacter {
     return this.fightCharacters[this.myCharacterId];
@@ -59,6 +63,12 @@ export class CombatPage implements OnInit {
 
   public get isMyCharacterActive(): boolean {
     return this.fight.currentTurn === this.myCharacterId;
+  }
+
+  public get defenders(): IFightCharacter[] {
+    return this.fight.defenders.map((character) => {
+      return this.fightCharacters[character.characterId];
+    });
   }
 
   constructor(
@@ -126,8 +136,169 @@ export class CombatPage implements OnInit {
 
   selectAbility(ability: ICombatAbility) {
     this.selectedAbility = ability;
+    this.staticSelectedTiles = {};
 
     this.abilitiesModal.dismiss();
+
+    this.chooseSelectedTiles(ability);
+  }
+
+  findTileWithCharacter(characterId: string): [number, number] | undefined {
+    let foundTile: [number, number] | undefined;
+
+    this.fight.tiles.forEach((row, y) => {
+      row.forEach((tile, x) => {
+        if (tile.containedCharacters.includes(characterId)) {
+          foundTile = [x, y];
+        }
+      });
+    });
+
+    return foundTile;
+  }
+
+  choosePatternAroundCenter(
+    x: number,
+    y: number,
+    pattern: ICombatAbilityPattern,
+  ): Record<string, boolean> {
+    const staticSelectedTiles: Record<string, boolean> = {};
+
+    switch (pattern) {
+      case 'Single': {
+        staticSelectedTiles[`${x}-${y}`] = true;
+        return staticSelectedTiles;
+      }
+
+      case 'Cross': {
+        staticSelectedTiles[`${x}-${y}`] = true;
+        staticSelectedTiles[`${x - 1}-${y}`] = true;
+        staticSelectedTiles[`${x + 1}-${y}`] = true;
+        staticSelectedTiles[`${x}-${y - 1}`] = true;
+        staticSelectedTiles[`${x}-${y + 1}`] = true;
+        return staticSelectedTiles;
+      }
+
+      case 'CrossNoCenter': {
+        staticSelectedTiles[`${x - 1}-${y}`] = true;
+        staticSelectedTiles[`${x + 1}-${y}`] = true;
+        staticSelectedTiles[`${x}-${y - 1}`] = true;
+        staticSelectedTiles[`${x}-${y + 1}`] = true;
+        return staticSelectedTiles;
+      }
+
+      case 'ThreeVertical': {
+        staticSelectedTiles[`${x}-${y}`] = true;
+        staticSelectedTiles[`${x}-${y - 1}`] = true;
+        staticSelectedTiles[`${x}-${y + 1}`] = true;
+        return staticSelectedTiles;
+      }
+
+      case 'TwoHorizontal': {
+        staticSelectedTiles[`${x}-${y}`] = true;
+        staticSelectedTiles[`${x + 1}-${y}`] = true;
+        return staticSelectedTiles;
+      }
+
+      default:
+        return pattern satisfies never;
+    }
+  }
+
+  drawPatternAroundCenter(
+    x: number,
+    y: number,
+    pattern: ICombatAbilityPattern,
+  ) {
+    const patternTiles = this.choosePatternAroundCenter(x, y, pattern);
+    this.staticSelectedTiles = { ...this.staticSelectedTiles, ...patternTiles };
+  }
+
+  chooseSelectedTiles(ability: ICombatAbility) {
+    switch (ability.targetting) {
+      case 'Self': {
+        const center = this.findTileWithCharacter(this.myCharacterId);
+        if (!center) return;
+
+        this.drawPatternAroundCenter(center[0], center[1], ability.pattern);
+        return;
+      }
+
+      case 'Creature': {
+        this.defenders.forEach((defender) => {
+          const center = this.findTileWithCharacter(defender.characterId);
+          if (!center) return;
+
+          this.drawPatternAroundCenter(center[0], center[1], ability.pattern);
+        });
+        return;
+      }
+    }
+  }
+
+  selectTilesOnHover(hoverTileX: number, hoverTileY: number) {
+    if (!this.selectedAbility || this.selectedAbility.targetting !== 'Ground')
+      return;
+
+    this.resetSelectedTiles();
+    this.drawPatternAroundCenter(
+      hoverTileX,
+      hoverTileY,
+      this.selectedAbility.pattern,
+    );
+  }
+
+  resetAbilityAndSelection() {
+    this.resetAbility();
+    this.resetSelectedTiles();
+  }
+
+  resetAbility() {
+    this.selectedAbility = undefined;
+  }
+
+  resetSelectedTiles() {
+    this.staticSelectedTiles = {};
+  }
+
+  isTileActive(x: number, y: number) {
+    if (!this.selectedAbility) return false;
+
+    const tileKey = `${x}-${y}`;
+    return this.staticSelectedTiles[tileKey];
+  }
+
+  clickTile(tile: IFightTile, x: number, y: number) {
+    if (!this.selectedAbility) return;
+
+    if (this.isTileActive(x, y)) {
+      const targetArgs =
+        this.selectedAbility.targetting === 'Ground'
+          ? { tile: { x, y } }
+          : { characterId: tile.containedCharacters[0] };
+
+      this.fightService
+        .takeAction(this.selectedAbility.itemId, targetArgs)
+        .subscribe();
+    }
+
+    this.resetAbilityAndSelection();
+  }
+
+  startMoving() {
+    const moveAction = this.contentService.getAbilityByName('Move');
+    if (!moveAction) return;
+
+    this.selectAbility(moveAction);
+  }
+
+  finalizeAction(targetParams: ICombatTargetParams) {
+    const action = this.selectedAbility;
+    if (!action) return;
+
+    this.fightService.takeAction(action.itemId, targetParams).subscribe();
+    this.resetAbility();
+    this.resetSelectedTiles();
   }
 
   async flee() {
