@@ -1,7 +1,9 @@
+import { ICombatTargetParams } from '@interfaces';
 import { JwtAuthGuard } from '@modules/auth/jwt.guard';
 import { FightService } from '@modules/fight/fight.service';
 import {
   BadRequestException,
+  Body,
   Controller,
   Param,
   Post,
@@ -31,11 +33,15 @@ export class FightController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Post('/action/flee')
+  @Post('/action')
   @ApiOperation({
-    summary: 'Flee from combat',
+    summary: 'Do an action',
   })
-  async flee(@User('token') user) {
-    return this.fightService.flee(user.userId);
+  async takeAction(
+    @User('token') user,
+    @Body('actionId') actionId: string,
+    @Body('targetParams') targetParams: ICombatTargetParams,
+  ) {
+    return this.fightService.takeAction(user.userId, actionId, targetParams);
   }
 }

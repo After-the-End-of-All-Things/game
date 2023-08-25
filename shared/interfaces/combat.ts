@@ -9,6 +9,15 @@ export type ICombatAbilityPattern =
   | 'ThreeVertical'
   | 'TwoHorizontal';
 
+export interface ICombatTargetParams {
+  tile?: {
+    x: number;
+    y: number;
+  };
+
+  targetId?: string;
+}
+
 export interface ICombatAbility {
   name: string;
   itemId: string;
@@ -21,6 +30,7 @@ export interface ICombatAbility {
   requiredJob: string;
   requiredLevel: number;
   elements: Element[];
+  specialAction?: string;
   generatedElements: Element[];
   statScaling: Partial<Record<Stat, number>>;
 }

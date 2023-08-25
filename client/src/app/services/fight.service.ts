@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '@environment';
+import { ICombatTargetParams } from '@interfaces';
 import { Store } from '@ngxs/store';
 import { GrabData } from '@stores/user/user.actions';
 
@@ -32,7 +33,10 @@ export class FightService {
     };
   }
 
-  flee() {
-    return this.http.post(`${environment.apiUrl}/fight/action/flee`, {});
+  takeAction(actionId: string, targetParams: ICombatTargetParams) {
+    return this.http.post(`${environment.apiUrl}/fight/action`, {
+      actionId,
+      targetParams,
+    });
   }
 }

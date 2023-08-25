@@ -142,7 +142,10 @@ export class CombatPage implements OnInit {
         {
           text: 'Flee',
           handler: async () => {
-            this.fightService.flee().subscribe(() => {});
+            const fleeAction = this.contentService.getAbilityByName('Flee');
+            if (!fleeAction) return;
+
+            this.fightService.takeAction(fleeAction.itemId, {}).subscribe();
           },
         },
       ],

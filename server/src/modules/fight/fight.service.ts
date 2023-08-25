@@ -1,5 +1,6 @@
 import { zeroStats } from '@helpers/stats';
 import {
+  ICombatTargetParams,
   IFightCharacter,
   IFightTile,
   IMonster,
@@ -200,6 +201,25 @@ export class FightService {
     await this.em.flush();
 
     return fight;
+  }
+
+  async takeAction(
+    userId: string,
+    actionId: string,
+    targetParams: ICombatTargetParams,
+  ): Promise<void> {
+    const action = this.contentService.getAbility(actionId);
+    if (!action) throw new Error('Action not found');
+
+    switch (action.specialAction) {
+      case 'Flee': {
+        return this.flee(userId);
+      }
+
+      default: {
+        console.log('default action', action);
+      }
+    }
   }
 
   async flee(userId: string): Promise<void> {
