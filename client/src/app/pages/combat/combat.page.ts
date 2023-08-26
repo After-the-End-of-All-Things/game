@@ -135,6 +135,8 @@ export class CombatPage implements OnInit {
   }
 
   selectAbility(ability: ICombatAbility) {
+    if (this.myCharacter.cooldowns[ability.itemId] > 0) return;
+
     this.selectedAbility = ability;
     this.staticSelectedTiles = {};
 

@@ -1,5 +1,6 @@
 import { delayTime } from '@helpers/promise';
 import {
+  Element,
   ICombatAbility,
   ICombatTargetParams,
   IFightCharacter,
@@ -230,6 +231,20 @@ export class FightService {
       .toFixed(1);
   }
 
+  calculateAbilityDamageWithElements(
+    elements: Record<Element, number>,
+    ability: ICombatAbility,
+    character: IFightCharacter,
+  ): number {
+    const damage = this.calculateAbilityDamage(ability, character);
+
+    const elementDamage = Object.keys(elements)
+      .map((element) => (elements?.[element as Element] ?? 0) * damage)
+      .reduce((a, b) => a + b, 0);
+
+    return damage + elementDamage;
+  }
+
   getTileAtPosition(fight: Fight, x: number, y: number): IFightTile {
     return fight.tiles[y][x];
   }
@@ -248,6 +263,17 @@ export class FightService {
   ): IFightCharacter | undefined {
     const allCharacters = [...fight.attackers, ...fight.defenders];
     return allCharacters.find((c) => c.userId === userId);
+  }
+
+  getCharacterFromFightForCharacterId(
+    fight: Fight,
+    characterId: string,
+  ): IFightCharacter {
+    const allCharacters = [...fight.attackers, ...fight.defenders];
+    const character = allCharacters.find((c) => c.characterId === characterId);
+    if (!character) throw new BadRequestException('Character not found');
+
+    return character;
   }
 
   isActiveTurn(fight: Fight, userId: string) {
@@ -281,6 +307,49 @@ export class FightService {
 
   didAttackersWinFight(fight: Fight): boolean {
     return fight.defenders.every((defender) => defender.health.current <= 0);
+  }
+
+  addAbilityElementsToFight(fight: Fight, ability: ICombatAbility): void {
+    const elementOpposites: Record<Element, Element> = {
+      air: 'earth',
+      earth: 'air',
+
+      fire: 'water',
+      water: 'fire',
+
+      light: 'dark',
+      dark: 'light',
+
+      neutral: 'neutral',
+    };
+
+    ability.generatedElements.forEach((element) => {
+      fight.generatedElements[element] =
+        (fight.generatedElements[element] ?? 0) + 1;
+
+      fight.generatedElements[elementOpposites[element]] = Math.max(
+        0,
+        (fight.generatedElements[elementOpposites[element]] ?? 0) - 1,
+      );
+    });
+  }
+
+  applyAbilityCooldown(
+    character: IFightCharacter,
+    ability: ICombatAbility,
+  ): void {
+    if (!ability.cooldown) return;
+
+    character.cooldowns[ability.itemId] = ability.cooldown + 1;
+  }
+
+  reduceAllCooldownsForCharacter(character: IFightCharacter): void {
+    Object.keys(character.cooldowns).forEach((key) => {
+      character.cooldowns[key] = Math.max(
+        0,
+        (character.cooldowns[key] ?? 0) - 1,
+      );
+    });
   }
 
   async endFight(fight: Fight): Promise<void> {
@@ -321,6 +390,13 @@ export class FightService {
     );
     const nextTurnIndex = (currentTurnIndex + 1) % fight.turnOrder.length;
 
+    const currentCharacter = this.getCharacterFromFightForCharacterId(
+      fight,
+      fight.currentTurn,
+    );
+
+    this.reduceAllCooldownsForCharacter(currentCharacter);
+
     fight.currentTurn = fight.turnOrder[nextTurnIndex];
     fight.statusMessage = '';
     await this.saveAndUpdateFight(fight);
@@ -346,6 +422,18 @@ export class FightService {
     const action = this.contentService.getAbility(actionId);
     if (!action) throw new BadRequestException('Action not found');
 
+    const character = this.getCharacterFromFightForUserId(fight, userId);
+    if (!character) throw new BadRequestException('Character not found');
+
+    await this.processActionIntoAbility(fight, character, action, targetParams);
+  }
+
+  async processActionIntoAbility(
+    fight: Fight,
+    character: IFightCharacter,
+    action: ICombatAbility,
+    targetParams: ICombatTargetParams,
+  ): Promise<void> {
     switch (action.specialAction) {
       case 'Flee': {
         return this.flee(fight);
@@ -353,17 +441,38 @@ export class FightService {
 
       case 'Move': {
         if (!targetParams.tile) throw new BadRequestException('No target tile');
-        await this.move(fight, userId, targetParams.tile);
+
+        await this.move(fight, character, targetParams.tile);
         break;
       }
 
       default: {
-        // TODO: factor in targetInOrder
-        console.log('default action', action, targetParams);
+        await this.handleAbility(fight, character, action, targetParams);
       }
     }
 
     await this.setNextTurn(fight);
+  }
+
+  async handleAbility(
+    fight: Fight,
+    character: IFightCharacter,
+    action: ICombatAbility,
+    targetParams: ICombatTargetParams,
+  ): Promise<void> {
+    const { requiredJob, requiredLevel } = action;
+    if (character.job !== requiredJob)
+      throw new BadRequestException('Wrong job');
+    if (character.level < requiredLevel)
+      throw new BadRequestException('Not high enough level');
+    if (character.cooldowns[action.itemId])
+      throw new BadRequestException('Ability is on cooldown');
+
+    this.addAbilityElementsToFight(fight, action);
+    this.applyAbilityCooldown(character, action);
+
+    console.log('default action', action, targetParams);
+    // TODO: check targetInOrder
   }
 
   async aiTakeAction(fight: Fight, characterId: string): Promise<void> {
@@ -381,12 +490,9 @@ export class FightService {
 
   async move(
     fight: Fight,
-    userId: string,
+    character: IFightCharacter,
     newTileCoordinates: { x: number; y: number },
   ): Promise<void> {
-    const character = this.getCharacterFromFightForUserId(fight, userId);
-    if (!character) throw new BadRequestException('Character not found');
-
     const tile = this.getTileContainingCharacter(fight, character.characterId);
     if (!tile) throw new BadRequestException('Tile not found');
 

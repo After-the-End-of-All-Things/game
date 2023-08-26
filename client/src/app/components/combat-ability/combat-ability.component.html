@@ -1,4 +1,4 @@
-<ion-row>
+<ion-row [class.cooling-down]="cooldownRemaining > 0">
   <ion-col class="target-image">
     <div class="target-image-container">
       <ion-img
@@ -23,9 +23,13 @@
         CD {{ ability.cooldown }}
       </ion-badge>
 
-      <ion-badge class="ct" color="secondary" *ngIf="ability.castTime">
-        CT {{ ability.castTime }}
-      </ion-badge>
+      <span class="cooldown-timer" *ngIf="cooldownRemaining > 0">
+        <ion-badge color="warning" class="ion-align-items-center">
+          <ion-icon name="timer-outline"></ion-icon>
+
+          {{ cooldownRemaining }} turns
+        </ion-badge>
+      </span>
     </h3>
 
     <p>

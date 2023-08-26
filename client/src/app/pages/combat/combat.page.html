@@ -159,6 +159,7 @@
           <app-combat-ability
             [ability]="ability"
             [stats]="myCharacter.totalStats"
+            [cooldownRemaining]="myCharacter.cooldowns[ability.itemId]"
           ></app-combat-ability>
         </ion-item>
       </ion-list>

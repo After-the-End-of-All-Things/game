@@ -19,4 +19,8 @@ export class ElementIconComponent implements OnInit {
   ngOnInit() {
     this.countArray = Array(this.count);
   }
+
+  ngOnChanges() {
+    this.countArray = Array(this.count);
+  }
 }

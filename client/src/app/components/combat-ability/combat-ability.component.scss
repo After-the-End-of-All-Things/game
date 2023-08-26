@@ -21,4 +21,24 @@
   .ct, .cd {
     font-size: 12px;
   }
+
+  .cooldown-timer {
+    margin-left: auto;
+
+    ion-badge {
+      display: flex;
+      align-items: center;
+      font-size: 16px;
+    }
+
+    ion-icon {
+      margin-right: 5px;
+    }
+  }
+}
+
+.cooling-down {
+  font-style: italic;
+  opacity: 0.7;
+  cursor: not-allowed;
 }
