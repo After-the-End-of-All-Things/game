@@ -27,6 +27,7 @@ export interface ICombatAbility {
   castTime: number;
   targetting: ICombatAbilityTargetting;
   pattern: ICombatAbilityPattern;
+  restrictToUserSide: boolean;
   description: string;
   requiredJob: string;
   requiredLevel: number;
@@ -38,6 +39,8 @@ export interface ICombatAbility {
 
 export interface IFightTile {
   containedCharacters: string[];
+  x: number;
+  y: number;
 }
 
 export interface IFightCharacter {

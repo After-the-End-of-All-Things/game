@@ -15,7 +15,7 @@ import { InventoryService } from '@modules/inventory/inventory.service';
 import { Player } from '@modules/player/player.schema';
 import { PlayerService } from '@modules/player/player.service';
 import { UserService } from '@modules/user/user.service';
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { sample, sampleSize } from 'lodash';
 import { fromEvent } from 'rxjs';
@@ -49,7 +49,7 @@ export class FightService {
 
   public async removeFight(fightId: string) {
     const fight = await this.fights.findOne({ _id: new ObjectId(fightId) });
-    if (!fight) throw new Error('Fight not found');
+    if (!fight) throw new BadRequestException('Fight not found');
 
     return this.em.remove<Fight>(fight);
   }
@@ -58,12 +58,12 @@ export class FightService {
     player: Player,
   ): Promise<IFightCharacter> {
     const user = await this.userService.findUserById(player.userId);
-    if (!user) throw new Error('User not found');
+    if (!user) throw new BadRequestException('User not found');
 
     const inventory = await this.inventoryService.getInventoryForUser(
       player.userId,
     );
-    if (!inventory) throw new Error('Inventory not found');
+    if (!inventory) throw new BadRequestException('Inventory not found');
 
     const totalStats = await this.playerService.getTotalStats(player);
     const totalResistances = await this.playerService.getTotalResistances(
@@ -112,6 +112,8 @@ export class FightService {
   private getEmptyTile(): IFightTile {
     return {
       containedCharacters: [],
+      x: -1,
+      y: -1,
     };
   }
 
@@ -162,7 +164,7 @@ export class FightService {
       .filter(Boolean) as IFightCharacter[];
 
     if (playerCharacters.length === 0 || monsterCharacters.length === 0)
-      throw new Error('Invalid fight');
+      throw new BadRequestException('Invalid fight');
 
     const leftTiles = this.getEmptyTiles();
     const rightTiles = this.getEmptyTiles();
@@ -173,6 +175,13 @@ export class FightService {
       [...leftTiles[2], ...rightTiles[2]],
       [...leftTiles[3], ...rightTiles[3]],
     ];
+
+    joinedTiles.forEach((row, y) => {
+      row.forEach((tile, x) => {
+        tile.x = x;
+        tile.y = y;
+      });
+    });
 
     const startPlayerTile = sample(leftTiles.flat()) as IFightTile;
     startPlayerTile.containedCharacters = [playerCharacters[0].characterId];
@@ -203,17 +212,70 @@ export class FightService {
     return fight;
   }
 
+  getTileAtPosition(fight: Fight, x: number, y: number): IFightTile {
+    return fight.tiles[y][x];
+  }
+
+  getTileContainingCharacter(fight: Fight, characterId: string): IFightTile {
+    const tiles = fight.tiles.flat();
+    const tile = tiles.find((t) => t.containedCharacters.includes(characterId));
+    if (!tile) throw new BadRequestException('Tile not found');
+
+    return tile;
+  }
+
+  getCharacterFromFightForUserId(
+    fight: Fight,
+    userId: string,
+  ): IFightCharacter | undefined {
+    const allCharacters = [...fight.attackers, ...fight.defenders];
+    return allCharacters.find((c) => c.userId === userId);
+  }
+
+  isActiveTurn(fight: Fight, userId: string) {
+    const myCharacter = this.getCharacterFromFightForUserId(fight, userId);
+    if (!myCharacter) throw new BadRequestException('Character not found');
+
+    return fight.currentTurn === myCharacter.characterId;
+  }
+
+  moveCharacterBetweenTiles(
+    characterId: string,
+    startTile: IFightTile,
+    endTile: IFightTile,
+  ): void {
+    startTile.containedCharacters = startTile.containedCharacters.filter(
+      (char) => char !== characterId,
+    );
+    endTile.containedCharacters = [...endTile.containedCharacters, characterId];
+  }
+
+  distBetweenTiles(tileA: IFightTile, tileB: IFightTile): number {
+    return Math.abs(tileA.x - tileB.x) + Math.abs(tileA.y - tileB.y);
+  }
+
   async takeAction(
     userId: string,
     actionId: string,
     targetParams: ICombatTargetParams,
   ): Promise<void> {
+    const fight = await this.getFightForUser(userId);
+    if (!fight) throw new BadRequestException('Fight not found');
+
+    if (!this.isActiveTurn(fight, userId))
+      throw new BadRequestException('Not your turn');
+
     const action = this.contentService.getAbility(actionId);
-    if (!action) throw new Error('Action not found');
+    if (!action) throw new BadRequestException('Action not found');
 
     switch (action.specialAction) {
       case 'Flee': {
-        return this.flee(userId);
+        return this.flee(fight);
+      }
+
+      case 'Move': {
+        if (!targetParams.tile) throw new BadRequestException('No target tile');
+        return this.move(fight, userId, targetParams.tile);
       }
 
       default: {
@@ -222,16 +284,47 @@ export class FightService {
     }
   }
 
-  async flee(userId: string): Promise<void> {
-    const fight = await this.getFightForUser(userId);
-    if (!fight) throw new Error('Fight not found');
+  async move(
+    fight: Fight,
+    userId: string,
+    newTileCoordinates: { x: number; y: number },
+  ): Promise<void> {
+    const character = this.getCharacterFromFightForUserId(fight, userId);
+    if (!character) throw new BadRequestException('Character not found');
 
+    const tile = this.getTileContainingCharacter(fight, character.characterId);
+    if (!tile) throw new BadRequestException('Tile not found');
+
+    const newTile = this.getTileAtPosition(
+      fight,
+      newTileCoordinates.x,
+      newTileCoordinates.y,
+    );
+    if (!newTile) throw new BadRequestException('New tile not found');
+
+    const dist = await this.distBetweenTiles(tile, newTile);
+    if (dist > 1) throw new BadRequestException('Too far away');
+
+    const side = newTileCoordinates.x < 4 ? 'left' : 'right';
+    const targetAffiliation = fight.attackers.includes(character)
+      ? 'left'
+      : 'right';
+
+    if (side !== targetAffiliation)
+      throw new BadRequestException('Cannot move to enemy side');
+
+    this.moveCharacterBetweenTiles(character.characterId, tile, newTile);
+
+    await this.saveAndUpdateFight(fight);
+  }
+
+  async flee(fight: Fight): Promise<void> {
     await this.removeFight(fight._id.toHexString());
 
     await Promise.all(
       fight.involvedPlayers.map(async (playerId) => {
         const player = await this.playerService.getPlayerForUser(playerId);
-        if (!player) throw new Error('Player not found');
+        if (!player) throw new BadRequestException('Player not found');
 
         this.playerService.setPlayerAction(player, undefined);
 
@@ -246,8 +339,32 @@ export class FightService {
             },
           ],
         });
+      }),
+    );
 
-        await this.em.flush();
+    await this.em.flush();
+  }
+
+  async saveAndUpdateFight(fight: Fight): Promise<void> {
+    await this.saveFight(fight);
+    await this.updateFightForAllPlayers(fight);
+  }
+
+  async saveFight(fight: Fight): Promise<void> {
+    await this.em.nativeUpdate(Fight, { _id: new ObjectId(fight.id) }, fight);
+    await this.em.flush();
+  }
+
+  async updateFightForAllPlayers(fight: Fight): Promise<void> {
+    await Promise.all(
+      fight.involvedPlayers.map(async (playerId) => {
+        const player = await this.playerService.getPlayerForUser(playerId);
+        if (!player) throw new BadRequestException('Player not found');
+
+        this.emit(playerId, {
+          fight,
+          player,
+        });
       }),
     );
   }

@@ -205,13 +205,15 @@ export class CombatPage implements OnInit {
     }
   }
 
-  drawPatternAroundCenter(
-    x: number,
-    y: number,
-    pattern: ICombatAbilityPattern,
-  ) {
-    const patternTiles = this.choosePatternAroundCenter(x, y, pattern);
+  drawPatternAroundCenter(x: number, y: number, ability: ICombatAbility) {
+    const patternTiles = this.choosePatternAroundCenter(x, y, ability.pattern);
     this.staticSelectedTiles = { ...this.staticSelectedTiles, ...patternTiles };
+
+    if (ability.restrictToUserSide) {
+      for (let x = 4; x < 8; x++)
+        for (let y = 0; y < 4; y++)
+          delete this.staticSelectedTiles[`${x}-${y}`];
+    }
   }
 
   chooseSelectedTiles(ability: ICombatAbility) {
@@ -220,7 +222,7 @@ export class CombatPage implements OnInit {
         const center = this.findTileWithCharacter(this.myCharacterId);
         if (!center) return;
 
-        this.drawPatternAroundCenter(center[0], center[1], ability.pattern);
+        this.drawPatternAroundCenter(center[0], center[1], ability);
         return;
       }
 
@@ -229,7 +231,7 @@ export class CombatPage implements OnInit {
           const center = this.findTileWithCharacter(defender.characterId);
           if (!center) return;
 
-          this.drawPatternAroundCenter(center[0], center[1], ability.pattern);
+          this.drawPatternAroundCenter(center[0], center[1], ability);
         });
         return;
       }
@@ -241,11 +243,7 @@ export class CombatPage implements OnInit {
       return;
 
     this.resetSelectedTiles();
-    this.drawPatternAroundCenter(
-      hoverTileX,
-      hoverTileY,
-      this.selectedAbility.pattern,
-    );
+    this.drawPatternAroundCenter(hoverTileX, hoverTileY, this.selectedAbility);
   }
 
   resetAbilityAndSelection() {
@@ -273,9 +271,9 @@ export class CombatPage implements OnInit {
 
     if (this.isTileActive(x, y)) {
       const targetArgs =
-        this.selectedAbility.targetting === 'Ground'
-          ? { tile: { x, y } }
-          : { characterId: tile.containedCharacters[0] };
+        this.selectedAbility.targetting === 'Creature'
+          ? { characterIds: tile.containedCharacters }
+          : { tile: { x, y } };
 
       this.fightService
         .takeAction(this.selectedAbility.itemId, targetArgs)
