@@ -9,3 +9,16 @@
     border-color: #000;
   }
 }
+
+.title {
+  display: flex;
+  align-items: center;
+
+  .name, app-element-icon, .ct, .cd {
+    margin-right: 5px;
+  }
+
+  .ct, .cd {
+    font-size: 12px;
+  }
+}

@@ -54,8 +54,9 @@ export interface IFightCharacter {
   job: string;
   health: { current: number; max: number };
   baseStats: Record<Stat, number>;
-  modifiedStats: Record<Stat, number>;
-  resistances: Record<Element, number>;
+  totalStats: Record<Stat, number>;
+  baseResistances: Record<Element, number>;
+  totalResistances: Record<Element, number>;
   cooldowns: Record<string, number>;
   equipment: Partial<Record<ItemSlot, IEquipment>>;
 }

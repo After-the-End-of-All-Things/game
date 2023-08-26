@@ -155,7 +155,10 @@
           *ngFor="let ability of getAbilities()"
           (click)="selectAbility(ability)"
         >
-          <app-combat-ability [ability]="ability"></app-combat-ability>
+          <app-combat-ability
+            [ability]="ability"
+            [stats]="myCharacter.totalStats"
+          ></app-combat-ability>
         </ion-item>
       </ion-list>
     </ion-content>

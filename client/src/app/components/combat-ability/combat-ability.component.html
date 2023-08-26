@@ -8,14 +8,24 @@
   </ion-col>
 
   <ion-col>
-    <h3>
-      {{ ability.name }}
+    <h3 class="title">
+      <span class="name">
+        {{ ability.name }}
+      </span>
 
       <app-element-icon
         *ngFor="let element of ability.generatedElements"
         [element]="element"
         [inline]="true"
       ></app-element-icon>
+
+      <ion-badge class="cd" color="secondary" *ngIf="ability.cooldown">
+        CD {{ ability.cooldown }}
+      </ion-badge>
+
+      <ion-badge class="ct" color="secondary" *ngIf="ability.castTime">
+        CT {{ ability.castTime }}
+      </ion-badge>
     </h3>
 
     <p>

@@ -1,10 +1,11 @@
-import { zeroStats } from '@helpers/stats';
 import {
+  ICombatAbility,
   ICombatTargetParams,
   IFightCharacter,
   IFightTile,
   IMonster,
   IMonsterFormation,
+  Stat,
   UserResponse,
 } from '@interfaces';
 import { EntityManager, EntityRepository, ObjectId } from '@mikro-orm/mongodb';
@@ -79,8 +80,9 @@ export class FightService {
       job: player.job,
       health: { current: totalStats.health, max: totalStats.health },
       baseStats: totalStats,
-      modifiedStats: zeroStats(),
-      resistances: totalResistances,
+      totalStats,
+      baseResistances: totalResistances,
+      totalResistances,
       equipment: inventory.equippedItems,
       cooldowns: {},
     };
@@ -102,8 +104,9 @@ export class FightService {
         max: monster.statBoosts.health,
       },
       baseStats: monster.statBoosts,
-      modifiedStats: zeroStats(),
-      resistances: monster.resistances,
+      totalStats: monster.statBoosts,
+      baseResistances: monster.resistances,
+      totalResistances: monster.resistances,
       equipment: {},
       cooldowns: {},
     };
@@ -210,6 +213,18 @@ export class FightService {
     await this.em.flush();
 
     return fight;
+  }
+
+  calculateAbilityDamage(ability: ICombatAbility, character: IFightCharacter) {
+    return Math.floor(
+      Object.keys(ability.statScaling)
+        .map(
+          (stat) =>
+            (ability.statScaling?.[stat as Stat] ?? 0) *
+            character.totalStats[stat as Stat],
+        )
+        .reduce((a, b) => a + b, 0),
+    );
   }
 
   getTileAtPosition(fight: Fight, x: number, y: number): IFightTile {

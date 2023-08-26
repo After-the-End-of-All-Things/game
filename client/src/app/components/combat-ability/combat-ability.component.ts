@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ICombatAbility } from '@interfaces';
+import { ICombatAbility, Stat } from '@interfaces';
 
 @Component({
   selector: 'app-combat-ability',
@@ -8,6 +8,7 @@ import { ICombatAbility } from '@interfaces';
 })
 export class CombatAbilityComponent implements OnInit {
   @Input() ability!: ICombatAbility;
+  @Input() stats!: Record<Stat, number>;
 
   public get imageName() {
     const pattern = this.ability.pattern.toLowerCase();
@@ -21,8 +22,15 @@ export class CombatAbilityComponent implements OnInit {
 
   ngOnInit() {}
 
-  // TODO: ability damage
-  abilityDamage() {
-    return 0;
+  abilityDamage(): number {
+    return Math.floor(
+      Object.keys(this.ability.statScaling)
+        .map(
+          (stat) =>
+            (this.ability.statScaling?.[stat as Stat] ?? 0) *
+            this.stats[stat as Stat],
+        )
+        .reduce((a, b) => a + b, 0),
+    );
   }
 }
