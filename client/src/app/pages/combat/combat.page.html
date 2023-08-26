@@ -123,7 +123,14 @@
   </ion-card>
 
   <ion-card *ngIf="selectedAbility">
-    <ion-card-content>{{ selectedAbility | json }}</ion-card-content>
+    <ion-card-content>
+      <strong>{{ selectedAbility.name }}</strong>
+      : {{ selectedAbility.description }}
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card *ngIf="fight.statusMessage">
+    <ion-card-content>{{ fight.statusMessage }}</ion-card-content>
   </ion-card>
 </ion-content>
 

@@ -27,6 +27,7 @@ export interface ICombatAbility {
   castTime: number;
   targetting: ICombatAbilityTargetting;
   pattern: ICombatAbilityPattern;
+  targetInOrder: boolean;
   restrictToUserSide: boolean;
   description: string;
   requiredJob: string;
@@ -63,11 +64,12 @@ export interface IFight {
   id: string;
   involvedPlayers: string[];
   turnOrder: string[];
+  currentTurn: string;
   attackers: IFightCharacter[];
   defenders: IFightCharacter[];
   tiles: IFightTile[][];
-  currentTurn: string;
   generatedElements: Partial<Record<Element, number>>;
+  statusMessage: string;
 }
 
 export interface IFightStore {

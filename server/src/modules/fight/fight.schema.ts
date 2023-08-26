@@ -36,6 +36,9 @@ export class Fight implements IFight {
   @Property()
   generatedElements: Partial<Record<string, number>>;
 
+  @Property()
+  statusMessage: string;
+
   constructor(
     involvedPlayers: string[],
     turnOrder: string[],
@@ -50,5 +53,6 @@ export class Fight implements IFight {
     this.tiles = tiles;
     this.currentTurn = attackers[0].characterId;
     this.generatedElements = {};
+    this.statusMessage = '';
   }
 }

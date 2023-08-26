@@ -279,6 +279,7 @@ export class FightService {
       }
 
       default: {
+        // TODO: factor in targetInOrder
         console.log('default action', action, targetParams);
       }
     }

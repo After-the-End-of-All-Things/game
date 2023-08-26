@@ -227,6 +227,25 @@ export class CombatPage implements OnInit {
       }
 
       case 'Creature': {
+        const shouldTargetOnlyFirstColumn = ability.targetInOrder;
+
+        if (shouldTargetOnlyFirstColumn) {
+          let hasFoundAnyone = false;
+
+          for (let x = 4; x < 8; x++) {
+            if (hasFoundAnyone) break;
+
+            for (let y = 0; y < 4; y++) {
+              const tile = this.fight.tiles[y][x];
+              if (tile.containedCharacters.length === 0) continue;
+
+              hasFoundAnyone = true;
+              this.drawPatternAroundCenter(x, y, ability);
+            }
+          }
+          return;
+        }
+
         this.defenders.forEach((defender) => {
           const center = this.findTileWithCharacter(defender.characterId);
           if (!center) return;
