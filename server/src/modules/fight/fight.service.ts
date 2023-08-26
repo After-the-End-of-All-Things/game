@@ -270,7 +270,50 @@ export class FightService {
     return Math.abs(tileA.x - tileB.x) + Math.abs(tileA.y - tileB.y);
   }
 
+  isFightOver(fight: Fight): boolean {
+    return (
+      fight.attackers.every((attacker) => attacker.health.current <= 0) ||
+      fight.defenders.every((defender) => defender.health.current <= 0)
+    );
+  }
+
+  didAttackersWinFight(fight: Fight): boolean {
+    return fight.defenders.every((defender) => defender.health.current <= 0);
+  }
+
+  async endFight(fight: Fight): Promise<void> {
+    await this.removeFight(fight._id.toHexString());
+
+    await Promise.all(
+      fight.involvedPlayers.map(async (playerId) => {
+        const player = await this.playerService.getPlayerForUser(playerId);
+        if (!player) throw new BadRequestException('Player not found');
+
+        this.playerService.setPlayerAction(player, undefined);
+
+        this.emit(playerId, {
+          fight: null,
+          player,
+          actions: [
+            {
+              type: 'Notify',
+              messageType: 'success',
+              message: `You fled from combat!`,
+            },
+          ],
+        });
+      }),
+    );
+
+    await this.em.flush();
+  }
+
   async setNextTurn(fight: Fight): Promise<void> {
+    if (this.isFightOver(fight)) {
+      await this.endFight(fight);
+      return;
+    }
+
     const currentTurnIndex = fight.turnOrder.findIndex(
       (turn) => turn === fight.currentTurn,
     );
@@ -370,30 +413,7 @@ export class FightService {
   }
 
   async flee(fight: Fight): Promise<void> {
-    await this.removeFight(fight._id.toHexString());
-
-    await Promise.all(
-      fight.involvedPlayers.map(async (playerId) => {
-        const player = await this.playerService.getPlayerForUser(playerId);
-        if (!player) throw new BadRequestException('Player not found');
-
-        this.playerService.setPlayerAction(player, undefined);
-
-        this.emit(playerId, {
-          fight: null,
-          player,
-          actions: [
-            {
-              type: 'Notify',
-              messageType: 'success',
-              message: `You fled from combat!`,
-            },
-          ],
-        });
-      }),
-    );
-
-    await this.em.flush();
+    await this.endFight(fight);
   }
 
   async saveAndUpdateFight(fight: Fight): Promise<void> {
