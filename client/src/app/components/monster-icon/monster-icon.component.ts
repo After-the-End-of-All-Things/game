@@ -9,6 +9,7 @@ import { IMonster } from '@interfaces';
 export class MonsterIconComponent implements OnInit {
   @Input({ required: true }) monster!: IMonster;
   @Input() size: 'xsmall' | 'small' | 'normal' = 'normal';
+  @Input() active = false;
 
   @HostBinding('class') get sizeClass() {
     return this.size;

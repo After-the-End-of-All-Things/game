@@ -26,6 +26,7 @@ export class IconComponent implements OnInit, OnChanges {
   @Input({ required: true }) spritesheet!: string;
   @Input({ required: true }) sprite!: number;
   @Input() size: 'xsmall' | 'small' | 'normal' = 'normal';
+  @Input() active = false;
 
   @HostBinding('class') get sizeClass() {
     return this.size;

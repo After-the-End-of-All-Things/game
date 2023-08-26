@@ -1,3 +1,4 @@
+import { delayTime } from '@helpers/promise';
 import {
   ICombatAbility,
   ICombatTargetParams,
@@ -269,6 +270,23 @@ export class FightService {
     return Math.abs(tileA.x - tileB.x) + Math.abs(tileA.y - tileB.y);
   }
 
+  async setNextTurn(fight: Fight): Promise<void> {
+    const currentTurnIndex = fight.turnOrder.findIndex(
+      (turn) => turn === fight.currentTurn,
+    );
+    const nextTurnIndex = (currentTurnIndex + 1) % fight.turnOrder.length;
+
+    fight.currentTurn = fight.turnOrder[nextTurnIndex];
+    fight.statusMessage = '';
+    await this.saveAndUpdateFight(fight);
+
+    if (
+      fight.defenders.find((char) => char.characterId === fight.currentTurn)
+    ) {
+      await this.aiTakeAction(fight, fight.currentTurn);
+    }
+  }
+
   async takeAction(
     userId: string,
     actionId: string,
@@ -285,12 +303,14 @@ export class FightService {
 
     switch (action.specialAction) {
       case 'Flee': {
-        return this.flee(fight);
+        await this.flee(fight);
+        break;
       }
 
       case 'Move': {
         if (!targetParams.tile) throw new BadRequestException('No target tile');
-        return this.move(fight, userId, targetParams.tile);
+        await this.move(fight, userId, targetParams.tile);
+        break;
       }
 
       default: {
@@ -298,6 +318,21 @@ export class FightService {
         console.log('default action', action, targetParams);
       }
     }
+
+    await this.setNextTurn(fight);
+  }
+
+  async aiTakeAction(fight: Fight, characterId: string): Promise<void> {
+    const characterRef = fight.defenders.find(
+      (char) => char.characterId === characterId,
+    );
+    if (!characterRef) return this.setNextTurn(fight);
+
+    fight.statusMessage = `${characterRef.name} is thinking...`;
+
+    await this.saveAndUpdateFight(fight);
+    await delayTime(1000);
+    await this.setNextTurn(fight);
   }
 
   async move(
