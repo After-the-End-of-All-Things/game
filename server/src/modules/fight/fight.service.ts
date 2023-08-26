@@ -401,9 +401,12 @@ export class FightService {
     fight.statusMessage = '';
     await this.saveAndUpdateFight(fight);
 
-    if (
-      fight.defenders.find((char) => char.characterId === fight.currentTurn)
-    ) {
+    const nextCharacter = this.getCharacterFromFightForCharacterId(
+      fight,
+      fight.currentTurn,
+    );
+
+    if (nextCharacter.monsterId) {
       await this.aiTakeAction(fight, fight.currentTurn);
     }
   }
