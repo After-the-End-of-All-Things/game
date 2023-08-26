@@ -216,16 +216,18 @@ export class FightService {
     return fight;
   }
 
-  calculateAbilityDamage(ability: ICombatAbility, character: IFightCharacter) {
-    return Math.floor(
-      Object.keys(ability.statScaling)
-        .map(
-          (stat) =>
-            (ability.statScaling?.[stat as Stat] ?? 0) *
-            character.totalStats[stat as Stat],
-        )
-        .reduce((a, b) => a + b, 0),
-    );
+  calculateAbilityDamage(
+    ability: ICombatAbility,
+    character: IFightCharacter,
+  ): number {
+    return +Object.keys(ability.statScaling)
+      .map(
+        (stat) =>
+          (ability.statScaling?.[stat as Stat] ?? 0) *
+          character.totalStats[stat as Stat],
+      )
+      .reduce((a, b) => a + b, 0)
+      .toFixed(1);
   }
 
   getTileAtPosition(fight: Fight, x: number, y: number): IFightTile {
@@ -346,8 +348,7 @@ export class FightService {
 
     switch (action.specialAction) {
       case 'Flee': {
-        await this.flee(fight);
-        break;
+        return this.flee(fight);
       }
 
       case 'Move': {

@@ -83,7 +83,7 @@ export class CombatPage implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(([user, player, fight]) => {
         if (!fight) {
-          this.store.dispatch(new ChangePage('home'));
+          this.store.dispatch(new ChangePage('explore'));
           return;
         }
 

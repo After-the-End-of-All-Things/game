@@ -23,14 +23,13 @@ export class CombatAbilityComponent implements OnInit {
   ngOnInit() {}
 
   abilityDamage(): number {
-    return Math.floor(
-      Object.keys(this.ability.statScaling)
-        .map(
-          (stat) =>
-            (this.ability.statScaling?.[stat as Stat] ?? 0) *
-            this.stats[stat as Stat],
-        )
-        .reduce((a, b) => a + b, 0),
-    );
+    return +Object.keys(this.ability.statScaling)
+      .map(
+        (stat) =>
+          (this.ability.statScaling?.[stat as Stat] ?? 0) *
+          this.stats[stat as Stat],
+      )
+      .reduce((a, b) => a + b, 0)
+      .toFixed(1);
   }
 }
