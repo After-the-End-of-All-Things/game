@@ -16,7 +16,7 @@ export interface ICombatTargetParams {
     y: number;
   };
 
-  targetId?: string;
+  characterIds?: string[];
 }
 
 export interface ICombatAbility {
@@ -31,8 +31,8 @@ export interface ICombatAbility {
   description: string;
   requiredJob: string;
   requiredLevel: number;
-  elements: Element[];
   specialAction?: string;
+  elements: Element[];
   generatedElements: Element[];
   statScaling: Partial<Record<Stat, number>>;
 }

@@ -239,7 +239,11 @@ export class CombatPage implements OnInit {
 
             for (let y = 0; y < 4; y++) {
               const tile = this.fight.tiles[y][x];
-              if (tile.containedCharacters.length === 0) continue;
+              const areContainedDead = tile.containedCharacters.every(
+                (c) => this.fightCharacters[c].health.current <= 0,
+              );
+              if (areContainedDead || tile.containedCharacters.length === 0)
+                continue;
 
               hasFoundAnyone = true;
               this.drawPatternAroundCenter(x, y, ability);
@@ -249,6 +253,8 @@ export class CombatPage implements OnInit {
         }
 
         this.defenders.forEach((defender) => {
+          if (defender.health.current <= 0) return;
+
           const center = this.findTileWithCharacter(defender.characterId);
           if (!center) return;
 

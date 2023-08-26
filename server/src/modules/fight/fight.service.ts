@@ -2,6 +2,7 @@ import { delayTime } from '@helpers/promise';
 import {
   Element,
   ICombatAbility,
+  ICombatAbilityPattern,
   ICombatTargetParams,
   IFightCharacter,
   IFightTile,
@@ -300,13 +301,13 @@ export class FightService {
 
   isFightOver(fight: Fight): boolean {
     return (
-      fight.attackers.every((attacker) => attacker.health.current <= 0) ||
-      fight.defenders.every((defender) => defender.health.current <= 0)
+      fight.attackers.every((attacker) => this.isDead(attacker)) ||
+      fight.defenders.every((defender) => this.isDead(defender))
     );
   }
 
   didAttackersWinFight(fight: Fight): boolean {
-    return fight.defenders.every((defender) => defender.health.current <= 0);
+    return fight.defenders.every((defender) => this.isDead(defender));
   }
 
   addAbilityElementsToFight(fight: Fight, ability: ICombatAbility): void {
@@ -350,6 +351,154 @@ export class FightService {
         (character.cooldowns[key] ?? 0) - 1,
       );
     });
+  }
+
+  isDead(character: IFightCharacter): boolean {
+    return character.health.current <= 0;
+  }
+
+  getTargettedTilesForPattern(
+    x: number,
+    y: number,
+    pattern: ICombatAbilityPattern,
+  ): Record<string, boolean> {
+    const staticSelectedTiles: Record<string, boolean> = {};
+
+    switch (pattern) {
+      case 'Single': {
+        staticSelectedTiles[`${x}-${y}`] = true;
+        return staticSelectedTiles;
+      }
+
+      case 'Cross': {
+        staticSelectedTiles[`${x}-${y}`] = true;
+        staticSelectedTiles[`${x - 1}-${y}`] = true;
+        staticSelectedTiles[`${x + 1}-${y}`] = true;
+        staticSelectedTiles[`${x}-${y - 1}`] = true;
+        staticSelectedTiles[`${x}-${y + 1}`] = true;
+        return staticSelectedTiles;
+      }
+
+      case 'CrossNoCenter': {
+        staticSelectedTiles[`${x - 1}-${y}`] = true;
+        staticSelectedTiles[`${x + 1}-${y}`] = true;
+        staticSelectedTiles[`${x}-${y - 1}`] = true;
+        staticSelectedTiles[`${x}-${y + 1}`] = true;
+        return staticSelectedTiles;
+      }
+
+      case 'ThreeVertical': {
+        staticSelectedTiles[`${x}-${y}`] = true;
+        staticSelectedTiles[`${x}-${y - 1}`] = true;
+        staticSelectedTiles[`${x}-${y + 1}`] = true;
+        return staticSelectedTiles;
+      }
+
+      case 'TwoHorizontal': {
+        staticSelectedTiles[`${x}-${y}`] = true;
+        staticSelectedTiles[`${x + 1}-${y}`] = true;
+        return staticSelectedTiles;
+      }
+
+      default:
+        return pattern satisfies never;
+    }
+  }
+
+  isValidTarget(
+    fight: Fight,
+    attacker: IFightCharacter,
+    action: ICombatAbility,
+    targetParams: ICombatTargetParams,
+  ): boolean {
+    const { targetting, pattern, targetInOrder } = action;
+
+    const { tile, characterIds } = targetParams;
+    if (!tile && !characterIds) return false;
+
+    // easy checks
+    if (tile && targetting !== 'Ground') return false;
+    if (characterIds && targetting === 'Ground') return false;
+
+    const ids = characterIds ?? [];
+
+    // if everyone in the target id list is dead, it's invalid
+    if (
+      ids.length > 0 &&
+      ids.every((id) =>
+        this.isDead(this.getCharacterFromFightForCharacterId(fight, id)),
+      )
+    ) {
+      return false;
+    }
+
+    const attackerSide = fight.attackers.includes(attacker)
+      ? 'attacker'
+      : 'defender';
+
+    // if we have to target in order, make sure we're targetting the first possible thing
+    if (targetInOrder && ids.length === 1) {
+      const attackersInOrder = [3, 2, 1, 0].map((x) => {
+        return [0, 1, 2, 3]
+          .map((y) => fight.tiles[y][x].containedCharacters)
+          .flat();
+      });
+
+      const defendersInOrder = [4, 5, 6, 7].map((x) =>
+        [0, 1, 2, 3].map((y) => fight.tiles[y][x].containedCharacters).flat(),
+      );
+
+      const checkArray =
+        attackerSide === 'attacker' ? defendersInOrder : attackersInOrder;
+
+      let isCorrect = false;
+      let cancelEarly = false;
+      checkArray.forEach((closenessArr) => {
+        if (cancelEarly || closenessArr.length === 0) return;
+        cancelEarly = true;
+
+        if (closenessArr.includes(ids[0])) {
+          isCorrect = true;
+        }
+      });
+
+      if (!isCorrect) return false;
+    }
+
+    // make sure if we have a pattern, we're hitting at least one alive creature
+    if (pattern && tile) {
+      const tiles = this.getTargettedTilesForPattern(tile.x, tile.y, pattern);
+      const allTargettedCharacters: IFightCharacter[] = [];
+
+      for (let x = 0; x < 8; x++) {
+        for (let y = 0; y < 4; y++) {
+          if (!tiles[`${x}-${y}`]) continue;
+
+          allTargettedCharacters.push(
+            ...fight.tiles[y][x].containedCharacters.map((id) =>
+              this.getCharacterFromFightForCharacterId(fight, id),
+            ),
+          );
+        }
+      }
+
+      if (
+        allTargettedCharacters.length === 0 ||
+        allTargettedCharacters.every((c) => this.isDead(c))
+      )
+        return false;
+    }
+
+    return true;
+  }
+
+  getTargetsForAbility(
+    fight: Fight,
+    action: ICombatAbility,
+    targetParams: ICombatTargetParams,
+  ): IFightCharacter[] {
+    // TODO: check if they're alive
+    return [];
   }
 
   async endFight(fight: Fight): Promise<void> {
@@ -406,6 +555,10 @@ export class FightService {
       fight.currentTurn,
     );
 
+    if (this.isDead(nextCharacter)) {
+      return this.setNextTurn(fight);
+    }
+
     if (nextCharacter.monsterId) {
       await this.aiTakeAction(fight, fight.currentTurn);
     }
@@ -451,6 +604,7 @@ export class FightService {
 
       default: {
         await this.handleAbility(fight, character, action, targetParams);
+        break;
       }
     }
 
@@ -464,18 +618,20 @@ export class FightService {
     targetParams: ICombatTargetParams,
   ): Promise<void> {
     const { requiredJob, requiredLevel } = action;
-    if (character.job !== requiredJob)
+    if (requiredJob && character.job !== requiredJob)
       throw new BadRequestException('Wrong job');
-    if (character.level < requiredLevel)
+    if (requiredLevel && character.level < requiredLevel)
       throw new BadRequestException('Not high enough level');
     if (character.cooldowns[action.itemId])
       throw new BadRequestException('Ability is on cooldown');
+    if (!this.isValidTarget(fight, character, action, targetParams)) {
+      throw new BadRequestException('Invalid target');
+    }
 
     this.addAbilityElementsToFight(fight, action);
     this.applyAbilityCooldown(character, action);
 
     console.log('default action', action, targetParams);
-    // TODO: check targetInOrder
   }
 
   async aiTakeAction(fight: Fight, characterId: string): Promise<void> {
@@ -485,6 +641,9 @@ export class FightService {
     if (!characterRef) return this.setNextTurn(fight);
 
     fight.statusMessage = `${characterRef.name} is thinking...`;
+
+    // TODO: real status message
+    // TODO: need to be aware of the side AI is on when making choices
 
     await this.saveAndUpdateFight(fight);
     await delayTime(1000);
