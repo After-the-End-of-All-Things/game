@@ -244,12 +244,27 @@ export function isValidTarget(
   if (targetInOrder && ids.length === 1) {
     const attackersInOrder = [3, 2, 1, 0].map((x) => {
       return [0, 1, 2, 3]
-        .map((y) => fight.tiles[y][x].containedCharacters)
+        .map((y) =>
+          fight.tiles[y][x].containedCharacters.filter((id) => {
+            const char = getCharacterFromFightForCharacterId(fight, id);
+            if (!char) return false;
+            return !isDead(char);
+          }),
+        )
         .flat();
     });
 
     const defendersInOrder = [4, 5, 6, 7].map((x) =>
-      [0, 1, 2, 3].map((y) => fight.tiles[y][x].containedCharacters).flat(),
+      [0, 1, 2, 3]
+        .map((y) =>
+          fight.tiles[y][x].containedCharacters.filter((id) => {
+            const char = getCharacterFromFightForCharacterId(fight, id);
+            if (!char) return false;
+            return !isDead(char);
+          }),
+        )
+        .filter(Boolean)
+        .flat(),
     );
 
     const checkArray =
@@ -298,6 +313,30 @@ export function isValidTarget(
 
 export function didAttackersWinFight(fight: Fight): boolean {
   return fight.defenders.every((defender) => isDead(defender));
+}
+
+// status message functions
+export function setStatusMessage(
+  fight: Fight,
+  context: string,
+  message: string,
+): void {
+  fight.statusMessage = [{ message, context, timestamp: Date.now() }];
+}
+
+export function addStatusMessage(
+  fight: Fight,
+  context: string,
+  message: string,
+): void {
+  fight.statusMessage = [
+    ...fight.statusMessage,
+    { message, context, timestamp: Date.now() },
+  ];
+}
+
+export function clearStatusMessage(fight: Fight): void {
+  fight.statusMessage = [];
 }
 
 // action functions
@@ -364,4 +403,20 @@ export function doDamageToTargetForAbility(
   damage: number,
 ): void {
   defender.health.current = Math.max(0, defender.health.current - damage);
+
+  addStatusMessage(
+    fight,
+    attacker.name,
+    `${attacker.name} dealt ${damage.toLocaleString()} damage to ${
+      defender.name
+    }!`,
+  );
+
+  if (isDead(defender)) {
+    addStatusMessage(
+      fight,
+      '<Death>',
+      `${defender.name} was slain by ${attacker.name}!`,
+    );
+  }
 }

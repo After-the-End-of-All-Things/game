@@ -13,8 +13,10 @@ import { InjectRepository } from '@mikro-orm/nestjs';
 import { ContentService } from '@modules/content/content.service';
 import {
   addAbilityElementsToFight,
+  addStatusMessage,
   applyAbilityCooldown,
   calculateAbilityDamageWithElements,
+  clearStatusMessage,
   distBetweenTiles,
   doDamageToTargetForAbility,
   getCharacterFromFightForCharacterId,
@@ -254,8 +256,31 @@ export class FightService {
     await this.em.flush();
   }
 
+  async handleFightRewards(fight: Fight): Promise<void> {}
+
+  async takeNextTurn(fight: Fight): Promise<void> {
+    const nextCharacter = getCharacterFromFightForCharacterId(
+      fight,
+      fight.currentTurn,
+    );
+
+    if (!nextCharacter) throw new BadRequestException('Character not found');
+
+    if (isDead(nextCharacter)) {
+      await this.setNextTurn(fight);
+      await this.takeNextTurn(fight);
+      return;
+    }
+
+    if (nextCharacter.monsterId) {
+      await this.aiTakeAction(fight, fight.currentTurn);
+    }
+  }
+
   async setNextTurn(fight: Fight): Promise<void> {
     if (isFightOver(fight)) {
+      await this.handleFightRewards(fight);
+      await delayTime(3000);
       await this.endFight(fight);
       return;
     }
@@ -264,6 +289,11 @@ export class FightService {
       (turn) => turn === fight.currentTurn,
     );
     const nextTurnIndex = (currentTurnIndex + 1) % fight.turnOrder.length;
+
+    if (nextTurnIndex === 0) {
+      await delayTime(3000);
+      clearStatusMessage(fight);
+    }
 
     const currentCharacter = getCharacterFromFightForCharacterId(
       fight,
@@ -275,23 +305,7 @@ export class FightService {
     reduceAllCooldownsForCharacter(currentCharacter);
 
     fight.currentTurn = fight.turnOrder[nextTurnIndex];
-    fight.statusMessage = '';
     await this.saveAndUpdateFight(fight);
-
-    const nextCharacter = getCharacterFromFightForCharacterId(
-      fight,
-      fight.currentTurn,
-    );
-
-    if (!nextCharacter) throw new BadRequestException('Character not found');
-
-    if (isDead(nextCharacter)) {
-      return this.setNextTurn(fight);
-    }
-
-    if (nextCharacter.monsterId) {
-      await this.aiTakeAction(fight, fight.currentTurn);
-    }
   }
 
   async takeAction(
@@ -312,6 +326,8 @@ export class FightService {
     if (!character) throw new BadRequestException('Character not found');
 
     await this.processActionIntoAbility(fight, character, action, targetParams);
+    await this.setNextTurn(fight);
+    await this.takeNextTurn(fight);
   }
 
   async processActionIntoAbility(
@@ -337,8 +353,6 @@ export class FightService {
         break;
       }
     }
-
-    await this.setNextTurn(fight);
   }
 
   async handleAbility(
@@ -381,7 +395,11 @@ export class FightService {
     );
     if (!characterRef) return this.setNextTurn(fight);
 
-    fight.statusMessage = `${characterRef.name} is thinking...`;
+    addStatusMessage(
+      fight,
+      characterRef.name,
+      `${characterRef.name} is thinking...`,
+    );
 
     // TODO: real status message
     // TODO: need to be aware of the side AI is on when making choices
@@ -389,6 +407,7 @@ export class FightService {
     await this.saveAndUpdateFight(fight);
     await delayTime(1000);
     await this.setNextTurn(fight);
+    await this.takeNextTurn(fight);
   }
 
   async move(

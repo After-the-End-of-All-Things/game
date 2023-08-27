@@ -69,7 +69,13 @@ export interface IFight {
   defenders: IFightCharacter[];
   tiles: IFightTile[][];
   generatedElements: Partial<Record<Element, number>>;
-  statusMessage: string;
+  statusMessage: IFightStatusMessage[];
+}
+
+export interface IFightStatusMessage {
+  timestamp: number;
+  context: string;
+  message: string;
 }
 
 export interface IFightStore {

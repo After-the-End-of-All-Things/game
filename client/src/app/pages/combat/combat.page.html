@@ -80,14 +80,20 @@
               >
                 <div class="name">{{ fightCharacters[char].name }}</div>
 
-                <div class="health-bar">
+                <div
+                  class="health-bar"
+                  *ngIf="fightCharacters[char].health.current > 0"
+                >
                   <div
                     class="current-health"
                     [style.width]="(fightCharacters[char].health.current / fightCharacters[char].health.max * 100) + '%'"
                   ></div>
                 </div>
 
-                <div class="avatar-container">
+                <div
+                  class="avatar-container"
+                  [class.dead]="fightCharacters[char].health.current <= 0"
+                >
                   <app-avatar
                     *ngIf="fightCharacters[char].userId"
                     [avatar]="fightCharacters[char].sprite"
@@ -130,8 +136,13 @@
     </ion-card-content>
   </ion-card>
 
-  <ion-card *ngIf="fight.statusMessage">
-    <ion-card-content>{{ fight.statusMessage }}</ion-card-content>
+  <ion-card *ngIf="fight.statusMessage.length > 0">
+    <ion-card-content>
+      <div *ngFor="let message of fight.statusMessage">
+        <strong>{{ message.context }}:</strong>
+        {{ message.message }}
+      </div>
+    </ion-card-content>
   </ion-card>
 </ion-content>
 

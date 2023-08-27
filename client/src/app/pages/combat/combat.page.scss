@@ -21,6 +21,10 @@
     object-fit: contain;
     background-size: cover;
 
+    .avatar-container.dead {
+      filter: grayscale(100%);
+    }
+
     &.tiny-characters {
       position: relative;
 

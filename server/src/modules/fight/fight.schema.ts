@@ -1,4 +1,10 @@
-import { Element, IFight, IFightCharacter, IFightTile } from '@interfaces';
+import {
+  Element,
+  IFight,
+  IFightCharacter,
+  IFightStatusMessage,
+  IFightTile,
+} from '@interfaces';
 import {
   Entity,
   PrimaryKey,
@@ -37,7 +43,7 @@ export class Fight implements IFight {
   generatedElements: Record<Element, number>;
 
   @Property()
-  statusMessage: string;
+  statusMessage: IFightStatusMessage[];
 
   constructor(
     involvedPlayers: string[],
@@ -61,6 +67,6 @@ export class Fight implements IFight {
       dark: 0,
       neutral: 0,
     };
-    this.statusMessage = '';
+    this.statusMessage = [];
   }
 }
