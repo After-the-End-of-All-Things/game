@@ -139,7 +139,7 @@
   <ion-card *ngIf="fight.statusMessage.length > 0">
     <ion-card-content>
       <div *ngFor="let message of fight.statusMessage">
-        <strong>{{ message.context }}:</strong>
+        <strong>&lt;{{ message.context }}&gt;</strong>
         {{ message.message }}
       </div>
     </ion-card-content>

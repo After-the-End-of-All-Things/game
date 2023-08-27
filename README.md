@@ -38,6 +38,8 @@ God, am I getting tired of typing that.
 - `LOCATION_FIND_PERCENT_BOOST` - the percent boost to location find events happening (default: 0)
 - `MONSTER_FIND_PERCENT_BOOST` - the percent boost to monster find events happening (default: 0)
 - `CRAFTING_SPEED_MULTIPLIER` - the multiplier for crafting speed [percent] (default: 100)
+- `COMBAT_XP_LOSS_MULTIPLIER` - the multiplier for combat XP loss [percent] (default: 25)
+- `COMBAT_COINS_LOSS_MULTIPLIER` - the multiplier for combat coins loss [percent] (default: 25)
 - `GAMEANALYTICS_KEY` - the game key for GameAnalytics
 - `GAMEANALYTICS_SECRET` - the secret key for GameAnalytics
 - `ROLLBAR_TOKEN` - the token for Rollbar

@@ -10,13 +10,16 @@ import {
 } from '@interfaces';
 import { EntityManager, EntityRepository, ObjectId } from '@mikro-orm/mongodb';
 import { InjectRepository } from '@mikro-orm/nestjs';
+import { ConstantsService } from '@modules/content/constants.service';
 import { ContentService } from '@modules/content/content.service';
+import { PlayerHelperService } from '@modules/content/playerhelper.service';
 import {
   addAbilityElementsToFight,
   addStatusMessage,
   applyAbilityCooldown,
   calculateAbilityDamageWithElements,
   clearStatusMessage,
+  didAttackersWinFight,
   distBetweenTiles,
   doDamageToTargetForAbility,
   getCharacterFromFightForCharacterId,
@@ -38,7 +41,8 @@ import { PlayerService } from '@modules/player/player.service';
 import { UserService } from '@modules/user/user.service';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { sample, sampleSize } from 'lodash';
+import { getPatchesAfterPropChanges } from '@utils/patches';
+import { sample, sampleSize, sum } from 'lodash';
 import { fromEvent } from 'rxjs';
 import { v4 as uuid } from 'uuid';
 
@@ -51,7 +55,9 @@ export class FightService {
     @InjectRepository(Fight)
     private readonly fights: EntityRepository<Fight>,
     private readonly contentService: ContentService,
+    private readonly constantsService: ConstantsService,
     private readonly playerService: PlayerService,
+    private readonly playerHelperService: PlayerHelperService,
     private readonly userService: UserService,
     private readonly inventoryService: InventoryService,
   ) {}
@@ -129,6 +135,7 @@ export class FightService {
       totalResistances: monster.resistances,
       equipment: {},
       cooldowns: {},
+      killRewards: monster.rewards,
     };
   }
 
@@ -256,7 +263,77 @@ export class FightService {
     await this.em.flush();
   }
 
-  async handleFightRewards(fight: Fight): Promise<void> {}
+  async handleFightRewards(fight: Fight): Promise<void> {
+    let xpDelta = 0;
+    let coinDelta = 0;
+
+    if (!didAttackersWinFight(fight)) {
+      const xpLost = Math.floor(
+        (this.constantsService.combatXpLossMultiplier / 100) *
+          sum(fight.defenders.map((c) => c.killRewards?.xp ?? 0)),
+      );
+      const coinsLost = Math.floor(
+        (this.constantsService.combatCoinLossMultiplier / 100) *
+          sum(fight.defenders.map((c) => c.killRewards?.coins ?? 0)),
+      );
+
+      addStatusMessage(fight, 'Fight', 'You lost the fight!');
+      addStatusMessage(
+        fight,
+        'Fight',
+        `You lost ${xpLost.toLocaleString()} XP!`,
+      );
+      addStatusMessage(
+        fight,
+        'Fight',
+        `You lost ${coinsLost.toLocaleString()} coins!`,
+      );
+
+      xpDelta = -xpLost;
+      coinDelta = -coinsLost;
+    } else {
+      const xpGained = sum(fight.defenders.map((c) => c.killRewards?.xp ?? 0));
+      const coinsGained = sum(
+        fight.defenders.map((c) => c.killRewards?.coins ?? 0),
+      );
+
+      addStatusMessage(fight, 'Fight', 'You won the fight!');
+      addStatusMessage(
+        fight,
+        'Fight',
+        `You gained ${xpGained.toLocaleString()} XP!`,
+      );
+      addStatusMessage(
+        fight,
+        'Fight',
+        `You gained ${coinsGained.toLocaleString()} coins!`,
+      );
+
+      xpDelta = xpGained;
+      coinDelta = coinsGained;
+    }
+
+    await Promise.all(
+      fight.involvedPlayers.map(async (playerId) => {
+        const player = await this.playerService.getPlayerForUser(playerId);
+        if (!player) throw new BadRequestException('Player not found');
+
+        const patches = await getPatchesAfterPropChanges(
+          player,
+          async (player) => {
+            this.playerHelperService.gainXp(player, xpDelta);
+            this.playerHelperService.gainCoins(player, coinDelta);
+          },
+        );
+
+        this.emit(playerId, {
+          player: patches,
+        });
+      }),
+    );
+
+    await this.em.flush();
+  }
 
   async takeNextTurn(fight: Fight): Promise<void> {
     const nextCharacter = getCharacterFromFightForCharacterId(

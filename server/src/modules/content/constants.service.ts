@@ -22,6 +22,9 @@ export class ConstantsService {
 
   public readonly craftingSpeedMultiplier: number = 100;
 
+  public readonly combatXpLossMultiplier: number = 25;
+  public readonly combatCoinLossMultiplier: number = 25;
+
   constructor(private readonly configService: ConfigService) {
     this.exploreSpeedMultiplier = +this.configService.get<number>(
       'EXPLORE_SPEED_MULTIPLIER',
@@ -75,6 +78,15 @@ export class ConstantsService {
     this.craftingSpeedMultiplier = +this.configService.get<number>(
       'CRAFTING_SPEED_MULTIPLIER',
       100,
+    );
+
+    this.combatXpLossMultiplier = +this.configService.get<number>(
+      'COMBAT_XP_LOSS_MULTIPLIER',
+      25,
+    );
+    this.combatCoinLossMultiplier = +this.configService.get<number>(
+      'COMBAT_COIN_LOSS_MULTIPLIER',
+      25,
     );
   }
 }

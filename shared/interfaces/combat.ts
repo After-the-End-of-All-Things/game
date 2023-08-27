@@ -1,4 +1,4 @@
-import { IEquipment, ItemSlot } from '@interfaces';
+import { IEquipment, IMonsterReward, ItemSlot } from '@interfaces';
 import { Element, Stat } from './buildingblocks';
 
 export type ICombatAbilityTargetting = 'Creature' | 'Ground' | 'Self';
@@ -58,6 +58,7 @@ export interface IFightCharacter {
   totalResistances: Record<Element, number>;
   cooldowns: Record<string, number>;
   equipment: Partial<Record<ItemSlot, IEquipment>>;
+  killRewards?: IMonsterReward;
 }
 
 export interface IFight {

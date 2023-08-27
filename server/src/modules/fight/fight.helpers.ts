@@ -415,7 +415,7 @@ export function doDamageToTargetForAbility(
   if (isDead(defender)) {
     addStatusMessage(
       fight,
-      '<Death>',
+      'Death',
       `${defender.name} was slain by ${attacker.name}!`,
     );
   }
