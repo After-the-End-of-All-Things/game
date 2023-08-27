@@ -1,4 +1,4 @@
-import { IFight, IFightCharacter, IFightTile } from '@interfaces';
+import { Element, IFight, IFightCharacter, IFightTile } from '@interfaces';
 import {
   Entity,
   PrimaryKey,
@@ -34,7 +34,7 @@ export class Fight implements IFight {
   currentTurn: string;
 
   @Property()
-  generatedElements: Partial<Record<string, number>>;
+  generatedElements: Record<Element, number>;
 
   @Property()
   statusMessage: string;
@@ -52,7 +52,15 @@ export class Fight implements IFight {
     this.defenders = defenders;
     this.tiles = tiles;
     this.currentTurn = attackers[0].characterId;
-    this.generatedElements = {};
+    this.generatedElements = {
+      fire: 0,
+      water: 0,
+      earth: 0,
+      air: 0,
+      light: 0,
+      dark: 0,
+      neutral: 0,
+    };
     this.statusMessage = '';
   }
 }
