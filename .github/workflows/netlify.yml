@@ -9,7 +9,7 @@ on:
 
 jobs:
   build:
-    name: Automatic Deploy
+    name: Automatic Deploy (Client)
 
     runs-on: ${{ matrix.os }}
 

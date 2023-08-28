@@ -1,6 +1,6 @@
 FROM debian:bullseye as builder
 
-ARG NODE_VERSION=18.9.0
+ARG NODE_VERSION=18.15.0
 
 RUN apt-get update; apt install -y curl
 RUN curl https://get.volta.sh | bash
@@ -19,9 +19,12 @@ WORKDIR /app
 
 ENV NODE_ENV production
 
-COPY . .
+COPY package.json .
+COPY server ./server
+COPY shared ./shared
 
-RUN npm install --include=dev && npm run build
+RUN cd server && npm install --include=dev 
+RUN cd server && npm run build
 FROM debian:bullseye
 
 LABEL fly_launch_runtime="nodejs"
@@ -33,4 +36,5 @@ WORKDIR /app
 ENV NODE_ENV production
 ENV PATH /root/.volta/bin:$PATH
 
-CMD [ "npm", "run", "start" ]
+WORKDIR /app/server
+CMD [ "npm", "run", "start:prod" ]
