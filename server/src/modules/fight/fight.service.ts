@@ -26,6 +26,7 @@ import {
   getAllTilesMatchingPatternTargets,
   getCharacterFromFightForCharacterId,
   getCharacterFromFightForUserId,
+  getEmptyTiles,
   getTargetsForAIAbility,
   getTargetsForAbility,
   getTargettedTilesForPattern,
@@ -143,46 +144,6 @@ export class FightService {
     };
   }
 
-  private getEmptyTile(): IFightTile {
-    return {
-      containedCharacters: [],
-      x: -1,
-      y: -1,
-    };
-  }
-
-  private getEmptyTiles(): IFightTile[][] {
-    return [
-      [
-        this.getEmptyTile(),
-        this.getEmptyTile(),
-        this.getEmptyTile(),
-        this.getEmptyTile(),
-      ],
-
-      [
-        this.getEmptyTile(),
-        this.getEmptyTile(),
-        this.getEmptyTile(),
-        this.getEmptyTile(),
-      ],
-
-      [
-        this.getEmptyTile(),
-        this.getEmptyTile(),
-        this.getEmptyTile(),
-        this.getEmptyTile(),
-      ],
-
-      [
-        this.getEmptyTile(),
-        this.getEmptyTile(),
-        this.getEmptyTile(),
-        this.getEmptyTile(),
-      ],
-    ];
-  }
-
   public async createPvEFightForSinglePlayer(
     player: Player,
     formation: IMonsterFormation,
@@ -200,8 +161,8 @@ export class FightService {
     if (playerCharacters.length === 0 || monsterCharacters.length === 0)
       throw new BadRequestException('Invalid fight');
 
-    const leftTiles = this.getEmptyTiles();
-    const rightTiles = this.getEmptyTiles();
+    const leftTiles = getEmptyTiles();
+    const rightTiles = getEmptyTiles();
 
     const joinedTiles = [
       [...leftTiles[0], ...rightTiles[0]],
@@ -344,24 +305,6 @@ export class FightService {
     await this.takeNextTurn(fight);
   }
 
-  async takeNextTurn(fight: Fight): Promise<void> {
-    const nextCharacter = getCharacterFromFightForCharacterId(
-      fight,
-      fight.currentTurn,
-    );
-
-    if (!nextCharacter) throw new BadRequestException('Character not found');
-
-    if (isDead(nextCharacter)) {
-      await this.setAndTakeNextTurn(fight);
-      return;
-    }
-
-    if (nextCharacter.monsterId) {
-      await this.aiTakeAction(fight, fight.currentTurn);
-    }
-  }
-
   async setNextTurn(fight: Fight): Promise<void> {
     if (isFightOver(fight)) {
       await this.handleFightRewards(fight);
@@ -391,6 +334,24 @@ export class FightService {
 
     fight.currentTurn = fight.turnOrder[nextTurnIndex];
     await this.saveAndUpdateFight(fight);
+  }
+
+  async takeNextTurn(fight: Fight): Promise<void> {
+    const nextCharacter = getCharacterFromFightForCharacterId(
+      fight,
+      fight.currentTurn,
+    );
+
+    if (!nextCharacter) throw new BadRequestException('Character not found');
+
+    if (isDead(nextCharacter)) {
+      await this.setAndTakeNextTurn(fight);
+      return;
+    }
+
+    if (nextCharacter.monsterId) {
+      await this.aiTakeAction(fight, fight.currentTurn);
+    }
   }
 
   async takeAction(
@@ -548,7 +509,6 @@ export class FightService {
       finalizedTargetParams,
     );
 
-    await this.saveAndUpdateFight(fight);
     await delayTime(1000);
     await this.setAndTakeNextTurn(fight);
   }
@@ -585,6 +545,8 @@ export class FightService {
   }
 
   async flee(fight: Fight): Promise<void> {
+    fight.defenders = [];
+
     await this.endFight(fight, [
       {
         type: 'Notify',

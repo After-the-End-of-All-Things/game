@@ -74,6 +74,23 @@ export function getTileContainingCharacter(
   return tile;
 }
 
+export function getEmptyTile(): IFightTile {
+  return {
+    containedCharacters: [],
+    x: -1,
+    y: -1,
+  };
+}
+
+export function getEmptyTiles(): IFightTile[][] {
+  return [
+    [getEmptyTile(), getEmptyTile(), getEmptyTile(), getEmptyTile()],
+    [getEmptyTile(), getEmptyTile(), getEmptyTile(), getEmptyTile()],
+    [getEmptyTile(), getEmptyTile(), getEmptyTile(), getEmptyTile()],
+    [getEmptyTile(), getEmptyTile(), getEmptyTile(), getEmptyTile()],
+  ];
+}
+
 export function getCharacterFromFightForUserId(
   fight: Fight,
   userId: string,
@@ -191,7 +208,9 @@ export function isActiveTurn(fight: Fight, userId: string) {
 export function isFightOver(fight: Fight): boolean {
   return (
     fight.attackers.every((attacker) => isDead(attacker)) ||
-    fight.defenders.every((defender) => isDead(defender))
+    fight.defenders.every((defender) => isDead(defender)) ||
+    fight.attackers.length > 0 ||
+    fight.defenders.length > 0
   );
 }
 
