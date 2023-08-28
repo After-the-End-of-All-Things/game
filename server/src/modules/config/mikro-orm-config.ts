@@ -23,6 +23,11 @@ function mikroOrmConfigFactory(
     'mongodb://127.0.0.1:27017',
   );
 
+  const disableLogging = configService.get<boolean>(
+    'DISABLE_DATABASE_LOGGING',
+    false,
+  );
+
   return {
     entities: [
       User,
@@ -43,7 +48,7 @@ function mikroOrmConfigFactory(
     ensureIndexes: true,
     clientUrl: mongoUrl,
     logger: console.log.bind(console),
-    debug: process.env.NODE_ENV !== 'production',
+    debug: !disableLogging,
   };
 }
 

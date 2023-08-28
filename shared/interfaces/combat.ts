@@ -28,6 +28,7 @@ export interface ICombatAbility {
   pattern: ICombatAbilityPattern;
   targetInOrder: boolean;
   restrictToUserSide: boolean;
+  requiresTileSelection: boolean;
   description: string;
   requiredJob: string;
   requiredLevel: number;

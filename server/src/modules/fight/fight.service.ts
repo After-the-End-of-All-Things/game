@@ -22,9 +22,13 @@ import {
   didAttackersWinFight,
   distBetweenTiles,
   doDamageToTargetForAbility,
+  getAllFightCharacters,
+  getAllTilesMatchingPatternTargets,
   getCharacterFromFightForCharacterId,
   getCharacterFromFightForUserId,
+  getTargetsForAIAbility,
   getTargetsForAbility,
+  getTargettedTilesForPattern,
   getTileAtPosition,
   getTileContainingCharacter,
   isActiveTurn,
@@ -335,6 +339,11 @@ export class FightService {
     await this.em.flush();
   }
 
+  async setAndTakeNextTurn(fight: Fight): Promise<void> {
+    await this.setNextTurn(fight);
+    await this.takeNextTurn(fight);
+  }
+
   async takeNextTurn(fight: Fight): Promise<void> {
     const nextCharacter = getCharacterFromFightForCharacterId(
       fight,
@@ -344,8 +353,7 @@ export class FightService {
     if (!nextCharacter) throw new BadRequestException('Character not found');
 
     if (isDead(nextCharacter)) {
-      await this.setNextTurn(fight);
-      await this.takeNextTurn(fight);
+      await this.setAndTakeNextTurn(fight);
       return;
     }
 
@@ -403,8 +411,7 @@ export class FightService {
     if (!character) throw new BadRequestException('Character not found');
 
     await this.processActionIntoAbility(fight, character, action, targetParams);
-    await this.setNextTurn(fight);
-    await this.takeNextTurn(fight);
+    await this.setAndTakeNextTurn(fight);
   }
 
   async processActionIntoAbility(
@@ -467,24 +474,83 @@ export class FightService {
   }
 
   async aiTakeAction(fight: Fight, characterId: string): Promise<void> {
-    const characterRef = fight.defenders.find(
+    const characterRef = getAllFightCharacters(fight).find(
       (char) => char.characterId === characterId,
     );
-    if (!characterRef) return this.setNextTurn(fight);
+    if (!characterRef || !characterRef.monsterId)
+      return this.setAndTakeNextTurn(fight);
 
-    addStatusMessage(
+    const monsterRef = this.contentService.getMonster(characterRef.monsterId);
+    if (!monsterRef) return this.setAndTakeNextTurn(fight);
+
+    const abilities = monsterRef.abilities;
+    if (abilities.length === 0) {
+      addStatusMessage(
+        fight,
+        characterRef.name,
+        `${characterRef.name} is idling...`,
+      );
+      return this.setAndTakeNextTurn(fight);
+    }
+
+    const ability = sample(abilities);
+    if (!ability) return this.setAndTakeNextTurn(fight);
+
+    const abilityRef = this.contentService.getAbility(ability.ability);
+    if (!abilityRef) return this.setAndTakeNextTurn(fight);
+
+    const targetParams = getTargetsForAIAbility(
       fight,
-      characterRef.name,
-      `${characterRef.name} is thinking...`,
+      abilityRef,
+      characterRef,
     );
+    if (
+      !targetParams ||
+      (targetParams.characterIds && targetParams.characterIds.length === 0)
+    ) {
+      addStatusMessage(
+        fight,
+        characterRef.name,
+        `${characterRef.name} is confused!`,
+      );
+      return this.setAndTakeNextTurn(fight);
+    }
 
-    // TODO: real status message
-    // TODO: need to be aware of the side AI is on when making choices
+    let finalizedTargetParams = targetParams;
+    if (abilityRef.requiresTileSelection) {
+      const characterId = sample(targetParams.characterIds ?? []);
+      if (!characterId) return this.setAndTakeNextTurn(fight);
+
+      const currentTile = getTileContainingCharacter(fight, characterId);
+      if (!currentTile) return this.setAndTakeNextTurn(fight);
+
+      const patternTiles = getTargettedTilesForPattern(
+        currentTile.x,
+        currentTile.y,
+        abilityRef.pattern,
+      );
+
+      const matchingTiles = getAllTilesMatchingPatternTargets(
+        fight,
+        patternTiles,
+      );
+
+      const chosenTile = sample(matchingTiles);
+      if (!chosenTile) return this.setAndTakeNextTurn(fight);
+
+      finalizedTargetParams = { tile: chosenTile };
+    }
+
+    await this.processActionIntoAbility(
+      fight,
+      characterRef,
+      abilityRef,
+      finalizedTargetParams,
+    );
 
     await this.saveAndUpdateFight(fight);
     await delayTime(1000);
-    await this.setNextTurn(fight);
-    await this.takeNextTurn(fight);
+    await this.setAndTakeNextTurn(fight);
   }
 
   async move(

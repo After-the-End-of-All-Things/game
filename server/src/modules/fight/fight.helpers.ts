@@ -8,6 +8,7 @@ import {
   Stat,
 } from '@interfaces';
 import { Fight } from '@modules/fight/fight.schema';
+import { sample } from 'lodash';
 
 // calculation functions
 export function calculateAbilityDamage(
@@ -51,6 +52,10 @@ export function isDead(character: IFightCharacter): boolean {
 }
 
 // getters
+export function getAllFightCharacters(fight: Fight): IFightCharacter[] {
+  return [...fight.attackers, ...fight.defenders];
+}
+
 export function getTileAtPosition(
   fight: Fight,
   x: number,
@@ -73,18 +78,27 @@ export function getCharacterFromFightForUserId(
   fight: Fight,
   userId: string,
 ): IFightCharacter | undefined {
-  const allCharacters = [...fight.attackers, ...fight.defenders];
-  return allCharacters.find((c) => c.userId === userId);
+  return getAllFightCharacters(fight).find((c) => c.userId === userId);
 }
 
 export function getCharacterFromFightForCharacterId(
   fight: Fight,
   characterId: string,
 ): IFightCharacter | undefined {
-  const allCharacters = [...fight.attackers, ...fight.defenders];
-  const character = allCharacters.find((c) => c.characterId === characterId);
+  return getAllFightCharacters(fight).find(
+    (c) => c.characterId === characterId,
+  );
+}
 
-  return character;
+export function getAllTiles(fight: Fight): IFightTile[] {
+  return fight.tiles.flat(2);
+}
+
+export function getAllTilesMatchingPatternTargets(
+  fight: Fight,
+  matchingTiles: Record<string, boolean>,
+): IFightTile[] {
+  return getAllTiles(fight).filter((t) => matchingTiles[`${t.x}-${t.y}`]);
 }
 
 export function getTargettedTilesForPattern(
@@ -133,33 +147,6 @@ export function getTargettedTilesForPattern(
     default:
       return pattern satisfies never;
   }
-}
-
-export function getTargetsForAbilityPattern(
-  fight: Fight,
-  x: number,
-  y: number,
-  pattern: ICombatAbilityPattern,
-): IFightCharacter[] {
-  const targets: IFightCharacter[] = [];
-  const tiles = getTargettedTilesForPattern(x, y, pattern);
-
-  for (let y = 0; y < 4; y++) {
-    for (let x = 0; x < 8; x++) {
-      if (!tiles[`${x}-${y}`]) continue;
-
-      const tile = getTileAtPosition(fight, x, y);
-      if (!tile) continue;
-
-      targets.push(
-        ...(tile.containedCharacters
-          .map((id) => getCharacterFromFightForCharacterId(fight, id))
-          .filter(Boolean) as IFightCharacter[]),
-      );
-    }
-  }
-
-  return targets;
 }
 
 export function getTargetsForAbility(
@@ -418,5 +405,56 @@ export function doDamageToTargetForAbility(
       'Death',
       `${defender.name} was slain by ${attacker.name}!`,
     );
+  }
+}
+
+// ai functions
+export function getTargetsForAIAbility(
+  fight: Fight,
+  ability: ICombatAbility,
+  attacker: IFightCharacter,
+): ICombatTargetParams | undefined {
+  const attackerSide = fight.attackers.includes(attacker)
+    ? 'attacker'
+    : 'defender';
+
+  const oppositeSide =
+    attackerSide === 'attacker' ? fight.defenders : fight.attackers;
+
+  switch (ability.targetting) {
+    case 'Creature': {
+      const validTargets = oppositeSide.filter((c) =>
+        isValidTarget(fight, attacker, ability, {
+          characterIds: [c.characterId],
+        }),
+      );
+
+      const target = sample(validTargets) as IFightCharacter;
+      if (!target) return undefined;
+
+      return { characterIds: [target.characterId] };
+    }
+
+    case 'Ground': {
+      const validTargets = oppositeSide.filter((c) => {
+        const tile = getTileContainingCharacter(fight, c.characterId);
+        if (!tile) return false;
+
+        return !isValidTarget(fight, attacker, ability, { tile });
+      });
+
+      const target = sample(validTargets) as IFightCharacter;
+      const targetTile = getTileContainingCharacter(fight, target.characterId);
+      if (!targetTile) return undefined;
+
+      return { tile: targetTile };
+    }
+
+    case 'Self': {
+      return { characterIds: [attacker.characterId] };
+    }
+
+    default:
+      return ability.targetting satisfies never;
   }
 }
