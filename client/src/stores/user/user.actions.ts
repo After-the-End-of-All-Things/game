@@ -10,3 +10,13 @@ export class ApplyUserPatches {
   static type = '[User] Apply Patches';
   constructor(public patches: jsonpatch.Operation[]) {}
 }
+
+export class ChangePage {
+  static type = 'ChangePage';
+  constructor(public newPage: string) {}
+}
+
+export class GrabData {
+  static type = '[User] Grab Data';
+  constructor(public data: any) {}
+}

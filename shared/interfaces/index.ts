@@ -1,4 +1,6 @@
 export * from './achievements';
+export * from './buildingblocks';
+export * from './combat';
 export * from './crafting';
 export * from './discoveries';
 export * from './inventory';
@@ -6,6 +8,7 @@ export * from './item';
 export * from './job';
 export * from './location';
 export * from './market';
+export * from './monster';
 export * from './notifications';
 export * from './player';
 export * from './stats';

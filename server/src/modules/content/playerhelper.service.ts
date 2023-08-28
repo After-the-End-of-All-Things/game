@@ -9,7 +9,7 @@ export class PlayerHelperService {
   constructor(private events: EventEmitter2) {}
 
   gainXp(player: Player, xp = 1) {
-    player.xp += xp;
+    player.xp = Math.max(0, player.xp + xp);
     this.attemptLevelUpForPlayer(player);
   }
 

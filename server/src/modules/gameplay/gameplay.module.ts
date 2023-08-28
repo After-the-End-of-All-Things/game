@@ -1,6 +1,7 @@
 import { ContentModule } from '@modules/content/content.module';
 import { CraftingModule } from '@modules/crafting/crafting.module';
 import { DiscoveriesModule } from '@modules/discoveries/discoveries.module';
+import { FightModule } from '@modules/fight/fight.module';
 import { GameplayController } from '@modules/gameplay/gameplay.controller';
 import { GameplayService } from '@modules/gameplay/gameplay.service';
 import { InventoryModule } from '@modules/inventory/inventory.module';
@@ -19,6 +20,7 @@ import { Module } from '@nestjs/common';
     InventoryModule,
     PlayerModule,
     CraftingModule,
+    FightModule,
   ],
   providers: [GameplayService],
   exports: [GameplayService],

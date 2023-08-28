@@ -1,4 +1,4 @@
-import { IFullUser, IPatchUser, Stat } from '@interfaces';
+import { IEquipment, ItemSlot, Stat, UserResponse } from '@interfaces';
 import { EntityManager, EntityRepository } from '@mikro-orm/mongodb';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { ConstantsService } from '@modules/content/constants.service';
@@ -50,9 +50,7 @@ export class InventoryService {
     return inventory;
   }
 
-  async getInventoryItemsForUser(
-    userId: string,
-  ): Promise<Partial<IFullUser | IPatchUser>> {
+  async getInventoryItemsForUser(userId: string): Promise<UserResponse> {
     return { items: await this.inventoryItems.find({ userId }) };
   }
 
@@ -108,6 +106,16 @@ export class InventoryService {
     return inventory.resources[resourceId] > amount;
   }
 
+  async updateEquippedItem(userId: string, slot: ItemSlot, item: IEquipment) {
+    const inventory = await this.getInventoryForUser(userId);
+    if (!inventory) return;
+
+    inventory.equippedItems = {
+      ...inventory.equippedItems,
+      [slot]: item,
+    };
+  }
+
   acquireResourceForInventory(
     inventory: Inventory,
     userId: string,
@@ -144,5 +152,14 @@ export class InventoryService {
     if (!inventory) return;
 
     this.removeResourceForInventory(inventory, userId, itemId, quantity);
+  }
+
+  async getEquipmentFor(
+    userId: string,
+  ): Promise<Record<ItemSlot, IEquipment | undefined>> {
+    const inventory = await this.getInventoryForUser(userId);
+    if (!inventory) throw new ForbiddenException('Inventory not found.');
+
+    return inventory.equippedItems;
   }
 }

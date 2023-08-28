@@ -1,12 +1,5 @@
-import { IFullUser } from '@interfaces';
 import { EntityManager, EntityRepository } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
-import { AchievementsService } from '@modules/achievements/achievements.service';
-import { CraftingService } from '@modules/crafting/crafting.service';
-import { DiscoveriesService } from '@modules/discoveries/discoveries.service';
-import { InventoryService } from '@modules/inventory/inventory.service';
-import { PlayerService } from '@modules/player/player.service';
-import { StatsService } from '@modules/stats/stats.service';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
 import { onlineUntilExpiration } from '../../utils/time';
@@ -18,12 +11,6 @@ export class UserService {
     private readonly em: EntityManager,
     @InjectRepository(User)
     private readonly users: EntityRepository<User>,
-    private readonly playerService: PlayerService,
-    private readonly statsService: StatsService,
-    private readonly discoveriesService: DiscoveriesService,
-    private readonly achievementsService: AchievementsService,
-    private readonly inventoryService: InventoryService,
-    private readonly craftingService: CraftingService,
   ) {}
 
   async createUser(user: User): Promise<User | undefined> {
@@ -68,42 +55,5 @@ export class UserService {
     if (!user) return;
 
     user.onlineUntil = onlineUntilExpiration();
-  }
-
-  async getAllUserInformation(userId: string): Promise<IFullUser> {
-    const user = await this.findUserById(userId);
-    const player = await this.playerService.getPlayerForUser(userId);
-    const stats = await this.statsService.getStatsForUser(userId);
-    const discoveries = await this.discoveriesService.getDiscoveriesForUser(
-      userId,
-    );
-    const achievements = await this.achievementsService.getAchievementsForUser(
-      userId,
-    );
-    const inventory = await this.inventoryService.getInventoryForUser(userId);
-    const crafting = await this.craftingService.getCraftingForUser(userId);
-
-    const fullUser: IFullUser = {
-      user,
-      player,
-      stats,
-      discoveries,
-      achievements,
-      inventory,
-      crafting,
-    } as IFullUser;
-
-    await this.migrateAccount(fullUser);
-
-    return fullUser;
-  }
-
-  async migrateAccount(user: IFullUser): Promise<void> {
-    if (!user.player.profile.displayName) {
-      user.player.profile = {
-        ...user.player.profile,
-        displayName: user.user.username,
-      };
-    }
   }
 }

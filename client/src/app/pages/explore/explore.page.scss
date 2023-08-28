@@ -42,6 +42,10 @@
 }
 
 .action-card {
+  &.text-only {
+    padding: 8px;
+  }
+
   .action-avatar, .action-center, .action-action {
     display: flex;
     flex-direction: column;
@@ -69,6 +73,14 @@
 .item-card {
   .action-center {
     .item-name {
+      font-weight: bold;
+    }
+  }
+}
+
+.formation-card {
+  .action-center {
+    .formation-name {
       font-weight: bold;
     }
   }

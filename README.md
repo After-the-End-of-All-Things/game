@@ -26,6 +26,13 @@ God, am I getting tired of typing that.
 
 ### Optional Server Environment Variables
 
+- `DISABLE_DATABASE_LOGGING` - turn off the noisy database logging for MikroORM (default: false)
+- `GAMEANALYTICS_KEY` - the game key for GameAnalytics
+- `GAMEANALYTICS_SECRET` - the secret key for GameAnalytics
+- `ROLLBAR_TOKEN` - the token for Rollbar
+
+### Optional Game Setting Server Environment Variables
+
 - `EXPLORE_SPEED_MULTIPLIER` - the multiplier for explore speed [percent] (default: 100)
 - `EXPLORE_XP_MULTIPLIER` - the multiplier for explore XP [percent] (default: 100)
 - `MAX_INVENTORY_SIZE` - the maximum inventory size per player [percent] (default: 100)
@@ -37,10 +44,10 @@ God, am I getting tired of typing that.
 - `COLLECTIBLE_FIND_PERCENT_BOOST` - the percent boost to collectible find events happening (default: 0)
 - `RESOURCE_FIND_PERCENT_BOOST` - the percent boost to resource find events happening (default: 0)
 - `LOCATION_FIND_PERCENT_BOOST` - the percent boost to location find events happening (default: 0)
+- `MONSTER_FIND_PERCENT_BOOST` - the percent boost to monster find events happening (default: 0)
 - `CRAFTING_SPEED_MULTIPLIER` - the multiplier for crafting speed [percent] (default: 100)
-- `GAMEANALYTICS_KEY` - the game key for GameAnalytics
-- `GAMEANALYTICS_SECRET` - the secret key for GameAnalytics
-- `ROLLBAR_TOKEN` - the token for Rollbar
+- `COMBAT_XP_LOSS_MULTIPLIER` - the multiplier for combat XP loss [percent] (default: 25)
+- `COMBAT_COINS_LOSS_MULTIPLIER` - the multiplier for combat coins loss [percent] (default: 25)
 
 ### Notes
 

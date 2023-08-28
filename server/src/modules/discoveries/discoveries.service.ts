@@ -1,4 +1,4 @@
-import { IFullUser, ILocation, IPatchUser } from '@interfaces';
+import { ILocation, UserResponse } from '@interfaces';
 import { EntityManager, EntityRepository } from '@mikro-orm/mongodb';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { ContentService } from '@modules/content/content.service';
@@ -104,7 +104,7 @@ export class DiscoveriesService {
   async discoverCollectible(
     userId: string,
     instanceId: string,
-  ): Promise<Partial<IFullUser | IPatchUser>> {
+  ): Promise<UserResponse> {
     const discoveries = await this.getDiscoveriesForUser(userId);
     if (!discoveries) throw new NotFoundException('User not found');
 
@@ -152,7 +152,7 @@ export class DiscoveriesService {
   async discoverEquipment(
     userId: string,
     instanceId: string,
-  ): Promise<Partial<IFullUser | IPatchUser>> {
+  ): Promise<UserResponse> {
     const discoveries = await this.getDiscoveriesForUser(userId);
     if (!discoveries) throw new NotFoundException('User not found');
 
@@ -195,9 +195,7 @@ export class DiscoveriesService {
     };
   }
 
-  async claimUniqueCollectibleReward(
-    userId: string,
-  ): Promise<Partial<IFullUser | IPatchUser>> {
+  async claimUniqueCollectibleReward(userId: string): Promise<UserResponse> {
     const player = await this.playerService.getPlayerForUser(userId);
     if (!player) throw new NotFoundException('Player not found');
 
@@ -242,9 +240,7 @@ export class DiscoveriesService {
     };
   }
 
-  async claimTotalCollectibleReward(
-    userId: string,
-  ): Promise<Partial<IFullUser | IPatchUser>> {
+  async claimTotalCollectibleReward(userId: string): Promise<UserResponse> {
     const player = await this.playerService.getPlayerForUser(userId);
     if (!player) throw new NotFoundException('Player not found');
 
@@ -289,9 +285,7 @@ export class DiscoveriesService {
     };
   }
 
-  async claimUniqueEquipmentReward(
-    userId: string,
-  ): Promise<Partial<IFullUser | IPatchUser>> {
+  async claimUniqueEquipmentReward(userId: string): Promise<UserResponse> {
     const player = await this.playerService.getPlayerForUser(userId);
     if (!player) throw new NotFoundException('Player not found');
 
@@ -336,9 +330,7 @@ export class DiscoveriesService {
     };
   }
 
-  async claimTotalEquipmentReward(
-    userId: string,
-  ): Promise<Partial<IFullUser | IPatchUser>> {
+  async claimTotalEquipmentReward(userId: string): Promise<UserResponse> {
     const player = await this.playerService.getPlayerForUser(userId);
     if (!player) throw new NotFoundException('Player not found');
 

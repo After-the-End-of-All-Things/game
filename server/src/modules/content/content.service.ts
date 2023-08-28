@@ -2,10 +2,13 @@ import { Injectable } from '@nestjs/common';
 
 import {
   ICollectible,
+  ICombatAbility,
   IEquipment,
   IItem,
   IJob,
   ILocation,
+  IMonster,
+  IMonsterFormation,
   IRecipe,
   IResource,
 } from '@interfaces';
@@ -30,6 +33,9 @@ export class ContentService {
     equipment: {},
     resources: {},
     recipes: {},
+    abilities: {},
+    monsters: {},
+    formations: {},
   };
 
   private get locations(): Record<string, ILocation> {
@@ -54,6 +60,18 @@ export class ContentService {
 
   private get recipes(): Record<string, IRecipe> {
     return this.content.recipes;
+  }
+
+  private get abilities(): Record<string, ICombatAbility> {
+    return this.content.abilities;
+  }
+
+  private get monsters(): Record<string, IMonster> {
+    return this.content.monsters;
+  }
+
+  private get formations(): Record<string, IMonsterFormation> {
+    return this.content.formations;
   }
 
   constructor(private logger: Logger) {}
@@ -131,5 +149,21 @@ export class ContentService {
 
   public getRecipe(item: string): IRecipe | undefined {
     return this.recipes[item];
+  }
+
+  public allFormations(): IMonsterFormation[] {
+    return Object.values(this.formations);
+  }
+
+  public getFormation(formation: string): IMonsterFormation | undefined {
+    return this.formations[formation];
+  }
+
+  public getMonster(monster: string): IMonster | undefined {
+    return this.monsters[monster];
+  }
+
+  public getAbility(ability: string): ICombatAbility | undefined {
+    return this.abilities[ability];
   }
 }

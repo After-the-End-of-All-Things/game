@@ -1,4 +1,4 @@
-import { IFullUser, IPatchUser } from '@interfaces';
+import { UserResponse } from '@interfaces';
 import { JwtAuthGuard } from '@modules/auth/jwt.guard';
 import { PlayerService } from '@modules/player/player.service';
 import { Body, Controller, Patch, UseGuards } from '@nestjs/common';
@@ -16,7 +16,7 @@ export class PlayerController {
   async changeShortBio(
     @User() user,
     @Body('shortbio') shortbio: string,
-  ): Promise<Partial<IFullUser | IPatchUser>> {
+  ): Promise<UserResponse> {
     return this.playerService.updateShortBioForPlayer(user.userId, shortbio);
   }
 
@@ -26,7 +26,7 @@ export class PlayerController {
   async changeLongBio(
     @User() user,
     @Body('longbio') longbio: string,
-  ): Promise<Partial<IFullUser | IPatchUser>> {
+  ): Promise<UserResponse> {
     return this.playerService.updateLongBioForPlayer(user.userId, longbio);
   }
 }

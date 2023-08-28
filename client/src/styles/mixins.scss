@@ -1,0 +1,28 @@
+
+@mixin glow-around {
+  --glow-color-start: #033;
+  --glow-color-end: #0ff;
+
+  animation: glow 1s ease-in-out infinite alternate;
+
+  filter: drop-shadow(1px 1px 0 var(--glow-color-start))
+          drop-shadow(-1px 1px 0 var(--glow-color-start))
+          drop-shadow(1px -1px 0 var(--glow-color-start))
+          drop-shadow(-1px -1px 0 var(--glow-color-start));
+
+  @keyframes glow {
+    0% {
+      filter: drop-shadow(1px 1px 0 var(--glow-color-start))
+              drop-shadow(-1px 1px 0 var(--glow-color-start))
+              drop-shadow(1px -1px 0 var(--glow-color-start))
+              drop-shadow(-1px -1px 0 var(--glow-color-start));
+    }
+
+    100% {
+      filter: drop-shadow(1px 1px 0 var(--glow-color-end))
+              drop-shadow(-1px 1px 0 var(--glow-color-end))
+              drop-shadow(1px -1px 0 var(--glow-color-end))
+              drop-shadow(-1px -1px 0 var(--glow-color-end));
+    }
+  }
+}

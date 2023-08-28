@@ -1,0 +1,179 @@
+<ion-header [translucent]="true">
+  <app-header-bar></app-header-bar>
+</ion-header>
+
+<ion-content [fullscreen]="true" id="combat-abilities">
+  <ion-header collapse="condense">
+    <app-header-bar></app-header-bar>
+  </ion-header>
+
+  <ion-card>
+    <ion-card-content>
+      <ion-row>
+        <ion-col class="action-container">
+          <ion-button
+            class="action-button"
+            id="abilitiesModal"
+            [disabled]="!isMyCharacterActive"
+          >
+            Attack
+          </ion-button>
+        </ion-col>
+
+        <ion-col class="action-container">
+          <ion-button
+            class="action-button"
+            [disabled]="!isMyCharacterActive"
+            (click)="startMoving()"
+          >
+            Move
+          </ion-button>
+        </ion-col>
+
+        <ion-col class="action-container">
+          <ion-button
+            class="action-button"
+            [disabled]="!isMyCharacterActive || true"
+          >
+            Item
+          </ion-button>
+        </ion-col>
+
+        <ion-col class="action-container">
+          <ion-button
+            class="action-button"
+            [disabled]="!isMyCharacterActive"
+            (click)="flee()"
+          >
+            Run Away
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-content>
+      <div class="fight">
+        <ion-row
+          *ngFor="let row of fight.tiles; let y = index"
+          class="tile-row"
+        >
+          <ion-col *ngFor="let col of row; let x = index" class="tile-col">
+            <div
+              class="tile"
+              [class.enemy]="x > 3"
+              [class.friendly]="x <= 3"
+              [class.glowing]="isTileActive(x, y)"
+              [class.tiny-characters]="col.containedCharacters.length > 1"
+              [class.two-characters]="col.containedCharacters.length === 2"
+              [ngClass]="['x-' + col.x, 'y-' + col.y]"
+              (mouseenter)="selectTilesOnHover(x, y)"
+              (contextmenu)="resetAbilityAndSelection(); $event.preventDefault()"
+              (click)="clickTile(col, x, y)"
+            >
+              <div
+                class="character-container"
+                [class.active]="isMyCharacterActive"
+                [class.small]="col.containedCharacters.length > 1"
+                *ngFor="let char of col.containedCharacters"
+              >
+                <div class="name">{{ fightCharacters[char].name }}</div>
+
+                <div
+                  class="health-bar"
+                  *ngIf="fightCharacters[char].health.current > 0"
+                >
+                  <div
+                    class="current-health"
+                    [style.width]="(fightCharacters[char].health.current / fightCharacters[char].health.max * 100) + '%'"
+                  ></div>
+                </div>
+
+                <div
+                  class="avatar-container"
+                  [class.dead]="fightCharacters[char].health.current <= 0"
+                >
+                  <app-avatar
+                    *ngIf="fightCharacters[char].userId"
+                    [avatar]="fightCharacters[char].sprite"
+                    size="small"
+                    [padding]="0"
+                    [noScale]="true"
+                    [active]="isMyCharacterActive && !selectedAbility"
+                  ></app-avatar>
+
+                  <app-monster-icon
+                    *ngIf="fightCharacters[char].monsterId as monsterId"
+                    [monster]="getMonster(monsterId)"
+                    [active]="fight.currentTurn === char"
+                  ></app-monster-icon>
+                </div>
+              </div>
+            </div>
+          </ion-col>
+        </ion-row>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-content>
+      <div class="elements">
+        <app-element-icon
+          *ngFor="let element of elements"
+          [element]="element"
+          [count]="fight.generatedElements[element] || 0"
+        ></app-element-icon>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card *ngIf="selectedAbility">
+    <ion-card-content>
+      <strong>{{ selectedAbility.name }}</strong>
+      : {{ selectedAbility.description }}
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card *ngIf="fight.statusMessage.length > 0">
+    <ion-card-content>
+      <div *ngFor="let message of fight.statusMessage">
+        <strong>&lt;{{ message.context }}&gt;</strong>
+        {{ message.message }}
+      </div>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
+
+<ion-modal
+  trigger="abilitiesModal"
+  [initialBreakpoint]="0.5"
+  [breakpoints]="[0, 0.5, 1]"
+  #abilitiesModal
+>
+  <ng-template>
+    <ion-header>
+      <ion-toolbar color="primary">
+        <ion-title>Abilities</ion-title>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content class="ability-modal">
+      <ion-list class="ability-list">
+        <ion-item
+          lines="none"
+          class="ability"
+          *ngFor="let ability of getAbilities()"
+          (click)="selectAbility(ability)"
+        >
+          <app-combat-ability
+            [ability]="ability"
+            [stats]="myCharacter.totalStats"
+            [cooldownRemaining]="myCharacter.cooldowns[ability.itemId]"
+          ></app-combat-ability>
+        </ion-item>
+      </ion-list>
+    </ion-content>
+  </ng-template>
+</ion-modal>

@@ -1,4 +1,4 @@
-import { IEquipment, ItemSlot } from '@interfaces';
+import { IEquipment, ItemSlot } from './item';
 
 export interface IInventory {
   equippedItems: Record<ItemSlot, IEquipment | undefined>;

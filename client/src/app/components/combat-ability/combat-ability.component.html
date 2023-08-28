@@ -1,0 +1,40 @@
+<ion-row [class.cooling-down]="cooldownRemaining > 0">
+  <ion-col class="target-image">
+    <div class="target-image-container">
+      <ion-img
+        [src]="'assets/combat/targetting/' + imageName + '.png'"
+      ></ion-img>
+    </div>
+  </ion-col>
+
+  <ion-col>
+    <h3 class="title">
+      <span class="name">
+        {{ ability.name }}
+      </span>
+
+      <app-element-icon
+        *ngFor="let element of ability.generatedElements"
+        [element]="element"
+        [inline]="true"
+      ></app-element-icon>
+
+      <ion-badge class="cd" color="secondary" *ngIf="ability.cooldown">
+        CD {{ ability.cooldown }}
+      </ion-badge>
+
+      <span class="cooldown-timer" *ngIf="cooldownRemaining > 0">
+        <ion-badge color="warning" class="ion-align-items-center">
+          <ion-icon name="timer-outline"></ion-icon>
+
+          {{ cooldownRemaining }} turns
+        </ion-badge>
+      </span>
+    </h3>
+
+    <p>
+      {{ ability.description }}
+      <strong>{{ abilityDamage() }} damage</strong>
+    </p>
+  </ion-col>
+</ion-row>

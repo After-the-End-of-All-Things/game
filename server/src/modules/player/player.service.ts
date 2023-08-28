@@ -1,13 +1,16 @@
+import { zeroResistances, zeroStats } from '@helpers/stats';
 import {
-  IFullUser,
+  Element,
   ILocation,
   INotificationAction,
-  IPatchUser,
   Rarity,
+  Stat,
+  UserResponse,
 } from '@interfaces';
 import { EntityManager, EntityRepository } from '@mikro-orm/mongodb';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { ContentService } from '@modules/content/content.service';
+import { InventoryService } from '@modules/inventory/inventory.service';
 import { Player } from '@modules/player/player.schema';
 import {
   BadRequestException,
@@ -24,6 +27,7 @@ export class PlayerService {
     @InjectRepository(Player)
     private readonly players: EntityRepository<Player>,
     private readonly contentService: ContentService,
+    private readonly inventoryService: InventoryService,
   ) {}
 
   async getPlayerForUser(userId: string): Promise<Player | undefined> {
@@ -54,7 +58,7 @@ export class PlayerService {
   async updatePortraitForPlayer(
     userId: string,
     portrait: number,
-  ): Promise<Partial<IFullUser | IPatchUser>> {
+  ): Promise<UserResponse> {
     const player = await this.getPlayerForUser(userId);
     if (!player) throw new ForbiddenException('Player not found');
 
@@ -80,7 +84,7 @@ export class PlayerService {
   async updateShortBioForPlayer(
     userId: string,
     shortBio: string,
-  ): Promise<Partial<IFullUser | IPatchUser>> {
+  ): Promise<UserResponse> {
     const player = await this.getPlayerForUser(userId);
     if (!player) throw new ForbiddenException('Player not found');
 
@@ -112,7 +116,7 @@ export class PlayerService {
   async updateLongBioForPlayer(
     userId: string,
     longBio: string,
-  ): Promise<Partial<IFullUser | IPatchUser>> {
+  ): Promise<UserResponse> {
     const player = await this.getPlayerForUser(userId);
     if (!player) throw new ForbiddenException('Player not found');
 
@@ -216,7 +220,7 @@ export class PlayerService {
     return found[0];
   }
 
-  async handleRandomWave(player: Player) {
+  async handleRandomWave(player: Player): Promise<void> {
     const randomPlayer = await this.getRandomOnlinePlayerAtLocation(
       player.userId,
       player.location.current,
@@ -237,7 +241,7 @@ export class PlayerService {
     });
   }
 
-  async handleFindResource(player: Player, location: ILocation): Promise<any> {
+  async handleFindResource(player: Player, location: ILocation): Promise<void> {
     const resourceRarityCommonality: Record<Rarity, number> = {
       Common: 100,
       Uncommon: 75,
@@ -275,7 +279,7 @@ export class PlayerService {
   async handleFindCollectible(
     player: Player,
     location: ILocation,
-  ): Promise<any> {
+  ): Promise<void> {
     const collectibleRarityCommonality: Record<Rarity, number> = {
       Common: 100,
       Uncommon: 75,
@@ -312,7 +316,7 @@ export class PlayerService {
     });
   }
 
-  async handleFindItem(player: Player, location: ILocation): Promise<any> {
+  async handleFindItem(player: Player, location: ILocation): Promise<void> {
     const randomItemForLocation = sample(
       this.contentService
         .allEquipment()
@@ -335,5 +339,75 @@ export class PlayerService {
       url: 'gameplay/item/take',
       urlData: {},
     });
+  }
+
+  async handleFindMonster(player: Player, location: ILocation): Promise<void> {
+    const randomFormationForLocation = sample(
+      this.contentService
+        .allFormations()
+        .filter((formation) => formation.location === location.name),
+    );
+
+    if (!randomFormationForLocation) return;
+
+    this.setPlayerAction(player, {
+      text: 'Fight',
+      action: 'fight',
+      actionData: {
+        formation: randomFormationForLocation,
+        stopExplore: true,
+      },
+      url: 'gameplay/fight',
+      urlData: {},
+    });
+  }
+
+  async getTotalStats(player: Player): Promise<Record<Stat, number>> {
+    const base = zeroStats();
+
+    // get job stats
+    const job = this.contentService.getJob(player.job);
+    if (!job) return base;
+
+    Object.keys(job.statGainsPerLevel).forEach((stat) => {
+      base[stat as Stat] += job.statGainsPerLevel[stat as Stat] * player.level;
+    });
+
+    // get equipment stats
+    const equipment = await this.inventoryService.getEquipmentFor(
+      player.userId,
+    );
+
+    Object.values(equipment)
+      .filter(Boolean)
+      .forEach((item) => {
+        if (!item) return;
+
+        Object.entries(item.stats).forEach(([stat, value]) => {
+          base[stat as Stat] += value;
+        });
+      });
+
+    return base;
+  }
+
+  async getTotalResistances(player: Player): Promise<Record<Element, number>> {
+    const base = zeroResistances();
+    const equipment = await this.inventoryService.getEquipmentFor(
+      player.userId,
+    );
+
+    Object.values(equipment)
+      .filter(Boolean)
+      .forEach((item) => {
+        if (!item) return;
+
+        // 10% resistance per element in defense elements
+        (item.defenseElements || []).forEach((element) => {
+          base[element] -= 0.1;
+        });
+      });
+
+    return base;
   }
 }

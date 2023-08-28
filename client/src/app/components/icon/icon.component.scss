@@ -1,4 +1,6 @@
 
+@import '../../../styles/mixins';
+
 :host {
   display: inline-block;
   width: 64px;
@@ -25,6 +27,10 @@
       object-fit: none;
       pointer-events: none;
       user-select: none;
+
+      &.active {
+        @include glow-around;
+      }
     }
   }
 

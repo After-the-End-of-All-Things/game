@@ -8,7 +8,9 @@ import { Component, Input, OnInit } from '@angular/core';
 export class AvatarComponent implements OnInit {
   @Input() avatar = 4;
   @Input() padding = 32;
+  @Input() noScale = false;
   @Input() size: 'normal' | 'small' = 'normal';
+  @Input() active = false;
 
   constructor() {}
 

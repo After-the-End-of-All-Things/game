@@ -1,6 +1,7 @@
 export * from './achievements/achievements.migrations';
 export * from './crafting/crafting.migrations';
 export * from './discoveries/discoveries.migrations';
+export * from './fight/fight.migrations';
 export * from './inventory/inventory.migrations';
 export * from './market/market.migrations';
 export * from './notifications/notifications.migrations';

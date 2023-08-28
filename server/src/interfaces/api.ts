@@ -3,6 +3,7 @@ import * as jsonpatch from 'fast-json-patch';
 import { Achievements } from '@modules/achievements/achievements.schema';
 import { Crafting } from '@modules/crafting/crafting.schema';
 import { Discoveries } from '@modules/discoveries/discoveries.schema';
+import { Fight } from '@modules/fight/fight.schema';
 import { Inventory } from '@modules/inventory/inventory.schema';
 import { InventoryItem } from '@modules/inventory/inventoryitem.schema';
 import { Player } from '@modules/player/player.schema';
@@ -22,6 +23,7 @@ export interface IFullUser {
   inventory: Inventory;
   crafting: Crafting;
   items: InventoryItem[];
+  fight: Fight | null;
 
   actions: Array<{ type: string } & any>;
 }
@@ -35,4 +37,7 @@ export interface IPatchUser {
   inventory: jsonpatch.Operation[];
   items: jsonpatch.Operation[];
   crafting: jsonpatch.Operation[];
+  fight: jsonpatch.Operation[];
 }
+
+export type UserResponse = Partial<IFullUser | IPatchUser>;

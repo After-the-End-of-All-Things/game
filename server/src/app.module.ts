@@ -19,9 +19,11 @@ import { StatsModule } from './modules/stats/stats.module';
 import { UserModule } from './modules/user/user.module';
 
 import { JWT_CONFIG } from '@modules/config/jwt-config';
+import { FightModule } from '@modules/fight/fight.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { JwtModule } from '@nestjs/jwt';
 import { HttpExceptionFilter } from '@utils/http-exception.filter';
+import { AggregatorModule } from './modules/aggregator/aggregator.module';
 import { CraftingModule } from './modules/crafting/crafting.module';
 import { GameplayModule } from './modules/gameplay/gameplay.module';
 import { MarketModule } from './modules/market/market.module';
@@ -70,6 +72,7 @@ const isProduction = process.env.NODE_ENV === 'production';
     AchievementsModule,
     ContentModule,
     InventoryModule,
+    FightModule,
     EventEmitterModule.forRoot(),
     GameplayModule,
     {
@@ -84,6 +87,7 @@ const isProduction = process.env.NODE_ENV === 'production';
     },
     CraftingModule,
     MarketModule,
+    AggregatorModule,
   ],
   controllers: [AppController, GameplayController],
   providers: [

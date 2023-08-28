@@ -6,11 +6,10 @@ import {
 } from '@helpers/item';
 import {
   IEquipment,
-  IFullUser,
   IItem,
   IMarketItem,
   IPagination,
-  IPatchUser,
+  UserResponse,
 } from '@interfaces';
 import { EntityManager, EntityRepository, ObjectId } from '@mikro-orm/mongodb';
 import { InjectRepository } from '@mikro-orm/nestjs';
@@ -47,7 +46,7 @@ export class MarketService {
     instanceId: string,
     price: number,
     quantity = 1,
-  ): Promise<Partial<IFullUser | IPatchUser>> {
+  ): Promise<UserResponse> {
     const player = await this.playerService.getPlayerForUser(userId);
     if (!player) throw new BadRequestException('Player not found');
 
@@ -284,7 +283,7 @@ export class MarketService {
     return allSoldListings.reduce((prev, curr) => prev + curr.price, 0);
   }
 
-  async claimMyValue(userId: string): Promise<Partial<IFullUser | IPatchUser>> {
+  async claimMyValue(userId: string): Promise<UserResponse> {
     const totalValue = await this.getMyValue(userId);
     if (totalValue <= 0) throw new BadRequestException('No value to claim');
 
@@ -315,10 +314,7 @@ export class MarketService {
     };
   }
 
-  async buyItem(
-    userId: string,
-    listingId: string,
-  ): Promise<Partial<IFullUser | IPatchUser>> {
+  async buyItem(userId: string, listingId: string): Promise<UserResponse> {
     const listing = await this.marketItem.findOne({
       _id: new ObjectId(listingId),
     });
@@ -408,7 +404,7 @@ export class MarketService {
     userId: string,
     listingId: string,
     price: number,
-  ): Promise<Partial<IFullUser | IPatchUser>> {
+  ): Promise<UserResponse> {
     const player = await this.playerService.getPlayerForUser(userId);
     if (!player) throw new BadRequestException('Player not found');
 
@@ -473,10 +469,7 @@ export class MarketService {
     };
   }
 
-  async unlistItem(
-    userId: string,
-    listingId: string,
-  ): Promise<Partial<IFullUser | IPatchUser>> {
+  async unlistItem(userId: string, listingId: string): Promise<UserResponse> {
     const player = await this.playerService.getPlayerForUser(userId);
     if (!player) throw new BadRequestException('Player not found');
 

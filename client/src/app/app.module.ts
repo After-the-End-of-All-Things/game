@@ -12,6 +12,7 @@ import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { NgxsStoragePluginModule, StorageOption } from '@ngxs/storage-plugin';
 import { NgxsModule } from '@ngxs/store';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { AppRoutingModule } from './app-routing.module';
@@ -22,6 +23,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { DataGrabberInterceptor } from '@helpers/data-grabber.interceptor';
 import { AuthService } from '@services/auth.service';
 import { ContentService } from '@services/content.service';
+import { FightService } from '@services/fight.service';
 import { NotificationsService } from '@services/notifications.service';
 import { RollbarErrorHandler, RollbarService } from '@services/rollbar.service';
 import { NgxTippyModule } from 'ngx-tippy-wrapper';
@@ -47,6 +49,7 @@ export function getAuthToken() {
     HttpClientModule,
     NgxTippyModule,
     SharedModule,
+    AngularSvgIconModule.forRoot(),
     JwtModule.forRoot({
       config: {
         tokenGetter: getAuthToken,
@@ -64,6 +67,7 @@ export function getAuthToken() {
     }),
     NgxsLoggerPluginModule.forRoot({
       disabled: !isDevMode(),
+      filter: (action) => !action.constructor.name.includes('GrabData'),
     }),
     NgxsStoragePluginModule.forRoot({
       key: allStores,
@@ -92,6 +96,7 @@ export function getAuthToken() {
           authService: AuthService,
           contentService: ContentService,
           notificationService: NotificationsService,
+          fightService: FightService,
           rollbarService: RollbarService,
         ) =>
         async () => {
@@ -99,6 +104,7 @@ export function getAuthToken() {
           await contentService.init();
           await authService.init();
           await notificationService.init();
+          await fightService.init();
           await rollbarService.init();
         },
       deps: [
@@ -106,6 +112,7 @@ export function getAuthToken() {
         AuthService,
         ContentService,
         NotificationsService,
+        FightService,
         RollbarService,
       ],
       multi: true,

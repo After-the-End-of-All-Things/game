@@ -1,4 +1,8 @@
-<div class="avatar" [ngClass]="[size]" [style.padding.px]="padding">
+<div
+  class="avatar"
+  [ngClass]="[size, noScale ? 'no-scale' : '', active ? 'active' : '']"
+  [style.padding.px]="padding"
+>
   <ion-avatar>
     <app-icon spritesheet="portraits" [sprite]="avatar + 1"></app-icon>
   </ion-avatar>

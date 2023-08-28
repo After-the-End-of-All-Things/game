@@ -1,0 +1,160 @@
+
+.fight {
+  .tile-row {
+    justify-content: center;
+
+    .tile-col {
+      max-height: 112px;
+      max-width: 112px;
+      padding: 0;
+    }
+  }
+
+  .tile {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 112px;
+    height: 112px;
+    border: 1px solid #fff;
+    object-fit: contain;
+    background-size: cover;
+
+    .avatar-container.dead {
+      filter: grayscale(100%);
+    }
+
+    &.tiny-characters {
+      position: relative;
+
+      &.two-characters {
+        .character-container {
+          position: absolute;
+        }
+
+        .character-container:nth-child(1) {
+          top: 0;
+          left: 0;
+        }
+
+        .character-container:nth-child(2) {
+          bottom: 0;
+          right: 0;
+        }
+      }
+
+      .character-container {
+        transform: scale(0.65);
+      }
+    }
+
+    &.enemy {
+      background-color: #400;
+
+      .avatar-container {
+        transform: scaleX(-1);
+      }
+    }
+
+    &.friendly {
+      background-color: #040;
+    }
+
+    &.glowing {
+      --glow-color-start: #099;
+      --glow-color-end: #0cc;
+
+      cursor: pointer;
+
+      animation: glow 1s ease-in-out infinite alternate;
+    }
+
+    @keyframes glow {
+      0% {
+        background-color: var(--glow-color-start);
+      }
+
+      100% {
+        background-color: var(--glow-color-end);
+      }
+    }
+  }
+}
+
+.elements {
+  display: flex;
+  justify-content: center;
+
+  app-element-icon {
+    margin-left: 8px;
+    margin-right: 8px;
+  }
+}
+
+.avatar-container, .character-container {
+  max-width: 64px;
+  max-height: 64px;
+
+  position: relative;
+}
+
+.name {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  z-index: 12;
+  width: 100%;
+  font-size: 10px;
+  text-align: center;
+  color: #fff;
+  text-shadow: 1px 1px 1px #000;
+}
+
+.health-bar {
+  position: absolute;
+  top: -10;
+  left: 0;
+  width: 100%;
+  height: 5px;
+
+  border: 1px solid #fff;
+  background: #fff;
+  z-index: 10;
+
+  .current-health {
+    position: absolute;
+    z-index: 11;
+    background-color: #f00;
+    height: 3px;
+  }
+}
+
+.action-container {
+  display: flex;
+  justify-content: center;
+
+  .action-button {
+    width: 150px;
+  }
+}
+
+.ability-modal {
+  --padding-top: 0;
+}
+
+.ability-list {
+  --ion-background-color: transparent;
+  --ion-item-background: transparent;
+  overflow-y: auto;
+  max-height: 574px;
+
+
+  .ability {
+    cursor: pointer;
+
+    &:hover {
+      background: #222;
+    }
+  }
+}

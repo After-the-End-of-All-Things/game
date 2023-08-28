@@ -1,13 +1,5 @@
-import { INotificationAction } from '@interfaces';
-
-export enum Stat {
-  Health = 'health',
-  Power = 'power',
-  Toughness = 'toughness',
-  Magic = 'magic',
-  Resistance = 'resistance',
-  Special = 'special',
-}
+import { Stat } from './buildingblocks';
+import { INotificationAction } from './notifications';
 
 export enum RechargeableStat {
   Health = 'health',

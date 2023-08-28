@@ -18,8 +18,12 @@ export class ConstantsService {
   public readonly collectibleFindPercentBoost: number = 0;
   public readonly resourceFindPercentBoost: number = 0;
   public readonly locationFindPercentBoost: number = 0;
+  public readonly monsterFindPercentBoost: number = 0;
 
   public readonly craftingSpeedMultiplier: number = 100;
+
+  public readonly combatXpLossMultiplier: number = 25;
+  public readonly combatCoinLossMultiplier: number = 25;
 
   constructor(private readonly configService: ConfigService) {
     this.exploreSpeedMultiplier = +this.configService.get<number>(
@@ -66,10 +70,23 @@ export class ConstantsService {
       'LOCATION_FIND_PERCENT_BOOST',
       0,
     );
+    this.monsterFindPercentBoost = +this.configService.get<number>(
+      'MONSTER_FIND_PERCENT_BOOST',
+      0,
+    );
 
     this.craftingSpeedMultiplier = +this.configService.get<number>(
       'CRAFTING_SPEED_MULTIPLIER',
       100,
+    );
+
+    this.combatXpLossMultiplier = +this.configService.get<number>(
+      'COMBAT_XP_LOSS_MULTIPLIER',
+      25,
+    );
+    this.combatCoinLossMultiplier = +this.configService.get<number>(
+      'COMBAT_COIN_LOSS_MULTIPLIER',
+      25,
     );
   }
 }

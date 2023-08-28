@@ -1,4 +1,4 @@
-import { IFullUser, IMarketItem, IPagination, IPatchUser } from '@interfaces';
+import { IMarketItem, IPagination, UserResponse } from '@interfaces';
 import { JwtAuthGuard } from '@modules/auth/jwt.guard';
 import { MarketService } from '@modules/market/market.service';
 import {
@@ -49,7 +49,7 @@ export class MarketController {
     @Body('instanceId') instanceId: string,
     @Body('price') price: number,
     @Body('quantity') quantity: number,
-  ): Promise<Partial<IFullUser | IPatchUser>> {
+  ): Promise<UserResponse> {
     return this.marketService.listItem(
       user.userId,
       instanceId,
@@ -65,7 +65,7 @@ export class MarketController {
     @User() user,
     @Param('id') listingId: string,
     @Body('price') price: number,
-  ): Promise<Partial<IFullUser | IPatchUser>> {
+  ): Promise<UserResponse> {
     return this.marketService.repriceItem(user.userId, listingId, price);
   }
 
@@ -75,7 +75,7 @@ export class MarketController {
   async removeListing(
     @User() user,
     @Param('id') listingId: string,
-  ): Promise<Partial<IFullUser | IPatchUser>> {
+  ): Promise<UserResponse> {
     return this.marketService.unlistItem(user.userId, listingId);
   }
 
@@ -85,7 +85,7 @@ export class MarketController {
   async buyListing(
     @User() user,
     @Param('id') listingId: string,
-  ): Promise<Partial<IFullUser | IPatchUser>> {
+  ): Promise<UserResponse> {
     return this.marketService.buyItem(user.userId, listingId);
   }
 
@@ -99,9 +99,7 @@ export class MarketController {
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Claim the listing value for an item post-sell' })
   @Post('listings/claims')
-  async claimListingCoins(
-    @User() user,
-  ): Promise<Partial<IFullUser | IPatchUser>> {
+  async claimListingCoins(@User() user): Promise<UserResponse> {
     return this.marketService.claimMyValue(user.userId);
   }
 }

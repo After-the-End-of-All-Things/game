@@ -21,6 +21,10 @@ export class ActionsService {
     private notificationService: NotificationsService,
   ) {}
 
+  changePage(newPage: string) {
+    this.router.navigate([`/${newPage}`]);
+  }
+
   doAction(action: INotificationAction, notification?: INotification) {
     if (action.url) {
       // we never send data here, it's inferred server side

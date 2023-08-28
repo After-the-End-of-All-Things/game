@@ -1,4 +1,4 @@
-import { IFullUser, IPatchUser } from '@interfaces';
+import { UserResponse } from '@interfaces';
 import { JwtAuthGuard } from '@modules/auth/jwt.guard';
 import { InventoryService } from '@modules/inventory/inventory.service';
 import { Controller, Get, UseGuards } from '@nestjs/common';
@@ -13,7 +13,7 @@ export class InventoryController {
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Get my current item list' })
   @Get('items')
-  async getItems(@User() user): Promise<Partial<IFullUser | IPatchUser>> {
+  async getItems(@User() user): Promise<UserResponse> {
     return this.inventoryService.getInventoryItemsForUser(user.userId);
   }
 }

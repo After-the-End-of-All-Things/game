@@ -45,7 +45,10 @@
             </ion-card-header>
 
             <ion-card-content>
-              <div class="action" *ngIf="data.action as actionInfo">
+              <div
+                class="action"
+                *ngIf="data.action as actionInfo; else noAction"
+              >
                 <ion-card
                   class="wave-card action-card"
                   *ngIf="actionInfo.action === 'wave'"
@@ -170,7 +173,63 @@
                     </div>
                   </ion-card-content>
                 </ion-card>
+
+                <ion-card
+                  class="action-card formation-card"
+                  *ngIf="actionInfo.action === 'fight'"
+                >
+                  <ion-card-content>
+                    <div class="intro">
+                      You came across
+                      <strong>
+                        {{ actionInfo.actionData.formation.name }}!
+                      </strong>
+                      Prepare for combat!
+                    </div>
+
+                    <div class="info full-width">
+                      <ion-row>
+                        <ion-col sizeXs="8">
+                          <ion-row>
+                            <ion-col sizeXs="4" class="action-avatar">
+                              <app-monster-icon
+                                [monster]="getMonster(actionInfo.actionData.formation.monsters[0].monster)"
+                              ></app-monster-icon>
+                            </ion-col>
+
+                            <ion-col sizeXs="8" class="action-center">
+                              <div class="formation-name">
+                                {{ actionInfo.actionData.formation.name }}
+                              </div>
+
+                              <div class="formation-count">
+                                {{
+                                actionInfo.actionData.formation.monsters.length
+                                }} monsters
+                              </div>
+                            </ion-col>
+                          </ion-row>
+                        </ion-col>
+
+                        <ion-col sizeXs="4" class="action-action">
+                          <ion-button
+                            color="secondary"
+                            (click)="actionsService.doAction(actionInfo)"
+                          >
+                            {{ actionInfo.text }}!
+                          </ion-button>
+                        </ion-col>
+                      </ion-row>
+                    </div>
+                  </ion-card-content>
+                </ion-card>
               </div>
+
+              <ng-template #noAction>
+                <ion-card class="action-card text-only">
+                  You didn't find anything of interest.
+                </ion-card>
+              </ng-template>
 
               <div class="earned">
                 <span class="xp">
@@ -197,7 +256,7 @@
                   color="primary"
                   class="explore"
                   (click)="explore()"
-                  [disabled]="!canExplore"
+                  [disabled]="!canExplore || data.action?.actionData.stopExplore"
                 >
                   <span *ngIf="canExplore">Go!</span>
 

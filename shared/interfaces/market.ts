@@ -1,4 +1,5 @@
-import { IItem, Rarity } from '@interfaces';
+import { Rarity } from './buildingblocks';
+import { IItem } from './item';
 
 export type IMarketItemExpanded = IMarketItem & {
   id: string;

@@ -5,7 +5,9 @@ import { RouterModule } from '@angular/router';
 import { AvatarComponent } from '@components/avatar/avatar.component';
 import { BackgroundArtComponent } from '@components/background-art/background-art.component';
 import { CardOnlineUsersComponent } from '@components/card-online-users/card-online-users.component';
+import { CombatAbilityComponent } from '@components/combat-ability/combat-ability.component';
 import { CountdownComponent } from '@components/countdown/countdown.component';
+import { ElementIconComponent } from '@components/element-icon/element-icon.component';
 import { HeaderBarComponent } from '@components/header-bar/header-bar.component';
 import { HeroComponent } from '@components/hero/hero.component';
 import { IconComponent } from '@components/icon/icon.component';
@@ -18,9 +20,11 @@ import { ChooseAvatarModalComponent } from '@components/modals/choose-avatar/cho
 import { CompareItemsModalComponent } from '@components/modals/compare-items/compare-items.component';
 import { LocationStatsModalComponent } from '@components/modals/location-stats/location-stats.component';
 import { MarketModalComponent } from '@components/modals/market/market.component';
+import { MonsterIconComponent } from '@components/monster-icon/monster-icon.component';
 import { StoreTextComponent } from '@components/store-text/store-text.component';
 import { RelativeTimePipe } from '@helpers/relativetime.pipe';
 import { IonicModule } from '@ionic/angular';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NgxTippyModule } from 'ngx-tippy-wrapper';
 
 const components = [
@@ -36,12 +40,15 @@ const components = [
   HeaderBarComponent,
   AvatarComponent,
   ItemIconComponent,
+  MonsterIconComponent,
   ItemRarityComponent,
   ItemStatsComponent,
   ItemElementsComponent,
   BackgroundArtComponent,
   CountdownComponent,
   RelativeTimePipe,
+  ElementIconComponent,
+  CombatAbilityComponent,
 ];
 
 @NgModule({
@@ -52,6 +59,7 @@ const components = [
     FormsModule,
     IonicModule,
     RouterModule,
+    AngularSvgIconModule,
     NgxTippyModule,
   ],
 })
