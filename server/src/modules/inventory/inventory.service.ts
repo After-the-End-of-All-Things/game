@@ -72,6 +72,9 @@ export class InventoryService {
     const item = await this.getInventoryItemForUser(userId, instanceId);
     if (!item) return;
 
+    this.logger.verbose(
+      `Removing item ${item.itemId} (${instanceId}) from ${userId}.`,
+    );
     return this.em.remove<InventoryItem>(item);
   }
 
@@ -101,6 +104,7 @@ export class InventoryService {
     const item = new InventoryItem(userId, itemId, uuid());
 
     await this.inventoryItems.create(item);
+    this.logger.verbose(`Acquiring item ${item.itemId} for ${userId}.`);
   }
 
   async hasResource(userId: string, resourceId: string, amount: number) {
@@ -126,6 +130,9 @@ export class InventoryService {
     itemId: string,
     quantity = 1,
   ) {
+    this.logger.verbose(
+      `Acquiring resource x${quantity} ${itemId} for ${userId}.`,
+    );
     inventory.resources = {
       ...(inventory.resources || {}),
       [itemId]: (inventory.resources?.[itemId] ?? 0) + quantity,
@@ -145,6 +152,9 @@ export class InventoryService {
     itemId: string,
     quantity = 1,
   ) {
+    this.logger.verbose(
+      `Removing resource x${quantity} ${itemId} for ${userId}.`,
+    );
     inventory.resources = {
       ...(inventory.resources || {}),
       [itemId]: (inventory.resources?.[itemId] ?? 0) - quantity,
@@ -155,6 +165,9 @@ export class InventoryService {
     const inventory = await this.getInventoryForUser(userId);
     if (!inventory) return;
 
+    this.logger.verbose(
+      `Removing resource x${quantity} ${itemId} for ${userId}.`,
+    );
     this.removeResourceForInventory(inventory, userId, itemId, quantity);
   }
 

@@ -45,6 +45,10 @@ export class StatsService {
     const stats = await this.getStatsForUser(userId);
     if (!stats) throw new BadRequestException('Stats not found');
 
+    this.logger.verbose(
+      `Incrementing stat ${stat} by ${byValue} for user ${userId}`,
+    );
+
     stats.stats = {
       ...stats.stats,
       [stat]: (stats.stats[stat] ?? 0) + byValue,

@@ -10,12 +10,14 @@ import { sample } from 'lodash';
 import { IFullUser, IHasAccessToken } from '@interfaces';
 import { AggregatorService } from '@modules/aggregator/aggregator.service';
 import { ContentService } from '@modules/content/content.service';
+import { Logger } from 'nestjs-pino';
 import { User } from '../user/user.schema';
 import { UserService } from '../user/user.service';
 
 @Injectable()
 export class AuthService {
   constructor(
+    private readonly logger: Logger,
     private readonly aggregatorService: AggregatorService,
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
@@ -58,6 +60,10 @@ export class AuthService {
     const createdUser = await this.userService.createUser(newUser);
 
     if (!createdUser) throw new BadRequestException('Failed to create user.');
+
+    this.logger.verbose(
+      `Registered new user: ${createdUser.username}#${createdUser.discriminator}`,
+    );
 
     return this.aggregatorService.getAllUserInformation(
       createdUser._id.toString(),

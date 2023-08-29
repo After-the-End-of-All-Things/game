@@ -153,6 +153,10 @@ export class MarketService {
       this.logger.error(e);
     }
 
+    this.logger.verbose(
+      `User ${userId} listed item ${instanceId} x${validQuantity} for ${price} coins.`,
+    );
+
     return {
       player: playerPatches,
       actions: [
@@ -310,6 +314,8 @@ export class MarketService {
       isSold: true,
     });
 
+    this.logger.verbose(`User ${userId} claimed ${totalValue} coins.`);
+
     return {
       player: playerPatches,
       actions: [
@@ -389,6 +395,10 @@ export class MarketService {
 
     await this.recordSale(userId, listing);
 
+    this.logger.verbose(
+      `User ${userId} bought ${listing.itemId} for ${listing.price} coins.`,
+    );
+
     return {
       player: playerPatches,
       actions: [
@@ -458,6 +468,10 @@ export class MarketService {
 
     listing.price = validPrice;
 
+    this.logger.verbose(
+      `User ${userId} repriced ${listing.itemId} for ${validPrice} coins.`,
+    );
+
     return {
       player: playerPatches,
       actions: [
@@ -510,6 +524,8 @@ export class MarketService {
     await this.em.nativeDelete<MarketItem>(MarketItem, {
       _id: new ObjectId(listingId),
     });
+
+    this.logger.verbose(`User ${userId} unlisted ${listing.itemId}.`);
 
     return {
       actions: [

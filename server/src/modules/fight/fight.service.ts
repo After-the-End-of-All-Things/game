@@ -210,10 +210,16 @@ export class FightService {
       this.logger.error(e);
     }
 
+    this.logger.verbose(
+      `Created PvE fight for player ${player.userId} (${fight._id})`,
+    );
+
     return fight;
   }
 
   async endFight(fight: Fight, actions: any[] = []): Promise<void> {
+    this.logger.verbose(`Ending fight ${fight._id}`);
+
     await this.removeFight(fight._id.toHexString());
 
     await Promise.all(
@@ -284,6 +290,10 @@ export class FightService {
       coinDelta = coinsGained;
     }
 
+    this.logger.verbose(
+      `Fight ${fight._id} rewarded ${xpDelta} XP and ${coinDelta} coins.`,
+    );
+
     await Promise.all(
       fight.involvedPlayers.map(async (playerId) => {
         const player = await this.playerService.getPlayerForUser(playerId);
@@ -308,6 +318,8 @@ export class FightService {
 
   async setAndTakeNextTurn(fight: Fight): Promise<void> {
     if (isFightOver(fight)) return;
+
+    this.logger.verbose(`Setting and taking next turn for fight ${fight._id}`);
 
     await this.setNextTurn(fight);
     await this.takeNextTurn(fight);
@@ -338,6 +350,10 @@ export class FightService {
 
     if (!currentCharacter) throw new BadRequestException('Character not found');
 
+    this.logger.verbose(
+      `Setting next turn for fight ${fight._id} - ${fight.currentTurn}`,
+    );
+
     reduceAllCooldownsForCharacter(currentCharacter);
 
     fight.currentTurn = fight.turnOrder[nextTurnIndex];
@@ -353,11 +369,17 @@ export class FightService {
     if (!nextCharacter) throw new BadRequestException('Character not found');
 
     if (isDead(nextCharacter)) {
+      this.logger.verbose(
+        `Skipping turn for dead character ${nextCharacter.characterId} in fight ${fight._id}`,
+      );
       await this.setAndTakeNextTurn(fight);
       return;
     }
 
     if (nextCharacter.monsterId) {
+      this.logger.verbose(
+        `Taking next turn for monster ${nextCharacter.monsterId} in fight ${fight._id}`,
+      );
       await this.aiTakeAction(fight, fight.currentTurn);
     }
   }
@@ -378,6 +400,10 @@ export class FightService {
 
     const character = getCharacterFromFightForUserId(fight, userId);
     if (!character) throw new BadRequestException('Character not found');
+
+    this.logger.verbose(
+      `Taking action ${actionId} for character ${character.characterId} in fight ${fight._id}`,
+    );
 
     await this.processActionIntoAbility(fight, character, action, targetParams);
     await this.setAndTakeNextTurn(fight);
@@ -439,6 +465,9 @@ export class FightService {
       doDamageToTargetForAbility(fight, character, target, damage);
     });
 
+    this.logger.verbose(
+      `Handling ability ${action.itemId} for character ${character.characterId} in fight ${fight._id}`,
+    );
     await this.saveAndUpdateFight(fight);
   }
 
@@ -510,6 +539,10 @@ export class FightService {
       finalizedTargetParams = { tile: chosenTile };
     }
 
+    this.logger.verbose(
+      `AI taking action ${abilityRef.itemId} for character ${characterRef.characterId} in fight ${fight._id}`,
+    );
+
     await this.processActionIntoAbility(
       fight,
       characterRef,
@@ -547,6 +580,10 @@ export class FightService {
     if (side !== targetAffiliation)
       throw new BadRequestException('Cannot move to enemy side');
 
+    this.logger.verbose(
+      `Moving character ${character.characterId} to tile ${newTile.x},${newTile.y} in fight ${fight._id}`,
+    );
+
     moveCharacterBetweenTiles(character.characterId, tile, newTile);
 
     await this.saveAndUpdateFight(fight);
@@ -554,6 +591,8 @@ export class FightService {
 
   async flee(fight: Fight): Promise<void> {
     fight.defenders = [];
+
+    this.logger.verbose(`Fleeing fight ${fight._id}`);
 
     await this.endFight(fight, [
       {

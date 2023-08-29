@@ -101,6 +101,9 @@ export class DiscoveriesService {
   discoverLocation(discoveries: Discoveries, locationName: string): boolean {
     if (discoveries.locations[locationName]) return false;
 
+    this.logger.verbose(
+      `Discovered ${locationName} for ${discoveries.userId}.`,
+    );
     discoveries.locations = { ...discoveries.locations, [locationName]: true };
     return true;
   }
@@ -135,6 +138,10 @@ export class DiscoveriesService {
             (discoveriesRef.collectibles?.[itemDefinition.itemId] ?? 0) + 1,
         };
       },
+    );
+
+    this.logger.verbose(
+      `Discovered collectible ${itemDefinition.name} for ${userId}.`,
     );
 
     return {
@@ -181,6 +188,10 @@ export class DiscoveriesService {
             (discoveriesRef.items?.[itemDefinition.itemId] ?? 0) + 1,
         };
       },
+    );
+
+    this.logger.verbose(
+      `Discovered equipment ${itemDefinition.name} for ${userId}.`,
     );
 
     return {
@@ -231,6 +242,10 @@ export class DiscoveriesService {
       },
     );
 
+    this.logger.verbose(
+      `Claimed unique collectible reward for ${userId} (${totalCollectiblesFound} total).`,
+    );
+
     return {
       discoveries: discoveryPatches,
       player: playerPatches,
@@ -274,6 +289,10 @@ export class DiscoveriesService {
         this.playerHelper.gainCoins(playerRef, coinReward);
         this.playerHelper.gainOats(playerRef, oatReward);
       },
+    );
+
+    this.logger.verbose(
+      `Claimed total collectible reward for ${userId} (${totalCollectiblesFound} total).`,
     );
 
     return {
@@ -321,6 +340,10 @@ export class DiscoveriesService {
       },
     );
 
+    this.logger.verbose(
+      `Claimed unique equipment reward for ${userId} (${totalItemsFound} total).`,
+    );
+
     return {
       discoveries: discoveryPatches,
       player: playerPatches,
@@ -364,6 +387,10 @@ export class DiscoveriesService {
         this.playerHelper.gainCoins(playerRef, coinReward);
         this.playerHelper.gainOats(playerRef, oatReward);
       },
+    );
+
+    this.logger.verbose(
+      `Claimed total equipment reward for ${userId} (${totalItemsFound} total).`,
     );
 
     return {

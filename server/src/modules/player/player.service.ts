@@ -73,6 +73,8 @@ export class PlayerService {
       },
     );
 
+    this.logger.verbose(`Updated portrait for player ${userId} to ${portrait}`);
+
     return {
       player: playerPatches,
       actions: [
@@ -103,6 +105,10 @@ export class PlayerService {
       async (playerRef) => {
         playerRef.profile = { ...playerRef.profile, shortBio };
       },
+    );
+
+    this.logger.verbose(
+      `Updated short bio for player ${userId} to ${shortBio}`,
     );
 
     return {
@@ -136,6 +142,8 @@ export class PlayerService {
         playerRef.profile = { ...playerRef.profile, longBio };
       },
     );
+
+    this.logger.verbose(`Updated long bio for player ${userId} to ${longBio}`);
 
     return {
       player: playerPatches,

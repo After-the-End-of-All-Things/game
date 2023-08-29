@@ -9,10 +9,12 @@ import { PlayerService } from '@modules/player/player.service';
 import { StatsService } from '@modules/stats/stats.service';
 import { UserService } from '@modules/user/user.service';
 import { Injectable } from '@nestjs/common';
+import { Logger } from 'nestjs-pino';
 
 @Injectable()
 export class AggregatorService {
   constructor(
+    private readonly logger: Logger,
     private readonly contentService: ContentService,
     private readonly userService: UserService,
     private readonly playerService: PlayerService,
@@ -73,10 +75,13 @@ export class AggregatorService {
         ) as IEquipment;
         if (!checkItem) return;
 
-        const currentItem = JSON.stringify(equippedItems[slot]);
+        const currentItem = JSON.stringify(currentEquippedItem);
         const newItem = JSON.stringify(checkItem);
 
         if (currentItem && newItem && currentItem !== newItem) {
+          this.logger.verbose(
+            `Migrating item ${currentEquippedItem.name} for ${user.user.username}.`,
+          );
           await this.inventoryService.updateEquippedItem(user.user.id, slot, {
             ...checkItem,
             instanceId: currentEquippedItem.instanceId,

@@ -73,6 +73,10 @@ export class NotificationService {
       this.logger.error(e);
     }
 
+    this.logger.verbose(
+      `Created notification ${notificationEntity.id} (${notification.text}) for ${userId}.`,
+    );
+
     return notificationEntity;
   }
 

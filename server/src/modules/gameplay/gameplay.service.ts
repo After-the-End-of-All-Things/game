@@ -29,6 +29,7 @@ import { ForbiddenException, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { getPatchesAfterPropChanges } from '@utils/patches';
 import { sample } from 'lodash';
+import { Logger } from 'nestjs-pino';
 
 type ExploreResult =
   | 'Nothing'
@@ -45,6 +46,7 @@ const createFilledArray = (length: number, fill: ExploreResult) =>
 @Injectable()
 export class GameplayService {
   constructor(
+    private readonly logger: Logger,
     private readonly playerService: PlayerService,
     private readonly discoveriesService: DiscoveriesService,
     private readonly statsService: StatsService,
@@ -243,6 +245,10 @@ export class GameplayService {
       },
     );
 
+    this.logger.verbose(
+      `Explore result: ${exploreResult} for player ${userId} in ${player.location.current}.`,
+    );
+
     return { player: playerPatches, discoveries: discoveriesPatches };
   }
 
@@ -293,6 +299,8 @@ export class GameplayService {
         };
       },
     );
+
+    this.logger.verbose(`Player ${userId} is walking to ${locationName}.`);
 
     return { player: playerPatches };
   }
@@ -350,6 +358,8 @@ export class GameplayService {
       },
     );
 
+    this.logger.verbose(`Player ${userId} is traveling to ${locationName}.`);
+
     return { player: playerPatches };
   }
 
@@ -378,6 +388,10 @@ export class GameplayService {
     const notificationAction = notification.actions?.[0];
     if (!notificationAction)
       throw new ForbiddenException('Notification has no actions');
+
+    this.logger.verbose(
+      `Player ${userId} is waving to ${notificationAction.urlData.targetUserId} from notification.`,
+    );
 
     return this.waveToPlayer(userId, player, notificationAction);
   }
@@ -464,6 +478,8 @@ export class GameplayService {
 
     this.analyticsService.sendDesignEvent(userId, `Gameplay:Wave`);
 
+    this.logger.verbose(`Player ${userId} waved to ${targetUserId}.`);
+
     return { player: playerPatches };
   }
 
@@ -489,6 +505,10 @@ export class GameplayService {
           await this.inventoryService.acquireItem(userId, item.itemId);
         }
       },
+    );
+
+    this.logger.verbose(
+      `Player ${userId} took item ${player.action?.actionData.item.itemId}.`,
     );
 
     const playerPatches = await getPatchesAfterPropChanges<Player>(
@@ -571,6 +591,8 @@ export class GameplayService {
         this.playerHelper.gainCoins(playerRef, coinsGained);
       },
     );
+
+    this.logger.verbose(`Player ${userId} sold item ${item.itemId}.`);
 
     return {
       player: playerPatches,
@@ -661,6 +683,8 @@ export class GameplayService {
       },
     );
 
+    this.logger.verbose(`Player ${userId} equipped item ${item.itemId}.`);
+
     return {
       inventory: inventoryPatches,
       actions: [
@@ -694,6 +718,8 @@ export class GameplayService {
       ...inventory.equippedItems,
       [equipmentSlot]: undefined,
     };
+
+    this.logger.verbose(`Player ${userId} unequipped item ${item.itemId}.`);
 
     return {};
   }
@@ -769,6 +795,10 @@ export class GameplayService {
       },
     );
 
+    this.logger.verbose(
+      `Player ${userId} started crafting item ${item.itemId}.`,
+    );
+
     return { inventory: inventoryPatches, crafting: craftingPatches };
   }
 
@@ -840,6 +870,10 @@ export class GameplayService {
     await this.notificationService.clearAllNotificationActionsMatchingUrl(
       userId,
       'gameplay/item/craft/take',
+    );
+
+    this.logger.verbose(
+      `Player ${userId} collected crafted item ${item.itemId}.`,
     );
 
     return {
