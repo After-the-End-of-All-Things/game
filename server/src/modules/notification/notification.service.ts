@@ -5,12 +5,14 @@ import { InjectRepository } from '@mikro-orm/nestjs';
 import { Notification } from '@modules/notification/notification.schema';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import { Logger } from 'nestjs-pino';
 import { fromEvent } from 'rxjs';
 @Injectable()
 export class NotificationService {
   private readonly events = new EventEmitter2();
 
   constructor(
+    private readonly logger: Logger,
     private readonly em: EntityManager,
     @InjectRepository(Notification)
     private readonly notifications: EntityRepository<Notification>,
@@ -64,9 +66,12 @@ export class NotificationService {
       expiresAfterHours,
     );
 
-    this.em.persist(notificationEntity);
-
-    await this.em.flush();
+    try {
+      this.em.persist(notificationEntity);
+      await this.em.flush();
+    } catch (e) {
+      this.logger.error(e);
+    }
 
     return notificationEntity;
   }

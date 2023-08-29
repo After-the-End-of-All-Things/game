@@ -48,6 +48,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { getPatchesAfterPropChanges } from '@utils/patches';
 import { sample, sampleSize, sum } from 'lodash';
+import { Logger } from 'nestjs-pino';
 import { fromEvent } from 'rxjs';
 import { v4 as uuid } from 'uuid';
 
@@ -56,6 +57,7 @@ export class FightService {
   private readonly events = new EventEmitter2();
 
   constructor(
+    private readonly logger: Logger,
     private readonly em: EntityManager,
     @InjectRepository(Fight)
     private readonly fights: EntityRepository<Fight>,
@@ -201,8 +203,12 @@ export class FightService {
       joinedTiles,
     );
 
-    await this.fights.create(fight);
-    await this.em.flush();
+    try {
+      await this.fights.create(fight);
+      await this.em.flush();
+    } catch (e) {
+      this.logger.error(e);
+    }
 
     return fight;
   }

@@ -24,10 +24,12 @@ import { UserService } from '@modules/user/user.service';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { getPatchesAfterPropChanges } from '@utils/patches';
+import { Logger } from 'nestjs-pino';
 
 @Injectable()
 export class MarketService {
   constructor(
+    private readonly logger: Logger,
     private readonly em: EntityManager,
     @InjectRepository(MarketItem)
     private readonly marketItem: EntityRepository<MarketItem>,
@@ -125,7 +127,6 @@ export class MarketService {
         listedById: user.discriminator,
       },
     );
-    await this.marketItem.create(dbItem);
 
     if (isResource) {
       await this.inventoryService.removeResource(userId, itemId, validQuantity);
@@ -143,7 +144,12 @@ export class MarketService {
       },
     );
 
-    await this.em.flush();
+    try {
+      await this.marketItem.create(dbItem);
+      await this.em.flush();
+    } catch (e) {
+      this.logger.error(e);
+    }
 
     return {
       player: playerPatches,
