@@ -183,12 +183,19 @@
 
         <ng-template #tooltip>
           <strong>{{ collectible.name }}</strong>
-          <br />
-          <br />
-          <em>Found in {{ collectible.location }}</em>
-          <br />
-          <br />
-          <em>{{ collectible.description }}</em>
+
+          <div *ngIf="discoveries.collectibles?.[collectible.itemId]">
+            <br />
+            <em>Found in {{ collectible.location }}</em>
+            <br />
+            <br />
+            <em>{{ collectible.description }}</em>
+          </div>
+
+          <div *ngIf="!discoveries.collectibles?.[collectible.itemId]">
+            <br />
+            <em>Not yet found</em>
+          </div>
         </ng-template>
       </ion-col>
     </ion-row>
