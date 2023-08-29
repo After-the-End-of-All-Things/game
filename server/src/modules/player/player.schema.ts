@@ -32,9 +32,6 @@ export class Player implements IPlayer {
   userId: string;
 
   @Property()
-  name: string;
-
-  @Property()
   xp: number;
 
   @Property()
