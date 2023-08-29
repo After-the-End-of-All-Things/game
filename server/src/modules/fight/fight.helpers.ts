@@ -408,6 +408,8 @@ export function doDamageToTargetForAbility(
   defender: IFightCharacter,
   damage: number,
 ): void {
+  if (isDead(defender)) return;
+
   defender.health.current = Math.max(0, defender.health.current - damage);
 
   addStatusMessage(
