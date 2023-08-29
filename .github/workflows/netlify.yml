@@ -1,4 +1,4 @@
-name: Automatic Deploy
+name: Automatic Deploy (Client)
 
 on:
   push:
