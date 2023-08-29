@@ -1,11 +1,10 @@
 name: Automatic Deploy (Client)
 
 on:
+  workflow_dispatch:
   push:
-    branches:
-      - main
-
-  workflow_dispatch: {}
+    tags:
+      - 'v*'
 
 jobs:
   build:
