@@ -209,8 +209,8 @@ export function isFightOver(fight: Fight): boolean {
   return (
     fight.attackers.every((attacker) => isDead(attacker)) ||
     fight.defenders.every((defender) => isDead(defender)) ||
-    fight.attackers.length > 0 ||
-    fight.defenders.length > 0
+    fight.attackers.length === 0 ||
+    fight.defenders.length === 0
   );
 }
 
