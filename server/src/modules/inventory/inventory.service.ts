@@ -10,11 +10,13 @@ import {
   ForbiddenException,
   Injectable,
 } from '@nestjs/common';
+import { Logger } from 'nestjs-pino';
 import { v4 as uuid } from 'uuid';
 
 @Injectable()
 export class InventoryService {
   constructor(
+    private readonly logger: Logger,
     private readonly em: EntityManager,
     @InjectRepository(Inventory)
     private readonly inventory: EntityRepository<Inventory>,
@@ -41,6 +43,8 @@ export class InventoryService {
       await this.inventory.create(inventory);
       await this.em.flush();
     } catch (e) {
+      this.logger.error(e);
+
       // mongodb duplicate
       if (e.code === 11000) {
         throw new BadRequestException('inventory id already in use.');

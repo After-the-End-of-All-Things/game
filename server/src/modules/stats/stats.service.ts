@@ -3,10 +3,12 @@ import { EntityManager, EntityRepository } from '@mikro-orm/mongodb';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { Stats } from '@modules/stats/stats.schema';
 import { BadRequestException, Injectable } from '@nestjs/common';
+import { Logger } from 'nestjs-pino';
 
 @Injectable()
 export class StatsService {
   constructor(
+    private readonly logger: Logger,
     private readonly em: EntityManager,
     @InjectRepository(Stats)
     private readonly stats: EntityRepository<Stats>,
@@ -28,6 +30,8 @@ export class StatsService {
       await this.stats.create(stats);
       await this.em.flush();
     } catch (e) {
+      this.logger.error(e);
+
       // mongodb duplicate
       if (e.code === 11000) {
         throw new BadRequestException('stats id already in use.');

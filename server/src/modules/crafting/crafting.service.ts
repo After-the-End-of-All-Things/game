@@ -3,10 +3,12 @@ import { EntityManager, EntityRepository } from '@mikro-orm/mongodb';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { Crafting } from '@modules/crafting/crafting.schema';
 import { BadRequestException, Injectable } from '@nestjs/common';
+import { Logger } from 'nestjs-pino';
 
 @Injectable()
 export class CraftingService {
   constructor(
+    private readonly logger: Logger,
     private readonly em: EntityManager,
     @InjectRepository(Crafting)
     private readonly crafting: EntityRepository<Crafting>,
@@ -28,6 +30,8 @@ export class CraftingService {
       await this.crafting.create(crafting);
       await this.em.flush();
     } catch (e) {
+      this.logger.error(e);
+
       // mongodb duplicate
       if (e.code === 11000) {
         throw new BadRequestException('crafting id already in use.');

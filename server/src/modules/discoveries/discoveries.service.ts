@@ -16,10 +16,12 @@ import {
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { getPatchesAfterPropChanges } from '@utils/patches';
 import { sample, sum } from 'lodash';
+import { Logger } from 'nestjs-pino';
 
 @Injectable()
 export class DiscoveriesService {
   constructor(
+    private readonly logger: Logger,
     private readonly em: EntityManager,
     @InjectRepository(Discoveries)
     private readonly discoveries: EntityRepository<Discoveries>,
@@ -50,6 +52,8 @@ export class DiscoveriesService {
       await this.discoveries.create(discoveries);
       await this.em.flush();
     } catch (e) {
+      this.logger.error(e);
+
       // mongodb duplicate
       if (e.code === 11000) {
         throw new BadRequestException('discoveries id already in use.');

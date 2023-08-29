@@ -19,10 +19,12 @@ import {
 } from '@nestjs/common';
 import { getPatchesAfterPropChanges } from '@utils/patches';
 import { sample } from 'lodash';
+import { Logger } from 'nestjs-pino';
 
 @Injectable()
 export class PlayerService {
   constructor(
+    private readonly logger: Logger,
     private readonly em: EntityManager,
     @InjectRepository(Player)
     private readonly players: EntityRepository<Player>,
@@ -46,6 +48,8 @@ export class PlayerService {
       await this.players.create(player);
       await this.em.flush();
     } catch (e) {
+      this.logger.error(e);
+
       // mongodb duplicate
       if (e.code === 11000) {
         throw new BadRequestException('player id already in use.');
