@@ -59,7 +59,7 @@ jobs:
           path: release_url.txt
 
       - name: Build Blog Post for Version Update
-        run: npm run blogpost:generate
+        run: npm run util:blogpost:generate
 
       - name: Read blog_post.txt file
         id: getBlogPost
