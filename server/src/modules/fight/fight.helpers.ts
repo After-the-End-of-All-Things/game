@@ -35,8 +35,12 @@ export function calculateAbilityDamageWithElements(
 
   const elementDamage = Object.keys(elements)
     .map((element) => {
+      const elementTotal = elements?.[element as Element] ?? 0;
       const resistance = target.totalResistances[element as Element] ?? 1;
-      return (elements?.[element as Element] ?? 0) * damage * resistance;
+      const baseDamage = damage * resistance;
+      const elementDamageTotal = baseDamage * (elementTotal * 0.05);
+
+      return elementDamageTotal;
     })
     .reduce((a, b) => a + b, 0);
 
@@ -182,7 +186,14 @@ export function getTargetsForAbility(
     }
 
     case 'Ground': {
-      return [];
+      const { tile } = targetParams;
+      if (!tile) return [];
+
+      const tiles = getTargettedTilesForPattern(tile.x, tile.y, action.pattern);
+      return getAllTilesMatchingPatternTargets(fight, tiles)
+        .flatMap((tile) => tile.containedCharacters)
+        .flatMap((id) => getCharacterFromFightForCharacterId(fight, id))
+        .filter(Boolean) as IFightCharacter[];
     }
 
     case 'Self': {
@@ -410,12 +421,14 @@ export function doDamageToTargetForAbility(
 ): void {
   if (isDead(defender)) return;
 
-  defender.health.current = Math.max(0, defender.health.current - damage);
+  const dealtDamage = +damage.toFixed(1);
+
+  defender.health.current = Math.max(0, defender.health.current - dealtDamage);
 
   addStatusMessage(
     fight,
     attacker.name,
-    `${attacker.name} dealt ${damage.toLocaleString()} damage to ${
+    `${attacker.name} dealt ${dealtDamage.toLocaleString()} damage to ${
       defender.name
     }!`,
   );
