@@ -24,7 +24,6 @@ export class RollbarService {
       captureUncaught: true,
       captureUnhandledRejections: true,
       hostBlockList: ['netlify.app'],
-      hostSafelist: ['ateoat.com'],
       payload: {
         environment: environment.rollbar.environment,
       },

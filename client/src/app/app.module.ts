@@ -53,6 +53,7 @@ export function getAuthToken() {
     JwtModule.forRoot({
       config: {
         tokenGetter: getAuthToken,
+        allowedDomains: ['localhost:3000', 'api.ateoat.com', 'ateoat.com'],
       },
     }),
     ServiceWorkerModule.register('ngsw-worker.js', {

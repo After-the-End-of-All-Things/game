@@ -11,6 +11,31 @@
     <ion-row>
       <ion-col>
         <ion-card>
+          <ion-card-content>
+            <ion-row>
+              <ion-col>
+                <strong>Client Version:</strong>
+                {{ version }}
+              </ion-col>
+
+              <ion-col>
+                <strong>Content Version:</strong>
+                {{ contentVersion }}
+              </ion-col>
+
+              <ion-col>
+                <strong>Assets Version:</strong>
+                {{ artVersion }}
+              </ion-col>
+            </ion-row>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-card>
           <ion-card-header>
             <ion-card-title>Options</ion-card-title>
           </ion-card-header>

@@ -31,6 +31,8 @@ export class AssetService {
     const manifest = await fetch(`${environment.assetsUrl}/manifest.json`);
     const manifestData = await manifest.json();
 
+    localStorage.setItem('artVersion', manifestData.meta.hash);
+
     this.maxPortraits = manifestData.assets.individualLQ.filter((x: any) =>
       x.name.startsWith('portraits-'),
     ).length;
