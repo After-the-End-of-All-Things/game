@@ -1,3 +1,4 @@
 node_modules
 *version*.md
 blog-post.txt
+client/src/assets/*.md

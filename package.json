@@ -1,6 +1,6 @@
 {
-  "name": "ateoat-server",
-  "description": "ateoat server",
+  "name": "ateoat-main",
+  "description": "ateoat main package",
   "version": "0.0.1",
   "author": "ateoat team",
   "private": true,

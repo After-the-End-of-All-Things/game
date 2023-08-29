@@ -24,6 +24,7 @@ import { DataGrabberInterceptor } from '@helpers/data-grabber.interceptor';
 import { AuthService } from '@services/auth.service';
 import { ContentService } from '@services/content.service';
 import { FightService } from '@services/fight.service';
+import { MetaService } from '@services/meta.service';
 import { NotificationsService } from '@services/notifications.service';
 import { RollbarErrorHandler, RollbarService } from '@services/rollbar.service';
 import { NgxTippyModule } from 'ngx-tippy-wrapper';
@@ -98,6 +99,7 @@ export function getAuthToken() {
           notificationService: NotificationsService,
           fightService: FightService,
           rollbarService: RollbarService,
+          metaService: MetaService,
         ) =>
         async () => {
           await assetService.init();
@@ -106,6 +108,7 @@ export function getAuthToken() {
           await notificationService.init();
           await fightService.init();
           await rollbarService.init();
+          await metaService.init();
         },
       deps: [
         AssetService,
@@ -114,6 +117,7 @@ export function getAuthToken() {
         NotificationsService,
         FightService,
         RollbarService,
+        MetaService,
       ],
       multi: true,
     },

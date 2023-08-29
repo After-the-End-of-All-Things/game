@@ -1,0 +1,26 @@
+<ion-header [translucent]="true">
+  <app-header-bar></app-header-bar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <app-header-bar></app-header-bar>
+  </ion-header>
+
+  <ion-card>
+    <ion-card-content>
+      <ion-segment value="current" (ionChange)="selectCategory($event)">
+        <ion-segment-button value="current">
+          <ion-label>Current</ion-label>
+        </ion-segment-button>
+
+        <ion-segment-button value="all">
+          <ion-label>All</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+
+      <br />
+      <div [innerHTML]="changelog"></div>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

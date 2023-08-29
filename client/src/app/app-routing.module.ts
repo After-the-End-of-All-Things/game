@@ -102,6 +102,13 @@ const routes: Routes = [
     loadChildren: () =>
       import('./pages/combat/combat.module').then((m) => m.CombatPageModule),
   },
+  {
+    path: 'updates',
+    canActivate: [AuthGuard],
+    data: { title: 'Game Updates' },
+    loadChildren: () =>
+      import('./pages/updates/updates.module').then((m) => m.UpdatesPageModule),
+  },
 
   {
     path: '**',
