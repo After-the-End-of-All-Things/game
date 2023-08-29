@@ -30,6 +30,7 @@ import { MarketModule } from './modules/market/market.module';
 import { UpdateAuthTimeInterceptor } from './utils/updatetime.interceptor';
 
 const isProduction = process.env.NODE_ENV === 'production';
+const logLevel = process.env.LOG_LEVEL || 'trace';
 
 @Module({
   imports: [
@@ -48,6 +49,7 @@ const isProduction = process.env.NODE_ENV === 'production';
                 singleLine: true,
               },
             },
+        level: logLevel,
         customSuccessMessage: (req) => `${req.method} ${req.url}`,
         serializers: {
           req: (req) => ({

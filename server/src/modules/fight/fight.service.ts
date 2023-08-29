@@ -217,6 +217,12 @@ export class FightService {
     return fight;
   }
 
+  async startEndFightSequence(fight: Fight): Promise<void> {
+    await this.handleFightRewards(fight);
+    await delayTime(3000);
+    await this.endFight(fight);
+  }
+
   async endFight(fight: Fight, actions: any[] = []): Promise<void> {
     this.logger.verbose(`Ending fight ${fight._id}`);
 
@@ -317,7 +323,9 @@ export class FightService {
   }
 
   async setAndTakeNextTurn(fight: Fight): Promise<void> {
-    if (isFightOver(fight)) return;
+    if (isFightOver(fight)) {
+      return this.startEndFightSequence(fight);
+    }
 
     this.logger.verbose(`Setting and taking next turn for fight ${fight._id}`);
 
@@ -327,10 +335,7 @@ export class FightService {
 
   async setNextTurn(fight: Fight): Promise<void> {
     if (isFightOver(fight)) {
-      await this.handleFightRewards(fight);
-      await delayTime(3000);
-      await this.endFight(fight);
-      return;
+      return this.startEndFightSequence(fight);
     }
 
     const currentTurnIndex = fight.turnOrder.findIndex(
