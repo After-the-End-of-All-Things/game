@@ -609,10 +609,10 @@ export class GameplayService {
       userId,
       instanceId,
     );
-    if (!item) throw new ForbiddenException('Item not found.');
+    if (!item) throw new ForbiddenException('Inventory item not found.');
 
     const itemRef = await this.contentService.getItem(item.itemId);
-    if (!itemRef) throw new ForbiddenException('Item not found.');
+    if (!itemRef) throw new ForbiddenException('Item ref not found.');
 
     const job = await this.contentService.getJob(player.job);
     if (!job) throw new ForbiddenException('Job not found.');
@@ -638,7 +638,7 @@ export class GameplayService {
     }
 
     const existingInstance = inventory.equippedItems[equipmentSlot];
-    if (existingInstance) {
+    if (existingInstance && existingInstance.instanceId) {
       await this.unequipItem(
         userId,
         equipmentSlot,
@@ -687,7 +687,7 @@ export class GameplayService {
       userId,
       instanceId,
     );
-    if (!item) throw new ForbiddenException('Item not found.');
+    if (!item) throw new ForbiddenException('Equipped item not found.');
 
     item.isInUse = false;
     inventory.equippedItems = {
@@ -709,7 +709,7 @@ export class GameplayService {
     if (!recipe) throw new ForbiddenException('Recipe not found.');
 
     const item = this.contentService.getItem(itemId);
-    if (!item) throw new ForbiddenException('Item not found.');
+    if (!item) throw new ForbiddenException('Craft item not found.');
 
     if (crafting.currentlyCrafting)
       throw new ForbiddenException('You are already crafting an item.');
@@ -789,7 +789,7 @@ export class GameplayService {
       throw new ForbiddenException('Crafting not done yet.');
 
     const item = this.contentService.getItem(craftItem);
-    if (!item) throw new ForbiddenException('Item not found.');
+    if (!item) throw new ForbiddenException('Crafted item not found.');
 
     if (
       item.type !== 'resource' &&

@@ -76,12 +76,11 @@ export class AggregatorService {
         const currentItem = JSON.stringify(equippedItems[slot]);
         const newItem = JSON.stringify(checkItem);
 
-        if (currentItem !== newItem) {
-          await this.inventoryService.updateEquippedItem(
-            user.user.id,
-            slot,
-            checkItem,
-          );
+        if (currentItem && newItem && currentItem !== newItem) {
+          await this.inventoryService.updateEquippedItem(user.user.id, slot, {
+            ...checkItem,
+            instanceId: currentEquippedItem.instanceId,
+          });
         }
       }),
     );

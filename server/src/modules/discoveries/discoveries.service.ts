@@ -116,7 +116,7 @@ export class DiscoveriesService {
       userId,
       instanceId,
     );
-    if (!item) throw new NotFoundException('Item not found');
+    if (!item) throw new NotFoundException('Collectible item not found');
 
     const itemDefinition = await this.contentService.getCollectible(
       item.itemId,
@@ -164,7 +164,7 @@ export class DiscoveriesService {
       userId,
       instanceId,
     );
-    if (!item) throw new NotFoundException('Item not found');
+    if (!item) throw new NotFoundException('Equipment item not found');
 
     const itemDefinition = await this.contentService.getEquipment(item.itemId);
     if (!itemDefinition)

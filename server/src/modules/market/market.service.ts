@@ -68,7 +68,8 @@ export class MarketService {
         instanceId,
       );
 
-      if (!inventoryItem) throw new BadRequestException('Item not found');
+      if (!inventoryItem)
+        throw new BadRequestException('Inventory item not found');
       if (inventoryItem.isInUse)
         throw new BadRequestException('Item is in use');
 
@@ -76,7 +77,8 @@ export class MarketService {
       itemId = inventoryItem.itemId;
     }
 
-    if (!itemRef || !itemId) throw new BadRequestException('Item not found');
+    if (!itemRef || !itemId)
+      throw new BadRequestException('Item ref not found');
 
     const validQuantity = isResource
       ? cleanNumber(quantity, 1, {
@@ -342,7 +344,7 @@ export class MarketService {
 
     const itemRef = this.contentService.getItem(listing.itemId);
     if (!itemRef && !isResource)
-      throw new BadRequestException('Item not found');
+      throw new BadRequestException('Item ref not found');
 
     const inventory = await this.inventoryService.getInventoryForUser(userId);
     if (!inventory) throw new BadRequestException('Inventory not found');
