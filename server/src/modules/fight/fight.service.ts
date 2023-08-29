@@ -307,6 +307,8 @@ export class FightService {
   }
 
   async setAndTakeNextTurn(fight: Fight): Promise<void> {
+    if (isFightOver(fight)) return;
+
     await this.setNextTurn(fight);
     await this.takeNextTurn(fight);
   }
