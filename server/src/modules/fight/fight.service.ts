@@ -26,6 +26,7 @@ import {
   getAllTilesMatchingPatternTargets,
   getCharacterFromFightForCharacterId,
   getCharacterFromFightForUserId,
+  getCharacterSide,
   getEmptyTiles,
   getTargetsForAIAbility,
   getTargetsForAbility,
@@ -407,7 +408,7 @@ export class FightService {
     if (!character) throw new BadRequestException('Character not found');
 
     this.logger.verbose(
-      `Taking action ${actionId} for character ${character.characterId} in fight ${fight._id}`,
+      `Taking action ${action.name} for character ${character.characterId} in fight ${fight._id}`,
     );
 
     await this.processActionIntoAbility(fight, character, action, targetParams);
@@ -471,7 +472,7 @@ export class FightService {
     });
 
     this.logger.verbose(
-      `Handling ability ${action.itemId} for character ${character.characterId} in fight ${fight._id}`,
+      `Handling ability ${action.name} for character ${character.characterId} in fight ${fight._id}`,
     );
     await this.saveAndUpdateFight(fight);
   }
@@ -533,10 +534,21 @@ export class FightService {
         abilityRef.pattern,
       );
 
-      const matchingTiles = getAllTilesMatchingPatternTargets(
+      let matchingTiles = getAllTilesMatchingPatternTargets(
         fight,
         patternTiles,
       );
+
+      if (abilityRef.restrictTileSelectionToUserSide) {
+        const side = getCharacterSide(fight, characterRef);
+        if (side === 'attacker') {
+          matchingTiles = matchingTiles.filter((tile) => tile.x <= 3);
+        } else {
+          matchingTiles = matchingTiles.filter((tile) => tile.x > 3);
+        }
+      }
+
+      console.log(characterRef.name, matchingTiles);
 
       const chosenTile = sample(matchingTiles);
       if (!chosenTile) return this.setAndTakeNextTurn(fight);
@@ -545,7 +557,7 @@ export class FightService {
     }
 
     this.logger.verbose(
-      `AI taking action ${abilityRef.itemId} for character ${characterRef.characterId} in fight ${fight._id}`,
+      `AI taking action ${abilityRef.name} for character ${characterRef.characterId} in fight ${fight._id}`,
     );
 
     await this.processActionIntoAbility(

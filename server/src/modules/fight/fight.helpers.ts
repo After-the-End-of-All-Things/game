@@ -225,6 +225,13 @@ export function isFightOver(fight: Fight): boolean {
   );
 }
 
+export function getCharacterSide(
+  fight: Fight,
+  char: IFightCharacter,
+): 'attacker' | 'defender' {
+  return fight.attackers.includes(char) ? 'attacker' : 'defender';
+}
+
 export function isValidTarget(
   fight: Fight,
   attacker: IFightCharacter,
@@ -253,9 +260,7 @@ export function isValidTarget(
     return false;
   }
 
-  const attackerSide = fight.attackers.includes(attacker)
-    ? 'attacker'
-    : 'defender';
+  const attackerSide = getCharacterSide(fight, attacker);
 
   // if we have to target in order, make sure we're targetting the first possible thing
   if (targetInOrder && ids.length === 1) {
@@ -448,9 +453,7 @@ export function getTargetsForAIAbility(
   ability: ICombatAbility,
   attacker: IFightCharacter,
 ): ICombatTargetParams | undefined {
-  const attackerSide = fight.attackers.includes(attacker)
-    ? 'attacker'
-    : 'defender';
+  const attackerSide = getCharacterSide(fight, attacker);
 
   const oppositeSide =
     attackerSide === 'attacker' ? fight.defenders : fight.attackers;
