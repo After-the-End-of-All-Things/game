@@ -19,6 +19,14 @@ export class CombatAbilityComponent implements OnInit {
     return `${pattern}-${targetting}`;
   }
 
+  public get isPhysical(): boolean {
+    return (this.ability.statScaling?.power ?? 0) > 0;
+  }
+
+  public get isMagical(): boolean {
+    return (this.ability.statScaling?.magic ?? 0) > 0;
+  }
+
   constructor() {}
 
   ngOnInit() {}

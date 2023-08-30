@@ -14,11 +14,11 @@
   display: flex;
   align-items: center;
 
-  .name, app-element-icon, .ct, .cd {
+  .name, app-element-icon, .ct, .cd, .type {
     margin-right: 5px;
   }
 
-  .ct, .cd {
+  .ct, .cd, .type {
     font-size: 12px;
   }
 

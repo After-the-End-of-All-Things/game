@@ -19,6 +19,14 @@
         [inline]="true"
       ></app-element-icon>
 
+      <ion-badge class="type" color="tertiary" *ngIf="isPhysical">
+        Physical
+      </ion-badge>
+
+      <ion-badge class="type" color="tertiary" *ngIf="isMagical">
+        Magical
+      </ion-badge>
+
       <ion-badge class="cd" color="secondary" *ngIf="ability.cooldown">
         CD {{ ability.cooldown }}
       </ion-badge>
