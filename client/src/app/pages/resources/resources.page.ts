@@ -103,9 +103,12 @@ export class ResourcesPage implements OnInit {
                   realPrice * realQuantity,
                 );
 
-                const taxPrice = Math.floor(
-                  realPriceQtyAdjusted *
-                    (locationData.baseStats[LocationStat.TaxRate] / 100),
+                const taxPrice = Math.max(
+                  1,
+                  Math.floor(
+                    realPriceQtyAdjusted *
+                      (locationData.baseStats[LocationStat.TaxRate] / 100),
+                  ),
                 );
 
                 const confirm = await this.alertCtrl.create({

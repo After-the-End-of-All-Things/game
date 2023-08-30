@@ -454,7 +454,7 @@ export class MarketService {
     if (!playerLocation) throw new BadRequestException('Location not found');
 
     const taxRate = playerLocation.baseStats.taxRate ?? 5;
-    const tax = Math.floor(validPrice * (taxRate / 100));
+    const tax = Math.max(1, Math.floor(validPrice * (taxRate / 100)));
 
     if (!this.playerHelper.hasCoins(player, tax))
       throw new BadRequestException('Not enough coins');

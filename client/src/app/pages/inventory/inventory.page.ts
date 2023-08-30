@@ -141,9 +141,12 @@ export class InventoryPage implements OnInit {
 
                 const realPrice = Math.floor(price);
 
-                const taxPrice = Math.floor(
-                  realPrice *
-                    (locationData.baseStats[LocationStat.TaxRate] / 100),
+                const taxPrice = Math.max(
+                  1,
+                  Math.floor(
+                    realPrice *
+                      (locationData.baseStats[LocationStat.TaxRate] / 100),
+                  ),
                 );
 
                 const confirm = await this.alertCtrl.create({
