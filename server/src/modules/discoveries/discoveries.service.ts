@@ -1,6 +1,7 @@
 import { ILocation, UserResponse } from '@interfaces';
 import { EntityManager, EntityRepository } from '@mikro-orm/mongodb';
 import { InjectRepository } from '@mikro-orm/nestjs';
+import { ConstantsService } from '@modules/content/constants.service';
 import { ContentService } from '@modules/content/content.service';
 import { PlayerHelperService } from '@modules/content/playerhelper.service';
 import { Discoveries } from '@modules/discoveries/discoveries.schema';
@@ -27,6 +28,7 @@ export class DiscoveriesService {
     private readonly discoveries: EntityRepository<Discoveries>,
     private readonly inventoryService: InventoryService,
     private readonly contentService: ContentService,
+    private readonly constants: ConstantsService,
     private readonly events: EventEmitter2,
     private readonly playerService: PlayerService,
     private readonly playerHelper: PlayerHelperService,
@@ -239,7 +241,7 @@ export class DiscoveriesService {
 
     const totalTimesClaimed = discoveries.uniqueCollectibleClaims ?? 0;
     const totalCollectiblesFound = sum(Object.keys(discoveries.collectibles));
-    const interval = 10;
+    const interval = this.constants.uniqueCollectiblesRequired;
 
     if (totalCollectiblesFound < (totalTimesClaimed + 1) * interval)
       throw new BadRequestException('Not enough collectibles found');
@@ -251,8 +253,8 @@ export class DiscoveriesService {
       },
     );
 
-    const coinReward = 50000;
-    const oatReward = 50;
+    const coinReward = this.constants.uniqueCollectibleRewardMultiplier * 1000;
+    const oatReward = this.constants.uniqueCollectibleRewardMultiplier;
 
     const playerPatches = await getPatchesAfterPropChanges<Player>(
       player,
@@ -288,7 +290,7 @@ export class DiscoveriesService {
 
     const totalTimesClaimed = discoveries.totalCollectibleClaims ?? 0;
     const totalCollectiblesFound = sum(Object.values(discoveries.collectibles));
-    const interval = 100;
+    const interval = this.constants.totalCollectiblesRequired;
 
     if (totalCollectiblesFound < (totalTimesClaimed + 1) * interval)
       throw new BadRequestException('Not enough collectibles found');
@@ -300,8 +302,8 @@ export class DiscoveriesService {
       },
     );
 
-    const coinReward = 25000;
-    const oatReward = 25;
+    const coinReward = this.constants.totalCollectibleRewardMultiplier * 1000;
+    const oatReward = this.constants.totalCollectibleRewardMultiplier;
 
     const playerPatches = await getPatchesAfterPropChanges<Player>(
       player,
@@ -337,7 +339,7 @@ export class DiscoveriesService {
 
     const totalTimesClaimed = discoveries.uniqueEquipmentClaims ?? 0;
     const totalItemsFound = sum(Object.keys(discoveries.items));
-    const interval = 100;
+    const interval = this.constants.uniqueEquipmentRequired;
 
     if (totalItemsFound < (totalTimesClaimed + 1) * interval)
       throw new BadRequestException('Not enough equipment found');
@@ -349,8 +351,8 @@ export class DiscoveriesService {
       },
     );
 
-    const coinReward = 10000;
-    const oatReward = 10;
+    const coinReward = this.constants.uniqueEquipmentRewardMultiplier * 1000;
+    const oatReward = this.constants.uniqueEquipmentRewardMultiplier;
 
     const playerPatches = await getPatchesAfterPropChanges<Player>(
       player,
@@ -386,7 +388,7 @@ export class DiscoveriesService {
 
     const totalTimesClaimed = discoveries.totalEquipmentClaims ?? 0;
     const totalItemsFound = sum(Object.values(discoveries.items));
-    const interval = 1000;
+    const interval = this.constants.totalEquipmentRequired;
 
     if (totalItemsFound < (totalTimesClaimed + 1) * interval)
       throw new ForbiddenException('Not enough equipment found');
@@ -398,8 +400,8 @@ export class DiscoveriesService {
       },
     );
 
-    const coinReward = 10000;
-    const oatReward = 10;
+    const coinReward = this.constants.totalEquipmentRewardMultiplier * 1000;
+    const oatReward = this.constants.totalEquipmentRewardMultiplier;
 
     const playerPatches = await getPatchesAfterPropChanges<Player>(
       player,
@@ -435,7 +437,7 @@ export class DiscoveriesService {
 
     const totalTimesClaimed = discoveries.uniqueMonsterClaims ?? 0;
     const totalItemsFound = sum(Object.keys(discoveries.monsters));
-    const interval = 25;
+    const interval = this.constants.uniqueMonstersRequired;
 
     if (totalItemsFound < (totalTimesClaimed + 1) * interval)
       throw new BadRequestException('Not enough equipment found');
@@ -447,8 +449,8 @@ export class DiscoveriesService {
       },
     );
 
-    const coinReward = 25000;
-    const oatReward = 25;
+    const coinReward = this.constants.uniqueMonsterRewardMultiplier * 1000;
+    const oatReward = this.constants.uniqueMonsterRewardMultiplier;
 
     const playerPatches = await getPatchesAfterPropChanges<Player>(
       player,
@@ -484,7 +486,7 @@ export class DiscoveriesService {
 
     const totalTimesClaimed = discoveries.totalMonsterClaims ?? 0;
     const totalItemsFound = sum(Object.values(discoveries.monsters));
-    const interval = 250;
+    const interval = this.constants.totalMonstersRequired;
 
     if (totalItemsFound < (totalTimesClaimed + 1) * interval)
       throw new ForbiddenException('Not enough equipment found');
@@ -496,8 +498,8 @@ export class DiscoveriesService {
       },
     );
 
-    const coinReward = 10000;
-    const oatReward = 10;
+    const coinReward = this.constants.totalMonsterRewardMultiplier * 1000;
+    const oatReward = this.constants.totalMonsterRewardMultiplier;
 
     const playerPatches = await getPatchesAfterPropChanges<Player>(
       player,
