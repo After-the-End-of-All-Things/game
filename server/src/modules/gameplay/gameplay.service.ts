@@ -525,6 +525,11 @@ export class GameplayService {
             item,
           },
         });
+
+        this.analyticsService.sendDesignEvent(
+          userId,
+          `Gameplay:TakeItem:${player.location.current}:${item.name}`,
+        );
       },
     );
 
@@ -548,6 +553,11 @@ export class GameplayService {
       formation,
     );
     if (!fight) throw new ForbiddenException('Fight not created');
+
+    this.analyticsService.sendDesignEvent(
+      userId,
+      `Gameplay:StartFight:${player.location.current}:${formation.name}`,
+    );
 
     return {
       fight,
@@ -593,6 +603,11 @@ export class GameplayService {
     );
 
     this.logger.verbose(`Player ${userId} sold item ${item.itemId}.`);
+
+    this.analyticsService.sendDesignEvent(
+      userId,
+      `Gameplay:SellItem:${player.location.current}:${item.name}`,
+    );
 
     return {
       player: playerPatches,
@@ -797,6 +812,11 @@ export class GameplayService {
 
     this.logger.verbose(
       `Player ${userId} started crafting item ${item.itemId}.`,
+    );
+
+    this.analyticsService.sendDesignEvent(
+      userId,
+      `Gameplay:CraftItem:${item.name}`,
     );
 
     return { inventory: inventoryPatches, crafting: craftingPatches };
