@@ -6,6 +6,7 @@ import {
   IFightTile,
   IMonster,
   IMonsterFormation,
+  TrackedStat,
   UserResponse,
 } from '@interfaces';
 import { EntityManager, EntityRepository, ObjectId } from '@mikro-orm/mongodb';
@@ -45,6 +46,7 @@ import { Fight } from '@modules/fight/fight.schema';
 import { InventoryService } from '@modules/inventory/inventory.service';
 import { Player } from '@modules/player/player.schema';
 import { PlayerService } from '@modules/player/player.service';
+import { StatsService } from '@modules/stats/stats.service';
 import { UserService } from '@modules/user/user.service';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
@@ -73,6 +75,7 @@ export class FightService {
     private readonly userService: UserService,
     private readonly inventoryService: InventoryService,
     private readonly discoveriesService: DiscoveriesService,
+    private readonly statsService: StatsService,
   ) {}
 
   public subscribe(channel: string) {
@@ -255,6 +258,7 @@ export class FightService {
   async handleFightRewards(fight: Fight): Promise<void> {
     let xpDelta = 0;
     let coinDelta = 0;
+    let isWin = false;
 
     if (!didAttackersWinFight(fight)) {
       const xpLost = Math.floor(
@@ -281,6 +285,7 @@ export class FightService {
       xpDelta = -xpLost;
       coinDelta = -coinsLost;
     } else {
+      isWin = true;
       const xpGained = sum(fight.defenders.map((c) => c.killRewards?.xp ?? 0));
       const coinsGained = sum(
         fight.defenders.map((c) => c.killRewards?.coins ?? 0),
@@ -316,6 +321,14 @@ export class FightService {
         );
         if (!discoveries)
           throw new BadRequestException('Discoveries not found');
+
+        if (fight.defenders.length > 0 && fight.attackers.length > 0) {
+          await this.statsService.incrementStat(
+            player.userId,
+            (isWin ? 'combatWins' : 'combatLosses') as TrackedStat,
+            1,
+          );
+        }
 
         const allMonsterIds = fight.defenders
           .map((c) => c.monsterId)
@@ -412,6 +425,14 @@ export class FightService {
       return;
     }
 
+    if (nextCharacter.userId) {
+      await this.statsService.incrementStat(
+        nextCharacter.userId,
+        'combatTurnsTaken' as TrackedStat,
+        1,
+      );
+    }
+
     if (nextCharacter.monsterId) {
       this.logger.verbose(
         `Taking next turn for monster ${nextCharacter.monsterId} in fight ${fight._id}`,
@@ -451,6 +472,14 @@ export class FightService {
     action: ICombatAbility,
     targetParams: ICombatTargetParams,
   ): Promise<void> {
+    if (character.userId) {
+      await this.statsService.incrementStat(
+        character.userId,
+        'combatActionsTaken' as TrackedStat,
+        1,
+      );
+    }
+
     switch (action.specialAction) {
       case 'Flee': {
         return this.flee(fight);
@@ -491,15 +520,50 @@ export class FightService {
     applyAbilityCooldown(character, action);
 
     const targets = getTargetsForAbility(fight, action, targetParams);
-    targets.forEach((target) => {
-      const damage = calculateAbilityDamageWithElements(
-        fight.generatedElements,
-        action,
-        character,
-        target,
-      );
-      doDamageToTargetForAbility(fight, character, target, damage);
-    });
+    await Promise.all(
+      targets.map(async (target) => {
+        const damage = calculateAbilityDamageWithElements(
+          fight.generatedElements,
+          action,
+          character,
+          target,
+        );
+
+        doDamageToTargetForAbility(fight, character, target, damage);
+
+        if (target.userId) {
+          await this.statsService.incrementStat(
+            target.userId,
+            'combatAttacksReceived' as TrackedStat,
+            1,
+          );
+
+          if (isDead(target)) {
+            await this.statsService.incrementStat(
+              target.userId,
+              'combatDeaths' as TrackedStat,
+              1,
+            );
+          }
+        }
+
+        if (target.monsterId && character.userId) {
+          await this.statsService.incrementStat(
+            character.userId,
+            'combatAttacksGiven' as TrackedStat,
+            1,
+          );
+
+          if (isDead(target)) {
+            await this.statsService.incrementStat(
+              character.userId,
+              'combatKills' as TrackedStat,
+              1,
+            );
+          }
+        }
+      }),
+    );
 
     this.logger.verbose(
       `Handling ability ${action.name} for character ${character.characterId} in fight ${fight._id}`,
@@ -578,8 +642,6 @@ export class FightService {
         }
       }
 
-      console.log(characterRef.name, matchingTiles);
-
       const chosenTile = sample(matchingTiles);
       if (!chosenTile) return this.setAndTakeNextTurn(fight);
 
@@ -640,6 +702,16 @@ export class FightService {
     fight.defenders = [];
 
     this.logger.verbose(`Fleeing fight ${fight._id}`);
+
+    await Promise.all(
+      fight.involvedPlayers.map(async (userId) => {
+        return this.statsService.incrementStat(
+          userId,
+          'combatFlees' as TrackedStat,
+          1,
+        );
+      }),
+    );
 
     await this.endFight(fight, [
       {

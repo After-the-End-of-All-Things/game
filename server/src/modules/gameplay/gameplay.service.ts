@@ -249,6 +249,12 @@ export class GameplayService {
       `Explore result: ${exploreResult} for player ${userId} in ${player.location.current}.`,
     );
 
+    await this.statsService.incrementStat(
+      userId,
+      'timesExplored' as TrackedStat,
+      1,
+    );
+
     return { player: playerPatches, discoveries: discoveriesPatches };
   }
 
@@ -359,6 +365,12 @@ export class GameplayService {
     );
 
     this.logger.verbose(`Player ${userId} is traveling to ${locationName}.`);
+
+    await this.statsService.incrementStat(
+      userId,
+      'timesTraveled' as TrackedStat,
+      1,
+    );
 
     return { player: playerPatches };
   }
@@ -526,6 +538,12 @@ export class GameplayService {
           },
         });
 
+        await this.statsService.incrementStat(
+          userId,
+          'itemsFound' as TrackedStat,
+          1,
+        );
+
         this.analyticsService.sendDesignEvent(
           userId,
           `Gameplay:TakeItem:${player.location.current}:${item.name}`,
@@ -607,6 +625,12 @@ export class GameplayService {
     this.analyticsService.sendDesignEvent(
       userId,
       `Gameplay:SellItem:${player.location.current}:${item.name}`,
+    );
+
+    await this.statsService.incrementStat(
+      userId,
+      'itemsSold' as TrackedStat,
+      1,
     );
 
     return {
@@ -894,6 +918,12 @@ export class GameplayService {
 
     this.logger.verbose(
       `Player ${userId} collected crafted item ${item.itemId}.`,
+    );
+
+    await this.statsService.incrementStat(
+      userId,
+      'itemsCrafted' as TrackedStat,
+      1,
     );
 
     return {
