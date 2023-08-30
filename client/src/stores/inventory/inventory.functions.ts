@@ -28,6 +28,7 @@ export const defaultStore: () => IInventoryStore = () => ({
     resources: {},
   },
   items: [],
+  isLoadingItems: false,
 });
 
 export function setInventory(
@@ -56,6 +57,7 @@ export function updateInventoryItems(
   if (!helpers) return;
   const { player, content } = helpers;
 
+  ctx.patchState({ isLoadingItems: true });
   player.getInventoryItems().subscribe((res: any) => {
     const items = res.items
       .filter((i: any) => !i.isInUse)
@@ -64,7 +66,7 @@ export function updateInventoryItems(
         instanceId: i.instanceId,
       })) as IItem[];
 
-    ctx.patchState({ items });
+    ctx.patchState({ items, isLoadingItems: false });
   });
 }
 

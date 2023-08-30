@@ -40,6 +40,7 @@ export class InventoryPage implements OnInit {
     Record<ItemSlot, IEquipment>
   >;
   @Select(InventoryStore.items) items$!: Observable<IItem[]>;
+  @Select(InventoryStore.isLoadingItems) isLoadingItems$!: Observable<boolean>;
 
   public readonly basicEquipTypes = AllArmor;
 

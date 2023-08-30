@@ -42,4 +42,9 @@ export class InventoryStore {
   static items(state: IInventoryStore) {
     return state.items ?? [];
   }
+
+  @Selector()
+  static isLoadingItems(state: IInventoryStore) {
+    return state.isLoadingItems;
+  }
 }

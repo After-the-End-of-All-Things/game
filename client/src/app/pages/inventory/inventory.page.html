@@ -16,6 +16,7 @@
           <ion-card-header>
             <ion-card-title>
               Inventory ({{ items.length }} / 100)
+              <ion-spinner *ngIf="isLoadingItems$ | async"></ion-spinner>
             </ion-card-title>
           </ion-card-header>
 
