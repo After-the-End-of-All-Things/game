@@ -5,8 +5,11 @@ export interface IDiscoveries {
   borders: Record<string, boolean>;
   collectibles: Record<string, number>;
   items: Record<string, number>;
+  monsters: Record<string, number>;
   uniqueCollectibleClaims: number;
   totalCollectibleClaims: number;
   uniqueEquipmentClaims: number;
   totalEquipmentClaims: number;
+  uniqueMonsterClaims: number;
+  totalMonsterClaims: number;
 }

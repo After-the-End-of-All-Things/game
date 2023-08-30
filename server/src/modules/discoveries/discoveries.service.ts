@@ -215,6 +215,21 @@ export class DiscoveriesService {
     };
   }
 
+  async discoverMonster(userId: string, monsterId: string): Promise<void> {
+    const discoveries = await this.getDiscoveriesForUser(userId);
+    if (!discoveries) throw new NotFoundException('User not found');
+
+    const monster = await this.contentService.getMonster(monsterId);
+    if (!monster) throw new NotFoundException('Monster not found');
+
+    this.logger.verbose(`Discovered monster ${monster.name} for ${userId}.`);
+
+    discoveries.monsters = {
+      ...(discoveries.monsters || {}),
+      [monsterId]: (discoveries.items?.[monsterId] ?? 0) + 1,
+    };
+  }
+
   async claimUniqueCollectibleReward(userId: string): Promise<UserResponse> {
     const player = await this.playerService.getPlayerForUser(userId);
     if (!player) throw new NotFoundException('Player not found');
@@ -236,8 +251,8 @@ export class DiscoveriesService {
       },
     );
 
-    const coinReward = 10000;
-    const oatReward = 10;
+    const coinReward = 50000;
+    const oatReward = 50;
 
     const playerPatches = await getPatchesAfterPropChanges<Player>(
       player,
@@ -285,8 +300,8 @@ export class DiscoveriesService {
       },
     );
 
-    const coinReward = 10000;
-    const oatReward = 10;
+    const coinReward = 25000;
+    const oatReward = 25;
 
     const playerPatches = await getPatchesAfterPropChanges<Player>(
       player,
@@ -396,6 +411,104 @@ export class DiscoveriesService {
 
     this.logger.verbose(
       `Claimed total equipment reward for ${userId} (${totalItemsFound} total).`,
+    );
+
+    return {
+      discoveries: discoveryPatches,
+      player: playerPatches,
+      actions: [
+        {
+          type: 'Notify',
+          messageType: 'success',
+          message: `You got ${coinReward.toLocaleString()} coins and ${oatReward.toLocaleString()} oats!`,
+        },
+      ],
+    };
+  }
+
+  async claimUniqueMonsterReward(userId: string): Promise<UserResponse> {
+    const player = await this.playerService.getPlayerForUser(userId);
+    if (!player) throw new NotFoundException('Player not found');
+
+    const discoveries = await this.getDiscoveriesForUser(userId);
+    if (!discoveries) throw new NotFoundException('Discoveries not found');
+
+    const totalTimesClaimed = discoveries.uniqueMonsterClaims ?? 0;
+    const totalItemsFound = sum(Object.keys(discoveries.monsters));
+    const interval = 25;
+
+    if (totalItemsFound < (totalTimesClaimed + 1) * interval)
+      throw new BadRequestException('Not enough equipment found');
+
+    const discoveryPatches = await getPatchesAfterPropChanges<Discoveries>(
+      discoveries,
+      async (discoveriesRef) => {
+        discoveriesRef.uniqueMonsterClaims = totalTimesClaimed + 1;
+      },
+    );
+
+    const coinReward = 25000;
+    const oatReward = 25;
+
+    const playerPatches = await getPatchesAfterPropChanges<Player>(
+      player,
+      async (playerRef) => {
+        this.playerHelper.gainCoins(playerRef, coinReward);
+        this.playerHelper.gainOats(playerRef, oatReward);
+      },
+    );
+
+    this.logger.verbose(
+      `Claimed unique monster reward for ${userId} (${totalItemsFound} total).`,
+    );
+
+    return {
+      discoveries: discoveryPatches,
+      player: playerPatches,
+      actions: [
+        {
+          type: 'Notify',
+          messageType: 'success',
+          message: `You got ${coinReward.toLocaleString()} coins and ${oatReward.toLocaleString()} oats!`,
+        },
+      ],
+    };
+  }
+
+  async claimTotalMonsterReward(userId: string): Promise<UserResponse> {
+    const player = await this.playerService.getPlayerForUser(userId);
+    if (!player) throw new NotFoundException('Player not found');
+
+    const discoveries = await this.getDiscoveriesForUser(userId);
+    if (!discoveries) throw new NotFoundException('Discoveries not found');
+
+    const totalTimesClaimed = discoveries.totalMonsterClaims ?? 0;
+    const totalItemsFound = sum(Object.values(discoveries.monsters));
+    const interval = 250;
+
+    if (totalItemsFound < (totalTimesClaimed + 1) * interval)
+      throw new ForbiddenException('Not enough equipment found');
+
+    const discoveryPatches = await getPatchesAfterPropChanges<Discoveries>(
+      discoveries,
+      async (discoveriesRef) => {
+        discoveriesRef.totalMonsterClaims = totalTimesClaimed + 1;
+      },
+    );
+
+    const coinReward = 10000;
+    const oatReward = 10;
+
+    const playerPatches = await getPatchesAfterPropChanges<Player>(
+      player,
+      async (playerRef) => {
+        this.playerHelper.gainCoins(playerRef, coinReward);
+        this.playerHelper.gainOats(playerRef, oatReward);
+      },
+    );
+
+    this.logger.verbose(
+      `Claimed total monster reward for ${userId} (${totalItemsFound} total).`,
     );
 
     return {

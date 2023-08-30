@@ -1,11 +1,9 @@
 import { UserResponse } from '@interfaces';
 import { DiscoveriesService } from '@modules/discoveries/discoveries.service';
-import { FightService } from '@modules/fight/fight.service';
 import { PlayerService } from '@modules/player/player.service';
 import {
   Body,
   Controller,
-  ForbiddenException,
   Get,
   NotFoundException,
   Patch,
@@ -22,7 +20,6 @@ export class DiscoveriesController {
   constructor(
     private readonly discoveriesService: DiscoveriesService,
     private readonly playerService: PlayerService,
-    private readonly fightsService: FightService,
   ) {}
 
   @UseGuards(JwtAuthGuard)
@@ -44,10 +41,6 @@ export class DiscoveriesController {
     @User() user,
     @Body('portrait') portrait: number,
   ): Promise<UserResponse> {
-    const fight = await this.fightsService.getFightForUser(user.userId);
-    if (fight)
-      throw new ForbiddenException('Cannot change portrait while in combat.');
-
     const portraitId = Math.round(Math.min(106, Math.max(0, portrait)));
 
     // Fetch the player's discoveries
@@ -115,5 +108,19 @@ export class DiscoveriesController {
   @Post('claim/total/equipment')
   async claimTotalEquipment(@User() user): Promise<UserResponse> {
     return this.discoveriesService.claimTotalEquipmentReward(user.userId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Claim rewards for killing unique monsters' })
+  @Post('claim/unique/monsters')
+  async claimUniqueMonsters(@User() user): Promise<UserResponse> {
+    return this.discoveriesService.claimUniqueMonsterReward(user.userId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Claim rewards for killing monsters' })
+  @Post('claim/total/monsters')
+  async claimTotalMonsters(@User() user): Promise<UserResponse> {
+    return this.discoveriesService.claimTotalMonsterReward(user.userId);
   }
 }

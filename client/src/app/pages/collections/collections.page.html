@@ -24,6 +24,10 @@
                 <ion-label>Items</ion-label>
               </ion-segment-button>
 
+              <ion-segment-button value="monsters">
+                <ion-label>Monsters</ion-label>
+              </ion-segment-button>
+
               <ion-segment-button value="portraits">
                 <ion-label>Portraits</ion-label>
               </ion-segment-button>
@@ -44,6 +48,12 @@
                 <ng-container *ngSwitchCase="'items'">
                   <ng-container
                     *ngTemplateOutlet="items; context: { discoveries }"
+                  ></ng-container>
+                </ng-container>
+
+                <ng-container *ngSwitchCase="'monsters'">
+                  <ng-container
+                    *ngTemplateOutlet="monsters; context: { discoveries }"
                   ></ng-container>
                 </ng-container>
 
@@ -334,6 +344,136 @@
 
         <ng-template #tooltip>
           <strong>{{ item.name }}</strong>
+        </ng-template>
+      </ion-col>
+    </ion-row>
+  </div>
+</ng-template>
+
+<ng-template #monsters let-discoveries="discoveries">
+  <div class="items">
+    <ion-row class="unlocked">
+      <ion-col>
+        <ion-row>
+          <ion-col>
+            <ion-card class="number-card center-title-card" color="secondary">
+              <ion-card-header>
+                <ion-card-title>Unique</ion-card-title>
+              </ion-card-header>
+
+              <ion-card-content>
+                <div class="number">
+                  <span class="main-number">
+                    {{ unlocked['monsters'] | number }}
+                  </span>
+                  <span class="sub-number">
+                    / {{ allMonsters.length | number }}
+                  </span>
+                </div>
+                <div class="number-action">
+                  {{ (unlocked['monsters'] ?? 0) / allMonsters.length | percent
+                  }}
+                </div>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+
+          <ion-col>
+            <ion-card class="number-card center-title-card" color="tertiary">
+              <ion-card-header>
+                <ion-card-title>Unique Rewards</ion-card-title>
+              </ion-card-header>
+
+              <ion-card-content>
+                <div class="number">
+                  <span class="main-number">
+                    {{ getUniqueMonstersClaimNumber() > monstersUniqueMax ?
+                    monstersUniqueMax : getUniqueMonstersClaimNumber() }}
+                  </span>
+                  <span class="sub-number">/ {{ monstersUniqueMax }}</span>
+                </div>
+
+                <ion-button
+                  class="number-action"
+                  color="secondary"
+                  (click)="claimMonstersUnique()"
+                  [disabled]="!canClaimUniqueMonsters()"
+                >
+                  Claim
+                </ion-button>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+
+          <ion-col>
+            <ion-card class="number-card center-title-card" color="secondary">
+              <ion-card-header>
+                <ion-card-title>
+                  Total
+
+                  <span
+                    class="tooltip"
+                    [ngxTippy]="'You can kill monsters multiple times to increase your total killed stat!'"
+                  >
+                    <ion-icon name="information-circle-outline"></ion-icon>
+                  </span>
+                </ion-card-title>
+              </ion-card-header>
+
+              <ion-card-content>
+                <div class="number">
+                  <span class="main-number">
+                    {{ totals['monsters'] | number }}
+                  </span>
+                </div>
+                <div class="number-action"></div>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+
+          <ion-col>
+            <ion-card class="number-card center-title-card" color="tertiary">
+              <ion-card-header>
+                <ion-card-title>Total Rewards</ion-card-title>
+              </ion-card-header>
+
+              <ion-card-content>
+                <div class="number">
+                  <span class="main-number">
+                    {{ getTotalMonstersClaimNumber() > monstersTotalMax ?
+                    monstersTotalMax : getTotalMonstersClaimNumber() }}
+                  </span>
+                  <span class="sub-number">/ {{ monstersTotalMax }}</span>
+                </div>
+
+                <ion-button
+                  class="number-action"
+                  color="secondary"
+                  (click)="claimMonstersTotal()"
+                  [disabled]="!canClaimTotalMonsters()"
+                >
+                  Claim
+                </ion-button>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+      </ion-col>
+    </ion-row>
+
+    <ion-row class="collect-row">
+      <ion-col
+        class="collect-col"
+        *ngFor="let monster of allMonsters; trackBy: trackBy"
+        [ngxTippy]="tooltip"
+      >
+        <app-monster-icon
+          [monster]="monster"
+          [class.uncollected]="!discoveries.monsters?.[monster.itemId]"
+        ></app-monster-icon>
+
+        <ng-template #tooltip>
+          <strong>{{ monster.name }}</strong>
         </ng-template>
       </ion-col>
     </ion-row>

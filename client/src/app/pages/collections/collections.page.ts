@@ -22,6 +22,9 @@ export class CollectionsPage implements OnInit {
   public readonly equipmentUniqueMax = 100;
   public readonly equipmentTotalMax = 1000;
 
+  public readonly monstersUniqueMax = 25;
+  public readonly monstersTotalMax = 250;
+
   public selectedCategory = 'collectibles';
 
   public readonly allPortraits = Array(this.contentService.maxPortraits)
@@ -34,12 +37,14 @@ export class CollectionsPage implements OnInit {
 
   public readonly allCollectibles = this.contentService.getAllCollectibles();
   public readonly allEquipment = this.contentService.getAllEquipment();
+  public readonly allMonsters = this.contentService.getAllMonsters();
 
   public unlocked: Partial<Record<keyof IDiscoveries, number>> = {
     collectibles: 0,
     backgrounds: 0,
     borders: 0,
     items: 0,
+    monsters: 0,
     locations: 0,
     portraits: 0,
   };
@@ -49,6 +54,7 @@ export class CollectionsPage implements OnInit {
     backgrounds: 0,
     borders: 0,
     items: 0,
+    monsters: 0,
     locations: 0,
     portraits: 0,
   };
@@ -103,6 +109,14 @@ export class CollectionsPage implements OnInit {
     return this.getUniqueEquipmentClaimNumber() >= this.equipmentUniqueMax;
   }
 
+  canClaimTotalMonsters(): boolean {
+    return this.getTotalMonstersClaimNumber() >= this.monstersTotalMax;
+  }
+
+  canClaimUniqueMonsters(): boolean {
+    return this.getUniqueMonstersClaimNumber() >= this.monstersUniqueMax;
+  }
+
   getTotalCollectibleClaimNumber(): number {
     return (
       (this.totals.collectibles ?? 0) -
@@ -132,6 +146,20 @@ export class CollectionsPage implements OnInit {
     );
   }
 
+  getTotalMonstersClaimNumber(): number {
+    return (
+      (this.totals.monsters ?? 0) -
+      (this.discoveries?.totalMonsterClaims ?? 0) * this.monstersTotalMax
+    );
+  }
+
+  getUniqueMonstersClaimNumber(): number {
+    return (
+      (this.unlocked.monsters ?? 0) -
+      (this.discoveries?.uniqueMonsterClaims ?? 0) * this.monstersUniqueMax
+    );
+  }
+
   claimCollectiblesUnique() {
     this.gameplayService.claimCollectibleUnique().subscribe();
   }
@@ -146,5 +174,13 @@ export class CollectionsPage implements OnInit {
 
   claimEquipmentTotal() {
     this.gameplayService.claimEquipmentTotal().subscribe();
+  }
+
+  claimMonstersUnique() {
+    this.gameplayService.claimMonstersUnique().subscribe();
+  }
+
+  claimMonstersTotal() {
+    this.gameplayService.claimMonstersTotal().subscribe();
   }
 }

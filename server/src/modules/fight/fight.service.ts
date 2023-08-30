@@ -13,6 +13,7 @@ import { InjectRepository } from '@mikro-orm/nestjs';
 import { ConstantsService } from '@modules/content/constants.service';
 import { ContentService } from '@modules/content/content.service';
 import { PlayerHelperService } from '@modules/content/playerhelper.service';
+import { DiscoveriesService } from '@modules/discoveries/discoveries.service';
 import {
   addAbilityElementsToFight,
   addStatusMessage,
@@ -68,6 +69,7 @@ export class FightService {
     private readonly playerHelperService: PlayerHelperService,
     private readonly userService: UserService,
     private readonly inventoryService: InventoryService,
+    private readonly discoveriesService: DiscoveriesService,
   ) {}
 
   public subscribe(channel: string) {
@@ -306,7 +308,17 @@ export class FightService {
         const player = await this.playerService.getPlayerForUser(playerId);
         if (!player) throw new BadRequestException('Player not found');
 
-        const patches = await getPatchesAfterPropChanges(
+        const discoveries = await this.discoveriesService.getDiscoveriesForUser(
+          player.userId,
+        );
+        if (!discoveries)
+          throw new BadRequestException('Discoveries not found');
+
+        const allMonsterIds = fight.defenders
+          .map((c) => c.monsterId)
+          .filter(Boolean) as string[];
+
+        const playerPatches = await getPatchesAfterPropChanges(
           player,
           async (player) => {
             this.playerHelperService.gainXp(player, xpDelta);
@@ -314,8 +326,23 @@ export class FightService {
           },
         );
 
+        const discoveryPatches = await getPatchesAfterPropChanges(
+          discoveries,
+          async () => {
+            await Promise.all(
+              allMonsterIds.map((monsterId) => {
+                return this.discoveriesService.discoverMonster(
+                  player.userId,
+                  monsterId,
+                );
+              }),
+            );
+          },
+        );
+
         this.emit(playerId, {
-          player: patches,
+          player: playerPatches,
+          discoveries: discoveryPatches,
         });
       }),
     );

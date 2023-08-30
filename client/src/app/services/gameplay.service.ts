@@ -77,6 +77,20 @@ export class GameplayService {
     );
   }
 
+  claimMonstersUnique() {
+    return this.http.post(
+      `${environment.apiUrl}/discoveries/claim/unique/monsters`,
+      {},
+    );
+  }
+
+  claimMonstersTotal() {
+    return this.http.post(
+      `${environment.apiUrl}/discoveries/claim/total/monsters`,
+      {},
+    );
+  }
+
   equipItem(slot: ItemSlot, instanceId: string) {
     return this.http.patch(
       `${environment.apiUrl}/gameplay/item/equip/${slot}`,

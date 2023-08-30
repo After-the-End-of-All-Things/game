@@ -124,6 +124,10 @@ export class ContentService {
     return Object.values(this.equipment);
   }
 
+  public getAllMonsters(): IMonster[] {
+    return Object.values(this.monsters);
+  }
+
   public getItem(item: string): IItem | undefined {
     return (
       this.getCollectible(item) ||
