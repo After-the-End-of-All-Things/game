@@ -14,7 +14,12 @@
       <ion-col sizeSm="4" *ngFor="let stat of stats">
         <ion-card class="number-card center-title-card">
           <ion-card-header>
-            <ion-card-title>{{ stat.name }}</ion-card-title>
+            <ion-card-title>
+              {{ stat.name }}
+              <span class="tooltip" [ngxTippy]="stat.tooltip">
+                <ion-icon name="information-circle-outline"></ion-icon>
+              </span>
+            </ion-card-title>
           </ion-card-header>
 
           <ion-card-content>

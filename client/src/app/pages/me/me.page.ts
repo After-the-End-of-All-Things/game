@@ -24,26 +24,34 @@ export class MePage implements OnInit {
   public readonly stats = [
     {
       name: 'HP',
+      tooltip: 'Your total health. When it hits 0, you die.',
       stat: Stat.Health,
     },
     {
       name: 'Power',
+      tooltip:
+        'How much damage you do on physical hits. Reduced by the targets Toughness.',
       stat: Stat.Power,
     },
     {
       name: 'Toughness',
+      tooltip: 'How much physical damage you resist. Reduces incoming Power.',
       stat: Stat.Toughness,
     },
     {
       name: 'Special',
+      tooltip: 'Used for special attacks. Not typically overcome by anything.',
       stat: Stat.Special,
     },
     {
       name: 'Magic',
+      tooltip:
+        'How much damage you do on magical hits. Reduced by the targets Resistance.',
       stat: Stat.Magic,
     },
     {
       name: 'Resistance',
+      tooltip: 'How much magical damage you resist. Reduces incoming Magic.',
       stat: Stat.Resistance,
     },
   ];

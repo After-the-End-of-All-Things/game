@@ -6,6 +6,7 @@ import { IonicModule } from '@ionic/angular';
 
 import { MePageRoutingModule } from './me-routing.module';
 
+import { NgxTippyModule } from 'ngx-tippy-wrapper';
 import { SharedModule } from 'src/app/shared.module';
 import { MePage } from './me.page';
 
@@ -13,6 +14,7 @@ import { MePage } from './me.page';
   imports: [
     CommonModule,
     FormsModule,
+    NgxTippyModule,
     IonicModule,
     MePageRoutingModule,
     SharedModule,

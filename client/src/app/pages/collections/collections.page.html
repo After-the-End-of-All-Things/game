@@ -126,7 +126,16 @@
           <ion-col>
             <ion-card class="number-card center-title-card" color="secondary">
               <ion-card-header>
-                <ion-card-title>Total</ion-card-title>
+                <ion-card-title>
+                  Total
+
+                  <span
+                    class="tooltip"
+                    [ngxTippy]="'You can collect collectibles multiple times to increase your total collected stat!'"
+                  >
+                    <ion-icon name="information-circle-outline"></ion-icon>
+                  </span>
+                </ion-card-title>
               </ion-card-header>
 
               <ion-card-content>
@@ -259,7 +268,16 @@
           <ion-col>
             <ion-card class="number-card center-title-card" color="secondary">
               <ion-card-header>
-                <ion-card-title>Total</ion-card-title>
+                <ion-card-title>
+                  Total
+
+                  <span
+                    class="tooltip"
+                    [ngxTippy]="'You can collect equipment multiple times to increase your total collected stat!'"
+                  >
+                    <ion-icon name="information-circle-outline"></ion-icon>
+                  </span>
+                </ion-card-title>
               </ion-card-header>
 
               <ion-card-content>
