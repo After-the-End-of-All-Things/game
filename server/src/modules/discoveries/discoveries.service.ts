@@ -174,8 +174,13 @@ export class DiscoveriesService {
     if (!item) throw new NotFoundException('Equipment item not found');
 
     const itemDefinition = await this.contentService.getEquipment(item.itemId);
-    if (!itemDefinition)
+    if (!itemDefinition) {
+      await this.inventoryService.removeInventoryItemForUser(
+        userId,
+        instanceId,
+      );
       throw new NotFoundException('Item definition not found');
+    }
 
     await this.inventoryService.removeInventoryItemForUser(userId, instanceId);
 
