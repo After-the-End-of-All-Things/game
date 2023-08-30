@@ -12,6 +12,7 @@
 }
 
 .rarity {
+
   &.common {
     color: #999;
   }
@@ -21,11 +22,11 @@
   }
 
   &.unusual {
-    color: #550;
+    color: #81811d;
   }
 
   &.rare {
-    color: #00b;
+    color: #6363dd;
   }
 
   &.masterful {
@@ -33,15 +34,15 @@
   }
 
   &.arcane {
-    color: #505;
+    color: #b57eb5;
   }
 
   &.epic {
-    color: #b0b;
+    color: #b83cb8;
   }
 
   &.divine {
-    color: #66a;
+    color: #9d9dff;
   }
 
   &.unique {
