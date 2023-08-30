@@ -40,6 +40,16 @@ export class ConstantsService {
   public readonly uniqueMonsterRewardMultiplier: number = 25;
   public readonly totalMonsterRewardMultiplier: number = 10;
 
+  public readonly findRateCommon: number = 100;
+  public readonly findRateUncommon: number = 75;
+  public readonly findRateUnusual: number = 50;
+  public readonly findRateRare: number = 25;
+  public readonly findRateEpic: number = 10;
+  public readonly findRateMasterful: number = 5;
+  public readonly findRateArcane: number = 3;
+  public readonly findRateDivine: number = 2;
+  public readonly findRateUnique: number = 1;
+
   constructor(private readonly configService: ConfigService) {
     this.exploreSpeedMultiplier = +this.configService.get<number>(
       'EXPLORE_SPEED_MULTIPLIER',
@@ -162,6 +172,45 @@ export class ConstantsService {
     this.totalMonsterRewardMultiplier = +this.configService.get<number>(
       'COLLECTIONS_TOTAL_MONSTER_REWARD_MULTIPLIER',
       10,
+    );
+
+    this.findRateCommon = +this.configService.get<number>(
+      'FIND_RATE_COMMON',
+      100,
+    );
+
+    this.findRateUncommon = +this.configService.get<number>(
+      'FIND_RATE_UNCOMMON',
+      75,
+    );
+
+    this.findRateUnusual = +this.configService.get<number>(
+      'FIND_RATE_UNUSUAL',
+      50,
+    );
+
+    this.findRateRare = +this.configService.get<number>('FIND_RATE_RARE', 25);
+
+    this.findRateEpic = +this.configService.get<number>('FIND_RATE_EPIC', 10);
+
+    this.findRateMasterful = +this.configService.get<number>(
+      'FIND_RATE_MASTERFUL',
+      5,
+    );
+
+    this.findRateArcane = +this.configService.get<number>(
+      'FIND_RATE_ARCANE',
+      3,
+    );
+
+    this.findRateDivine = +this.configService.get<number>(
+      'FIND_RATE_DIVINE',
+      2,
+    );
+
+    this.findRateUnique = +this.configService.get<number>(
+      'FIND_RATE_UNIQUE',
+      1,
     );
   }
 }

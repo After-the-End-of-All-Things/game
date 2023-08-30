@@ -72,6 +72,18 @@ God, am I getting tired of typing that.
 - `EXPLORE_SPEED_MULTIPLIER` - the multiplier for explore speed [percent] (default: 100)
 - `EXPLORE_XP_MULTIPLIER` - the multiplier for explore XP [percent] (default: 100)
 
+#### Finding Items
+
+- `FIND_RATE_COMMON` - the rate at which common items are found [weight] (default: 100)
+- `FIND_RATE_UNCOMMON` - the rate at which uncommon items are found [weight] (default: 75)
+- `FIND_RATE_UNUSUAL` - the rate at which unusual items are found [weight] (default: 50)
+- `FIND_RATE_RARE` - the rate at which rare items are found [weight] (default: 25)
+- `FIND_RATE_EPIC` - the rate at which epic items are found [weight] (default: 10)
+- `FIND_RATE_MASTERFUL` - the rate at which masterful items are found [weight] (default: 5)
+- `FIND_RATE_ARCANE` - the rate at which arcane items are found [weight] (default: 3)
+- `FIND_RATE_DIVINE` - the rate at which divine items are found [weight] (default: 2)
+- `FIND_RATE_UNIQUE` - the rate at which unique items are found [weight] (default: 1)
+
 #### Inventory
 
 - `INVENTORY_MAX_SIZE` - the maximum inventory size per player [percent] (default: 100)

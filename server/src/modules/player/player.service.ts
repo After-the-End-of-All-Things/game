@@ -9,6 +9,7 @@ import {
 } from '@interfaces';
 import { EntityManager, EntityRepository } from '@mikro-orm/mongodb';
 import { InjectRepository } from '@mikro-orm/nestjs';
+import { ConstantsService } from '@modules/content/constants.service';
 import { ContentService } from '@modules/content/content.service';
 import { InventoryService } from '@modules/inventory/inventory.service';
 import { Player } from '@modules/player/player.schema';
@@ -29,6 +30,7 @@ export class PlayerService {
     @InjectRepository(Player)
     private readonly players: EntityRepository<Player>,
     private readonly contentService: ContentService,
+    private readonly constants: ConstantsService,
     private readonly inventoryService: InventoryService,
   ) {}
 
@@ -194,6 +196,20 @@ export class PlayerService {
     }
   }
 
+  private getFindCommonality(): Record<Rarity, number> {
+    return {
+      Common: this.constants.findRateCommon,
+      Uncommon: this.constants.findRateUncommon,
+      Unusual: this.constants.findRateUnusual,
+      Rare: this.constants.findRateRare,
+      Epic: this.constants.findRateEpic,
+      Masterful: this.constants.findRateMasterful,
+      Arcane: this.constants.findRateArcane,
+      Divine: this.constants.findRateDivine,
+      Unique: this.constants.findRateUnique,
+    };
+  }
+
   async getRandomOnlinePlayerAtLocation(
     excludeUserId: string,
     locationName: string,
@@ -254,17 +270,7 @@ export class PlayerService {
   }
 
   async handleFindResource(player: Player, location: ILocation): Promise<void> {
-    const resourceRarityCommonality: Record<Rarity, number> = {
-      Common: 100,
-      Uncommon: 75,
-      Unusual: 50,
-      Rare: 25,
-      Epic: 10,
-      Arcane: 5,
-      Divine: 3,
-      Masterful: 2,
-      Unique: 1,
-    };
+    const resourceRarityCommonality = this.getFindCommonality();
 
     const allResources = this.contentService
       .allResources()
@@ -292,17 +298,7 @@ export class PlayerService {
     player: Player,
     location: ILocation,
   ): Promise<void> {
-    const collectibleRarityCommonality: Record<Rarity, number> = {
-      Common: 100,
-      Uncommon: 75,
-      Unusual: 50,
-      Rare: 25,
-      Epic: 10,
-      Arcane: 5,
-      Divine: 3,
-      Masterful: 2,
-      Unique: 1,
-    };
+    const collectibleRarityCommonality = this.getFindCommonality();
 
     const allCollectibles = this.contentService
       .allCollectibles()

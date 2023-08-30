@@ -54,6 +54,9 @@ import { Logger } from 'nestjs-pino';
 import { fromEvent } from 'rxjs';
 import { v4 as uuid } from 'uuid';
 
+const DELAY_BETWEEN_ROUNDS = 3000;
+const DELAY_BETWEEN_TURNS = 1000;
+
 @Injectable()
 export class FightService {
   private readonly events = new EventEmitter2();
@@ -222,7 +225,7 @@ export class FightService {
 
   async startEndFightSequence(fight: Fight): Promise<void> {
     await this.handleFightRewards(fight);
-    await delayTime(3000);
+    await delayTime(DELAY_BETWEEN_ROUNDS);
     await this.endFight(fight);
   }
 
@@ -372,7 +375,7 @@ export class FightService {
     const nextTurnIndex = (currentTurnIndex + 1) % fight.turnOrder.length;
 
     if (nextTurnIndex === 0) {
-      await delayTime(3000);
+      await delayTime(DELAY_BETWEEN_ROUNDS);
       clearStatusMessage(fight);
     }
 
@@ -594,7 +597,7 @@ export class FightService {
       finalizedTargetParams,
     );
 
-    await delayTime(1000);
+    await delayTime(DELAY_BETWEEN_TURNS);
     await this.setAndTakeNextTurn(fight);
   }
 
