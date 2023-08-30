@@ -101,6 +101,19 @@ export class InventoryService {
   }
 
   async acquireItem(userId: string, itemId: string) {
+    const itemRef = this.contentService.getItem(itemId);
+    if (!itemRef) throw new BadRequestException('Item not found.');
+
+    if (itemRef.type === 'resource') {
+      await this.acquireResource(userId, itemId, 1);
+      this.logger.error(
+        new Error(
+          `Erroneously attempting to acquire ${itemId} as an for ${userId}`,
+        ),
+      );
+      return;
+    }
+
     const item = new InventoryItem(userId, itemId, uuid());
 
     await this.inventoryItems.create(item);
@@ -142,6 +155,19 @@ export class InventoryService {
   async acquireResource(userId: string, itemId: string, quantity = 1) {
     const inventory = await this.getInventoryForUser(userId);
     if (!inventory) return;
+
+    const itemRef = this.contentService.getItem(itemId);
+    if (!itemRef) throw new BadRequestException('Item not found.');
+
+    if (itemRef.type !== 'resource') {
+      await this.acquireItem(userId, itemId);
+      this.logger.error(
+        new Error(
+          `Erroneously attempting to acquire ${itemId} as a resource for ${userId}`,
+        ),
+      );
+      return;
+    }
 
     this.acquireResourceForInventory(inventory, userId, itemId, quantity);
   }
