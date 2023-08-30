@@ -41,7 +41,12 @@
   </ng-container>
 </ion-toolbar>
 
-<ion-popover #popover [showBackdrop]="false" class="notification-area">
+<ion-popover
+  #popover
+  [showBackdrop]="false"
+  class="notification-area"
+  keep-contents-mounted="true"
+>
   <ng-template>
     <ion-content *ngIf="notifications$ | async as notifications">
       <div class="header">
