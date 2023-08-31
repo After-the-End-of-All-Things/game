@@ -1,7 +1,9 @@
 import { IItem, Rarity } from '@interfaces';
 
 export function xpForLevel(level: number): number {
-  return (level + 1) * 15;
+  const multiplier = Math.max(1, Math.floor(level / 10));
+
+  return (level + 1) * 10 * multiplier;
 }
 
 export function xpForCraftingLevel(level: number): number {
