@@ -1,5 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { LoggerErrorInterceptor } from 'nestjs-pino';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -7,6 +8,7 @@ async function bootstrap() {
   app.enableCors({
     origin: ['http://localhost:3699', 'https://play.ateoat.com'],
   });
+  app.useGlobalInterceptors(new LoggerErrorInterceptor());
 
   const config = new DocumentBuilder()
     .setTitle('ateoat API')
