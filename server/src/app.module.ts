@@ -40,15 +40,13 @@ const logLevel = process.env.LOG_LEVEL || 'trace';
     ConfigModule,
     LoggerModule.forRoot({
       pinoHttp: {
-        transport: isProduction
-          ? undefined
-          : {
-              target: 'pino-pretty',
-              options: {
-                colorize: true,
-                singleLine: true,
-              },
-            },
+        transport: {
+          target: 'pino-pretty',
+          options: {
+            colorize: true,
+            singleLine: true,
+          },
+        },
         level: logLevel,
         customSuccessMessage: (req) =>
           `${req.method} ${req.url?.includes('sse') ? 'SSE' : req.url}`,
