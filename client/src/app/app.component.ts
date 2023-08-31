@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { environment } from '@environment';
 import { Store } from '@ngxs/store';
 import { Observable, timer } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
@@ -100,10 +101,12 @@ export class AppComponent {
       )
       .subscribe((data: any) => {
         if (data) {
-          this.titleService.setTitle(`${data} | AtEoAT`);
-        } else {
-          this.titleService.setTitle('After the End of All Things');
+          const devString = environment.production ? '' : ' (dev)';
+          this.titleService.setTitle(`${data} | AtEoAT ${devString}`);
+          return;
         }
+
+        this.titleService.setTitle('After the End of All Things');
       });
   }
 }
