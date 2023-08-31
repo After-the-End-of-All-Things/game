@@ -53,7 +53,6 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { getPatchesAfterPropChanges } from '@utils/patches';
 import { sample, sampleSize, sum } from 'lodash';
 import { Logger } from 'nestjs-pino';
-import { fromEvent } from 'rxjs';
 import { v4 as uuid } from 'uuid';
 
 const DELAY_BETWEEN_ROUNDS = 3000;
@@ -61,8 +60,6 @@ const DELAY_BETWEEN_TURNS = 1000;
 
 @Injectable()
 export class FightService {
-  private readonly events = new EventEmitter2();
-
   constructor(
     private readonly logger: Logger,
     private readonly em: EntityManager,
@@ -76,14 +73,14 @@ export class FightService {
     private readonly inventoryService: InventoryService,
     private readonly discoveriesService: DiscoveriesService,
     private readonly statsService: StatsService,
+    private events: EventEmitter2,
   ) {}
 
-  public subscribe(channel: string) {
-    return fromEvent(this.events, channel);
-  }
-
-  public emit(channel: string, data: UserResponse = {}) {
-    this.events.emit(channel, { data });
+  private emit(userId: string, data: UserResponse = {}) {
+    this.events.emit('userdata.send', {
+      userId,
+      data,
+    });
   }
 
   public async getFightForUser(userId: string): Promise<Fight | null> {

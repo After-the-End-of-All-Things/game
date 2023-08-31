@@ -9,17 +9,39 @@ import {
   ClearNotificationActions,
   ClearNotificationActionsMatchingUrl,
 } from '@stores/notifications/notifications.actions';
+import { GrabData } from '@stores/user/user.actions';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ActionsService {
+  private events!: EventSource;
+
   constructor(
     private store: Store,
     private router: Router,
     private http: HttpClient,
     private notificationService: NotificationsService,
   ) {}
+
+  async init() {
+    this.initEvents();
+  }
+
+  initEvents() {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+
+    this.events = new EventSource(`${environment.apiUrl}/sse/${token}`);
+
+    this.events.onmessage = (data) => {
+      console.log('got!', data);
+      if (!data.data) return;
+
+      const grabData = JSON.parse(data.data);
+      this.store.dispatch(new GrabData(grabData));
+    };
+  }
 
   changePage(newPage: string) {
     this.router.navigate([`/${newPage}`]);

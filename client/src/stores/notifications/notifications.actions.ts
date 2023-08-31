@@ -5,11 +5,6 @@ export class SetNotifications {
   constructor(public notifications: INotification[]) {}
 }
 
-export class AddNotification {
-  static type = '[Notifications] Apply Patches';
-  constructor(public notification: INotification) {}
-}
-
 export class MarkNotificationRead {
   static type = '[Notifications] Mark Read';
   constructor(public id: string) {}
@@ -28,6 +23,11 @@ export class ClearNotificationActions {
 export class ClearNotificationActionsMatchingUrl {
   static type = '[Notifications] Clear Actions Matching Url';
   constructor(public url: string) {}
+}
+
+export class AddNotification {
+  static type = 'AddNotification';
+  constructor(public notification: INotification) {}
 }
 
 export class Notify {

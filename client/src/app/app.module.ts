@@ -21,11 +21,10 @@ import { ErrorInterceptor } from './helpers/error.interceptor';
 
 import { BrowserModule } from '@angular/platform-browser';
 import { DataGrabberInterceptor } from '@helpers/data-grabber.interceptor';
+import { ActionsService } from '@services/actions.service';
 import { AuthService } from '@services/auth.service';
 import { ContentService } from '@services/content.service';
-import { FightService } from '@services/fight.service';
 import { MetaService } from '@services/meta.service';
-import { NotificationsService } from '@services/notifications.service';
 import { RollbarErrorHandler, RollbarService } from '@services/rollbar.service';
 import { NgxTippyModule } from 'ngx-tippy-wrapper';
 import * as Stores from '../stores';
@@ -96,8 +95,7 @@ export function getAuthToken() {
           assetService: AssetService,
           authService: AuthService,
           contentService: ContentService,
-          notificationService: NotificationsService,
-          fightService: FightService,
+          actionsService: ActionsService,
           rollbarService: RollbarService,
           metaService: MetaService,
         ) =>
@@ -105,8 +103,7 @@ export function getAuthToken() {
           await assetService.init();
           await contentService.init();
           await authService.init();
-          await notificationService.init();
-          await fightService.init();
+          await actionsService.init();
           await rollbarService.init();
           await metaService.init();
         },
@@ -114,8 +111,7 @@ export function getAuthToken() {
         AssetService,
         AuthService,
         ContentService,
-        NotificationsService,
-        FightService,
+        ActionsService,
         RollbarService,
         MetaService,
       ],

@@ -1,11 +1,14 @@
 import { INotificationAction } from '@interfaces';
 import { NotificationService } from '@modules/notification/notification.service';
 import { Injectable } from '@nestjs/common';
-import { OnEvent } from '@nestjs/event-emitter';
+import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
 
 @Injectable()
 export class NotificationEventService {
-  constructor(private readonly notifications: NotificationService) {}
+  constructor(
+    private readonly notifications: NotificationService,
+    private events: EventEmitter2,
+  ) {}
 
   @OnEvent('notification.create')
   async createNotification(event: {
@@ -23,6 +26,11 @@ export class NotificationEventService {
       event.expiresAfterHours,
     );
 
-    this.notifications.emit(event.userId, notification);
+    this.events.emit('userdata.send', {
+      userId: event.userId,
+      data: {
+        actions: [{ type: 'AddNotification', notification }],
+      },
+    });
   }
 }
