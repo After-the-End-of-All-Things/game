@@ -445,7 +445,6 @@ export class FightService {
   ): Promise<void> {
     const fight = await this.getFightForUser(userId);
     if (!fight) throw new BadRequestException('Fight not found');
-
     if (!isActiveTurn(fight, userId))
       throw new BadRequestException('Not your turn');
 
@@ -460,7 +459,11 @@ export class FightService {
     );
 
     await this.processActionIntoAbility(fight, character, action, targetParams);
-    await this.setAndTakeNextTurn(fight);
+
+    // in case the fight ends during the action (flee)
+    if (!isFightOver(fight)) {
+      await this.setAndTakeNextTurn(fight);
+    }
   }
 
   async processActionIntoAbility(
