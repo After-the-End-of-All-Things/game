@@ -48,7 +48,6 @@ export class PlayerService {
 
     try {
       await this.players.create(player);
-      await this.em.flush();
     } catch (e) {
       this.logger.error(e);
 
@@ -58,6 +57,8 @@ export class PlayerService {
       }
 
       throw e;
+    } finally {
+      await this.em.flush();
     }
 
     return player;

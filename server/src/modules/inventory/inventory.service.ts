@@ -41,7 +41,6 @@ export class InventoryService {
 
     try {
       await this.inventory.create(inventory);
-      await this.em.flush();
     } catch (e) {
       this.logger.error(e);
 
@@ -51,6 +50,8 @@ export class InventoryService {
       }
 
       throw e;
+    } finally {
+      await this.em.flush();
     }
 
     return inventory;

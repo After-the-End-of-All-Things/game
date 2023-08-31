@@ -28,7 +28,6 @@ export class StatsService {
 
     try {
       await this.stats.create(stats);
-      await this.em.flush();
     } catch (e) {
       this.logger.error(e);
 
@@ -38,6 +37,8 @@ export class StatsService {
       }
 
       throw e;
+    } finally {
+      await this.em.flush();
     }
 
     return stats;

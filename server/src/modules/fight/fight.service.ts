@@ -211,10 +211,11 @@ export class FightService {
 
     try {
       await this.fights.create(fight);
-      await this.em.flush();
     } catch (e) {
       this.logger.error(e);
       throw e;
+    } finally {
+      await this.em.flush();
     }
 
     this.logger.verbose(

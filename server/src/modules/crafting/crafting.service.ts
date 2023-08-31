@@ -28,7 +28,6 @@ export class CraftingService {
 
     try {
       await this.crafting.create(crafting);
-      await this.em.flush();
     } catch (e) {
       this.logger.error(e);
 
@@ -38,6 +37,8 @@ export class CraftingService {
       }
 
       throw e;
+    } finally {
+      await this.em.flush();
     }
 
     return crafting;

@@ -52,7 +52,6 @@ export class DiscoveriesService {
 
     try {
       await this.discoveries.create(discoveries);
-      await this.em.flush();
     } catch (e) {
       this.logger.error(e);
 
@@ -62,6 +61,8 @@ export class DiscoveriesService {
       }
 
       throw e;
+    } finally {
+      await this.em.flush();
     }
 
     return discoveries;

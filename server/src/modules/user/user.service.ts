@@ -18,7 +18,6 @@ export class UserService {
   async createUser(user: User): Promise<User | undefined> {
     try {
       await this.users.create(user);
-      await this.em.flush();
     } catch (e) {
       this.logger.error(e);
 
@@ -28,6 +27,8 @@ export class UserService {
       }
 
       throw e;
+    } finally {
+      await this.em.flush();
     }
 
     return user;

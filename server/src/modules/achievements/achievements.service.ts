@@ -31,7 +31,6 @@ export class AchievementsService {
 
     try {
       await this.achievements.create(achievements);
-      await this.em.flush();
     } catch (e) {
       this.logger.error(e);
 
@@ -41,6 +40,8 @@ export class AchievementsService {
       }
 
       throw e;
+    } finally {
+      await this.em.flush();
     }
 
     return achievements;
