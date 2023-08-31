@@ -49,6 +49,8 @@ export class InventoryService {
       if (e.code === 11000) {
         throw new BadRequestException('inventory id already in use.');
       }
+
+      throw e;
     }
 
     return inventory;

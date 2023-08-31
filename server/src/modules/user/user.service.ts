@@ -26,6 +26,8 @@ export class UserService {
       if (e.code === 11000) {
         throw new BadRequestException('Email already in use.');
       }
+
+      throw e;
     }
 
     return user;

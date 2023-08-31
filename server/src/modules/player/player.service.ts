@@ -56,6 +56,8 @@ export class PlayerService {
       if (e.code === 11000) {
         throw new BadRequestException('player id already in use.');
       }
+
+      throw e;
     }
 
     return player;

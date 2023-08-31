@@ -214,6 +214,7 @@ export class FightService {
       await this.em.flush();
     } catch (e) {
       this.logger.error(e);
+      throw e;
     }
 
     this.logger.verbose(

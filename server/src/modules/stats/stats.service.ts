@@ -36,6 +36,8 @@ export class StatsService {
       if (e.code === 11000) {
         throw new BadRequestException('stats id already in use.');
       }
+
+      throw e;
     }
 
     return stats;

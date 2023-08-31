@@ -36,6 +36,8 @@ export class CraftingService {
       if (e.code === 11000) {
         throw new BadRequestException('crafting id already in use.');
       }
+
+      throw e;
     }
 
     return crafting;

@@ -60,6 +60,8 @@ export class DiscoveriesService {
       if (e.code === 11000) {
         throw new BadRequestException('discoveries id already in use.');
       }
+
+      throw e;
     }
 
     return discoveries;

@@ -39,6 +39,8 @@ export class AchievementsService {
       if (e.code === 11000) {
         throw new BadRequestException('achievements id already in use.');
       }
+
+      throw e;
     }
 
     return achievements;
