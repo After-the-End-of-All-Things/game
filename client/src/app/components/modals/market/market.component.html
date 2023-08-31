@@ -3,7 +3,15 @@
     <ion-title>
       Steelrose Market
 
-      <small class="available-coins">{{ coins | number }} coins</small>
+      <small class="available-coins">
+        <span class="icon-and-text-container">
+          <app-game-icon
+            cssColor="#daa520"
+            icon="currency-coin"
+          ></app-game-icon>
+          {{ coins | number }} coins
+        </span>
+      </small>
     </ion-title>
 
     <ion-buttons slot="end">
@@ -13,7 +21,13 @@
         color="primary"
         *ngIf="unclaimed > 0"
       >
-        Claim {{ unclaimed | number }} coins
+        <span class="icon-and-text-container">
+          <app-game-icon
+            cssColor="#daa520"
+            icon="currency-coin"
+          ></app-game-icon>
+          Claim {{ unclaimed | number }} coins
+        </span>
       </ion-button>
 
       <ion-button
@@ -245,7 +259,16 @@
                       </h2>
                       <p>
                         {{ item.itemData.type | titlecase }} &middot;
-                        <strong>{{ item.price | number }} coins</strong>
+                        <strong>
+                          <span class="icon-and-text-container">
+                            <app-game-icon
+                              cssColor="#daa520"
+                              icon="currency-coin"
+                              size="small"
+                            ></app-game-icon>
+                            {{ item.price | number }} coins
+                          </span>
+                        </strong>
                       </p>
                       <p>
                         <app-item-stats [item]="item.itemData"></app-item-stats>

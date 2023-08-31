@@ -24,6 +24,12 @@
 
   .currencies {
     margin-top: 8px;
+
+    .coins {
+      &:first-child {
+        margin-right: 10px;
+      }
+    }
   }
 
   .relevant-stats, .currencies {

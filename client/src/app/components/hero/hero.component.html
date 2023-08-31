@@ -28,9 +28,14 @@
     </div>
 
     <div class="currencies">
-      <span class="coins">{{ data.coins ?? 0 | number }} Coins</span>
-      &middot;
-      <span class="coins">{{ data.oats ?? 0 | number }} Oats</span>
+      <span class="coins icon-and-text-container">
+        <app-game-icon cssColor="#daa520" icon="currency-coin"></app-game-icon>
+        {{ data.coins ?? 0 | number }} Coins
+      </span>
+      <span class="coins icon-and-text-container">
+        <app-game-icon cssColor="#daa520" icon="currency-oat"></app-game-icon>
+        {{ data.oats ?? 0 | number }} Oats
+      </span>
     </div>
   </div>
 </div>

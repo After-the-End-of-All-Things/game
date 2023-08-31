@@ -25,3 +25,12 @@
   --width: 100%;
   --height: 100%;
 }
+
+.icon-and-text-container {
+  display: inline-flex;
+  align-items: center;
+
+  app-game-icon {
+    margin-right: 5px;
+  }
+}
