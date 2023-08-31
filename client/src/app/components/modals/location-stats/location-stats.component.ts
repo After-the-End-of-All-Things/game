@@ -80,7 +80,7 @@ export class LocationStatsModalComponent implements OnInit {
     if (value <= 175) return 'Higher';
     if (value <= 200) return 'Significantly Higher';
 
-    return `Way More (${value}%)`;
+    return `Way Higher (${value}%)`;
   }
 
   speedValueFormatter(value: number): string {
