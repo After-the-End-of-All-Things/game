@@ -9,7 +9,11 @@
 
   <ion-card>
     <ion-card-content>
-      <ion-segment value="current" (ionChange)="selectCategory($event)">
+      <ion-segment
+        value="current"
+        (ionChange)="selectCategory($event)"
+        color="tertiary"
+      >
         <ion-segment-button value="current">
           <ion-label>Current</ion-label>
         </ion-segment-button>
