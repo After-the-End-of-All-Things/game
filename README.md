@@ -30,7 +30,7 @@ God, am I getting tired of typing that.
 - `GAMEANALYTICS_KEY` - the game key for GameAnalytics
 - `GAMEANALYTICS_SECRET` - the secret key for GameAnalytics
 - `ROLLBAR_TOKEN` - the token for Rollbar
-- `LOG_LEVEL` - the log level to use for the server (default: `verbose`)
+- `LOG_LEVEL` - the log level to use for the server (default: `trace`)
 
 ### Optional Game Setting Server Environment Variables
 
