@@ -9,6 +9,7 @@ import { PlayerService } from '@modules/player/player.service';
 import { StatsService } from '@modules/stats/stats.service';
 import { UserService } from '@modules/user/user.service';
 import { Injectable } from '@nestjs/common';
+import { omit } from 'lodash';
 import { Logger } from 'nestjs-pino';
 
 @Injectable()
@@ -75,10 +76,13 @@ export class AggregatorService {
         ) as IEquipment;
         if (!checkItem) return;
 
-        const currentItem = JSON.stringify(currentEquippedItem);
+        const currentItem = JSON.stringify(
+          omit(currentEquippedItem, ['instanceId']),
+        );
         const newItem = JSON.stringify(checkItem);
 
         if (currentItem && newItem && currentItem !== newItem) {
+          console.log({ currentItem, newItem });
           this.logger.verbose(
             `Migrating item ${currentEquippedItem.name} for ${user.user.username}.`,
           );
