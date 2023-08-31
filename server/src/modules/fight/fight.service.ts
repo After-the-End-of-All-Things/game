@@ -89,7 +89,7 @@ export class FightService {
 
   public async removeFight(fightId: string) {
     const fight = await this.fights.findOne({ _id: new ObjectId(fightId) });
-    if (!fight) throw new BadRequestException('Fight not found');
+    if (!fight) return;
 
     return this.em.remove<Fight>(fight);
   }
@@ -375,10 +375,6 @@ export class FightService {
   }
 
   async setNextTurn(fight: Fight): Promise<void> {
-    if (isFightOver(fight)) {
-      return this.startEndFightSequence(fight);
-    }
-
     const currentTurnIndex = fight.turnOrder.findIndex(
       (turn) => turn === fight.currentTurn,
     );
@@ -460,10 +456,7 @@ export class FightService {
 
     await this.processActionIntoAbility(fight, character, action, targetParams);
 
-    // in case the fight ends during the action (flee)
-    if (!isFightOver(fight)) {
-      await this.setAndTakeNextTurn(fight);
-    }
+    await this.setAndTakeNextTurn(fight);
   }
 
   async processActionIntoAbility(
