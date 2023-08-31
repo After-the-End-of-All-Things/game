@@ -19,6 +19,7 @@ import { CensorSensor } from 'censor-sensor';
 
 const censor = new CensorSensor();
 censor.disableTier(4);
+censor.disableTier(2);
 
 @Injectable()
 export class ContentService {
