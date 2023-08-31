@@ -237,7 +237,8 @@
                     class="xp-value"
                     *ngIf="visualService.xp$ | async as xp"
                   >
-                    +{{ xp }} XP
+                    <strong *ngIf="xp < 0">Level up!</strong>
+                    <span *ngIf="xp > 0">+{{ xp }} XP</span>
                   </span>
                 </span>
 
