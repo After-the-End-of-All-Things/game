@@ -65,6 +65,9 @@ export class GameplayService {
     const player = await this.playerService.getPlayerForUser(userId);
     if (!player) throw new ForbiddenException('Player not found');
 
+    const fight = await this.fights.getFightForUser(userId);
+    if (fight) throw new ForbiddenException('Cannot explore while fighting');
+
     if (player.location.cooldown > Date.now())
       return { player: [], discoveries: [] };
 
