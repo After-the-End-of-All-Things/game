@@ -119,7 +119,9 @@
                     ? collectibleUniqueMax : getUniqueCollectibleClaimNumber()
                     }}
                   </span>
-                  <span class="sub-number">/ {{ collectibleUniqueMax }}</span>
+                  <span class="sub-number">
+                    / {{ collectibleUniqueMax | number }}
+                  </span>
                 </div>
 
                 <ion-button
@@ -172,7 +174,9 @@
                     {{ getTotalCollectibleClaimNumber() > collectibleTotalMax ?
                     collectibleTotalMax : getTotalCollectibleClaimNumber() }}
                   </span>
-                  <span class="sub-number">/ {{ collectibleTotalMax }}</span>
+                  <span class="sub-number">
+                    / {{ collectibleTotalMax | number }}
+                  </span>
                 </div>
 
                 <ion-button
@@ -261,7 +265,9 @@
                     {{ getUniqueEquipmentClaimNumber() > equipmentUniqueMax ?
                     equipmentUniqueMax : getUniqueEquipmentClaimNumber() }}
                   </span>
-                  <span class="sub-number">/ {{ equipmentUniqueMax }}</span>
+                  <span class="sub-number">
+                    / {{ equipmentUniqueMax | number }}
+                  </span>
                 </div>
 
                 <ion-button
@@ -314,7 +320,9 @@
                     {{ getTotalEquipmentClaimNumber() > equipmentTotalMax ?
                     equipmentTotalMax : getTotalEquipmentClaimNumber() }}
                   </span>
-                  <span class="sub-number">/ {{ equipmentTotalMax }}</span>
+                  <span class="sub-number">
+                    / {{ equipmentTotalMax | number }}
+                  </span>
                 </div>
 
                 <ion-button
@@ -391,7 +399,9 @@
                     {{ getUniqueMonstersClaimNumber() > monstersUniqueMax ?
                     monstersUniqueMax : getUniqueMonstersClaimNumber() }}
                   </span>
-                  <span class="sub-number">/ {{ monstersUniqueMax }}</span>
+                  <span class="sub-number">
+                    / {{ monstersUniqueMax | number }}
+                  </span>
                 </div>
 
                 <ion-button
@@ -444,7 +454,9 @@
                     {{ getTotalMonstersClaimNumber() > monstersTotalMax ?
                     monstersTotalMax : getTotalMonstersClaimNumber() }}
                   </span>
-                  <span class="sub-number">/ {{ monstersTotalMax }}</span>
+                  <span class="sub-number">
+                    / {{ monstersTotalMax | number }}
+                  </span>
                 </div>
 
                 <ion-button
