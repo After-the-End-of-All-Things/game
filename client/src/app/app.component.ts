@@ -101,7 +101,7 @@ export class AppComponent {
       )
       .subscribe((data: any) => {
         if (data) {
-          const devString = environment.production ? '' : ' (dev)';
+          const devString = environment.production ? '' : '(dev)';
           this.titleService.setTitle(`${data} | AtEoAT ${devString}`);
           return;
         }
