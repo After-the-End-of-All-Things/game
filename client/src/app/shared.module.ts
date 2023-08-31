@@ -8,6 +8,7 @@ import { CardOnlineUsersComponent } from '@components/card-online-users/card-onl
 import { CombatAbilityComponent } from '@components/combat-ability/combat-ability.component';
 import { CountdownComponent } from '@components/countdown/countdown.component';
 import { ElementIconComponent } from '@components/element-icon/element-icon.component';
+import { GameIconComponent } from '@components/game-icon/game-icon.component';
 import { HeaderBarComponent } from '@components/header-bar/header-bar.component';
 import { HeroComponent } from '@components/hero/hero.component';
 import { IconComponent } from '@components/icon/icon.component';
@@ -49,6 +50,7 @@ const components = [
   RelativeTimePipe,
   ElementIconComponent,
   CombatAbilityComponent,
+  GameIconComponent,
 ];
 
 @NgModule({

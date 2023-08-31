@@ -70,7 +70,10 @@
           <ion-card-content>
             <ion-list>
               <ion-item [routerLink]="['/crafting']">
-                <ion-icon slot="start" name="construct"></ion-icon>
+                <app-game-icon
+                  slot="start"
+                  icon="town-crafting"
+                ></app-game-icon>
 
                 <ion-label>
                   <h3>Crafting</h3>
@@ -82,7 +85,7 @@
                 class="ion-activatable cursor-pointer"
                 (click)="openMarket()"
               >
-                <ion-icon slot="start" name="cart"></ion-icon>
+                <app-game-icon slot="start" icon="town-market"></app-game-icon>
 
                 <ion-label>
                   <h3>Market</h3>

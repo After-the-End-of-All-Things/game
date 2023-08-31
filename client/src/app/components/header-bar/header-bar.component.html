@@ -19,7 +19,10 @@
 
   <ion-buttons slot="end" *ngIf="notifications$ | async as notifications">
     <ion-button class="notifications" (click)="popover.present($event)">
-      <ion-icon slot="icon-only" name="notifications"></ion-icon>
+      <app-game-icon
+        slot="icon-only"
+        icon="global-notifications"
+      ></app-game-icon>
 
       <ion-badge
         class="number"

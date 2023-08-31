@@ -29,7 +29,7 @@ export class AppComponent {
     {
       title: 'Town',
       url: 'town',
-      icon: 'map',
+      icon: 'town',
       indicator: timer(0, 1000).pipe(
         switchMap(() =>
           this.store.select((state) =>
@@ -37,7 +37,7 @@ export class AppComponent {
             state.crafting.crafting.currentlyCraftingDoneAt < Date.now()
               ? {
                   color: 'primary',
-                  icon: 'alert-circle-outline',
+                  icon: 'global-important',
                   tooltip: 'Crafting complete!',
                 }
               : undefined,
@@ -51,27 +51,27 @@ export class AppComponent {
     {
       title: 'My Profile',
       url: 'me',
-      icon: 'person',
+      icon: 'profile',
     },
     {
       title: 'My Items',
       url: 'inventory',
-      icon: 'file-tray-full',
+      icon: 'items',
     },
     {
       title: 'My Equipment',
       url: 'equipment',
-      icon: 'shirt',
+      icon: 'equipment',
     },
     {
       title: 'My Resources',
       url: 'resources',
-      icon: 'leaf',
+      icon: 'resources',
     },
     {
       title: 'My Collections',
       url: 'collections',
-      icon: 'diamond',
+      icon: 'collections',
     },
   ];
 

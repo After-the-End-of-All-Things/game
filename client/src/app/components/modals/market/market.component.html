@@ -229,7 +229,10 @@
                         *ngIf="canEquipItem(item.itemData)"
                         [ngxTippy]="'Can equip!'"
                       >
-                        <ion-icon name="checkmark"></ion-icon>
+                        <app-game-icon
+                          icon="global-yes"
+                          size="small"
+                        ></app-game-icon>
                       </ion-badge>
                     </div>
 
@@ -259,7 +262,10 @@
                           canCompare(item.itemData)
                         "
                       >
-                        <ion-icon name="podium"></ion-icon>
+                        <app-game-icon
+                          icon="equipment-compare"
+                          size="small"
+                        ></app-game-icon>
 
                         &nbsp;Compare
                       </ion-button>
@@ -269,7 +275,10 @@
                         [disabled]="coins < item.price"
                         (click)="buyItem(item)"
                       >
-                        <ion-icon name="cart"></ion-icon>
+                        <app-game-icon
+                          icon="market-buy"
+                          size="small"
+                        ></app-game-icon>
 
                         &nbsp;Buy
                       </ion-button>
@@ -281,7 +290,10 @@
                         color="secondary"
                         (click)="repriceItem(item)"
                       >
-                        <ion-icon name="repeat"></ion-icon>
+                        <app-game-icon
+                          icon="market-reprice"
+                          size="small"
+                        ></app-game-icon>
 
                         &nbsp;Reprice
                       </ion-button>
@@ -291,7 +303,10 @@
                         color="danger"
                         (click)="unlistItem(item)"
                       >
-                        <ion-icon name="archive"></ion-icon>
+                        <app-game-icon
+                          icon="market-unlist"
+                          size="small"
+                        ></app-game-icon>
 
                         &nbsp;Unlist
                       </ion-button>

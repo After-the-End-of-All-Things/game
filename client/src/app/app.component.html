@@ -18,22 +18,20 @@
               detail="false"
               routerLinkActive="selected"
             >
-              <ion-icon
-                aria-hidden="true"
+              <app-game-icon
                 slot="start"
-                [ios]="p.icon + '-outline'"
-                [md]="p.icon + '-sharp'"
-              ></ion-icon>
+                [icon]="'sidebar-' + p.icon"
+              ></app-game-icon>
 
               <ion-label>{{ p.title }}</ion-label>
 
               <ng-container *ngIf="p.indicator | async as indicator">
-                <ion-icon
+                <app-game-icon
                   slot="end"
                   [color]="indicator.color"
                   [icon]="indicator.icon"
                   [ngxTippy]="indicator.tooltip"
-                ></ion-icon>
+                ></app-game-icon>
               </ng-container>
             </ion-item>
           </ion-menu-toggle>
@@ -51,22 +49,20 @@
               detail="false"
               routerLinkActive="selected"
             >
-              <ion-icon
-                aria-hidden="true"
+              <app-game-icon
                 slot="start"
-                [ios]="p.icon + '-outline'"
-                [md]="p.icon + '-sharp'"
-              ></ion-icon>
+                [icon]="'sidebar-' + p.icon"
+              ></app-game-icon>
 
               <ion-label>{{ p.title }}</ion-label>
 
               <ng-container *ngIf="p.indicator | async as indicator">
-                <ion-icon
+                <app-game-icon
                   slot="end"
                   [color]="indicator.color"
                   [icon]="indicator.icon"
                   [ngxTippy]="indicator.tooltip"
-                ></ion-icon>
+                ></app-game-icon>
               </ng-container>
             </ion-item>
           </ion-menu-toggle>

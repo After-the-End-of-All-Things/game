@@ -75,10 +75,11 @@
                 [cellClass]="'center-column icon-column'"
               >
                 <ng-template let-row="row" ngx-datatable-cell-template>
-                  <ion-icon
-                    [name]="isDiscovered(row) ? 'checkmark-circle' : 'close-circle'"
+                  <app-game-icon
+                    class="icon"
+                    [icon]="isDiscovered(row) ? 'global-yes' : 'global-no'"
                     [color]="isDiscovered(row) ? 'success' : 'danger'"
-                  ></ion-icon>
+                  ></app-game-icon>
                 </ng-template>
               </ngx-datatable-column>
 
@@ -158,11 +159,12 @@
                             (click)="discoverCollectible(row); popover.dismiss()"
                           >
                             Collect
-                            <ion-icon
+                            <app-game-icon
                               slot="end"
-                              [name]="isDiscovered(row) ? 'checkmark-circle' : 'close-circle'"
+                              class="icon"
+                              [icon]="isDiscovered(row) ? 'global-yes' : 'global-no'"
                               [color]="isDiscovered(row) ? 'success' : 'danger'"
-                            ></ion-icon>
+                            ></app-game-icon>
                           </ion-item>
 
                           <ion-item
@@ -171,11 +173,12 @@
                             (click)="discoverEquipment(row); popover.dismiss()"
                           >
                             Collect
-                            <ion-icon
+                            <app-game-icon
                               slot="end"
-                              [name]="isDiscovered(row) ? 'checkmark-circle' : 'close-circle'"
+                              class="icon"
+                              [icon]="isDiscovered(row) ? 'global-yes' : 'global-no'"
                               [color]="isDiscovered(row) ? 'success' : 'danger'"
-                            ></ion-icon>
+                            ></app-game-icon>
                           </ion-item>
                         </ion-list>
                       </ion-content>

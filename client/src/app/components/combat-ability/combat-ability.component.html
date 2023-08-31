@@ -33,7 +33,12 @@
 
       <span class="cooldown-timer" *ngIf="cooldownRemaining > 0">
         <ion-badge color="warning" class="ion-align-items-center">
-          <ion-icon name="timer-outline"></ion-icon>
+          <app-game-icon
+            class="icon"
+            icon="combat-cooldown"
+            size="small"
+            cssColor="#000"
+          ></app-game-icon>
 
           {{ cooldownRemaining }} turns
         </ion-badge>
