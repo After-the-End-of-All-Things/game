@@ -50,12 +50,13 @@ const logLevel = process.env.LOG_LEVEL || 'trace';
               },
             },
         level: logLevel,
-        customSuccessMessage: (req) => `${req.method} ${req.url}`,
+        customSuccessMessage: (req) =>
+          `${req.method} ${req.url?.includes('sse') ? 'SSE' : req.url}`,
         serializers: {
           req: (req) => ({
-            url: req.url,
+            url: req.url.includes('sse') ? 'SSE' : req.url,
             method: req.method,
-            params: req.params,
+            params: req.url.includes('sse') ? {} : req.params,
           }),
           res: (res) => ({
             statusCode: res.statusCode,
