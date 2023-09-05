@@ -1,6 +1,6 @@
 # After the End of All Things
 
-God, am I getting tired of typing that.
+we love eating our oats
 
 ## Getting Started
 
