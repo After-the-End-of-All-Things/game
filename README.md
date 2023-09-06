@@ -86,7 +86,7 @@ we love eating our oats
 
 #### Inventory
 
-- `INVENTORY_MAX_SIZE` - the maximum inventory size per player [percent] (default: 100)
+- `INVENTORY_MAX_SIZE` - the maximum inventory size per player (default: 100)
 
 ### Notes
 
