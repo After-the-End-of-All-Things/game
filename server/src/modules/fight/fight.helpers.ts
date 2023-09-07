@@ -14,13 +14,25 @@ import { sample } from 'lodash';
 export function calculateAbilityDamage(
   ability: ICombatAbility,
   character: IFightCharacter,
+  target: IFightCharacter,
 ): number {
   return +Object.keys(ability.statScaling)
-    .map(
-      (stat) =>
-        (ability.statScaling?.[stat as Stat] ?? 0) *
-        character.totalStats[stat as Stat],
-    )
+    .map((stat: Stat) => {
+      const statBase =
+        (ability.statScaling?.[stat] ?? 0) * character.totalStats[stat];
+
+      if (stat === 'power') {
+        const otherTough = Math.max(0, target.totalStats.toughness);
+        return Math.max(0, statBase - otherTough);
+      }
+
+      if (stat === 'magic') {
+        const otherResist = Math.max(0, target.totalStats.resistance);
+        return Math.max(0, statBase - otherResist);
+      }
+
+      return statBase;
+    })
     .reduce((a, b) => a + b, 0)
     .toFixed(1);
 }
@@ -31,7 +43,7 @@ export function calculateAbilityDamageWithElements(
   character: IFightCharacter,
   target: IFightCharacter,
 ): number {
-  const damage = calculateAbilityDamage(ability, character);
+  const damage = calculateAbilityDamage(ability, character, target);
 
   const elementDamage = Object.keys(elements)
     .map((element) => {
