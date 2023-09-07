@@ -91,11 +91,34 @@ export class FightService {
     return this.fights.findOne({ involvedPlayers: userId });
   }
 
-  public async removeFight(fightId: string) {
+  public async getValidFightForUser(userId: string): Promise<Fight | null> {
+    const fight = await this.getFightForUser(userId);
+    if (!fight) return null;
+
+    const currentTurnCharacter = getCharacterFromFightForCharacterId(
+      fight,
+      fight.currentTurn,
+    );
+    if (!currentTurnCharacter || !currentTurnCharacter.characterId) {
+      this.logger.log(
+        `Fight ${fight._id} has no valid current turn player; removing...`,
+      );
+      await this.removeFight(fight);
+      return null;
+    }
+
+    return fight;
+  }
+
+  public async removeFight(fight: Fight) {
+    return this.em.remove<Fight>(fight);
+  }
+
+  public async removeFightById(fightId: string) {
     const fight = await this.getFightById(fightId);
     if (!fight) return;
 
-    return this.em.remove<Fight>(fight);
+    return this.removeFight(fight);
   }
 
   private async convertPlayerToFightCharacter(
@@ -241,7 +264,7 @@ export class FightService {
 
     this.logger.verbose(`Ending fight ${fight._id}`);
 
-    await this.removeFight(fight._id.toHexString());
+    await this.removeFight(fight);
 
     await Promise.all(
       fight.involvedPlayers.map(async (playerId) => {

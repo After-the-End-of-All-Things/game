@@ -39,7 +39,7 @@ export class AggregatorService {
     );
     const inventory = await this.inventoryService.getInventoryForUser(userId);
     const crafting = await this.craftingService.getCraftingForUser(userId);
-    const fight = await this.fightService.getFightForUser(userId);
+    const fight = await this.fightService.getValidFightForUser(userId);
 
     const fullUser: IFullUser = {
       user,
