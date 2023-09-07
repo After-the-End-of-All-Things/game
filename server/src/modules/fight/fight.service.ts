@@ -83,12 +83,16 @@ export class FightService {
     });
   }
 
+  public async getFightById(fightId: string): Promise<Fight | null> {
+    return this.fights.findOne({ _id: new ObjectId(fightId) });
+  }
+
   public async getFightForUser(userId: string): Promise<Fight | null> {
     return this.fights.findOne({ involvedPlayers: userId });
   }
 
   public async removeFight(fightId: string) {
-    const fight = await this.fights.findOne({ _id: new ObjectId(fightId) });
+    const fight = await this.getFightById(fightId);
     if (!fight) return;
 
     return this.em.remove<Fight>(fight);
@@ -232,6 +236,9 @@ export class FightService {
   }
 
   async endFight(fight: Fight, actions: any[] = []): Promise<void> {
+    const checkFight = await this.getFightById(fight.id);
+    if (!checkFight) return;
+
     this.logger.verbose(`Ending fight ${fight._id}`);
 
     await this.removeFight(fight._id.toHexString());
