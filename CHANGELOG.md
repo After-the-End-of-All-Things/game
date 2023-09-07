@@ -1,230 +1,341 @@
-## [0.1.10](https://github.com/After-The-End-Of-All-Things/game/compare/v0.1.9...v0.1.10) (2023-09-07)
+## <small>0.1.11 (2023-09-07)</small>
 
+* fix(combat): attempt to fix FNF by not ending the fight twice. closes #128 ([766b23c](https://github.com/After-The-End-Of-All-Things/game/commit/766b23c)), closes [#128](https://github.com/After-The-End-Of-All-Things/game/issues/128)
+* delete old sse route ([83892f0](https://github.com/After-The-End-Of-All-Things/game/commit/83892f0))
 
-### Bug Fixes
 
-* **combat:** enemies now respect ability cooldowns ([2c48b6d](https://github.com/After-The-End-Of-All-Things/game/commit/2c48b6d0df79e4323ff755e25931b482c4659e30))
-* **core:** remove optional values in items, closes [#97](https://github.com/After-The-End-Of-All-Things/game/issues/97) ([e4fba4b](https://github.com/After-The-End-Of-All-Things/game/commit/e4fba4b06b50c2cc2a19b3113295a3dea52aa51c))
-* **core:** use ws instead of sse. closes [#149](https://github.com/After-The-End-Of-All-Things/game/issues/149) ([4ca44a6](https://github.com/After-The-End-Of-All-Things/game/commit/4ca44a6481936f69ec715efdfc452a75709e44a4))
-* **explore:** no explore while in combat, closes [#148](https://github.com/After-The-End-Of-All-Things/game/issues/148) ([a4c9756](https://github.com/After-The-End-Of-All-Things/game/commit/a4c9756ad360228702e9e79a1757864ec4406255))
 
+## <small>0.1.10 (2023-09-07)</small>
 
-### Features
+* disable tier 2 censors because lol ([9cd8b18](https://github.com/After-The-End-Of-All-Things/game/commit/9cd8b18))
+* flush in finally ([b63f57d](https://github.com/After-The-End-Of-All-Things/game/commit/b63f57d))
+* inventory env variable is not a percent ([36a02fd](https://github.com/After-The-End-Of-All-Things/game/commit/36a02fd))
+* logs in prod ([590cc77](https://github.com/After-The-End-Of-All-Things/game/commit/590cc77))
+* Update changelog ([ac2a38f](https://github.com/After-The-End-Of-All-Things/game/commit/ac2a38f))
+* Update README.md ([ac9e566](https://github.com/After-The-End-Of-All-Things/game/commit/ac9e566))
+* use this error interceptor ([18b3f74](https://github.com/After-The-End-Of-All-Things/game/commit/18b3f74))
+* chore(release): Patch 0.1.10 ([66ab392](https://github.com/After-The-End-Of-All-Things/game/commit/66ab392))
+* fix(combat): enemies now respect ability cooldowns ([2c48b6d](https://github.com/After-The-End-Of-All-Things/game/commit/2c48b6d))
+* fix(core): remove optional values in items, closes #97 ([e4fba4b](https://github.com/After-The-End-Of-All-Things/game/commit/e4fba4b)), closes [#97](https://github.com/After-The-End-Of-All-Things/game/issues/97)
+* fix(core): use ws instead of sse. closes #149 ([4ca44a6](https://github.com/After-The-End-Of-All-Things/game/commit/4ca44a6)), closes [#149](https://github.com/After-The-End-Of-All-Things/game/issues/149)
+* fix(explore): no explore while in combat, closes #148 ([a4c9756](https://github.com/After-The-End-Of-All-Things/game/commit/a4c9756)), closes [#148](https://github.com/After-The-End-Of-All-Things/game/issues/148)
+* feat(ui): show level up when you level up from exploring, instead of negative xp. closes #116 ([3ebefe5](https://github.com/After-The-End-Of-All-Things/game/commit/3ebefe5)), closes [#116](https://github.com/After-The-End-Of-All-Things/game/issues/116)
 
-* **ui:** show level up when you level up from exploring, instead of negative xp. closes [#116](https://github.com/After-The-End-Of-All-Things/game/issues/116) ([3ebefe5](https://github.com/After-The-End-Of-All-Things/game/commit/3ebefe5d43542745c5e3c15a96f5a67ec79f1c6d))
 
 
+## <small>0.1.9 (2023-08-31)</small>
 
-## [0.1.9](https://github.com/After-The-End-Of-All-Things/game/compare/v0.1.8...v0.1.9) (2023-08-31)
+* errant space ([cfbb1de](https://github.com/After-The-End-Of-All-Things/game/commit/cfbb1de))
+* Update changelog ([b120761](https://github.com/After-The-End-Of-All-Things/game/commit/b120761))
+* chore(release): Patch 0.1.9 ([5564475](https://github.com/After-The-End-Of-All-Things/game/commit/5564475))
+* fix(core): do not show full urls for sse - they flood logs. closes #117 ([56391b8](https://github.com/After-The-End-Of-All-Things/game/commit/56391b8)), closes [#117](https://github.com/After-The-End-Of-All-Things/game/issues/117)
+* fix(errors): rethrow some db-adjacent errors ([52634c8](https://github.com/After-The-End-Of-All-Things/game/commit/52634c8))
+* feat(ui): add coin/oat icons ([f2fa7df](https://github.com/After-The-End-Of-All-Things/game/commit/f2fa7df))
+* feat(ui): call out dev mode for browser tab name ([3bea2ee](https://github.com/After-The-End-Of-All-Things/game/commit/3bea2ee))
 
 
-### Bug Fixes
 
-* **core:** do not show full urls for sse - they flood logs. closes [#117](https://github.com/After-The-End-Of-All-Things/game/issues/117) ([56391b8](https://github.com/After-The-End-Of-All-Things/game/commit/56391b84030103ab99cfc12e94d3a36ca9cced07))
-* **errors:** rethrow some db-adjacent errors ([52634c8](https://github.com/After-The-End-Of-All-Things/game/commit/52634c81833cd46273b2edffcc061cc56fb55bb3))
+## <small>0.1.8 (2023-08-31)</small>
 
+* Update changelog ([ef795a6](https://github.com/After-The-End-Of-All-Things/game/commit/ef795a6))
+* chore(release): Patch 0.1.8 ([5ed5295](https://github.com/After-The-End-Of-All-Things/game/commit/5ed5295))
+* fix(combat): combat ends correctly ([983e075](https://github.com/After-The-End-Of-All-Things/game/commit/983e075))
+* feat(ui): add lots of custom icons. closes #64 ([0846bb2](https://github.com/After-The-End-Of-All-Things/game/commit/0846bb2)), closes [#64](https://github.com/After-The-End-Of-All-Things/game/issues/64)
 
-### Features
 
-* **ui:** add coin/oat icons ([f2fa7df](https://github.com/After-The-End-Of-All-Things/game/commit/f2fa7dfcfd56fad97cc4f44c7cc9e68d213a5190))
-* **ui:** call out dev mode for browser tab name ([3bea2ee](https://github.com/After-The-End-Of-All-Things/game/commit/3bea2eee067bd43b04615f9ba2b97959f79e79ce))
 
+## <small>0.1.7 (2023-08-31)</small>
 
+* fix readme for log_level ([6657d71](https://github.com/After-The-End-Of-All-Things/game/commit/6657d71))
+* text change ([c88c360](https://github.com/After-The-End-Of-All-Things/game/commit/c88c360))
+* Update changelog ([da569f4](https://github.com/After-The-End-Of-All-Things/game/commit/da569f4))
+* chore(release): Patch 0.1.7 ([b8a8037](https://github.com/After-The-End-Of-All-Things/game/commit/b8a8037))
+* fix(core): hopefully add better error handling. closes #133 ([32f7944](https://github.com/After-The-End-Of-All-Things/game/commit/32f7944)), closes [#133](https://github.com/After-The-End-Of-All-Things/game/issues/133)
+* fix(core): merge all event sources into one websocket, fix client to utilize one, using a united int ([00ed143](https://github.com/After-The-End-Of-All-Things/game/commit/00ed143)), closes [#131](https://github.com/After-The-End-Of-All-Things/game/issues/131)
+* fix(crafting): change ambiguous collect to take ([d1826c1](https://github.com/After-The-End-Of-All-Things/game/commit/d1826c1))
+* fix(fight): fix fleeing a fight throwing fight not found [ending the fight twice is not sensible]. ([1a41808](https://github.com/After-The-End-Of-All-Things/game/commit/1a41808))
+* fix(migration): items will no longer migrate if they have an instance id (which triggers every time) ([11fe9c7](https://github.com/After-The-End-Of-All-Things/game/commit/11fe9c7))
+* fix(ui): segments are now colored by tertiary, instead of primary, to not clash with xp bars. closes ([8b72209](https://github.com/After-The-End-Of-All-Things/game/commit/8b72209)), closes [#142](https://github.com/After-The-End-Of-All-Things/game/issues/142)
+* fix(xp): make xp require more every 10 levels ([5154541](https://github.com/After-The-End-Of-All-Things/game/commit/5154541))
+* feat(ui): add number formatting to more things on collections page ([865cf4d](https://github.com/After-The-End-Of-All-Things/game/commit/865cf4d))
+* feat(ui): improve descriptions for non-raw-percent values in travel screen, closes #121 ([145f88c](https://github.com/After-The-End-Of-All-Things/game/commit/145f88c)), closes [#121](https://github.com/After-The-End-Of-All-Things/game/issues/121)
 
-## [0.1.8](https://github.com/After-The-End-Of-All-Things/game/compare/v0.1.7...v0.1.8) (2023-08-31)
 
 
-### Bug Fixes
+## <small>0.1.6 (2023-08-30)</small>
 
-* **combat:** combat ends correctly ([983e075](https://github.com/After-The-End-Of-All-Things/game/commit/983e0759a9eff46278ba1523dc75e44f6fb5a282))
+* allow for collecting monster kills. closes #96 ([5bb982c](https://github.com/After-The-End-Of-All-Things/game/commit/5bb982c)), closes [#96](https://github.com/After-The-End-Of-All-Things/game/issues/96)
+* Update changelog ([265b59f](https://github.com/After-The-End-Of-All-Things/game/commit/265b59f))
+* chore(release): Patch 0.1.6 ([d9226ef](https://github.com/After-The-End-Of-All-Things/game/commit/d9226ef))
+* feat(analytics): track more game events. closes #118 ([6b60cd5](https://github.com/After-The-End-Of-All-Things/game/commit/6b60cd5)), closes [#118](https://github.com/After-The-End-Of-All-Things/game/issues/118)
+* feat(api): add game stats api endpoint to double check constants. closes #138 ([1d7fa2e](https://github.com/After-The-End-Of-All-Things/game/commit/1d7fa2e)), closes [#138](https://github.com/After-The-End-Of-All-Things/game/issues/138)
+* feat(combat): show if ability is physical or magical ([b71e952](https://github.com/After-The-End-Of-All-Things/game/commit/b71e952))
+* feat(core): rip out discovery totals/rewards as constants ([d38d049](https://github.com/After-The-End-Of-All-Things/game/commit/d38d049))
+* feat(core): rip out find rates as constants ([14b461b](https://github.com/After-The-End-Of-All-Things/game/commit/14b461b))
+* feat(inventory): add loading spinner when loading inventory ([a7ffb2d](https://github.com/After-The-End-Of-All-Things/game/commit/a7ffb2d))
+* feat(stats): track more stats - combat, explores, items. closes #124 ([7ce1b75](https://github.com/After-The-End-Of-All-Things/game/commit/7ce1b75)), closes [#124](https://github.com/After-The-End-Of-All-Things/game/issues/124)
+* feat(ui): add tooltips to profile for stats, total collected to increase user clarity. closes #136 ([197fd1e](https://github.com/After-The-End-Of-All-Things/game/commit/197fd1e)), closes [#136](https://github.com/After-The-End-Of-All-Things/game/issues/136)
+* fix(popover): add attribute to make popovers load in the right place ([1e0d29e](https://github.com/After-The-End-Of-All-Things/game/commit/1e0d29e))
+* fix(ui): improve coloration on rarities. closes #130 ([2b8d9e7](https://github.com/After-The-End-Of-All-Things/game/commit/2b8d9e7)), closes [#130](https://github.com/After-The-End-Of-All-Things/game/issues/130)
 
 
-### Features
-
-* **ui:** add lots of custom icons. closes [#64](https://github.com/After-The-End-Of-All-Things/game/issues/64) ([0846bb2](https://github.com/After-The-End-Of-All-Things/game/commit/0846bb2102a8be16ec9604c0847b4837bec54591))
-
-
-
-## [0.1.7](https://github.com/After-The-End-Of-All-Things/game/compare/v0.1.6...v0.1.7) (2023-08-31)
-
-
-### Bug Fixes
-
-* **core:** hopefully add better error handling. closes [#133](https://github.com/After-The-End-Of-All-Things/game/issues/133) ([32f7944](https://github.com/After-The-End-Of-All-Things/game/commit/32f794400e38b9a84d18aee1fcb5a54433df41bb))
-* **core:** merge all event sources into one websocket, fix client to utilize one, using a united interface. closes [#131](https://github.com/After-The-End-Of-All-Things/game/issues/131) ([00ed143](https://github.com/After-The-End-Of-All-Things/game/commit/00ed14376c95c4c25938bf97710b4075369746c0))
-* **crafting:** change ambiguous collect to take ([d1826c1](https://github.com/After-The-End-Of-All-Things/game/commit/d1826c147ffcdbfba35989c00d22919dc37eece7))
-* **fight:** fix fleeing a fight throwing fight not found [ending the fight twice is not sensible]. ([1a41808](https://github.com/After-The-End-Of-All-Things/game/commit/1a41808014d22a36285acc54f8b4e6a2a928f39b))
-* **migration:** items will no longer migrate if they have an instance id (which triggers every time) ([11fe9c7](https://github.com/After-The-End-Of-All-Things/game/commit/11fe9c75bcb45c6bdfd408fd500985fcc1701c82))
-* **ui:** segments are now colored by tertiary, instead of primary, to not clash with xp bars. closes [#142](https://github.com/After-The-End-Of-All-Things/game/issues/142) ([8b72209](https://github.com/After-The-End-Of-All-Things/game/commit/8b72209ffc2f4c7bf2a4aaa20d01fc862911f05a))
-* **xp:** make xp require more every 10 levels ([5154541](https://github.com/After-The-End-Of-All-Things/game/commit/5154541f58aca327b0508a5474ed5937c443f33d))
-
-
-### Features
-
-* **ui:** add number formatting to more things on collections page ([865cf4d](https://github.com/After-The-End-Of-All-Things/game/commit/865cf4df275924811c37373c94f28fcca25a230d))
-* **ui:** improve descriptions for non-raw-percent values in travel screen, closes [#121](https://github.com/After-The-End-Of-All-Things/game/issues/121) ([145f88c](https://github.com/After-The-End-Of-All-Things/game/commit/145f88c47abdba560ba6b2c13df62859b1e364ae))
-
-
-
-## [0.1.6](https://github.com/After-The-End-Of-All-Things/game/compare/v0.1.5...v0.1.6) (2023-08-30)
-
-
-### Bug Fixes
-
-* **popover:** add attribute to make popovers load in the right place ([1e0d29e](https://github.com/After-The-End-Of-All-Things/game/commit/1e0d29e35ee71e15781a62cce484f037f5e77e8e))
-* **ui:** improve coloration on rarities. closes [#130](https://github.com/After-The-End-Of-All-Things/game/issues/130) ([2b8d9e7](https://github.com/After-The-End-Of-All-Things/game/commit/2b8d9e72dac1c863e7d4784558084dc6ec32593d))
-
-
-### Features
-
-* **analytics:** track more game events. closes [#118](https://github.com/After-The-End-Of-All-Things/game/issues/118) ([6b60cd5](https://github.com/After-The-End-Of-All-Things/game/commit/6b60cd5c81e98bd02e73bc7fb56337a31f815500))
-* **api:** add game stats api endpoint to double check constants. closes [#138](https://github.com/After-The-End-Of-All-Things/game/issues/138) ([1d7fa2e](https://github.com/After-The-End-Of-All-Things/game/commit/1d7fa2e6238180be7c682ccc70ab67c37eb0f72a))
-* **combat:** show if ability is physical or magical ([b71e952](https://github.com/After-The-End-Of-All-Things/game/commit/b71e952e2eb87d9d11e74891910e00826746fb36))
-* **core:** rip out discovery totals/rewards as constants ([d38d049](https://github.com/After-The-End-Of-All-Things/game/commit/d38d04972b4b70c0ee5c3f64e7b16592e400d402))
-* **core:** rip out find rates as constants ([14b461b](https://github.com/After-The-End-Of-All-Things/game/commit/14b461ba8f650ef55e5f0dd6804618dddc976710))
-* **inventory:** add loading spinner when loading inventory ([a7ffb2d](https://github.com/After-The-End-Of-All-Things/game/commit/a7ffb2d4d9a3f5d2815ed601f16b001bbe2098e3))
-* **stats:** track more stats - combat, explores, items. closes [#124](https://github.com/After-The-End-Of-All-Things/game/issues/124) ([7ce1b75](https://github.com/After-The-End-Of-All-Things/game/commit/7ce1b75ed6ab98129737f3d454e56332f67da4f8))
-* **ui:** add tooltips to profile for stats, total collected to increase user clarity. closes [#136](https://github.com/After-The-End-Of-All-Things/game/issues/136) ([197fd1e](https://github.com/After-The-End-Of-All-Things/game/commit/197fd1e77384162a6f6b1939ff2f8be5c1935d28))
-
-
-
-## [0.1.5](https://github.com/After-The-End-Of-All-Things/game/compare/v0.1.4...v0.1.5) (2023-08-30)
-
-
-### Bug Fixes
-
-* **item:** discovering a bad equipment item will remove it ([2d2d1c8](https://github.com/After-The-End-Of-All-Things/game/commit/2d2d1c821d55598ae00a0991c51bf5ec02fa3bd4))
-* **item:** items/resources now cross-check so you can't get them in the wrong spots ([8f89d09](https://github.com/After-The-End-Of-All-Things/game/commit/8f89d0926e0230fc5323dc57966154221416915d))
-* **market:** market now always costs 1 coin to list at least ([49c5b11](https://github.com/After-The-End-Of-All-Things/game/commit/49c5b116bbe8b9d8458e06d22c9dd3ddbf7fea64))
-
-
-
-## [0.1.4](https://github.com/After-The-End-Of-All-Things/game/compare/v0.1.3...v0.1.4) (2023-08-29)
-
-
-### Bug Fixes
-
-* **combat:** enemies will no longer attempt to move to the wrong side, halting the fight ([957fd3b](https://github.com/After-The-End-Of-All-Things/game/commit/957fd3bcf1452452a27906f09267821b116f2643))
-* **fight:** elemental damage is no longer wack. ground targetted spells work ([06b29f3](https://github.com/After-The-End-Of-All-Things/game/commit/06b29f37871eb6ae2f761090cbeb9138e03e15be))
-* **fight:** fights can end again ([079e22e](https://github.com/After-The-End-Of-All-Things/game/commit/079e22ea0369f4f757bb3c9ea48f867c1b7b7ba4))
-* **fight:** you can no longer kill dead creatures ([fa4e3cd](https://github.com/After-The-End-Of-All-Things/game/commit/fa4e3cd0b89fd96cbef413070fb600328f71c25c))
-
-
-### Features
-
-* **core:** add logic to service paths, closes [#104](https://github.com/After-The-End-Of-All-Things/game/issues/104) ([c628d71](https://github.com/After-The-End-Of-All-Things/game/commit/c628d712e68c251880c6ea987b469e8d1588a1f1))
-
-
-
-## [0.1.3](https://github.com/After-The-End-Of-All-Things/game/compare/v0.1.2...v0.1.3) (2023-08-29)
-
-
-
-## [0.1.2](https://github.com/After-The-End-Of-All-Things/game/compare/v0.1.1...v0.1.2) (2023-08-29)
-
-
-### Bug Fixes
-
-* **build:** generate blog posts correctly ([902326e](https://github.com/After-The-End-Of-All-Things/game/commit/902326e02eadef087c092d4bc156a0e5ad08a4be))
-
-
-
-## [0.1.1](https://github.com/After-The-End-Of-All-Things/game/compare/v0.1.0...v0.1.1) (2023-08-29)
-
-
-
-# [0.1.0](https://github.com/After-The-End-Of-All-Things/game/compare/0f26cbec9622f89edc58468e6a454b0abd7ea137...v0.1.0) (2023-08-29)
-
-
-### Bug Fixes
-
-* **action:** wave should have an actual user id ([05a8f7d](https://github.com/After-The-End-Of-All-Things/game/commit/05a8f7d23432d18fba519b9c8d61c296500a3de8))
-* **action:** wave should not default to waveback=true ([c187f57](https://github.com/After-The-End-Of-All-Things/game/commit/c187f57bb41617374cd39be82dfc12bbb13b75ba))
-* **analytics:** gameanalytics starts a session every time it sends an event now ([bdecd8a](https://github.com/After-The-End-Of-All-Things/game/commit/bdecd8a92ad256978603a8e437d6e89b386e26f7))
-* **analytics:** swallow error for sessionStart ([a8c6150](https://github.com/After-The-End-Of-All-Things/game/commit/a8c61500403803ef469c5900302061996a4fbe7c))
-* **api:** never trust the client. closes [#70](https://github.com/After-The-End-Of-All-Things/game/issues/70) ([7f4027e](https://github.com/After-The-End-Of-All-Things/game/commit/7f4027e8ed32edc2ee0423a385a9a5828efe1ed8))
-* **api:** unite response values of services/controllers to all be the same interface ([aeadbda](https://github.com/After-The-End-Of-All-Things/game/commit/aeadbda27264eee5b8d7146b91b58c961067c33b))
-* **auth:** add auth guard to pages, closes [#52](https://github.com/After-The-End-Of-All-Things/game/issues/52) ([2f35dcb](https://github.com/After-The-End-Of-All-Things/game/commit/2f35dcb022e36d772a797872ea36a8e8b10b9da7))
-* **avatar:** default avatar shown in modal is no longer +1'd ([d78e40e](https://github.com/After-The-End-Of-All-Things/game/commit/d78e40e880838e7f4c7e565111f1893cd47a019e))
-* **client:** fix rollbar sending client error cases ([91c545d](https://github.com/After-The-End-Of-All-Things/game/commit/91c545d2bb551292566b4e8f70acf07d3c10dc56))
-* **combat:** combat doesnt end every action ([e083f20](https://github.com/After-The-End-Of-All-Things/game/commit/e083f20c651274904b6c51e2c569e408490adb9d))
-* **combat:** fix fight not found errors ([654387a](https://github.com/After-The-End-Of-All-Things/game/commit/654387a07a00b48f7ec637648abc081665a3f660))
-* **equipment:** equipment will no longer lose its instance id when equipped ([cb5fa25](https://github.com/After-The-End-Of-All-Things/game/commit/cb5fa2512945f6665f1e405b55b30b5b52e76d40))
-* **explore:** explore would display negative xp if you leveled up from it ([96a671a](https://github.com/After-The-End-Of-All-Things/game/commit/96a671a0719bd0716a6c09fbd9e76918daa72817))
-* **icon:** fix icon component to fill space correctly ([2071220](https://github.com/After-The-End-Of-All-Things/game/commit/2071220588ebc0fb8c8aff8ca15101373802297b))
-* **inventory:** can equip accessories again. closes [#89](https://github.com/After-The-End-Of-All-Things/game/issues/89) ([e12cec5](https://github.com/After-The-End-Of-All-Things/game/commit/e12cec59b1e180e61880eafd63cfd1509ddc1b5d))
-* **inventory:** names will wrap if needed ([8e156d9](https://github.com/After-The-End-Of-All-Things/game/commit/8e156d9bb6fce513068f99de38210076bb6f7dd7))
-* **login:** get notifications on login. closes [#54](https://github.com/After-The-End-Of-All-Things/game/issues/54) ([2d028e1](https://github.com/After-The-End-Of-All-Things/game/commit/2d028e11948a265d6fb13ef0648287f4bb278d84))
-* **login:** no unauthorized error on homepage. closes [#53](https://github.com/After-The-End-Of-All-Things/game/issues/53) ([ee575ce](https://github.com/After-The-End-Of-All-Things/game/commit/ee575cea151f3dc2889a8c6622c92b004cfc82f4))
-* **market:** can now list the last of a resource ([1901f37](https://github.com/After-The-End-Of-All-Things/game/commit/1901f37b07460b9a75eac1168f8a6c425f945e87))
-* **notifications:** mark all read should not send 1 event per notification ([2c52a6e](https://github.com/After-The-End-Of-All-Things/game/commit/2c52a6efb4a0f6f977b96a4eac994b125c9bcdfd))
-* **notifications:** notifications with actions will no longer race to submit data and clear the actions ([6293a4f](https://github.com/After-The-End-Of-All-Things/game/commit/6293a4f49bb8be0407e8aea6660e556ad704b146))
-* **portrait:** portrait selection is in the right place again ([2aec357](https://github.com/After-The-End-Of-All-Things/game/commit/2aec3577dcd2c0401212642d9007074cbae86413))
-* **profile:** tiny avatar shows again. closes [#63](https://github.com/After-The-End-Of-All-Things/game/issues/63) ([c079201](https://github.com/After-The-End-Of-All-Things/game/commit/c079201e1a6198efd7e7e6d798a3f9e1b7b960b2))
-* **setup:** add setup script for client, fix error for server setup ([37733aa](https://github.com/After-The-End-Of-All-Things/game/commit/37733aaff5e94ef43e80999fbd81721c41efa0df))
-* **workflow:** only deploy server/client on tags ([6895cc3](https://github.com/After-The-End-Of-All-Things/game/commit/6895cc3ba174f15222f652956d9f1ab61a7308e8))
-
-
-### Features
-
-* **actions:** better, more robust action handling. closes [#57](https://github.com/After-The-End-Of-All-Things/game/issues/57) ([2b9b497](https://github.com/After-The-End-Of-All-Things/game/commit/2b9b497c3e8e009865bf4868b89dcd1954657187))
-* **analytics:** add gameanalytics to server. needs further refinement based on GA team. closes [#33](https://github.com/After-The-End-Of-All-Things/game/issues/33) ([f787309](https://github.com/After-The-End-Of-All-Things/game/commit/f7873097ff7b71bd3bc7e3eca8239ccfc5c83547))
-* **api:** add swagger api docs. closes [#56](https://github.com/After-The-End-Of-All-Things/game/issues/56) ([8760899](https://github.com/After-The-End-Of-All-Things/game/commit/8760899d2a3941eeb462e2b2980feface8598744))
-* **assets:** better loading of background/portrait counts ([d4532f7](https://github.com/After-The-End-Of-All-Things/game/commit/d4532f7c8900a0683e4c733e70bdbb5b9773e74b))
-* **assets:** drastically improve asset load speed by caching spritesheet urls. closes [#10](https://github.com/After-The-End-Of-All-Things/game/issues/10) ([45783ee](https://github.com/After-The-End-Of-All-Things/game/commit/45783eef27e7c8db1f3376853275fdd4738219f3))
-* **assets:** load all qualities of asset, closes [#7](https://github.com/After-The-End-Of-All-Things/game/issues/7) ([b539704](https://github.com/After-The-End-Of-All-Things/game/commit/b53970417874c8478c86c5de383f257812776911))
-* **assets:** properly cache assets and only bust if hash doesn't match ([00e6b77](https://github.com/After-The-End-Of-All-Things/game/commit/00e6b77957dc831c3867affe223520b8f8c50184)), closes [#19](https://github.com/After-The-End-Of-All-Things/game/issues/19)
-* **assets:** properly cache bust/store spritesheets for medium quality ([5c68b84](https://github.com/After-The-End-Of-All-Things/game/commit/5c68b84d673014a1b180b528d5fd26f99f51213a))
-* **asset:** support actually selecting different qualities of assets. closes [#6](https://github.com/After-The-End-Of-All-Things/game/issues/6) ([4b50d8f](https://github.com/After-The-End-Of-All-Things/game/commit/4b50d8fc3033bafb1ee4873876b5da9520dc1db4))
-* **background:** cache background urls ([6ee80ac](https://github.com/After-The-End-Of-All-Things/game/commit/6ee80ac146a45db7dcc0538fe99b72f1344d2b64))
-* **collectibles:** add progress to collectibles. closes [#73](https://github.com/After-The-End-Of-All-Things/game/issues/73) ([36a4997](https://github.com/After-The-End-Of-All-Things/game/commit/36a4997db651007984c8ffaa9380e202f71e32aa))
-* **collections:** add collections page for viewing all stuff in the game ([d91848c](https://github.com/After-The-End-Of-All-Things/game/commit/d91848c55a83167ea7e567b506fc58d0984d62fb))
-* **collections:** add scaffolded collections page ([38ebcf6](https://github.com/After-The-End-Of-All-Things/game/commit/38ebcf6f6209c48cf960040a2eb84e1eab08fb4f))
-* **collections:** collections now impart rewards. closes [#39](https://github.com/After-The-End-Of-All-Things/game/issues/39) ([b097634](https://github.com/After-The-End-Of-All-Things/game/commit/b0976349596706cb3a934a084e598f26927c0f5a))
-* **collections:** hide collectible information for unfound ones ([4ed7124](https://github.com/After-The-End-Of-All-Things/game/commit/4ed7124555028f9ea3dc08204767c798c2017060))
-* **collections:** show collectible description ([cc9627a](https://github.com/After-The-End-Of-All-Things/game/commit/cc9627a36c4b95218b8ec01423d44264430c365e))
-* **core:** add exp xp multiplier variable for faster dev ([2b7d069](https://github.com/After-The-End-Of-All-Things/game/commit/2b7d06918d1a22ea529137e09c7139482ad57bd9))
-* **core:** add explore speed multiplier to make local testing faster ([4aeabd2](https://github.com/After-The-End-Of-All-Things/game/commit/4aeabd28f69a0866346f2eb96444dc68ed37722d))
-* **core:** add nestia. closes [#2](https://github.com/After-The-End-Of-All-Things/game/issues/2) ([fbb6ca6](https://github.com/After-The-End-Of-All-Things/game/commit/fbb6ca6bd92d2a337521d2f740a4ce971fe1b2ae))
-* **core:** can now collect resources ([330af1c](https://github.com/After-The-End-Of-All-Things/game/commit/330af1c0a424799de9c6a68e9f8a8ce8d236b86f)), closes [#46](https://github.com/After-The-End-Of-All-Things/game/issues/46)
-* **craft:** add confirm to craft ([fc21e6e](https://github.com/After-The-End-Of-All-Things/game/commit/fc21e6e18c89e77a677cca03ee3824daa1220c16))
-* **crafting:** add crafting. update some old systems. closes [#46](https://github.com/After-The-End-Of-All-Things/game/issues/46) ([953944d](https://github.com/After-The-End-Of-All-Things/game/commit/953944d6a56e9f933617bf44e96dcb69e514933f))
-* **database:** add indexes to non-fulluser schemas ([0b218b1](https://github.com/After-The-End-Of-All-Things/game/commit/0b218b140d8f1d3014ccaf7de2528f2d513d5a3d))
-* **equip:** better nothing equipped messaging ([2c8c86e](https://github.com/After-The-End-Of-All-Things/game/commit/2c8c86e41fbc1f8a0510a620df0205c0666cbebc))
-* **error:** handle errors by myself instead of using a library because I want to send some back to the user too ([78d9d8b](https://github.com/After-The-End-Of-All-Things/game/commit/78d9d8b328d2a75f35e0711a2ce2c5705d8d3043))
-* **errors:** add rollbar for error tracking. closes [#29](https://github.com/After-The-End-Of-All-Things/game/issues/29) ([660703f](https://github.com/After-The-End-Of-All-Things/game/commit/660703f6574b009eb890dc7edb7559e9bc876383))
-* **explore:** add wave option from explore (based on npcChance). targets a random player at that location. creates a notification that target user can use to wave back to the originating player ([ffcb7b6](https://github.com/After-The-End-Of-All-Things/game/commit/ffcb7b6bd9bf1443847ff9c4bafe128a3a950edc))
-* **explore:** collectible rarity now matters ([92220bd](https://github.com/After-The-End-Of-All-Things/game/commit/92220bd5892ce03ea48bd0c7136b19356d2c73c6))
-* **inventory:** add item compare modal pre-equip. closes [#76](https://github.com/After-The-End-Of-All-Things/game/issues/76) ([4d0e234](https://github.com/After-The-End-Of-All-Things/game/commit/4d0e234d0ca7f098073641dc9bdb89863fc1b686))
-* **inventory:** allow multiple collects for collectibles and equipment ([b95bfcf](https://github.com/After-The-End-Of-All-Things/game/commit/b95bfcf7d2f2ca262cd9507bc082f4af3e2d5d39))
-* **item:** can find items, collectibles, view them in inventory ([99fa6fe](https://github.com/After-The-End-Of-All-Things/game/commit/99fa6fecb8be76fbb89fc385f21c6b1c5c130c69))
-* **item:** can now equip items, closes [#68](https://github.com/After-The-End-Of-All-Things/game/issues/68) ([5ee41b1](https://github.com/After-The-End-Of-All-Things/game/commit/5ee41b1b51f76ac4e7279bd5af1eb10628144ecb))
-* **item:** can now sell items ([0740d47](https://github.com/After-The-End-Of-All-Things/game/commit/0740d4748ad637eec8caf40ad531c474f914bed4))
-* **linkage:** add discord join link ([8a7b3e7](https://github.com/After-The-End-Of-All-Things/game/commit/8a7b3e7c60a5a2d8ba42b4fbbaefc66e2fbf4bd8))
-* **location:** show location stats on travel screen and explore screen ([b5d2b55](https://github.com/After-The-End-Of-All-Things/game/commit/b5d2b551094607ebae454f4249bc31d68997241e)), closes [#15](https://github.com/After-The-End-Of-All-Things/game/issues/15) [#20](https://github.com/After-The-End-Of-All-Things/game/issues/20)
-* **logging:** add more logging ([a29bbe4](https://github.com/After-The-End-Of-All-Things/game/commit/a29bbe4ca8a6eb2a7c8f3485131b7044345ca8b6))
-* **login:** login page will show latest announcement. closes [#30](https://github.com/After-The-End-Of-All-Things/game/issues/30) ([470f2dc](https://github.com/After-The-End-Of-All-Things/game/commit/470f2dc63dcd32564da91b28adc8e7ab4bea0471))
-* **market:** can list items on market, market interface ([a8d7e4f](https://github.com/After-The-End-Of-All-Things/game/commit/a8d7e4f73a7f8258504ba647eabeefd0d0c01085))
-* **market:** sales history is tracked per sale. closes [#83](https://github.com/After-The-End-Of-All-Things/game/issues/83) ([2ed1c46](https://github.com/After-The-End-Of-All-Things/game/commit/2ed1c46856cb9a3bd7b5a33b6c928deeb66034bc))
-* **me:** add my total stat calculations ([25f8295](https://github.com/After-The-End-Of-All-Things/game/commit/25f82955920ad1fe61b0392be74162011f7a4ce8))
-* **me:** can now set bio and longbio ([bfc618f](https://github.com/After-The-End-Of-All-Things/game/commit/bfc618f94a1ee420c04d0823befda302ba3a3fd2)), closes [#12](https://github.com/After-The-End-Of-All-Things/game/issues/12)
-* **notification:** add location discovery notification ([b7b2a97](https://github.com/After-The-End-Of-All-Things/game/commit/b7b2a97aceb7e962322f853a0d9ea3425fd7bafd))
-* **notifications:** add notification system. add levelup notifications that auto dismiss after an hour ([0f26cbe](https://github.com/After-The-End-Of-All-Things/game/commit/0f26cbec9622f89edc58468e6a454b0abd7ea137))
-* **notification:** support one notification action to travel ([b4ad5b3](https://github.com/After-The-End-Of-All-Things/game/commit/b4ad5b31364ca3ab90f85d05ccac81c69555607f))
-* **notifications:** use SSE instead of long polling to get new notifications ([c7f4857](https://github.com/After-The-End-Of-All-Things/game/commit/c7f4857d8f63941405c46fb8d2265150e417b485))
-* **options:** add options page, it does nothing. closes [#37](https://github.com/After-The-End-Of-All-Things/game/issues/37) ([0e6915a](https://github.com/After-The-End-Of-All-Things/game/commit/0e6915a019f18074f320b46efee4def89ef28a1e))
-* **player:** show player stats ([45ea36a](https://github.com/After-The-End-Of-All-Things/game/commit/45ea36a0a976bcfd32ce47c2e132fbe6776b86a6))
-* **profile:** add censor-sensor to stop people from being unnecessarily profane. closes [#11](https://github.com/After-The-End-Of-All-Things/game/issues/11) ([429fbf8](https://github.com/After-The-End-Of-All-Things/game/commit/429fbf835855eba99c7348fc0a32bcb8d846f973))
-* **profile:** add logout button. closes [#55](https://github.com/After-The-End-Of-All-Things/game/issues/55) ([2cf7cae](https://github.com/After-The-End-Of-All-Things/game/commit/2cf7caed753c7c2f4ab9e9a8e73053d4cc51f6d9))
-* **travel:** show # collectibles found per location, closes [#77](https://github.com/After-The-End-Of-All-Things/game/issues/77) ([8112255](https://github.com/After-The-End-Of-All-Things/game/commit/81122558caaae152a272117143a898524559a902))
-* **ui:** add background-art component to make it easier to update when it happens ([85a52db](https://github.com/After-The-End-Of-All-Things/game/commit/85a52dbcac28e14642b3e08ed5371bb3769ad947))
-* **ui:** add modals to confirm travel/walk ([b2494c2](https://github.com/After-The-End-Of-All-Things/game/commit/b2494c2810c4f7d57dc40dee510bd115f0606331)), closes [#22](https://github.com/After-The-End-Of-All-Things/game/issues/22)
-* **ui:** add my profile page ([4b2598c](https://github.com/After-The-End-Of-All-Things/game/commit/4b2598c3816afa3c3959ba8cad92eabe22664510))
-* **ui:** cache background images ([184a82b](https://github.com/After-The-End-Of-All-Things/game/commit/184a82b126cff7284f9ee2a77634d734ec9782ac))
-* **ui:** can collect items/collectibles. closes [#21](https://github.com/After-The-End-Of-All-Things/game/issues/21) ([8fa6fcf](https://github.com/After-The-End-Of-All-Things/game/commit/8fa6fcf7e944fc5179de3331f738da8e38f767a3))
-* **ui:** server can run arbitrary ui actions ([f0a6074](https://github.com/After-The-End-Of-All-Things/game/commit/f0a6074124a9375eee92e8b541dda44ef7820fbe))
-* **updates:** add game updates page, closes [#80](https://github.com/After-The-End-Of-All-Things/game/issues/80) ([4850a97](https://github.com/After-The-End-Of-All-Things/game/commit/4850a973531778e862c14bc4a63bdafba5265b15))
-* **updates:** blogpost generator puts version in title ([42e669c](https://github.com/After-The-End-Of-All-Things/game/commit/42e669c97389cd6adddb6a9cec94550978331d82))
+
+## <small>0.1.5 (2023-08-30)</small>
+
+* Update changelog ([28eeb1c](https://github.com/After-The-End-Of-All-Things/game/commit/28eeb1c))
+* chore(release): Patch 0.1.5 ([8f98a98](https://github.com/After-The-End-Of-All-Things/game/commit/8f98a98))
+* fix(item): discovering a bad equipment item will remove it ([2d2d1c8](https://github.com/After-The-End-Of-All-Things/game/commit/2d2d1c8))
+* fix(item): items/resources now cross-check so you can't get them in the wrong spots ([8f89d09](https://github.com/After-The-End-Of-All-Things/game/commit/8f89d09))
+* fix(market): market now always costs 1 coin to list at least ([49c5b11](https://github.com/After-The-End-Of-All-Things/game/commit/49c5b11))
+
+
+
+## <small>0.1.4 (2023-08-29)</small>
+
+* Update changelog ([2fcad10](https://github.com/After-The-End-Of-All-Things/game/commit/2fcad10))
+* chore(release): Patch 0.1.4 ([3aaf7d5](https://github.com/After-The-End-Of-All-Things/game/commit/3aaf7d5))
+* fix(combat): enemies will no longer attempt to move to the wrong side, halting the fight ([957fd3b](https://github.com/After-The-End-Of-All-Things/game/commit/957fd3b))
+* fix(fight): elemental damage is no longer wack. ground targetted spells work ([06b29f3](https://github.com/After-The-End-Of-All-Things/game/commit/06b29f3))
+* fix(fight): fights can end again ([079e22e](https://github.com/After-The-End-Of-All-Things/game/commit/079e22e))
+* fix(fight): you can no longer kill dead creatures ([fa4e3cd](https://github.com/After-The-End-Of-All-Things/game/commit/fa4e3cd))
+* feat(core): add logic to service paths, closes #104 ([c628d71](https://github.com/After-The-End-Of-All-Things/game/commit/c628d71)), closes [#104](https://github.com/After-The-End-Of-All-Things/game/issues/104)
+
+
+
+## <small>0.1.3 (2023-08-29)</small>
+
+* Update changelog ([8180dac](https://github.com/After-The-End-Of-All-Things/game/commit/8180dac))
+* chore(release): Patch 0.1.3 ([ccac560](https://github.com/After-The-End-Of-All-Things/game/commit/ccac560))
+
+
+
+## <small>0.1.2 (2023-08-29)</small>
+
+* Update changelog ([0fb6c4b](https://github.com/After-The-End-Of-All-Things/game/commit/0fb6c4b))
+* chore(release): Patch 0.1.2 ([ece42f0](https://github.com/After-The-End-Of-All-Things/game/commit/ece42f0))
+* fix(build): generate blog posts correctly ([902326e](https://github.com/After-The-End-Of-All-Things/game/commit/902326e))
+
+
+
+## <small>0.1.1 (2023-08-29)</small>
+
+* new token name ([5f7f7e9](https://github.com/After-The-End-Of-All-Things/game/commit/5f7f7e9))
+* Update changelog ([6ed23e2](https://github.com/After-The-End-Of-All-Things/game/commit/6ed23e2))
+* workflow dispatch for release notes ([68d56c3](https://github.com/After-The-End-Of-All-Things/game/commit/68d56c3))
+* chore(release): Patch 0.1.1 ([45b02c7](https://github.com/After-The-End-Of-All-Things/game/commit/45b02c7))
+
+
+
+## 0.1.0 (2023-08-29)
+
+* actually add page ([d5bea36](https://github.com/After-The-End-Of-All-Things/game/commit/d5bea36))
+* add basic asset loading process ([ed440cc](https://github.com/After-The-End-Of-All-Things/game/commit/ed440cc))
+* add basic server stuff ([47c849a](https://github.com/After-The-End-Of-All-Things/game/commit/47c849a))
+* add changelogs, remove weird empty line of code ([91d6b12](https://github.com/After-The-End-Of-All-Things/game/commit/91d6b12))
+* add collectible find stat ([319967f](https://github.com/After-The-End-Of-All-Things/game/commit/319967f))
+* add content service client side ([85b7577](https://github.com/After-The-End-Of-All-Things/game/commit/85b7577))
+* add crossnocenter icons ([ff78134](https://github.com/After-The-End-Of-All-Things/game/commit/ff78134))
+* add description field to items ([dfe0cbf](https://github.com/After-The-End-Of-All-Things/game/commit/dfe0cbf))
+* add discoveries and achievements modules ([04285c1](https://github.com/After-The-End-Of-All-Things/game/commit/04285c1))
+* add element icons, element component, ability diagram images, show sprites and elements on combat pa ([6a260ab](https://github.com/After-The-End-Of-All-Things/game/commit/6a260ab))
+* add explore functionality and a lot of adjacent functionality ([d6905bd](https://github.com/After-The-End-Of-All-Things/game/commit/d6905bd))
+* add first store, migration, etc and utilize it ([c4d3434](https://github.com/After-The-End-Of-All-Things/game/commit/c4d3434))
+* add git describe module ([4320a34](https://github.com/After-The-End-Of-All-Things/game/commit/4320a34))
+* add health bars, fix player stat/resistance calculations ([6b672ba](https://github.com/After-The-End-Of-All-Things/game/commit/6b672ba))
+* add interfaces for content ([51a77d3](https://github.com/After-The-End-Of-All-Things/game/commit/51a77d3))
+* add jobs ([b2af490](https://github.com/After-The-End-Of-All-Things/game/commit/b2af490))
+* add logic for finishing fight ([9fd4e54](https://github.com/After-The-End-Of-All-Things/game/commit/9fd4e54))
+* add menu button for short resolutions ([c23f6bf](https://github.com/After-The-End-Of-All-Things/game/commit/c23f6bf))
+* add monster icon component, monster fight action, ability to block explore for secondary actions, fi ([08e2eaa](https://github.com/After-The-End-Of-All-Things/game/commit/08e2eaa))
+* add player, move to shared interfaces, etc ([8708ea6](https://github.com/After-The-End-Of-All-Things/game/commit/8708ea6))
+* add progress bar to explore button ([238f36d](https://github.com/After-The-End-Of-All-Things/game/commit/238f36d))
+* add real logging ([39805d9](https://github.com/After-The-End-Of-All-Things/game/commit/39805d9))
+* add shared module, store-text grabber, etc ([c233586](https://github.com/After-The-End-Of-All-Things/game/commit/c233586))
+* add stores for server schemas, add new server schemas, reorg, add data grabbing interceptor ([fbf4d87](https://github.com/After-The-End-Of-All-Things/game/commit/fbf4d87))
+* add table/listings, add basic ui for items buying ([3e74c6e](https://github.com/After-The-End-Of-All-Things/game/commit/3e74c6e))
+* add theme ([ccbe9ff](https://github.com/After-The-End-Of-All-Things/game/commit/ccbe9ff))
+* add tooltips, add current xp as a tooltip ([cfe3909](https://github.com/After-The-End-Of-All-Things/game/commit/cfe3909))
+* add town view ([bbc498b](https://github.com/After-The-End-Of-All-Things/game/commit/bbc498b))
+* add turn order ([672ab93](https://github.com/After-The-End-Of-All-Things/game/commit/672ab93))
+* add version info, show on options page ([87217d2](https://github.com/After-The-End-Of-All-Things/game/commit/87217d2))
+* added recommended vscode extensions ([9839a1d](https://github.com/After-The-End-Of-All-Things/game/commit/9839a1d))
+* adjust db config, readme constant, and make AI do stuff ([6f2593a](https://github.com/After-The-End-Of-All-Things/game/commit/6f2593a))
+* all the code is there ([fd5e62f](https://github.com/After-The-End-Of-All-Things/game/commit/fd5e62f))
+* also store sprite on fight character ([a2aa056](https://github.com/After-The-End-Of-All-Things/game/commit/a2aa056))
+* antoher fix ([89c43ec](https://github.com/After-The-End-Of-All-Things/game/commit/89c43ec))
+* api convergence ([7f1d5a5](https://github.com/After-The-End-Of-All-Things/game/commit/7f1d5a5))
+* begin ability display ([263b11a](https://github.com/After-The-End-Of-All-Things/game/commit/263b11a))
+* better check for AI ([ec23a7f](https://github.com/After-The-End-Of-All-Things/game/commit/ec23a7f))
+* better handling of messages, timing, etc ([6cc15bf](https://github.com/After-The-End-Of-All-Things/game/commit/6cc15bf))
+* better highlight for abilities, inline element display, job abilities ([353f19b](https://github.com/After-The-End-Of-All-Things/game/commit/353f19b))
+* better logging in setup script ([c3097af](https://github.com/After-The-End-Of-All-Things/game/commit/c3097af))
+* Block changing portrait if the user has not unlocked it ([aff4bd1](https://github.com/After-The-End-Of-All-Things/game/commit/aff4bd1))
+* Cache discriminators to check instead of pinging db until finding a good one ([e22a219](https://github.com/After-The-End-Of-All-Things/game/commit/e22a219))
+* can claim coins from transactions ([678f938](https://github.com/After-The-End-Of-All-Things/game/commit/678f938))
+* can explore, travel between places, pay money to travel faster, etc ([adb3914](https://github.com/After-The-End-Of-All-Things/game/commit/adb3914))
+* can gain coins/xp from combat ([6b0dccd](https://github.com/After-The-End-Of-All-Things/game/commit/6b0dccd))
+* can no longer see own items on market ([6aca48e](https://github.com/After-The-End-Of-All-Things/game/commit/6aca48e))
+* can now buy items from the market ([a19c0d5](https://github.com/After-The-End-Of-All-Things/game/commit/a19c0d5))
+* can now get a list of items back ([4ace12a](https://github.com/After-The-End-Of-All-Things/game/commit/4ace12a))
+* can now win fights ([6887aa0](https://github.com/After-The-End-Of-All-Things/game/commit/6887aa0))
+* can reprice and unlist items ([8641ab7](https://github.com/After-The-End-Of-All-Things/game/commit/8641ab7))
+* check for user before updating their online ([6f0e289](https://github.com/After-The-End-Of-All-Things/game/commit/6f0e289))
+* client side, send actions to server side. need to finish move ([c4e032b](https://github.com/After-The-End-Of-All-Things/game/commit/c4e032b))
+* cooldowns work ([b2ebe71](https://github.com/After-The-End-Of-All-Things/game/commit/b2ebe71))
+* Default choices to 0 to prevent NaN arrays ([4b832e7](https://github.com/After-The-End-Of-All-Things/game/commit/4b832e7))
+* deploy fixes ([d3df239](https://github.com/After-The-End-Of-All-Things/game/commit/d3df239))
+* does this fix it ([1a91d04](https://github.com/After-The-End-Of-All-Things/game/commit/1a91d04))
+* enemies get turns, their AI doesnt do anything ([f99e725](https://github.com/After-The-End-Of-All-Things/game/commit/f99e725))
+* error interceptor, token refresh, login, autologin on refresh, register, error showing for auth erro ([f2bd670](https://github.com/After-The-End-Of-All-Things/game/commit/f2bd670))
+* fix accessory list ([b0fc039](https://github.com/After-The-End-Of-All-Things/game/commit/b0fc039))
+* fix display for multi creature tiles, make it so you can only move on your side ([9c2d39e](https://github.com/After-The-End-Of-All-Things/game/commit/9c2d39e))
+* fix domain for jwt auth ([93a9569](https://github.com/After-The-End-Of-All-Things/game/commit/93a9569))
+* fix escape bug, fix rounding on damage to be 1 decimal place ([554c39d](https://github.com/After-The-End-Of-All-Things/game/commit/554c39d))
+* fix flee, slight refactoring ([454ceca](https://github.com/After-The-End-Of-All-Things/game/commit/454ceca))
+* fix jwtmodule setup? ([bcef5a1](https://github.com/After-The-End-Of-All-Things/game/commit/bcef5a1))
+* fix lint ([7a14c47](https://github.com/After-The-End-Of-All-Things/game/commit/7a14c47))
+* fix lint ([b201c8b](https://github.com/After-The-End-Of-All-Things/game/commit/b201c8b))
+* fix nest. better handling of refresh so it doesnt refresh as much when it doesnt have to ([bc79cba](https://github.com/After-The-End-Of-All-Things/game/commit/bc79cba))
+* fix netlify deploy branch ([9f1a349](https://github.com/After-The-End-Of-All-Things/game/commit/9f1a349))
+* fix schemas to be more consistent, etc ([2a24c3e](https://github.com/After-The-End-Of-All-Things/game/commit/2a24c3e))
+* fix targetting visuals ([41e9dd8](https://github.com/After-The-End-Of-All-Things/game/commit/41e9dd8))
+* Fix the name of the game ([e4eb982](https://github.com/After-The-End-Of-All-Things/game/commit/e4eb982))
+* fix this fucking error again? ([5eefd5e](https://github.com/After-The-End-Of-All-Things/game/commit/5eefd5e))
+* fix tsconfig.paths to work!!! ([b18ef07](https://github.com/After-The-End-Of-All-Things/game/commit/b18ef07))
+* fix workflow names ([436f492](https://github.com/After-The-End-Of-All-Things/game/commit/436f492))
+* Forgot some routes ([dd75d7e](https://github.com/After-The-End-Of-All-Things/game/commit/dd75d7e))
+* http fallback for loading content ([6d159e8](https://github.com/After-The-End-Of-All-Things/game/commit/6d159e8))
+* ifl this font ([ed13f6b](https://github.com/After-The-End-Of-All-Things/game/commit/ed13f6b))
+* ignore .env ([69c2517](https://github.com/After-The-End-Of-All-Things/game/commit/69c2517))
+* ignore 404s in rollbar ([344cb72](https://github.com/After-The-End-Of-All-Things/game/commit/344cb72))
+* ignore all http errors ([a7ade5d](https://github.com/After-The-End-Of-All-Things/game/commit/a7ade5d))
+* ignore auth/register in update time interceptor ([d175bf6](https://github.com/After-The-End-Of-All-Things/game/commit/d175bf6))
+* ignore grab data in log ([5155bf5](https://github.com/After-The-End-Of-All-Things/game/commit/5155bf5))
+* Lint ([de0d5c6](https://github.com/After-The-End-Of-All-Things/game/commit/de0d5c6))
+* Lint, remove unused import ([a4a4067](https://github.com/After-The-End-Of-All-Things/game/commit/a4a4067))
+* linting ([fd341c5](https://github.com/After-The-End-Of-All-Things/game/commit/fd341c5))
+* make pwa, add some boilerplate, etc ([63e6230](https://github.com/After-The-End-Of-All-Things/game/commit/63e6230))
+* mark new netlify as production deploy ([87a15eb](https://github.com/After-The-End-Of-All-Things/game/commit/87a15eb))
+* merge with main, back to using Lodash.random ([b859750](https://github.com/After-The-End-Of-All-Things/game/commit/b859750))
+* migrate equipped items on load ([522fb74](https://github.com/After-The-End-Of-All-Things/game/commit/522fb74))
+* monster letters in name, show names on screen ([d23a5f1](https://github.com/After-The-End-Of-All-Things/game/commit/d23a5f1))
+* move flee into normal action setup ([897466d](https://github.com/After-The-End-Of-All-Things/game/commit/897466d))
+* move headers/redirect ([9e73484](https://github.com/After-The-End-Of-All-Things/game/commit/9e73484))
+* move headers/redirects ([8fa6b13](https://github.com/After-The-End-Of-All-Things/game/commit/8fa6b13))
+* move to aggregator for auth getting fulluser, make it so fights can be created, add combat page, add ([01af4ef](https://github.com/After-The-End-Of-All-Things/game/commit/01af4ef))
+* new homescreen I guess ([c8c01f9](https://github.com/After-The-End-Of-All-Things/game/commit/c8c01f9))
+* Only retrieving discriminators, using Set for faster lookup, handling max users ([4085b33](https://github.com/After-The-End-Of-All-Things/game/commit/4085b33))
+* patch architecture, can change pfp ([ec7600f](https://github.com/After-The-End-Of-All-Things/game/commit/ec7600f))
+* raw home image ([82ae40b](https://github.com/After-The-End-Of-All-Things/game/commit/82ae40b))
+* Re-add the sample instead of always returning the first player ([12123bb](https://github.com/After-The-End-Of-All-Things/game/commit/12123bb))
+* re-enable external @interfaces for api ([1f588d2](https://github.com/After-The-End-Of-All-Things/game/commit/1f588d2))
+* refactor data-grabber to be an action, can flee from combat ([b7320e4](https://github.com/After-The-End-Of-All-Things/game/commit/b7320e4))
+* remove console.log ([04e3bfb](https://github.com/After-The-End-Of-All-Things/game/commit/04e3bfb))
+* Remove console.log ([6b110fc](https://github.com/After-The-End-Of-All-Things/game/commit/6b110fc))
+* remove setup script from lint script ([714502d](https://github.com/After-The-End-Of-All-Things/game/commit/714502d))
+* return full user including discoveries and achievements ([1551500](https://github.com/After-The-End-Of-All-Things/game/commit/1551500))
+* rework into hero component, add online users ([640d557](https://github.com/After-The-End-Of-All-Things/game/commit/640d557))
+* run lint ([5d4f558](https://github.com/After-The-End-Of-All-Things/game/commit/5d4f558))
+* sell/buy resources ([1fc8f78](https://github.com/After-The-End-Of-All-Things/game/commit/1fc8f78))
+* send notification when player sells item ([73a4ff8](https://github.com/After-The-End-Of-All-Things/game/commit/73a4ff8))
+* show glow around active character ([f32ffc8](https://github.com/After-The-End-Of-All-Things/game/commit/f32ffc8))
+* show job in screen ([b232f16](https://github.com/After-The-End-Of-All-Things/game/commit/b232f16))
+* show total damage, rework resist/stats ([a990fca](https://github.com/After-The-End-Of-All-Things/game/commit/a990fca))
+* support borders as a discovery ([273fe22](https://github.com/After-The-End-Of-All-Things/game/commit/273fe22))
+* target validation is better ([be232f0](https://github.com/After-The-End-Of-All-Things/game/commit/be232f0))
+* timer should check every 5 minutes for active player count, while visible ([adcc41d](https://github.com/After-The-End-Of-All-Things/game/commit/adcc41d))
+* Update changelog ([66d24b5](https://github.com/After-The-End-Of-All-Things/game/commit/66d24b5))
+* update readme ([5d7408d](https://github.com/After-The-End-Of-All-Things/game/commit/5d7408d))
+* Update README.md ([b2c0efd](https://github.com/After-The-End-Of-All-Things/game/commit/b2c0efd))
+* Update title from routing ([41373f5](https://github.com/After-The-End-Of-All-Things/game/commit/41373f5))
+* Use 127.0.0.1 instead of localhost for mikro-orm, and update documentation ([3555412](https://github.com/After-The-End-Of-All-Things/game/commit/3555412))
+* use job stats for player stats ([97bbac9](https://github.com/After-The-End-Of-All-Things/game/commit/97bbac9))
+* Use sample() instead of random() ([7c9324f](https://github.com/After-The-End-Of-All-Things/game/commit/7c9324f))
+* Wave should only check for online players ([3808c27](https://github.com/After-The-End-Of-All-Things/game/commit/3808c27))
+* chore(release): Minor 0.1.0 ([64972e6](https://github.com/After-The-End-Of-All-Things/game/commit/64972e6))
+* feat(actions): better, more robust action handling. closes #57 ([2b9b497](https://github.com/After-The-End-Of-All-Things/game/commit/2b9b497)), closes [#57](https://github.com/After-The-End-Of-All-Things/game/issues/57)
+* feat(analytics): add gameanalytics to server. needs further refinement based on GA team. closes #33 ([f787309](https://github.com/After-The-End-Of-All-Things/game/commit/f787309)), closes [#33](https://github.com/After-The-End-Of-All-Things/game/issues/33)
+* feat(api): add swagger api docs. closes #56 ([8760899](https://github.com/After-The-End-Of-All-Things/game/commit/8760899)), closes [#56](https://github.com/After-The-End-Of-All-Things/game/issues/56)
+* feat(asset): support actually selecting different qualities of assets. closes #6 ([4b50d8f](https://github.com/After-The-End-Of-All-Things/game/commit/4b50d8f)), closes [#6](https://github.com/After-The-End-Of-All-Things/game/issues/6)
+* feat(assets): better loading of background/portrait counts ([d4532f7](https://github.com/After-The-End-Of-All-Things/game/commit/d4532f7))
+* feat(assets): drastically improve asset load speed by caching spritesheet urls. closes #10 ([45783ee](https://github.com/After-The-End-Of-All-Things/game/commit/45783ee)), closes [#10](https://github.com/After-The-End-Of-All-Things/game/issues/10)
+* feat(assets): load all qualities of asset, closes #7 ([b539704](https://github.com/After-The-End-Of-All-Things/game/commit/b539704)), closes [#7](https://github.com/After-The-End-Of-All-Things/game/issues/7)
+* feat(assets): properly cache assets and only bust if hash doesn't match ([00e6b77](https://github.com/After-The-End-Of-All-Things/game/commit/00e6b77)), closes [#19](https://github.com/After-The-End-Of-All-Things/game/issues/19)
+* feat(assets): properly cache bust/store spritesheets for medium quality ([5c68b84](https://github.com/After-The-End-Of-All-Things/game/commit/5c68b84))
+* feat(background): cache background urls ([6ee80ac](https://github.com/After-The-End-Of-All-Things/game/commit/6ee80ac))
+* feat(collectibles): add progress to collectibles. closes #73 ([36a4997](https://github.com/After-The-End-Of-All-Things/game/commit/36a4997)), closes [#73](https://github.com/After-The-End-Of-All-Things/game/issues/73)
+* feat(collections): add collections page for viewing all stuff in the game ([d91848c](https://github.com/After-The-End-Of-All-Things/game/commit/d91848c))
+* feat(collections): add scaffolded collections page ([38ebcf6](https://github.com/After-The-End-Of-All-Things/game/commit/38ebcf6))
+* feat(collections): collections now impart rewards. closes #39 ([b097634](https://github.com/After-The-End-Of-All-Things/game/commit/b097634)), closes [#39](https://github.com/After-The-End-Of-All-Things/game/issues/39)
+* feat(collections): hide collectible information for unfound ones ([4ed7124](https://github.com/After-The-End-Of-All-Things/game/commit/4ed7124))
+* feat(collections): show collectible description ([cc9627a](https://github.com/After-The-End-Of-All-Things/game/commit/cc9627a))
+* feat(core): add exp xp multiplier variable for faster dev ([2b7d069](https://github.com/After-The-End-Of-All-Things/game/commit/2b7d069))
+* feat(core): add explore speed multiplier to make local testing faster ([4aeabd2](https://github.com/After-The-End-Of-All-Things/game/commit/4aeabd2))
+* feat(core): add nestia. closes #2 ([fbb6ca6](https://github.com/After-The-End-Of-All-Things/game/commit/fbb6ca6)), closes [#2](https://github.com/After-The-End-Of-All-Things/game/issues/2)
+* feat(core): can now collect resources ([330af1c](https://github.com/After-The-End-Of-All-Things/game/commit/330af1c)), closes [#46](https://github.com/After-The-End-Of-All-Things/game/issues/46)
+* feat(craft): add confirm to craft ([fc21e6e](https://github.com/After-The-End-Of-All-Things/game/commit/fc21e6e))
+* feat(crafting): add crafting. update some old systems. closes #46 ([953944d](https://github.com/After-The-End-Of-All-Things/game/commit/953944d)), closes [#46](https://github.com/After-The-End-Of-All-Things/game/issues/46)
+* feat(database): add indexes to non-fulluser schemas ([0b218b1](https://github.com/After-The-End-Of-All-Things/game/commit/0b218b1))
+* feat(equip): better nothing equipped messaging ([2c8c86e](https://github.com/After-The-End-Of-All-Things/game/commit/2c8c86e))
+* feat(error): handle errors by myself instead of using a library because I want to send some back to  ([78d9d8b](https://github.com/After-The-End-Of-All-Things/game/commit/78d9d8b))
+* feat(errors): add rollbar for error tracking. closes #29 ([660703f](https://github.com/After-The-End-Of-All-Things/game/commit/660703f)), closes [#29](https://github.com/After-The-End-Of-All-Things/game/issues/29)
+* feat(explore): add wave option from explore (based on npcChance). targets a random player at that lo ([ffcb7b6](https://github.com/After-The-End-Of-All-Things/game/commit/ffcb7b6))
+* feat(explore): collectible rarity now matters ([92220bd](https://github.com/After-The-End-Of-All-Things/game/commit/92220bd))
+* feat(inventory): add item compare modal pre-equip. closes #76 ([4d0e234](https://github.com/After-The-End-Of-All-Things/game/commit/4d0e234)), closes [#76](https://github.com/After-The-End-Of-All-Things/game/issues/76)
+* feat(inventory): allow multiple collects for collectibles and equipment ([b95bfcf](https://github.com/After-The-End-Of-All-Things/game/commit/b95bfcf))
+* feat(item): can find items, collectibles, view them in inventory ([99fa6fe](https://github.com/After-The-End-Of-All-Things/game/commit/99fa6fe))
+* feat(item): can now equip items, closes #68 ([5ee41b1](https://github.com/After-The-End-Of-All-Things/game/commit/5ee41b1)), closes [#68](https://github.com/After-The-End-Of-All-Things/game/issues/68)
+* feat(item): can now sell items ([0740d47](https://github.com/After-The-End-Of-All-Things/game/commit/0740d47))
+* feat(linkage): add discord join link ([8a7b3e7](https://github.com/After-The-End-Of-All-Things/game/commit/8a7b3e7))
+* feat(location): show location stats on travel screen and explore screen ([b5d2b55](https://github.com/After-The-End-Of-All-Things/game/commit/b5d2b55)), closes [#15](https://github.com/After-The-End-Of-All-Things/game/issues/15) [#20](https://github.com/After-The-End-Of-All-Things/game/issues/20)
+* feat(logging): add more logging ([a29bbe4](https://github.com/After-The-End-Of-All-Things/game/commit/a29bbe4))
+* feat(login): login page will show latest announcement. closes #30 ([470f2dc](https://github.com/After-The-End-Of-All-Things/game/commit/470f2dc)), closes [#30](https://github.com/After-The-End-Of-All-Things/game/issues/30)
+* feat(market): can list items on market, market interface ([a8d7e4f](https://github.com/After-The-End-Of-All-Things/game/commit/a8d7e4f))
+* feat(market): sales history is tracked per sale. closes #83 ([2ed1c46](https://github.com/After-The-End-Of-All-Things/game/commit/2ed1c46)), closes [#83](https://github.com/After-The-End-Of-All-Things/game/issues/83)
+* feat(me): add my total stat calculations ([25f8295](https://github.com/After-The-End-Of-All-Things/game/commit/25f8295))
+* feat(me): can now set bio and longbio ([bfc618f](https://github.com/After-The-End-Of-All-Things/game/commit/bfc618f)), closes [#12](https://github.com/After-The-End-Of-All-Things/game/issues/12)
+* feat(notification): add location discovery notification ([b7b2a97](https://github.com/After-The-End-Of-All-Things/game/commit/b7b2a97))
+* feat(notification): support one notification action to travel ([b4ad5b3](https://github.com/After-The-End-Of-All-Things/game/commit/b4ad5b3))
+* feat(notifications): add notification system. add levelup notifications that auto dismiss after an h ([0f26cbe](https://github.com/After-The-End-Of-All-Things/game/commit/0f26cbe))
+* feat(notifications): use SSE instead of long polling to get new notifications ([c7f4857](https://github.com/After-The-End-Of-All-Things/game/commit/c7f4857))
+* feat(options): add options page, it does nothing. closes #37 ([0e6915a](https://github.com/After-The-End-Of-All-Things/game/commit/0e6915a)), closes [#37](https://github.com/After-The-End-Of-All-Things/game/issues/37)
+* feat(player): show player stats ([45ea36a](https://github.com/After-The-End-Of-All-Things/game/commit/45ea36a))
+* feat(profile): add censor-sensor to stop people from being unnecessarily profane. closes #11 ([429fbf8](https://github.com/After-The-End-Of-All-Things/game/commit/429fbf8)), closes [#11](https://github.com/After-The-End-Of-All-Things/game/issues/11)
+* feat(profile): add logout button. closes #55 ([2cf7cae](https://github.com/After-The-End-Of-All-Things/game/commit/2cf7cae)), closes [#55](https://github.com/After-The-End-Of-All-Things/game/issues/55)
+* feat(travel): show # collectibles found per location, closes #77 ([8112255](https://github.com/After-The-End-Of-All-Things/game/commit/8112255)), closes [#77](https://github.com/After-The-End-Of-All-Things/game/issues/77)
+* feat(ui): add background-art component to make it easier to update when it happens ([85a52db](https://github.com/After-The-End-Of-All-Things/game/commit/85a52db))
+* feat(ui): add modals to confirm travel/walk ([b2494c2](https://github.com/After-The-End-Of-All-Things/game/commit/b2494c2)), closes [#22](https://github.com/After-The-End-Of-All-Things/game/issues/22)
+* feat(ui): add my profile page ([4b2598c](https://github.com/After-The-End-Of-All-Things/game/commit/4b2598c))
+* feat(ui): cache background images ([184a82b](https://github.com/After-The-End-Of-All-Things/game/commit/184a82b))
+* feat(ui): can collect items/collectibles. closes #21 ([8fa6fcf](https://github.com/After-The-End-Of-All-Things/game/commit/8fa6fcf)), closes [#21](https://github.com/After-The-End-Of-All-Things/game/issues/21)
+* feat(ui): server can run arbitrary ui actions ([f0a6074](https://github.com/After-The-End-Of-All-Things/game/commit/f0a6074))
+* feat(updates): add game updates page, closes #80 ([4850a97](https://github.com/After-The-End-Of-All-Things/game/commit/4850a97)), closes [#80](https://github.com/After-The-End-Of-All-Things/game/issues/80)
+* feat(updates): blogpost generator puts version in title ([42e669c](https://github.com/After-The-End-Of-All-Things/game/commit/42e669c))
+* fix(action): wave should have an actual user id ([05a8f7d](https://github.com/After-The-End-Of-All-Things/game/commit/05a8f7d))
+* fix(action): wave should not default to waveback=true ([c187f57](https://github.com/After-The-End-Of-All-Things/game/commit/c187f57))
+* fix(analytics): gameanalytics starts a session every time it sends an event now ([bdecd8a](https://github.com/After-The-End-Of-All-Things/game/commit/bdecd8a))
+* fix(analytics): swallow error for sessionStart ([a8c6150](https://github.com/After-The-End-Of-All-Things/game/commit/a8c6150))
+* fix(api): never trust the client. closes #70 ([7f4027e](https://github.com/After-The-End-Of-All-Things/game/commit/7f4027e)), closes [#70](https://github.com/After-The-End-Of-All-Things/game/issues/70)
+* fix(api): unite response values of services/controllers to all be the same interface ([aeadbda](https://github.com/After-The-End-Of-All-Things/game/commit/aeadbda))
+* fix(auth): add auth guard to pages, closes #52 ([2f35dcb](https://github.com/After-The-End-Of-All-Things/game/commit/2f35dcb)), closes [#52](https://github.com/After-The-End-Of-All-Things/game/issues/52)
+* fix(avatar): default avatar shown in modal is no longer +1'd ([d78e40e](https://github.com/After-The-End-Of-All-Things/game/commit/d78e40e))
+* fix(client): fix rollbar sending client error cases ([91c545d](https://github.com/After-The-End-Of-All-Things/game/commit/91c545d))
+* fix(combat): combat doesnt end every action ([e083f20](https://github.com/After-The-End-Of-All-Things/game/commit/e083f20))
+* fix(combat): fix fight not found errors ([654387a](https://github.com/After-The-End-Of-All-Things/game/commit/654387a))
+* fix(equipment): equipment will no longer lose its instance id when equipped ([cb5fa25](https://github.com/After-The-End-Of-All-Things/game/commit/cb5fa25))
+* fix(explore): explore would display negative xp if you leveled up from it ([96a671a](https://github.com/After-The-End-Of-All-Things/game/commit/96a671a))
+* fix(icon): fix icon component to fill space correctly ([2071220](https://github.com/After-The-End-Of-All-Things/game/commit/2071220))
+* fix(inventory): can equip accessories again. closes #89 ([e12cec5](https://github.com/After-The-End-Of-All-Things/game/commit/e12cec5)), closes [#89](https://github.com/After-The-End-Of-All-Things/game/issues/89)
+* fix(inventory): names will wrap if needed ([8e156d9](https://github.com/After-The-End-Of-All-Things/game/commit/8e156d9))
+* fix(login): get notifications on login. closes #54 ([2d028e1](https://github.com/After-The-End-Of-All-Things/game/commit/2d028e1)), closes [#54](https://github.com/After-The-End-Of-All-Things/game/issues/54)
+* fix(login): no unauthorized error on homepage. closes #53 ([ee575ce](https://github.com/After-The-End-Of-All-Things/game/commit/ee575ce)), closes [#53](https://github.com/After-The-End-Of-All-Things/game/issues/53)
+* fix(market): can now list the last of a resource ([1901f37](https://github.com/After-The-End-Of-All-Things/game/commit/1901f37))
+* fix(notifications): mark all read should not send 1 event per notification ([2c52a6e](https://github.com/After-The-End-Of-All-Things/game/commit/2c52a6e))
+* fix(notifications): notifications with actions will no longer race to submit data and clear the acti ([6293a4f](https://github.com/After-The-End-Of-All-Things/game/commit/6293a4f))
+* fix(portrait): portrait selection is in the right place again ([2aec357](https://github.com/After-The-End-Of-All-Things/game/commit/2aec357))
+* fix(profile): tiny avatar shows again. closes #63 ([c079201](https://github.com/After-The-End-Of-All-Things/game/commit/c079201)), closes [#63](https://github.com/After-The-End-Of-All-Things/game/issues/63)
+* fix(setup): add setup script for client, fix error for server setup ([37733aa](https://github.com/After-The-End-Of-All-Things/game/commit/37733aa))
+* fix(workflow): only deploy server/client on tags ([6895cc3](https://github.com/After-The-End-Of-All-Things/game/commit/6895cc3))
 
 
 
