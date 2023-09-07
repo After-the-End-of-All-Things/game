@@ -554,7 +554,11 @@ export class GameplayService {
       },
     );
 
-    return { player: playerPatches, inventory: inventoryPatches };
+    return {
+      player: playerPatches,
+      inventory: inventoryPatches,
+      actions: [{ type: 'UpdateInventoryItems' }],
+    };
   }
 
   async startFight(userId: string): Promise<UserResponse> {
