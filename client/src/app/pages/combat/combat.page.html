@@ -52,14 +52,11 @@
     </ion-card-content>
   </ion-card>
 
-  <ion-card>
+  <ion-card class="fight-card">
     <ion-card-content>
       <div class="fight">
-        <ion-row
-          *ngFor="let row of fight.tiles; let y = index"
-          class="tile-row"
-        >
-          <ion-col *ngFor="let col of row; let x = index" class="tile-col">
+        <div *ngFor="let row of fight.tiles; let y = index" class="tile-row">
+          <div *ngFor="let col of row; let x = index" class="tile-col">
             <div
               class="tile"
               [class.enemy]="x > 3"
@@ -111,8 +108,8 @@
                 </div>
               </div>
             </div>
-          </ion-col>
-        </ion-row>
+          </div>
+        </div>
       </div>
     </ion-card-content>
   </ion-card>

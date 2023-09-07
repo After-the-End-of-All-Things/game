@@ -1,11 +1,35 @@
 
+@media screen and (max-width: 1320px) {
+  .fight {
+    --tile-dimensions: 84px !important;
+  }
+
+  .character-container {
+    transform: scale(calc(84 / 112));
+  }
+}
+
+.fight-card {
+  ion-card-content {
+    padding-top: 4px;
+    padding-bottom: 4px;
+
+    min-height: calc(var(--tile-dimensions) * 4);
+  }
+}
+
 .fight {
+  --tile-dimensions: 112px;
+
   .tile-row {
+    display: flex;
     justify-content: center;
+    width: 100%;
+    max-height: var(--tile-dimensions);
 
     .tile-col {
-      max-height: 112px;
-      max-width: 112px;
+      max-height: var(--tile-dimensions);
+      max-width: var(--tile-dimensions);
       padding: 0;
     }
   }
@@ -15,8 +39,8 @@
     justify-content: center;
     align-items: center;
 
-    width: 112px;
-    height: 112px;
+    width: var(--tile-dimensions);
+    height: var(--tile-dimensions);
     border: 1px solid #fff;
     object-fit: contain;
     background-size: cover;
