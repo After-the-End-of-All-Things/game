@@ -10,6 +10,7 @@ import {
   ClearNotificationActionsMatchingUrl,
 } from '@stores/notifications/notifications.actions';
 import { GrabData } from '@stores/user/user.actions';
+import { io } from 'socket.io-client';
 
 @Injectable({
   providedIn: 'root',
@@ -32,15 +33,16 @@ export class ActionsService {
     const token = localStorage.getItem('token');
     if (!token) return;
 
-    this.events = new EventSource(`${environment.apiUrl}/sse/${token}`);
+    const ws = io(environment.apiUrl, {
+      query: {
+        token,
+      },
+      transports: ['websocket'],
+    });
 
-    this.events.onmessage = (data) => {
-      console.log('got!', data);
-      if (!data.data) return;
-
-      const grabData = JSON.parse(data.data);
-      this.store.dispatch(new GrabData(grabData));
-    };
+    ws.on('userdata', (event) => {
+      this.store.dispatch(new GrabData(event));
+    });
   }
 
   changePage(newPage: string) {

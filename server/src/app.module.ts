@@ -25,11 +25,11 @@ import { JwtModule } from '@nestjs/jwt';
 import { HttpExceptionFilter } from '@utils/http-exception.filter';
 import { AggregatorModule } from './modules/aggregator/aggregator.module';
 import { CraftingModule } from './modules/crafting/crafting.module';
+import { EventsModule } from './modules/events/events.module';
 import { GameplayModule } from './modules/gameplay/gameplay.module';
 import { MarketModule } from './modules/market/market.module';
 import { UpdateAuthTimeInterceptor } from './utils/updatetime.interceptor';
 
-const isProduction = process.env.NODE_ENV === 'production';
 const logLevel = process.env.LOG_LEVEL || 'trace';
 
 @Module({
@@ -62,10 +62,12 @@ const logLevel = process.env.LOG_LEVEL || 'trace';
         },
       },
     }),
-    ThrottlerModule.forRoot({
-      ttl: 60,
-      limit: 10,
-    }),
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60,
+        limit: 10,
+      },
+    ]),
     NotificationModule,
     PlayerModule,
     StatsModule,
@@ -89,6 +91,7 @@ const logLevel = process.env.LOG_LEVEL || 'trace';
     CraftingModule,
     MarketModule,
     AggregatorModule,
+    EventsModule,
   ],
   controllers: [AppController, GameplayController],
   providers: [

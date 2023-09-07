@@ -1,4 +1,5 @@
 import { ConstantsService } from '@modules/content/constants.service';
+import { EventsService } from '@modules/events/events.service';
 import {
   BadRequestException,
   Controller,
@@ -17,6 +18,7 @@ export class AppController {
     private readonly appService: AppService,
     private readonly constantsService: ConstantsService,
     private readonly jwtService: JwtService,
+    private readonly eventsService: EventsService,
   ) {}
 
   @Get('game/stats')
@@ -33,6 +35,6 @@ export class AppController {
     const data: any = this.jwtService.decode(token);
     if (!data) throw new BadRequestException('Invalid token');
 
-    return this.appService.subscribe(data.sub);
+    return this.eventsService.subscribe(data.sub);
   }
 }
