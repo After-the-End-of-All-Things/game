@@ -3,7 +3,6 @@ import { JwtAuthGuard } from '@modules/auth/jwt.guard';
 import { GameplayService } from '@modules/gameplay/gameplay.service';
 import { InventoryService } from '@modules/inventory/inventory.service';
 import {
-  BadRequestException,
   Body,
   Controller,
   Param,
@@ -74,10 +73,6 @@ export class GameplayController {
   @ApiOperation({ summary: 'Explore Event: Take an item' })
   @Post('item/take')
   async takeItem(@User() user): Promise<UserResponse> {
-    if (await this.inventoryService.isInventoryFull(user.userId)) {
-      throw new BadRequestException('Inventory is full.');
-    }
-
     return this.gameplayService.takeItem(user.userId);
   }
 

@@ -25,7 +25,11 @@ import { NotificationService } from '@modules/notification/notification.service'
 import { Player } from '@modules/player/player.schema';
 import { PlayerService } from '@modules/player/player.service';
 import { StatsService } from '@modules/stats/stats.service';
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+} from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { getPatchesAfterPropChanges } from '@utils/patches';
 import { sample } from 'lodash';
@@ -505,13 +509,19 @@ export class GameplayService {
     const inventory = await this.inventoryService.getInventoryForUser(userId);
     if (!inventory) throw new ForbiddenException('Inventory not found');
 
+    const isResource = player.action?.action === 'resource';
+
+    if (!isResource && (await this.inventoryService.isInventoryFull(userId))) {
+      throw new BadRequestException('Inventory is full.');
+    }
+
     const inventoryPatches = await getPatchesAfterPropChanges<Inventory>(
       inventory,
       async (inventoryRef) => {
         const item: IItem = player.action?.actionData.item;
         if (!item) return;
 
-        if (player.action?.action === 'resource') {
+        if (isResource) {
           inventoryRef.resources = {
             ...(inventoryRef.resources || {}),
             [item.itemId]: (inventoryRef.resources?.[item.itemId] ?? 0) + 1,
