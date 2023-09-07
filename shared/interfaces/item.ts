@@ -60,7 +60,7 @@ export interface IItem {
   name: string;
   itemId: string;
   instanceId?: string;
-  description?: string;
+  description: string;
   rarity: Rarity;
   sprite: number;
   type: ItemType;
@@ -79,5 +79,5 @@ export interface IEquipment extends IItem {
   attackElements: Element[];
   defenseElements: Element[];
   levelRequirement: number;
-  abilities?: string[];
+  abilities: string[];
 }
