@@ -586,6 +586,11 @@ export class FightService {
       return this.setAndTakeNextTurn(fight);
     }
 
+    const validAbilities = abilities.filter(
+      (ability) => (characterRef.cooldowns[ability.ability] ?? 0) <= 0,
+    );
+    if (validAbilities.length === 0) return this.setAndTakeNextTurn(fight);
+
     const ability = sample(abilities);
     if (!ability) return this.setAndTakeNextTurn(fight);
 
