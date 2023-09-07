@@ -1,0 +1,35 @@
+name: Tag New Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      type:
+        type: choice
+        description: What kind of version?
+        required: true
+        options:
+          - patch
+          - minor
+          - major
+
+jobs:
+  tag:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node-version: [18]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - run: npm install
+
+      - name: Run Versioning
+        run: npm run bump:${{ github.event.inputs.type }}
