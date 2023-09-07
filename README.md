@@ -1,6 +1,6 @@
 # After the End of All Things
 
-God, am I getting tired of typing that.
+we love eating our oats
 
 ## Getting Started
 
@@ -86,7 +86,7 @@ God, am I getting tired of typing that.
 
 #### Inventory
 
-- `INVENTORY_MAX_SIZE` - the maximum inventory size per player [percent] (default: 100)
+- `INVENTORY_MAX_SIZE` - the maximum inventory size per player (default: 100)
 
 ### Notes
 
