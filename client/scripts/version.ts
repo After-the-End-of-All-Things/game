@@ -11,5 +11,5 @@ try {
   console.error('No git HEAD; default gitRev set.');
 }
 
-fs.writeJson(`${__dirname}/../src/assets/version.json`, gitRev);
+fs.writeJson(`${__dirname}/../www/assets/version.json`, gitRev);
 console.log('Wrote version information', gitRev);
