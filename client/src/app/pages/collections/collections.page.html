@@ -512,8 +512,8 @@
         </span>
 
         <span class="percent">
-          ({{ unlocked['portraits'] ?? 0 / contentService.maxPortraits | percent
-          }})
+          ({{ (((unlocked['portraits'] ?? 0) / contentService.maxPortraits) *
+          100) | number:'1.0-2' }}%)
         </span>
       </ion-col>
     </ion-row>
@@ -541,8 +541,8 @@
         </span>
 
         <span class="percent">
-          ({{ unlocked['backgrounds'] ?? 0 / contentService.maxBackgrounds |
-          percent }})
+          ({{ (((unlocked['backgrounds'] ?? 0) / contentService.maxPortraits) *
+          100) | number:'1.0-2' }}%)
         </span>
       </ion-col>
     </ion-row>
