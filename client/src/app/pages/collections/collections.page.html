@@ -523,7 +523,9 @@
         class="collect-col"
         *ngFor="let portrait of allPortraits; trackBy: trackBy"
       >
-        <ion-avatar [class.uncollected]="!discoveries.portraits?.[portrait]">
+        <ion-avatar
+          [class.uncollected]="!discoveries.portraits?.[portrait - 1]"
+        >
           <app-icon spritesheet="portraits" [sprite]="portrait"></app-icon>
         </ion-avatar>
       </ion-col>
@@ -553,7 +555,7 @@
         *ngFor="let background of allBackgrounds; trackBy: trackBy"
       >
         <app-background-art
-          [class.uncollected]="!discoveries.backgrounds?.[background]"
+          [class.uncollected]="!discoveries.backgrounds?.[background - 1]"
           [sprite]="background.toString().padStart(4, '0')"
         ></app-background-art>
       </ion-col>

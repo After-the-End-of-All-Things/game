@@ -27,7 +27,7 @@ export class ChooseAvatarModalComponent implements OnInit {
   ngOnInit() {
     this.userService.getDiscoveries().subscribe(({ discoveries }: any) => {
       const portraits = discoveries.portraits || {};
-      this.selectablePortraits = Object.keys(portraits).map((x) => +x);
+      this.selectablePortraits = Object.keys(portraits).map((x) => +x + 1);
     });
 
     this.selectedPortrait = this.defaultPortrait + 1;
