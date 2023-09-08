@@ -29,6 +29,11 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
+      - name: setup git config
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "<>"
+
       - run: npm install
 
       #- run: npm run lint
