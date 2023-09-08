@@ -3,8 +3,20 @@ name: Lint Code
 on: [push, pull_request]
 
 jobs:
-  build:
+  test:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    outputs:
+      should_skip: ${{ steps.skip_check.outputs.should_skip }}
+    steps:
+      - id: skip_check
+        uses: fkirc/skip-duplicate-actions@v5
+
+  lint:
     name: Lint Code
+
+    needs: test
+    if: needs.test.outputs.should_skip != 'true'
 
     runs-on: ${{ matrix.os }}
 
