@@ -436,6 +436,22 @@ export class FightService {
     reduceAllCooldownsForCharacter(currentCharacter);
 
     fight.currentTurn = fight.turnOrder[nextTurnIndex];
+
+    const nextCharacter = getCharacterFromFightForCharacterId(
+      fight,
+      fight.currentTurn,
+    );
+
+    if (!nextCharacter) throw new BadRequestException('Character not found');
+
+    if (isDead(nextCharacter)) {
+      this.logger.verbose(
+        `Skipping turn for dead character ${nextCharacter.characterId} in fight ${fight._id}`,
+      );
+      await this.setAndTakeNextTurn(fight);
+      return;
+    }
+
     await this.saveAndUpdateFight(fight);
   }
 
