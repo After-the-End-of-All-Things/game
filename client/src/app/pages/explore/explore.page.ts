@@ -65,6 +65,7 @@ export class ExplorePage implements OnInit {
   }
 
   explore() {
+    this.canExplore = false;
     this.gameplayService.explore().subscribe();
   }
 
