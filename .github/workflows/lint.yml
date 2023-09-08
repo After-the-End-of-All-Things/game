@@ -17,7 +17,6 @@ on:
 jobs:
   lint:
     name: Lint Code
-    if: ${{ github.event_name == 'push' || github.event.pull_request.merged == true }}
 
     runs-on: ${{ matrix.os }}
 
