@@ -51,6 +51,7 @@ import { UserService } from '@modules/user/user.service';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { getPatchesAfterPropChanges } from '@utils/patches';
+import { Operation } from 'fast-json-patch';
 import { sample, sampleSize, sum } from 'lodash';
 import { Logger } from 'nestjs-pino';
 import { v4 as uuid } from 'uuid';
@@ -371,19 +372,23 @@ export class FightService {
           },
         );
 
-        const discoveryPatches = await getPatchesAfterPropChanges(
-          discoveries,
-          async () => {
-            await Promise.all(
-              allMonsterIds.map((monsterId) => {
-                return this.discoveriesService.discoverMonster(
-                  player.userId,
-                  monsterId,
-                );
-              }),
-            );
-          },
-        );
+        let discoveryPatches: Operation[] = [];
+
+        if (isWin) {
+          discoveryPatches = await getPatchesAfterPropChanges(
+            discoveries,
+            async () => {
+              await Promise.all(
+                allMonsterIds.map((monsterId) => {
+                  return this.discoveriesService.discoverMonster(
+                    player.userId,
+                    monsterId,
+                  );
+                }),
+              );
+            },
+          );
+        }
 
         this.emit(playerId, {
           player: playerPatches,

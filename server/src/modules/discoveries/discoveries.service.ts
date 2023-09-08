@@ -231,7 +231,7 @@ export class DiscoveriesService {
 
     discoveries.monsters = {
       ...(discoveries.monsters || {}),
-      [monsterId]: (discoveries.items?.[monsterId] ?? 0) + 1,
+      [monsterId]: (discoveries.monsters?.[monsterId] ?? 0) + 1,
     };
   }
 
