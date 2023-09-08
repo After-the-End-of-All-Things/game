@@ -1,22 +1,23 @@
 name: Lint Code
 
-on: [push, pull_request]
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '**/*.md'
+  pull_request_target:
+    branches:
+      - main
+    types:
+      - synchronize
+      - opened
 
 jobs:
-  test:
-    continue-on-error: true
-    runs-on: ubuntu-latest
-    outputs:
-      should_skip: ${{ steps.skip_check.outputs.should_skip }}
-    steps:
-      - id: skip_check
-        uses: fkirc/skip-duplicate-actions@v5
-
   lint:
     name: Lint Code
-
-    needs: test
-    if: needs.test.outputs.should_skip != 'true'
+    if: ${{ github.event_name == 'push' || github.event.pull_request.merged == true }}
 
     runs-on: ${{ matrix.os }}
 
