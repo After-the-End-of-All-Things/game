@@ -39,9 +39,9 @@ jobs:
 
       - run: npm install
 
-      #- run: npm run lint
+      - run: npm run lint
 
-      #- run: npm run build
+      - run: npm run build
 
       - name: Run Versioning
         run: npm run bump:${{ github.event.inputs.type }} --ignore-scripts -- --force
