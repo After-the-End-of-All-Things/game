@@ -1,4 +1,4 @@
-import { Element, Stat } from './buildingblocks';
+import { Element, IWeighted, Stat } from './buildingblocks';
 
 export interface ICombatMonsterAbility {
   ability: string;
@@ -31,9 +31,10 @@ export interface IMonsterGroup {
   monster: string;
 }
 
-export interface IMonsterFormation {
+export interface IMonsterFormation extends IWeighted {
   name: string;
   itemId: string;
+  weight: number;
   location: string;
   monsters: IMonsterGroup[];
 }

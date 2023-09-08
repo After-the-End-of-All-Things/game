@@ -26,3 +26,8 @@ export enum Stat {
   Resistance = 'resistance',
   Special = 'special',
 }
+
+export interface IWeighted {
+  weight: number;
+  itemId: string;
+}

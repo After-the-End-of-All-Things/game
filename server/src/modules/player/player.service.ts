@@ -2,6 +2,7 @@ import { zeroResistances, zeroStats } from '@helpers/stats';
 import {
   Element,
   ILocation,
+  IMonsterFormation,
   INotificationAction,
   Rarity,
   Stat,
@@ -19,6 +20,7 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { getPatchesAfterPropChanges } from '@utils/patches';
+import { pickWeighted } from '@utils/weighted';
 import { sample } from 'lodash';
 import { Logger } from 'nestjs-pino';
 
@@ -353,7 +355,7 @@ export class PlayerService {
   }
 
   async handleFindMonster(player: Player, location: ILocation): Promise<void> {
-    const randomFormationForLocation = sample(
+    const randomFormationForLocation = pickWeighted<IMonsterFormation>(
       this.contentService
         .allFormations()
         .filter((formation) => formation.location === location.name),
