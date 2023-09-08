@@ -5,9 +5,9 @@ we love eating our oats
 ## Getting Started
 
 - use Node 18.15 or higher
+- Install MongoDB
 - `npm i` - install dependencies and run setup scripts
 - `npm start` - start the client and server
-- Install MongoDB
 - Install recommended VSCode extensions
 
 ## Useful Scripts
