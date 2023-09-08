@@ -31,5 +31,18 @@ jobs:
 
       - run: npm install
 
+      - run: npm run lint
+
+      - run: npm run build
+
       - name: Run Versioning
-        run: npm run bump:${{ github.event.inputs.type }}
+        run: npm run bump:${{ github.event.inputs.type }} --ignore-scripts
+
+      - name: Generate Changelogs
+        run: npm run util:changelog:generate && npm run util:changelog:generate:current
+
+      - name: Commit Changelogs
+        run: npm run util:changelog:commit && npm run util:version:reversion
+
+      - name: Push Changelogs
+        run: git push && git push --tags
