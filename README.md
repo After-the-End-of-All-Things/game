@@ -1,5 +1,7 @@
 # After the End of All Things
 
+[![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2FAfter-the-End-of-All-Things%2Fgame%2Fbadge%3Fref%3Dmain&style=for-the-badge)](https://actions-badge.atrox.dev/After-the-End-of-All-Things/game/goto?ref=main)
+
 we love eating our oats
 
 ## Getting Started
