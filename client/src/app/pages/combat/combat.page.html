@@ -75,8 +75,6 @@
                 [class.small]="col.containedCharacters.length > 1"
                 *ngFor="let char of col.containedCharacters"
               >
-                <div class="name">{{ fightCharacters[char].name }}</div>
-
                 <div
                   class="health-bar"
                   *ngIf="fightCharacters[char].health.current > 0"
@@ -85,6 +83,23 @@
                     class="current-health"
                     [style.width]="(fightCharacters[char].health.current / fightCharacters[char].health.max * 100) + '%'"
                   ></div>
+                </div>
+
+                <div
+                  class="letter-container"
+                  [ngxTippy]="fightCharacters[char].name"
+                  *ngIf="fightCharacters[char].health.current > 0"
+                >
+                  <ion-badge
+                    color="light"
+                    *ngIf="getMonsterLetter(fightCharacters[char]) as letter; else player"
+                  >
+                    {{ letter }}
+                  </ion-badge>
+
+                  <ng-template #player>
+                    <ion-badge color="light">?</ion-badge>
+                  </ng-template>
                 </div>
 
                 <div

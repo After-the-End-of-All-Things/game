@@ -6,6 +6,7 @@ import { IonicModule } from '@ionic/angular';
 
 import { CombatPageRoutingModule } from './combat-routing.module';
 
+import { NgxTippyModule } from 'ngx-tippy-wrapper';
 import { SharedModule } from 'src/app/shared.module';
 import { CombatPage } from './combat.page';
 
@@ -15,6 +16,7 @@ import { CombatPage } from './combat.page';
     FormsModule,
     IonicModule,
     SharedModule,
+    NgxTippyModule,
     CombatPageRoutingModule,
   ],
   declarations: [CombatPage],

@@ -107,6 +107,11 @@ export class CombatPage implements OnInit {
     return this.contentService.getMonster(id) as IMonster;
   }
 
+  getMonsterLetter(character: IFightCharacter): string {
+    if (!character.monsterId) return '';
+    return character.name.split(' ').pop() as string;
+  }
+
   getAbilities(): ICombatAbility[] {
     const itemAbilities = [
       this.contentService.getAbilityByName('Unarmed Attack'),
