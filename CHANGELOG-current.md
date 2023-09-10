@@ -1,21 +1,21 @@
-## [0.1.12](https://github.com/After-the-End-of-All-Things/game/compare/v0.1.11...v0.1.12) (2023-09-08)
+# [0.2.0](https://github.com/After-the-End-of-All-Things/game/compare/v0.1.12...v0.2.0) (2023-09-10)
 
 
 ### Bug Fixes
 
-* **client:** put version.json in the correct folder. closes [#155](https://github.com/After-the-End-of-All-Things/game/issues/155) ([1bdb25e](https://github.com/After-the-End-of-All-Things/game/commit/1bdb25e0d030e4789a7e2aa0a8ea2132311e1d39))
-* **combat:** actually skip characters who have no turn - no glowing ([3a4ba9a](https://github.com/After-the-End-of-All-Things/game/commit/3a4ba9a201c1e0689ba0569917657faf6fc050be))
-* **combat:** remove invalid fights if they ever occur. closes [#127](https://github.com/After-the-End-of-All-Things/game/issues/127) ([c39e8fb](https://github.com/After-the-End-of-All-Things/game/commit/c39e8fb856c4957784d9d5a7e1bd179c3d76e4b5))
-* **combat:** ui should downscale better for fights. closes [#119](https://github.com/After-the-End-of-All-Things/game/issues/119) ([44957eb](https://github.com/After-the-End-of-All-Things/game/commit/44957eb97ffd226907a1c3fb91f3db70b58c8305))
-* **discoveries:** you can now discover a monster multiple times ([03121d4](https://github.com/After-the-End-of-All-Things/game/commit/03121d4b8f20a66cc6433e4eea15c8c9a3b5fe1e))
-* **inventory:** can take resources when your normal inventory is full ([c4770f1](https://github.com/After-the-End-of-All-Things/game/commit/c4770f1dadab5e58e8d804118a5b46de234a7410))
-* **ui:** when taking an item from explore, the update event is fired correctly. closes [#150](https://github.com/After-the-End-of-All-Things/game/issues/150) ([80cec50](https://github.com/After-the-End-of-All-Things/game/commit/80cec509632cfb35f2ca4b2850e58ea7131d5318))
+* **collections:** Fix off-by-one error in portrait display, closes [#154](https://github.com/After-the-End-of-All-Things/game/issues/154) ([#165](https://github.com/After-the-End-of-All-Things/game/issues/165)) ([82bea8a](https://github.com/After-the-End-of-All-Things/game/commit/82bea8adeb0798859b892b674a2b021cc900d10f))
+* **combat:** make time between turns go 5x faster, closes [#168](https://github.com/After-the-End-of-All-Things/game/issues/168) ([7d49e2b](https://github.com/After-the-End-of-All-Things/game/commit/7d49e2ba83809aa9aaa44c99567eede780af6bcb))
+* **explore:** disable explore button immediately, closes [#125](https://github.com/After-the-End-of-All-Things/game/issues/125) ([#162](https://github.com/After-the-End-of-All-Things/game/issues/162)) ([6c644e7](https://github.com/After-the-End-of-All-Things/game/commit/6c644e7892e5495612b28475e03e5a217d8a1696))
 
 
 ### Features
 
-* **combat:** use toughness/resistance. closes [#115](https://github.com/After-the-End-of-All-Things/game/issues/115) ([bff0e25](https://github.com/After-the-End-of-All-Things/game/commit/bff0e25c53b95fb67e3c179949df0e12c88d3b82))
-* **explore:** monster formations are weighted ([4929a08](https://github.com/After-the-End-of-All-Things/game/commit/4929a0831b3d16c7d6e645feae029559c7be05df))
+* **combat:** rework display area to not have name on the sprite. closes [#164](https://github.com/After-the-End-of-All-Things/game/issues/164) ([f35f928](https://github.com/After-the-End-of-All-Things/game/commit/f35f928ce43094b1deb6adcd9df75b1b63b01371))
+* **dx:** PRs will now have a required title or commit format ([2592041](https://github.com/After-the-End-of-All-Things/game/commit/2592041c22b66db5ee3d50141f2cf666364769f2))
+* **explore:** can find npcs that unlock backgrounds and sprites ([4283587](https://github.com/After-the-End-of-All-Things/game/commit/4283587270d488a0fcabcd0d4a831110a3ae41a7))
+* **explore:** you can now encounter npcs who will let you change your class ([a4e3fd1](https://github.com/After-the-End-of-All-Things/game/commit/a4e3fd138c95431030635c150042e1072f07c96b))
+* **town:** add leaderboards to towns. closes [#123](https://github.com/After-the-End-of-All-Things/game/issues/123) ([17b6bab](https://github.com/After-the-End-of-All-Things/game/commit/17b6babbabdb0f5f851413094be5223ad0b6507c))
+* **ui:** can choose backgrounds. one background can be found ([fdf5707](https://github.com/After-the-End-of-All-Things/game/commit/fdf5707e951fc1f183afa252846f2982f1938d8d))
 
 
 
