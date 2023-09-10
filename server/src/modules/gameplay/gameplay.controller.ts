@@ -138,4 +138,18 @@ export class GameplayController {
   async changeClass(@User() user): Promise<UserResponse> {
     return this.gameplayService.changeClass(user.userId);
   }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Buy a background' })
+  @Post('unlockbackground')
+  async buyBackground(@User() user): Promise<UserResponse> {
+    return this.gameplayService.buyBackground(user.userId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Buy a portrait' })
+  @Post('unlocksprite')
+  async buyPortrait(@User() user): Promise<UserResponse> {
+    return this.gameplayService.buyPortrait(user.userId);
+  }
 }

@@ -1,6 +1,8 @@
 import { IEquipment, IFullUser, ItemSlot } from '@interfaces';
+import { EntityManager } from '@mikro-orm/mongodb';
 import { AchievementsService } from '@modules/achievements/achievements.service';
 import { ContentService } from '@modules/content/content.service';
+import { PlayerHelperService } from '@modules/content/playerhelper.service';
 import { CraftingService } from '@modules/crafting/crafting.service';
 import { DiscoveriesService } from '@modules/discoveries/discoveries.service';
 import { FightService } from '@modules/fight/fight.service';
@@ -9,12 +11,15 @@ import { PlayerService } from '@modules/player/player.service';
 import { StatsService } from '@modules/stats/stats.service';
 import { UserService } from '@modules/user/user.service';
 import { Injectable } from '@nestjs/common';
+import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
+import { getPatchesAfterPropChanges } from '@utils/patches';
 import { omit } from 'lodash';
 import { Logger } from 'nestjs-pino';
 
 @Injectable()
 export class AggregatorService {
   constructor(
+    private readonly em: EntityManager,
     private readonly logger: Logger,
     private readonly contentService: ContentService,
     private readonly userService: UserService,
@@ -25,6 +30,8 @@ export class AggregatorService {
     private readonly inventoryService: InventoryService,
     private readonly craftingService: CraftingService,
     private readonly fightService: FightService,
+    private readonly playerHelper: PlayerHelperService,
+    private readonly events: EventEmitter2,
   ) {}
 
   async getAllUserInformation(userId: string): Promise<IFullUser> {
@@ -82,7 +89,6 @@ export class AggregatorService {
         const newItem = JSON.stringify(checkItem);
 
         if (currentItem && newItem && currentItem !== newItem) {
-          console.log({ currentItem, newItem });
           this.logger.verbose(
             `Migrating item ${currentEquippedItem.name} for ${user.user.username}.`,
           );
@@ -93,5 +99,54 @@ export class AggregatorService {
         }
       }),
     );
+  }
+
+  @OnEvent('player.gaincoins')
+  async onPlayerGainCoins(event: {
+    userId: string;
+    amount: number;
+  }): Promise<void> {
+    const { userId, amount } = event;
+    const player = await this.playerService.getPlayerForUser(userId);
+    if (!player) return;
+
+    const playerPatches = await getPatchesAfterPropChanges(
+      player,
+      async (player) => {
+        this.playerHelper.gainCoins(player, amount);
+      },
+    );
+
+    await this.em.flush();
+
+    this.events.emit('userdata.send', {
+      userId,
+      data: { player: playerPatches },
+    });
+  }
+
+  @OnEvent('player.gainoats')
+  async onPlayerGainOats(event: {
+    userId: string;
+    amount: number;
+  }): Promise<void> {
+    const { userId, amount } = event;
+
+    const player = await this.playerService.getPlayerForUser(userId);
+    if (!player) return;
+
+    const playerPatches = await getPatchesAfterPropChanges(
+      player,
+      async (player) => {
+        this.playerHelper.gainOats(player, amount);
+      },
+    );
+
+    await this.em.flush();
+
+    this.events.emit('userdata.send', {
+      userId,
+      data: { player: playerPatches },
+    });
   }
 }

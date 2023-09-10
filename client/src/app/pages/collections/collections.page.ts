@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { IDiscoveries } from '@interfaces';
 import { Select } from '@ngxs/store';
 import { ContentService } from '@services/content.service';
 import { GameplayService } from '@services/gameplay.service';
-import { UserService } from '@services/user.service';
 import { DiscoveriesStore } from '@stores';
 import { sum } from 'lodash';
 import { Observable } from 'rxjs';
@@ -13,7 +13,8 @@ import { Observable } from 'rxjs';
   templateUrl: './collections.page.html',
   styleUrls: ['./collections.page.scss'],
 })
-export class CollectionsPage implements OnInit {
+export class CollectionsPage {
+  private destroyRef = inject(DestroyRef);
   @Select(DiscoveriesStore.discoveries) discoveries$!: Observable<IDiscoveries>;
 
   public readonly collectibleUniqueMax = 10;
@@ -29,11 +30,11 @@ export class CollectionsPage implements OnInit {
 
   public readonly allPortraits = Array(this.contentService.maxPortraits)
     .fill(0)
-    .map((_, i) => i + 1);
+    .map((_, i) => i);
 
   public readonly allBackgrounds = Array(this.contentService.maxBackgrounds)
     .fill(0)
-    .map((_, i) => i + 1);
+    .map((_, i) => i);
 
   public readonly allCollectibles = this.contentService.getAllCollectibles();
   public readonly allEquipment = this.contentService.getAllEquipment();
@@ -62,27 +63,28 @@ export class CollectionsPage implements OnInit {
   private discoveries!: IDiscoveries;
 
   constructor(
-    private userService: UserService,
     private gameplayService: GameplayService,
     public contentService: ContentService,
   ) {}
 
-  ngOnInit() {
-    this.userService.getDiscoveries().subscribe(({ discoveries }: any) => {
-      this.discoveries = discoveries;
+  ionViewDidEnter() {
+    this.discoveries$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((discoveries) => {
+        this.discoveries = discoveries;
 
-      Object.keys(discoveries).forEach((key) => {
-        if (!this.unlocked.hasOwnProperty(key)) return;
+        Object.keys(discoveries).forEach((key) => {
+          if (!this.unlocked.hasOwnProperty(key)) return;
 
-        this.unlocked[key as keyof IDiscoveries] = Object.keys(
-          discoveries[key],
-        ).length;
+          this.unlocked[key as keyof IDiscoveries] = Object.keys(
+            discoveries[key as keyof IDiscoveries],
+          ).length;
 
-        this.totals[key as keyof IDiscoveries] = sum(
-          Object.values(discoveries[key]),
-        );
+          this.totals[key as keyof IDiscoveries] = sum(
+            Object.values(discoveries[key as keyof IDiscoveries]),
+          );
+        });
       });
-    });
   }
 
   trackBy(index: number) {

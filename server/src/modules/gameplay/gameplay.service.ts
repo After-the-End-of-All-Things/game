@@ -10,6 +10,7 @@ import {
   TrackedStat,
   UserResponse,
 } from '@interfaces';
+import { EntityManager } from '@mikro-orm/mongodb';
 import { AnalyticsService } from '@modules/content/analytics.service';
 import { ConstantsService } from '@modules/content/constants.service';
 import { ContentService } from '@modules/content/content.service';
@@ -51,6 +52,7 @@ const createFilledArray = (length: number, fill: ExploreResult) =>
 @Injectable()
 export class GameplayService {
   constructor(
+    private readonly em: EntityManager,
     private readonly logger: Logger,
     private readonly playerService: PlayerService,
     private readonly discoveriesService: DiscoveriesService,
@@ -1000,6 +1002,99 @@ export class GameplayService {
           type: 'Notify',
           messageType: 'success',
           message: `You changed your job to ${newJob}!`,
+        },
+      ],
+    };
+  }
+
+  async buyPortrait(userId: string): Promise<UserResponse> {
+    const player = await this.playerService.getPlayerForUser(userId);
+    if (!player) throw new ForbiddenException('Player not found.');
+
+    const { unlockSprite, unlockCost } =
+      player.action?.actionData.npc.properties;
+
+    if (!this.playerHelper.hasCoins(player, unlockCost ?? 0))
+      throw new ForbiddenException('Not enough coins.');
+
+    const discoveries = await this.discoveriesService.getDiscoveriesForUser(
+      userId,
+    );
+    if (!discoveries) throw new ForbiddenException('Discoveries not found.');
+
+    const playerPatches = await getPatchesAfterPropChanges<Player>(
+      player,
+      async (playerRef) => {
+        this.playerHelper.spendCoins(playerRef, unlockCost ?? 0);
+        this.playerService.setPlayerAction(playerRef, undefined);
+      },
+    );
+
+    const discoveryPatches = await getPatchesAfterPropChanges<Discoveries>(
+      discoveries,
+      async (discoveriesRef) => {
+        this.discoveriesService.discoverPortrait(discoveriesRef, unlockSprite);
+      },
+    );
+
+    await this.em.flush();
+
+    return {
+      player: playerPatches,
+      discoveries: discoveryPatches,
+      actions: [
+        {
+          type: 'Notify',
+          messageType: 'success',
+          message: `You unlocked a new portrait!`,
+        },
+      ],
+    };
+  }
+
+  async buyBackground(userId: string): Promise<UserResponse> {
+    const player = await this.playerService.getPlayerForUser(userId);
+    if (!player) throw new ForbiddenException('Player not found.');
+
+    const { unlockBackground, unlockCost } =
+      player.action?.actionData.npc.properties;
+
+    if (!this.playerHelper.hasCoins(player, unlockCost ?? 0))
+      throw new ForbiddenException('Not enough coins.');
+
+    const discoveries = await this.discoveriesService.getDiscoveriesForUser(
+      userId,
+    );
+    if (!discoveries) throw new ForbiddenException('Discoveries not found.');
+
+    const playerPatches = await getPatchesAfterPropChanges<Player>(
+      player,
+      async (playerRef) => {
+        this.playerHelper.spendCoins(playerRef, unlockCost ?? 0);
+        this.playerService.setPlayerAction(playerRef, undefined);
+      },
+    );
+
+    const discoveryPatches = await getPatchesAfterPropChanges<Discoveries>(
+      discoveries,
+      async (discoveriesRef) => {
+        this.discoveriesService.discoverBackground(
+          discoveriesRef,
+          unlockBackground,
+        );
+      },
+    );
+
+    await this.em.flush();
+
+    return {
+      player: playerPatches,
+      discoveries: discoveryPatches,
+      actions: [
+        {
+          type: 'Notify',
+          messageType: 'success',
+          message: `You unlocked a new background!`,
         },
       ],
     };

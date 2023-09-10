@@ -543,8 +543,8 @@
         </span>
 
         <span class="percent">
-          ({{ (((unlocked['backgrounds'] ?? 0) / contentService.maxPortraits) *
-          100) | number:'1.0-2' }}%)
+          ({{ (((unlocked['backgrounds'] ?? 0) / contentService.maxBackgrounds)
+          * 100) | number:'1.0-2' }}%)
         </span>
       </ion-col>
     </ion-row>
@@ -555,7 +555,7 @@
         *ngFor="let background of allBackgrounds; trackBy: trackBy"
       >
         <app-background-art
-          [class.uncollected]="!discoveries.backgrounds?.[background - 1]"
+          [class.uncollected]="!discoveries.backgrounds?.[background.toString().padStart(4, '0')]"
           [sprite]="background.toString().padStart(4, '0')"
         ></app-background-art>
       </ion-col>

@@ -3,11 +3,9 @@ import { EntityManager, EntityRepository } from '@mikro-orm/mongodb';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { ConstantsService } from '@modules/content/constants.service';
 import { ContentService } from '@modules/content/content.service';
-import { PlayerHelperService } from '@modules/content/playerhelper.service';
 import { Discoveries } from '@modules/discoveries/discoveries.schema';
 import { InventoryService } from '@modules/inventory/inventory.service';
 import { Player } from '@modules/player/player.schema';
-import { PlayerService } from '@modules/player/player.service';
 import {
   BadRequestException,
   ForbiddenException,
@@ -30,8 +28,6 @@ export class DiscoveriesService {
     private readonly contentService: ContentService,
     private readonly constants: ConstantsService,
     private readonly events: EventEmitter2,
-    private readonly playerService: PlayerService,
-    private readonly playerHelper: PlayerHelperService,
   ) {}
 
   async getDiscoveriesForUser(
@@ -236,9 +232,6 @@ export class DiscoveriesService {
   }
 
   async claimUniqueCollectibleReward(userId: string): Promise<UserResponse> {
-    const player = await this.playerService.getPlayerForUser(userId);
-    if (!player) throw new NotFoundException('Player not found');
-
     const discoveries = await this.getDiscoveriesForUser(userId);
     if (!discoveries) throw new NotFoundException('Discoveries not found');
 
@@ -259,13 +252,8 @@ export class DiscoveriesService {
     const coinReward = this.constants.uniqueCollectibleRewardMultiplier * 1000;
     const oatReward = this.constants.uniqueCollectibleRewardMultiplier;
 
-    const playerPatches = await getPatchesAfterPropChanges<Player>(
-      player,
-      async (playerRef) => {
-        this.playerHelper.gainCoins(playerRef, coinReward);
-        this.playerHelper.gainOats(playerRef, oatReward);
-      },
-    );
+    this.events.emit('player.gaincoins', { userId, amount: coinReward });
+    this.events.emit('player.gainoats', { userId, amount: oatReward });
 
     this.logger.verbose(
       `Claimed unique collectible reward for ${userId} (${totalCollectiblesFound} total).`,
@@ -273,7 +261,6 @@ export class DiscoveriesService {
 
     return {
       discoveries: discoveryPatches,
-      player: playerPatches,
       actions: [
         {
           type: 'Notify',
@@ -285,9 +272,6 @@ export class DiscoveriesService {
   }
 
   async claimTotalCollectibleReward(userId: string): Promise<UserResponse> {
-    const player = await this.playerService.getPlayerForUser(userId);
-    if (!player) throw new NotFoundException('Player not found');
-
     const discoveries = await this.getDiscoveriesForUser(userId);
     if (!discoveries) throw new NotFoundException('Discoveries not found');
 
@@ -308,13 +292,8 @@ export class DiscoveriesService {
     const coinReward = this.constants.totalCollectibleRewardMultiplier * 1000;
     const oatReward = this.constants.totalCollectibleRewardMultiplier;
 
-    const playerPatches = await getPatchesAfterPropChanges<Player>(
-      player,
-      async (playerRef) => {
-        this.playerHelper.gainCoins(playerRef, coinReward);
-        this.playerHelper.gainOats(playerRef, oatReward);
-      },
-    );
+    this.events.emit('player.gaincoins', { userId, amount: coinReward });
+    this.events.emit('player.gainoats', { userId, amount: oatReward });
 
     this.logger.verbose(
       `Claimed total collectible reward for ${userId} (${totalCollectiblesFound} total).`,
@@ -322,7 +301,6 @@ export class DiscoveriesService {
 
     return {
       discoveries: discoveryPatches,
-      player: playerPatches,
       actions: [
         {
           type: 'Notify',
@@ -334,9 +312,6 @@ export class DiscoveriesService {
   }
 
   async claimUniqueEquipmentReward(userId: string): Promise<UserResponse> {
-    const player = await this.playerService.getPlayerForUser(userId);
-    if (!player) throw new NotFoundException('Player not found');
-
     const discoveries = await this.getDiscoveriesForUser(userId);
     if (!discoveries) throw new NotFoundException('Discoveries not found');
 
@@ -357,13 +332,8 @@ export class DiscoveriesService {
     const coinReward = this.constants.uniqueEquipmentRewardMultiplier * 1000;
     const oatReward = this.constants.uniqueEquipmentRewardMultiplier;
 
-    const playerPatches = await getPatchesAfterPropChanges<Player>(
-      player,
-      async (playerRef) => {
-        this.playerHelper.gainCoins(playerRef, coinReward);
-        this.playerHelper.gainOats(playerRef, oatReward);
-      },
-    );
+    this.events.emit('player.gaincoins', { userId, amount: coinReward });
+    this.events.emit('player.gainoats', { userId, amount: oatReward });
 
     this.logger.verbose(
       `Claimed unique equipment reward for ${userId} (${totalItemsFound} total).`,
@@ -371,7 +341,6 @@ export class DiscoveriesService {
 
     return {
       discoveries: discoveryPatches,
-      player: playerPatches,
       actions: [
         {
           type: 'Notify',
@@ -383,9 +352,6 @@ export class DiscoveriesService {
   }
 
   async claimTotalEquipmentReward(userId: string): Promise<UserResponse> {
-    const player = await this.playerService.getPlayerForUser(userId);
-    if (!player) throw new NotFoundException('Player not found');
-
     const discoveries = await this.getDiscoveriesForUser(userId);
     if (!discoveries) throw new NotFoundException('Discoveries not found');
 
@@ -406,13 +372,8 @@ export class DiscoveriesService {
     const coinReward = this.constants.totalEquipmentRewardMultiplier * 1000;
     const oatReward = this.constants.totalEquipmentRewardMultiplier;
 
-    const playerPatches = await getPatchesAfterPropChanges<Player>(
-      player,
-      async (playerRef) => {
-        this.playerHelper.gainCoins(playerRef, coinReward);
-        this.playerHelper.gainOats(playerRef, oatReward);
-      },
-    );
+    this.events.emit('player.gaincoins', { userId, amount: coinReward });
+    this.events.emit('player.gainoats', { userId, amount: oatReward });
 
     this.logger.verbose(
       `Claimed total equipment reward for ${userId} (${totalItemsFound} total).`,
@@ -420,7 +381,6 @@ export class DiscoveriesService {
 
     return {
       discoveries: discoveryPatches,
-      player: playerPatches,
       actions: [
         {
           type: 'Notify',
@@ -432,9 +392,6 @@ export class DiscoveriesService {
   }
 
   async claimUniqueMonsterReward(userId: string): Promise<UserResponse> {
-    const player = await this.playerService.getPlayerForUser(userId);
-    if (!player) throw new NotFoundException('Player not found');
-
     const discoveries = await this.getDiscoveriesForUser(userId);
     if (!discoveries) throw new NotFoundException('Discoveries not found');
 
@@ -455,13 +412,8 @@ export class DiscoveriesService {
     const coinReward = this.constants.uniqueMonsterRewardMultiplier * 1000;
     const oatReward = this.constants.uniqueMonsterRewardMultiplier;
 
-    const playerPatches = await getPatchesAfterPropChanges<Player>(
-      player,
-      async (playerRef) => {
-        this.playerHelper.gainCoins(playerRef, coinReward);
-        this.playerHelper.gainOats(playerRef, oatReward);
-      },
-    );
+    this.events.emit('player.gaincoins', { userId, amount: coinReward });
+    this.events.emit('player.gainoats', { userId, amount: oatReward });
 
     this.logger.verbose(
       `Claimed unique monster reward for ${userId} (${totalItemsFound} total).`,
@@ -469,7 +421,6 @@ export class DiscoveriesService {
 
     return {
       discoveries: discoveryPatches,
-      player: playerPatches,
       actions: [
         {
           type: 'Notify',
@@ -481,9 +432,6 @@ export class DiscoveriesService {
   }
 
   async claimTotalMonsterReward(userId: string): Promise<UserResponse> {
-    const player = await this.playerService.getPlayerForUser(userId);
-    if (!player) throw new NotFoundException('Player not found');
-
     const discoveries = await this.getDiscoveriesForUser(userId);
     if (!discoveries) throw new NotFoundException('Discoveries not found');
 
@@ -504,13 +452,8 @@ export class DiscoveriesService {
     const coinReward = this.constants.totalMonsterRewardMultiplier * 1000;
     const oatReward = this.constants.totalMonsterRewardMultiplier;
 
-    const playerPatches = await getPatchesAfterPropChanges<Player>(
-      player,
-      async (playerRef) => {
-        this.playerHelper.gainCoins(playerRef, coinReward);
-        this.playerHelper.gainOats(playerRef, oatReward);
-      },
-    );
+    this.events.emit('player.gaincoins', { userId, amount: coinReward });
+    this.events.emit('player.gainoats', { userId, amount: oatReward });
 
     this.logger.verbose(
       `Claimed total monster reward for ${userId} (${totalItemsFound} total).`,
@@ -518,7 +461,6 @@ export class DiscoveriesService {
 
     return {
       discoveries: discoveryPatches,
-      player: playerPatches,
       actions: [
         {
           type: 'Notify',
@@ -526,6 +468,20 @@ export class DiscoveriesService {
           message: `You got ${coinReward.toLocaleString()} coins and ${oatReward.toLocaleString()} oats!`,
         },
       ],
+    };
+  }
+
+  discoverPortrait(discoveries: Discoveries, portrait: number): void {
+    discoveries.portraits = {
+      ...discoveries.portraits,
+      [portrait]: true,
+    };
+  }
+
+  discoverBackground(discoveries: Discoveries, background: number): void {
+    discoveries.backgrounds = {
+      ...discoveries.backgrounds,
+      [background]: true,
     };
   }
 }

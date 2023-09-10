@@ -433,7 +433,11 @@ export class PlayerService {
     const npcData = this.contentService.getNPC(randomNPCForLocation.name);
     if (!npcData) return;
 
-    const action = this.npcService.getActionForNPC(player, location, npcData);
+    const action = await this.npcService.getActionForNPC(
+      player,
+      location,
+      npcData,
+    );
     if (!action) return;
 
     this.setPlayerAction(player, action);

@@ -1,5 +1,6 @@
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { ContentModule } from '@modules/content/content.module';
+import { DiscoveriesModule } from '@modules/discoveries/discoveries.module';
 import { InventoryModule } from '@modules/inventory/inventory.module';
 import { NpcService } from '@modules/player/npc.service';
 import { PlayerController } from '@modules/player/player.controller';
@@ -13,6 +14,7 @@ import { Module } from '@nestjs/common';
     MikroOrmModule.forFeature([Player]),
     ContentModule,
     InventoryModule,
+    DiscoveriesModule,
   ],
   providers: [PlayerService, NpcService],
   exports: [PlayerService],

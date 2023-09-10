@@ -12,7 +12,27 @@ export enum LocationStat {
   TaxRate = 'taxRate',
 }
 
-export type LocationNPCType = 'ClassTrainer';
+export type ClassTrainerProperties = { text: string; changeJob: string };
+export type SpriteUnlockerProperties = {
+  text: string;
+  unlockSprite: number;
+  unlockCost: number;
+};
+export type BackgroundUnlockerProperties = {
+  text: string;
+  unlockBackground: string;
+  unlockCost: number;
+};
+
+export type LocationNPCProperties =
+  | ClassTrainerProperties
+  | SpriteUnlockerProperties
+  | BackgroundUnlockerProperties;
+
+export type LocationNPCType =
+  | 'ClassTrainer'
+  | 'SpriteUnlocker'
+  | 'BackgroundUnlocker';
 
 export interface ILocationConnection {
   name: string;
@@ -36,5 +56,5 @@ export interface ILocationNPC {
   itemId: string;
   sprite: number;
   type: LocationNPCType;
-  properties: Record<string, any>;
+  properties: Record<string, keyof LocationNPCProperties>;
 }
