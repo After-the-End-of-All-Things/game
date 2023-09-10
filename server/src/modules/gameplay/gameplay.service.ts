@@ -327,6 +327,8 @@ export class GameplayService {
 
     this.logger.verbose(`Player ${userId} is walking to ${locationName}.`);
 
+    this.events.emit('sync.player', player);
+
     return { player: playerPatches };
   }
 
@@ -382,6 +384,8 @@ export class GameplayService {
         };
       },
     );
+
+    this.events.emit('sync.player', player);
 
     this.logger.verbose(`Player ${userId} is traveling to ${locationName}.`);
 

@@ -10,6 +10,7 @@ export class GameIconComponent implements OnInit {
   @Input() color = '';
   @Input() cssColor = '';
   @Input() backgroundColor = '';
+  @Input() rounded = false;
   @Input() size: 'small' | 'medium' | 'large' = 'medium';
 
   constructor() {}

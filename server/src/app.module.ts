@@ -29,6 +29,7 @@ import { EventsModule } from './modules/events/events.module';
 import { GameplayModule } from './modules/gameplay/gameplay.module';
 import { MarketModule } from './modules/market/market.module';
 import { UpdateAuthTimeInterceptor } from './utils/updatetime.interceptor';
+import { LeaderboardModule } from './modules/leaderboard/leaderboard.module';
 
 const logLevel = process.env.LOG_LEVEL || 'trace';
 
@@ -92,6 +93,7 @@ const logLevel = process.env.LOG_LEVEL || 'trace';
     MarketModule,
     AggregatorModule,
     EventsModule,
+    LeaderboardModule,
   ],
   controllers: [AppController, GameplayController],
   providers: [

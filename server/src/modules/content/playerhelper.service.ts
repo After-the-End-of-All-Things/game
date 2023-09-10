@@ -56,6 +56,8 @@ export class PlayerHelperService {
     player.xp = 0;
     player.level += 1;
 
+    this.events.emit('sync.player', player);
+
     this.events.emit('notification.create', {
       userId: player.userId,
       notification: {

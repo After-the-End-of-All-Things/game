@@ -20,6 +20,7 @@ import {
   ForbiddenException,
   Injectable,
 } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { getPatchesAfterPropChanges } from '@utils/patches';
 import { pickWeighted } from '@utils/weighted';
 import { sample } from 'lodash';
@@ -36,6 +37,7 @@ export class PlayerService {
     private readonly constants: ConstantsService,
     private readonly inventoryService: InventoryService,
     private readonly npcService: NpcService,
+    private readonly events: EventEmitter2,
   ) {}
 
   async getPlayerForUser(userId: string): Promise<Player | undefined> {
@@ -83,6 +85,8 @@ export class PlayerService {
     );
 
     this.logger.verbose(`Updated portrait for player ${userId} to ${portrait}`);
+
+    this.events.emit('sync.player', player);
 
     return {
       player: playerPatches,

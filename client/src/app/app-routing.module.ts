@@ -109,6 +109,15 @@ const routes: Routes = [
     loadChildren: () =>
       import('./pages/updates/updates.module').then((m) => m.UpdatesPageModule),
   },
+  {
+    path: 'leaderboard',
+    canActivate: [AuthGuard],
+    data: { title: 'Leaderboard' },
+    loadChildren: () =>
+      import('./pages/leaderboard/leaderboard.module').then(
+        (m) => m.LeaderboardPageModule,
+      ),
+  },
 
   {
     path: '**',

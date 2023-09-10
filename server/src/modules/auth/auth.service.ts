@@ -57,7 +57,15 @@ export class AuthService {
 
     const hash = await bcrypt.hash(password, 10);
     const newUser = new User(username, discriminator, hash, email);
-    const createdUser = await this.userService.createUser(newUser);
+    let createdUser;
+
+    try {
+      createdUser = await this.userService.createUser(newUser);
+    } catch (err) {
+      throw new BadRequestException(
+        'Failed to create user. This email might already be in use.',
+      );
+    }
 
     if (!createdUser) throw new BadRequestException('Failed to create user.');
 

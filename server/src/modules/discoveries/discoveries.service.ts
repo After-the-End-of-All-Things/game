@@ -106,6 +106,7 @@ export class DiscoveriesService {
       `Discovered ${locationName} for ${discoveries.userId}.`,
     );
     discoveries.locations = { ...discoveries.locations, [locationName]: true };
+    this.syncDiscoveriesForLeaderboard(discoveries);
     return true;
   }
 
@@ -144,6 +145,8 @@ export class DiscoveriesService {
     this.logger.verbose(
       `Discovered collectible ${itemDefinition.name} for ${userId}.`,
     );
+
+    this.syncDiscoveriesForLeaderboard(discoveries);
 
     return {
       discoveries: discoveryPatches,
@@ -200,6 +203,8 @@ export class DiscoveriesService {
       `Discovered equipment ${itemDefinition.name} for ${userId}.`,
     );
 
+    this.syncDiscoveriesForLeaderboard(discoveries);
+
     return {
       discoveries: discoveryPatches,
       actions: [
@@ -229,6 +234,8 @@ export class DiscoveriesService {
       ...(discoveries.monsters || {}),
       [monsterId]: (discoveries.monsters?.[monsterId] ?? 0) + 1,
     };
+
+    this.syncDiscoveriesForLeaderboard(discoveries);
   }
 
   async claimUniqueCollectibleReward(userId: string): Promise<UserResponse> {
@@ -258,6 +265,8 @@ export class DiscoveriesService {
     this.logger.verbose(
       `Claimed unique collectible reward for ${userId} (${totalCollectiblesFound} total).`,
     );
+
+    this.syncDiscoveriesForLeaderboard(discoveries);
 
     return {
       discoveries: discoveryPatches,
@@ -299,6 +308,8 @@ export class DiscoveriesService {
       `Claimed total collectible reward for ${userId} (${totalCollectiblesFound} total).`,
     );
 
+    this.syncDiscoveriesForLeaderboard(discoveries);
+
     return {
       discoveries: discoveryPatches,
       actions: [
@@ -338,6 +349,8 @@ export class DiscoveriesService {
     this.logger.verbose(
       `Claimed unique equipment reward for ${userId} (${totalItemsFound} total).`,
     );
+
+    this.syncDiscoveriesForLeaderboard(discoveries);
 
     return {
       discoveries: discoveryPatches,
@@ -379,6 +392,8 @@ export class DiscoveriesService {
       `Claimed total equipment reward for ${userId} (${totalItemsFound} total).`,
     );
 
+    this.syncDiscoveriesForLeaderboard(discoveries);
+
     return {
       discoveries: discoveryPatches,
       actions: [
@@ -418,6 +433,8 @@ export class DiscoveriesService {
     this.logger.verbose(
       `Claimed unique monster reward for ${userId} (${totalItemsFound} total).`,
     );
+
+    this.syncDiscoveriesForLeaderboard(discoveries);
 
     return {
       discoveries: discoveryPatches,
@@ -459,6 +476,8 @@ export class DiscoveriesService {
       `Claimed total monster reward for ${userId} (${totalItemsFound} total).`,
     );
 
+    this.syncDiscoveriesForLeaderboard(discoveries);
+
     return {
       discoveries: discoveryPatches,
       actions: [
@@ -476,6 +495,8 @@ export class DiscoveriesService {
       ...discoveries.portraits,
       [portrait]: true,
     };
+
+    this.syncDiscoveriesForLeaderboard(discoveries);
   }
 
   discoverBackground(discoveries: Discoveries, background: number): void {
@@ -483,5 +504,11 @@ export class DiscoveriesService {
       ...discoveries.backgrounds,
       [background]: true,
     };
+
+    this.syncDiscoveriesForLeaderboard(discoveries);
+  }
+
+  private syncDiscoveriesForLeaderboard(discoveries: Discoveries): void {
+    this.events.emit('sync.discoveries', discoveries);
   }
 }

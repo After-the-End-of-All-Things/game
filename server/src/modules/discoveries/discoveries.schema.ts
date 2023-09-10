@@ -64,8 +64,8 @@ export class Discoveries implements IDiscoveries {
 
     this.locations = { Mork: true };
     this.portraits = { 4: true };
-    this.backgrounds = { 0: true };
-    this.borders = { 0: true };
+    this.backgrounds = {};
+    this.borders = {};
     this.collectibles = {};
     this.items = {};
     this.monsters = {};

@@ -36,3 +36,8 @@ ion-button.icon-only {
 ion-spinner {
   height: 20px;
 }
+
+ion-menu.split-pane-side.menu-side-start {
+  --side-min-width: 400px;
+  --side-max-width: 400px;
+}

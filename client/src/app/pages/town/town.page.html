@@ -92,6 +92,21 @@
                   <p>Buy and sell items with other players.</p>
                 </ion-label>
               </ion-item>
+
+              <ion-item
+                class="ion-activatable cursor-pointer"
+                [routerLink]="['/leaderboard']"
+              >
+                <app-game-icon
+                  slot="start"
+                  icon="town-leaderboard"
+                ></app-game-icon>
+
+                <ion-label>
+                  <h3>Leaderboard</h3>
+                  <p>View the local and global leaderboards.</p>
+                </ion-label>
+              </ion-item>
             </ion-list>
           </ion-card-content>
         </ion-card>
