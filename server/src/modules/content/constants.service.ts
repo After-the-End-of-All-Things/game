@@ -19,6 +19,7 @@ export class ConstantsService {
   public readonly resourceFindPercentBoost: number = 0;
   public readonly locationFindPercentBoost: number = 0;
   public readonly monsterFindPercentBoost: number = 0;
+  public readonly npcFindPercentBoost: number = 0;
 
   public readonly craftingSpeedMultiplier: number = 100;
 
@@ -97,6 +98,10 @@ export class ConstantsService {
     );
     this.monsterFindPercentBoost = +this.configService.get<number>(
       'EXPLORE_EVENT_MONSTER_FIND_PERCENT_BOOST',
+      0,
+    );
+    this.npcFindPercentBoost = +this.configService.get<number>(
+      'EXPLORE_EVENT_NPC_FIND_PERCENT_BOOST',
       0,
     );
 

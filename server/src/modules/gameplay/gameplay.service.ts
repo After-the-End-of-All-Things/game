@@ -42,7 +42,8 @@ type ExploreResult =
   | 'Discovery'
   | 'Collectible'
   | 'Resource'
-  | 'Monster';
+  | 'Monster'
+  | 'NPC';
 
 const createFilledArray = (length: number, fill: ExploreResult) =>
   Array(length).fill(fill);
@@ -128,6 +129,11 @@ export class GameplayService {
           this.constantsService.monsterFindPercentBoost +
             foundLocation.baseStats.monsterFind || 0,
           'Monster',
+        ),
+        ...createFilledArray(
+          this.constantsService.npcFindPercentBoost +
+            foundLocation.baseStats.npcEncounter || 0,
+          'NPC',
         ),
       ];
 
@@ -233,6 +239,10 @@ export class GameplayService {
 
         if (exploreResult === 'Monster') {
           await this.playerService.handleFindMonster(playerRef, foundLocation);
+        }
+
+        if (exploreResult === 'NPC') {
+          await this.playerService.handleFindNPC(playerRef, foundLocation);
         }
       },
     );
@@ -951,6 +961,45 @@ export class GameplayService {
           type: 'Notify',
           messageType: 'success',
           message: `You collected ${item.name}!`,
+        },
+      ],
+    };
+  }
+
+  async changeClass(userId: string): Promise<UserResponse> {
+    const player = await this.playerService.getPlayerForUser(userId);
+    if (!player) throw new ForbiddenException('Player not found.');
+
+    const newJob = player.action?.actionData.newJob;
+    if (!newJob) throw new ForbiddenException('New job not found.');
+
+    const playerPatches = await getPatchesAfterPropChanges<Player>(
+      player,
+      async (playerRef) => {
+        playerRef.job = newJob;
+
+        this.playerService.setPlayerAction(playerRef, undefined);
+
+        this.analyticsService.sendDesignEvent(
+          userId,
+          `Gameplay:ChangeClass:${newJob}`,
+        );
+
+        await this.statsService.incrementStat(
+          userId,
+          'classChanges' as TrackedStat,
+          1,
+        );
+      },
+    );
+
+    return {
+      player: playerPatches,
+      actions: [
+        {
+          type: 'Notify',
+          messageType: 'success',
+          message: `You changed your job to ${newJob}!`,
         },
       ],
     };

@@ -131,4 +131,11 @@ export class GameplayController {
   async takeCraftItemFromNotification(@User() user): Promise<UserResponse> {
     return this.gameplayService.takeCraftedItem(user.userId);
   }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Change classes' })
+  @Post('changeclass')
+  async changeClass(@User() user): Promise<UserResponse> {
+    return this.gameplayService.changeClass(user.userId);
+  }
 }

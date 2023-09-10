@@ -13,6 +13,7 @@ import { InjectRepository } from '@mikro-orm/nestjs';
 import { ConstantsService } from '@modules/content/constants.service';
 import { ContentService } from '@modules/content/content.service';
 import { InventoryService } from '@modules/inventory/inventory.service';
+import { NpcService } from '@modules/player/npc.service';
 import { Player } from '@modules/player/player.schema';
 import {
   BadRequestException,
@@ -34,6 +35,7 @@ export class PlayerService {
     private readonly contentService: ContentService,
     private readonly constants: ConstantsService,
     private readonly inventoryService: InventoryService,
+    private readonly npcService: NpcService,
   ) {}
 
   async getPlayerForUser(userId: string): Promise<Player | undefined> {
@@ -422,5 +424,18 @@ export class PlayerService {
       });
 
     return base;
+  }
+
+  async handleFindNPC(player: Player, location: ILocation): Promise<void> {
+    const randomNPCForLocation = sample(location.npcs);
+    if (!randomNPCForLocation) return;
+
+    const npcData = this.contentService.getNPC(randomNPCForLocation.name);
+    if (!npcData) return;
+
+    const action = this.npcService.getActionForNPC(player, location, npcData);
+    if (!action) return;
+
+    this.setPlayerAction(player, action);
   }
 }

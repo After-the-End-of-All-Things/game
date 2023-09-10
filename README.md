@@ -67,6 +67,7 @@ we love eating our oats
 - `EXPLORE_EVENT_ITEM_FIND_PERCENT_BOOST` - the percent boost to item find events happening (default: 0)
 - `EXPLORE_EVENT_LOCATION_FIND_PERCENT_BOOST` - the percent boost to location find events happening (default: 0)
 - `EXPLORE_EVENT_MONSTER_FIND_PERCENT_BOOST` - the percent boost to monster find events happening (default: 0)
+- `EXPLORE_EVENT_NPC_FIND_PERCENT_BOOST` - the percent boost to NPC find events happening (default: 0)
 - `EXPLORE_EVENT_RESOURCE_FIND_PERCENT_BOOST` - the percent boost to resource find events happening (default: 0)
 - `EXPLORE_EVENT_WAVE_PERCENT_BOOST` - the percent boost to wave events happening (default: 0)
 - `EXPLORE_SPEED_MULTIPLIER` - the multiplier for explore speed [percent] (default: 100)

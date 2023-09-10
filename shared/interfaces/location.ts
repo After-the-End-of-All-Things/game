@@ -12,6 +12,8 @@ export enum LocationStat {
   TaxRate = 'taxRate',
 }
 
+export type LocationNPCType = 'ClassTrainer';
+
 export interface ILocationConnection {
   name: string;
 }
@@ -26,4 +28,13 @@ export interface ILocation {
   cost: number;
   baseStats: Record<LocationStat, number>;
   connections: ILocationConnection[];
+  npcs: Array<{ name: string }>;
+}
+
+export interface ILocationNPC {
+  name: string;
+  itemId: string;
+  sprite: number;
+  type: LocationNPCType;
+  properties: Record<string, any>;
 }

@@ -223,6 +223,46 @@
                     </div>
                   </ion-card-content>
                 </ion-card>
+
+                <ion-card
+                  class="job-card action-card"
+                  *ngIf="actionInfo.action === 'change'"
+                >
+                  <ion-card-content>
+                    <div class="intro">
+                      You met with the
+                      <strong>{{ actionInfo.actionData.newJob }}</strong>
+                      Trainer! Would you like to change classes?
+                    </div>
+
+                    <div class="info full-width">
+                      <ion-row>
+                        <ion-col sizeXs="8">
+                          <ion-row>
+                            <ion-col sizeXs="4" class="action-avatar">
+                              <app-avatar
+                                [avatar]="actionInfo.actionData.npc.sprite"
+                              ></app-avatar>
+                            </ion-col>
+
+                            <ion-col sizeXs="8" class="action-center">
+                              {{ actionInfo.actionData.npc.properties.text }}
+                            </ion-col>
+                          </ion-row>
+                        </ion-col>
+
+                        <ion-col sizeXs="4" class="action-action">
+                          <ion-button
+                            color="secondary"
+                            (click)="actionsService.doAction(actionInfo)"
+                          >
+                            {{ actionInfo.text }}
+                          </ion-button>
+                        </ion-col>
+                      </ion-row>
+                    </div>
+                  </ion-card-content>
+                </ion-card>
               </div>
 
               <ng-template #noAction>

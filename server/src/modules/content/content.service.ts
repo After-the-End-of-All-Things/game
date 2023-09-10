@@ -7,6 +7,7 @@ import {
   IItem,
   IJob,
   ILocation,
+  ILocationNPC,
   IMonster,
   IMonsterFormation,
   IRecipe,
@@ -37,6 +38,7 @@ export class ContentService {
     abilities: {},
     monsters: {},
     formations: {},
+    npcs: {},
   };
 
   private get locations(): Record<string, ILocation> {
@@ -73,6 +75,10 @@ export class ContentService {
 
   private get formations(): Record<string, IMonsterFormation> {
     return this.content.formations;
+  }
+
+  private get npcs(): Record<string, ILocationNPC> {
+    return this.content.npcs;
   }
 
   constructor(private logger: Logger) {}
@@ -166,5 +172,13 @@ export class ContentService {
 
   public getAbility(ability: string): ICombatAbility | undefined {
     return this.abilities[ability];
+  }
+
+  public allNPCs(): ILocationNPC[] {
+    return Object.values(this.npcs);
+  }
+
+  public getNPC(npc: string): ILocationNPC | undefined {
+    return this.npcs[npc];
   }
 }

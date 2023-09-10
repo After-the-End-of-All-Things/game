@@ -7,6 +7,7 @@ import {
   IItem,
   IJob,
   ILocation,
+  ILocationNPC,
   IMonster,
   IMonsterFormation,
   IRecipe,
@@ -28,6 +29,7 @@ export class ContentService {
     abilities: {},
     monsters: {},
     formations: {},
+    npcs: {},
   };
 
   public get maxPortraits() {
@@ -72,6 +74,10 @@ export class ContentService {
 
   public get formations(): Record<string, IMonsterFormation> {
     return this.content.formations;
+  }
+
+  public get npcs(): Record<string, ILocationNPC> {
+    return this.content.npcs;
   }
 
   constructor(private assetService: AssetService) {}
@@ -156,5 +162,9 @@ export class ContentService {
 
   public getAbility(ability: string): ICombatAbility | undefined {
     return this.abilities[ability];
+  }
+
+  public getNPC(npc: string): ILocationNPC | undefined {
+    return this.npcs[npc];
   }
 }

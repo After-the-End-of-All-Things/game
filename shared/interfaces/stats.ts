@@ -15,6 +15,7 @@ export enum TrackedStat {
   CombatWins = 'combatWins',
   CombatLosses = 'combatLosses',
   CombatFlees = 'combatFlees',
+  ClassChanges = 'classChanges',
 }
 
 export interface IStats {
