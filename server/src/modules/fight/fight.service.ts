@@ -57,7 +57,7 @@ import { Logger } from 'nestjs-pino';
 import { v4 as uuid } from 'uuid';
 
 const DELAY_BETWEEN_ROUNDS = 3000;
-const DELAY_BETWEEN_TURNS = 1000;
+const DELAY_BETWEEN_TURNS = 200;
 
 @Injectable()
 export class FightService {
