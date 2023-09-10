@@ -65,4 +65,35 @@ export class PlayerController {
 
     return this.playerService.updatePortraitForPlayer(user.userId, portraitId);
   }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Change Player Background' })
+  @Patch('cosmetics/background')
+  async changeBackground(
+    @User() user,
+    @Body('background') background: number,
+  ): Promise<UserResponse> {
+    const backgroundId = Math.round(Math.min(18, Math.max(-1, background)));
+
+    // Fetch the player's discoveries
+    const discoveries = await this.discoveriesService.getDiscoveriesForUser(
+      user.userId,
+    );
+
+    if (!discoveries) {
+      throw new NotFoundException('Discoveries not found for this user.');
+    }
+
+    // Check if the portrait is unlocked
+    if (backgroundId !== -1 && !discoveries.backgrounds[backgroundId]) {
+      throw new NotFoundException(
+        `Background ${backgroundId} is not unlocked.`,
+      );
+    }
+
+    return this.playerService.updateBackgroundForPlayer(
+      user.userId,
+      backgroundId,
+    );
+  }
 }

@@ -1,0 +1,32 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Choose New Background</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="confirm()" [strong]="true">Confirm</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-row>
+    <ion-col>
+      <ion-icon
+        name="close"
+        class="icon-container reset-container"
+        (click)="selectBackground(-1)"
+        [class.selected]="selectedBackground === -1"
+      ></ion-icon>
+    </ion-col>
+
+    <ion-col *ngFor="let background of allBackgrounds">
+      <app-background-art
+        class="icon-container"
+        [sprite]="background"
+        (click)="selectBackground(background)"
+        [class.selected]="selectedBackground === background"
+        [class.disabled]="!selectableBackgrounds.includes(background)"
+      ></app-background-art>
+    </ion-col>
+  </ion-row>
+</ion-content>

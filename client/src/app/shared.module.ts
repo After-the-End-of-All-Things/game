@@ -18,6 +18,7 @@ import { ItemRarityComponent } from '@components/item-rarity/item-rarity.compone
 import { ItemStatsComponent } from '@components/item-stats/item-stats.component';
 import { LocationStatsButtonComponent } from '@components/location-stats-button/location-stats-button.component';
 import { ChooseAvatarModalComponent } from '@components/modals/choose-avatar/choose-avatar.component';
+import { ChooseBackgroundComponent } from '@components/modals/choose-background/choose-background.component';
 import { CompareItemsModalComponent } from '@components/modals/compare-items/compare-items.component';
 import { LocationStatsModalComponent } from '@components/modals/location-stats/location-stats.component';
 import { MarketModalComponent } from '@components/modals/market/market.component';
@@ -34,6 +35,7 @@ const components = [
   CardOnlineUsersComponent,
   HeroComponent,
   ChooseAvatarModalComponent,
+  ChooseBackgroundComponent,
   CompareItemsModalComponent,
   MarketModalComponent,
   LocationStatsButtonComponent,

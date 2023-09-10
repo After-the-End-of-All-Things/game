@@ -96,6 +96,36 @@ export class PlayerService {
     };
   }
 
+  async updateBackgroundForPlayer(
+    userId: string,
+    background: number,
+  ): Promise<UserResponse> {
+    const player = await this.getPlayerForUser(userId);
+    if (!player) throw new ForbiddenException('Player not found');
+
+    const playerPatches = await getPatchesAfterPropChanges<Player>(
+      player,
+      async (playerRef) => {
+        playerRef.cosmetics = { ...player.cosmetics, background };
+      },
+    );
+
+    this.logger.verbose(
+      `Updated background for player ${userId} to ${background}`,
+    );
+
+    return {
+      player: playerPatches,
+      actions: [
+        {
+          type: 'Notify',
+          messageType: 'success',
+          message: `Background updated!`,
+        },
+      ],
+    };
+  }
+
   async updateShortBioForPlayer(
     userId: string,
     shortBio: string,

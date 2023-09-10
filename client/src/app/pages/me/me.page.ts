@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ChooseAvatarModalComponent } from '@components/modals/choose-avatar/choose-avatar.component';
+import { ChooseBackgroundComponent } from '@components/modals/choose-background/choose-background.component';
 import { IEquipment, IPlayer, ItemSlot, Stat } from '@interfaces';
 import { AlertController, ModalController } from '@ionic/angular';
 import { Select } from '@ngxs/store';
@@ -79,6 +80,22 @@ export class MePage implements OnInit {
     const { data } = await modal.onWillDismiss();
     if (data) {
       this.playerService.changePortrait(data);
+    }
+  }
+
+  async changeBackground(defaultBackground: number) {
+    const modal = await this.modal.create({
+      component: ChooseBackgroundComponent,
+      componentProps: {
+        defaultBackground,
+      },
+    });
+
+    modal.present();
+
+    const { data } = await modal.onWillDismiss();
+    if (data) {
+      this.playerService.changeBackground(data);
     }
   }
 

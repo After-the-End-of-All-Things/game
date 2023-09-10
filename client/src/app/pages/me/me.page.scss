@@ -1,8 +1,9 @@
 
-app-avatar {
+app-avatar, .tiny-background-art {
   position: relative;
   left: -19px;
 
+  min-width: 56px;
   max-height: 64px;
   max-width: 56px;
 

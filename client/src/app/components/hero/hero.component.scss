@@ -1,11 +1,17 @@
 
 .hero-container {
-  min-height: 300px;
+  min-height: 240px;
 
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
+  app-background-art {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+  }
 
   .user-info {
     .username {
@@ -34,5 +40,9 @@
 
   .relevant-stats, .currencies {
     text-align: center;
+  }
+
+  .username, .discriminator, .level, .coins {
+    text-shadow: 1px 1px 0px #000, -1px -1px 0px #000, 1px -1px 0px #000, -1px 1px 0px #000;
   }
 }

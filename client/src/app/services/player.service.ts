@@ -20,6 +20,14 @@ export class PlayerService {
       .subscribe();
   }
 
+  changeBackground(background: number) {
+    this.http
+      .patch(`${environment.apiUrl}/player/cosmetics/background`, {
+        background,
+      })
+      .subscribe();
+  }
+
   changeShortBio(shortbio: string) {
     this.http
       .patch(`${environment.apiUrl}/player/profile/shortbio`, { shortbio })

@@ -555,8 +555,8 @@
         *ngFor="let background of allBackgrounds; trackBy: trackBy"
       >
         <app-background-art
-          [class.uncollected]="!discoveries.backgrounds?.[background.toString().padStart(4, '0')]"
-          [sprite]="background.toString().padStart(4, '0')"
+          [class.uncollected]="!discoveries.backgrounds?.[background]"
+          [sprite]="background"
         ></app-background-art>
       </ion-col>
     </ion-row>

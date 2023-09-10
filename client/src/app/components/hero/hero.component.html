@@ -7,6 +7,13 @@
     oats: playerOats$ | async
   } as data"
 >
+  <ng-container *ngIf="data.player?.cosmetics?.background as background">
+    <app-background-art
+      [sprite]="background"
+      *ngIf="background !== -1"
+    ></app-background-art>
+  </ng-container>
+
   <app-avatar [avatar]="data.player?.cosmetics?.portrait ?? 4"></app-avatar>
 
   <div class="user-info">
@@ -29,11 +36,23 @@
 
     <div class="currencies">
       <span class="coins icon-and-text-container">
-        <app-game-icon cssColor="#daa520" icon="currency-coin"></app-game-icon>
+        <app-game-icon
+          cssColor="#daa520"
+          [backgroundColor]="
+            data.player?.cosmetics?.background === -1 ? '' : '#000'
+          "
+          icon="currency-coin"
+        ></app-game-icon>
         {{ data.coins ?? 0 | number }} Coins
       </span>
       <span class="coins icon-and-text-container">
-        <app-game-icon cssColor="#daa520" icon="currency-oat"></app-game-icon>
+        <app-game-icon
+          cssColor="#daa520"
+          [backgroundColor]="
+            data.player?.cosmetics?.background === -1 ? '' : '#000'
+          "
+          icon="currency-oat"
+        ></app-game-icon>
         {{ data.oats ?? 0 | number }} Oats
       </span>
     </div>

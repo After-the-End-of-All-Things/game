@@ -107,7 +107,7 @@ export class Player implements IPlayer {
 
     this.cosmetics = {
       portrait: 4,
-      background: 0,
+      background: -1,
     };
 
     this.action = {

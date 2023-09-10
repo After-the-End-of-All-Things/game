@@ -1,0 +1,30 @@
+
+ion-col {
+  margin: 8px;
+  max-width: 96px;
+  min-width: 96px;
+}
+
+.reset-container {
+  width: 96px;
+  height: 64px;
+  font-size: 0.8em;
+}
+
+.icon-container {
+  display: flex;
+  overflow: hidden;
+  cursor: pointer;
+  width: 96px;
+  height: 64px;
+
+  &.selected {
+    outline: 3px solid #f0f;
+  }
+
+  &.disabled {
+    pointer-events: none;
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+}
