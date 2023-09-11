@@ -78,8 +78,6 @@ export class TravelService {
 
     this.logger.verbose(`Player ${userId} is walking to ${locationName}.`);
 
-    this.events.emit('sync.player', player);
-
     return { player: playerPatches };
   }
 

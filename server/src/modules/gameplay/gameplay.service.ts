@@ -14,6 +14,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { getPatchesAfterPropChanges } from '@utils/patches';
 import { sample } from 'lodash';
 import { Logger } from 'nestjs-pino';
@@ -43,6 +44,7 @@ export class GameplayService {
     private readonly analyticsService: AnalyticsService,
     private readonly playerHelper: PlayerHelperService,
     private readonly fights: FightService,
+    private readonly events: EventEmitter2,
   ) {}
 
   async explore(userId: string): Promise<UserResponse> {
@@ -194,6 +196,8 @@ export class GameplayService {
               goingTo: '',
               arrivesAt: 0,
             };
+
+            this.events.emit('sync.player', player);
           }
         }
 
