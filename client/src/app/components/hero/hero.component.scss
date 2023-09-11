@@ -33,6 +33,10 @@
   .currencies {
     margin-top: 8px;
 
+    .coins, .oats {
+      font-feature-settings: 'tnum';
+    }
+
     .coins {
       &:first-child {
         margin-right: 10px;
