@@ -52,7 +52,7 @@ export class AssetService {
             this.imageService.fetchImage(fullUrl),
           );
 
-          this.backgroundImageService.saveImageToDatabase(
+          await this.backgroundImageService.saveImageToDatabase(
             name,
             hash,
             fullUrl,
