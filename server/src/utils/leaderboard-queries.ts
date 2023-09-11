@@ -64,7 +64,7 @@ export const leaderboardQueries = [
     formatter: (data) => {
       return {
         ...alwaysData(data),
-        value: data.discoveries[stat].toLocaleString(),
+        value: data.discoveries?.[stat]?.toLocaleString() || '0',
       };
     },
   })),
@@ -98,7 +98,7 @@ export const leaderboardQueries = [
     formatter: (data) => {
       return {
         ...alwaysData(data),
-        value: data.stats[stat].toLocaleString(),
+        value: data.stats?.[stat]?.toLocaleString() || '0',
       };
     },
   })),
