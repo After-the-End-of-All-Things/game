@@ -19,7 +19,21 @@
 }
 
 .fight {
+  position: relative;
   --tile-dimensions: 112px;
+
+  .background {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    opacity: 0.2;
+    width: 100%;
+
+    app-background-art {
+      width: calc(var(--tile-dimensions) * 8);
+      height: calc(var(--tile-dimensions) * 4);
+    }
+  }
 
   .tile-row {
     display: flex;

@@ -55,6 +55,10 @@
   <ion-card class="fight-card">
     <ion-card-content>
       <div class="fight">
+        <div class="background">
+          <app-background-art [sprite]="locationSprite"></app-background-art>
+        </div>
+
         <div *ngFor="let row of fight.tiles; let y = index" class="tile-row">
           <div *ngFor="let col of row; let x = index" class="tile-col">
             <div

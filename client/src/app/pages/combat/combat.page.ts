@@ -56,6 +56,7 @@ export class CombatPage implements OnInit {
   public myCharacterLevel = 0;
   public selectedAbility: ICombatAbility | undefined;
   public staticSelectedTiles: Record<string, boolean> = {};
+  public locationSprite = -1;
 
   public get myCharacter(): IFightCharacter {
     return this.fightCharacters[this.myCharacterId];
@@ -100,6 +101,10 @@ export class CombatPage implements OnInit {
 
         this.myCharacterJob = player.job;
         this.myCharacterLevel = player.level;
+
+        this.locationSprite =
+          this.contentService.getLocation(player.location.current)
+            ?.background ?? -1;
       });
   }
 
