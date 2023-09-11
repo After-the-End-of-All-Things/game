@@ -1,7 +1,10 @@
 import { ItemSlot, UserResponse } from '@interfaces';
 import { JwtAuthGuard } from '@modules/auth/jwt.guard';
 import { GameplayService } from '@modules/gameplay/gameplay.service';
-import { InventoryService } from '@modules/inventory/inventory.service';
+import { ItemService } from '@modules/gameplay/item.service';
+import { NpcService } from '@modules/gameplay/npc.service';
+import { TravelService } from '@modules/gameplay/travel.service';
+import { WaveService } from '@modules/gameplay/wave.service';
 import {
   Body,
   Controller,
@@ -19,7 +22,10 @@ import { User } from '@utils/user.decorator';
 export class GameplayController {
   constructor(
     private gameplayService: GameplayService,
-    private inventoryService: InventoryService,
+    private travelService: TravelService,
+    private waveService: WaveService,
+    private itemService: ItemService,
+    private npcService: NpcService,
   ) {}
 
   @UseGuards(JwtAuthGuard)
@@ -36,7 +42,7 @@ export class GameplayController {
     @User() user,
     @Body('location') location: string,
   ): Promise<UserResponse> {
-    return this.gameplayService.walkToLocation(user.userId, location);
+    return this.travelService.walkToLocation(user.userId, location);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -46,14 +52,14 @@ export class GameplayController {
     @User() user,
     @Body('location') location: string,
   ): Promise<UserResponse> {
-    return this.gameplayService.travelToLocation(user.userId, location);
+    return this.travelService.travelToLocation(user.userId, location);
   }
 
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Explore Event: Wave at another player' })
   @Post('wave')
   async wave(@User() user): Promise<UserResponse> {
-    return this.gameplayService.waveToPlayerFromExplore(user.userId);
+    return this.waveService.waveToPlayerFromExplore(user.userId);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -63,7 +69,7 @@ export class GameplayController {
     @User() user,
     @Param('id') notificationId: string,
   ): Promise<UserResponse> {
-    return this.gameplayService.waveToPlayerFromNotification(
+    return this.waveService.waveToPlayerFromNotification(
       user.userId,
       notificationId,
     );
@@ -73,7 +79,7 @@ export class GameplayController {
   @ApiOperation({ summary: 'Explore Event: Take an item' })
   @Post('item/take')
   async takeItem(@User() user): Promise<UserResponse> {
-    return this.gameplayService.takeItem(user.userId);
+    return this.itemService.takeItem(user.userId);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -90,7 +96,7 @@ export class GameplayController {
     @User() user,
     @Body('instanceId') instanceId: string,
   ): Promise<UserResponse> {
-    return this.gameplayService.sellItem(user.userId, instanceId);
+    return this.itemService.sellItem(user.userId, instanceId);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -101,11 +107,7 @@ export class GameplayController {
     @Param('slot') equipmentSlot: ItemSlot,
     @Body('instanceId') instanceId: string,
   ): Promise<UserResponse> {
-    return this.gameplayService.equipItem(
-      user.userId,
-      equipmentSlot,
-      instanceId,
-    );
+    return this.itemService.equipItem(user.userId, equipmentSlot, instanceId);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -115,41 +117,41 @@ export class GameplayController {
     @User() user,
     @Body('itemId') itemId: string,
   ): Promise<UserResponse> {
-    return this.gameplayService.craftItem(user.userId, itemId);
+    return this.itemService.craftItem(user.userId, itemId);
   }
 
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Take a crafted item' })
   @Post('item/craft/take')
   async takeCraftItem(@User() user): Promise<UserResponse> {
-    return this.gameplayService.takeCraftedItem(user.userId);
+    return this.itemService.takeCraftedItem(user.userId);
   }
 
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Take a crafted item (from notification)' })
   @Post('item/craft/take/:id')
   async takeCraftItemFromNotification(@User() user): Promise<UserResponse> {
-    return this.gameplayService.takeCraftedItem(user.userId);
+    return this.itemService.takeCraftedItem(user.userId);
   }
 
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Change classes' })
   @Post('changeclass')
   async changeClass(@User() user): Promise<UserResponse> {
-    return this.gameplayService.changeClass(user.userId);
+    return this.npcService.changeClass(user.userId);
   }
 
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Buy a background' })
   @Post('unlockbackground')
   async buyBackground(@User() user): Promise<UserResponse> {
-    return this.gameplayService.buyBackground(user.userId);
+    return this.npcService.buyBackground(user.userId);
   }
 
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Buy a portrait' })
   @Post('unlocksprite')
   async buyPortrait(@User() user): Promise<UserResponse> {
-    return this.gameplayService.buyPortrait(user.userId);
+    return this.npcService.buyPortrait(user.userId);
   }
 }

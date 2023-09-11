@@ -4,11 +4,15 @@ import { DiscoveriesModule } from '@modules/discoveries/discoveries.module';
 import { FightModule } from '@modules/fight/fight.module';
 import { GameplayController } from '@modules/gameplay/gameplay.controller';
 import { GameplayService } from '@modules/gameplay/gameplay.service';
+import { WaveService } from '@modules/gameplay/wave.service';
 import { InventoryModule } from '@modules/inventory/inventory.module';
 import { NotificationModule } from '@modules/notification/notification.module';
 import { PlayerModule } from '@modules/player/player.module';
 import { StatsModule } from '@modules/stats/stats.module';
 import { Module } from '@nestjs/common';
+import { ItemService } from './item.service';
+import { NpcService } from './npc.service';
+import { TravelService } from './travel.service';
 
 @Module({
   controllers: [GameplayController],
@@ -22,7 +26,19 @@ import { Module } from '@nestjs/common';
     CraftingModule,
     FightModule,
   ],
-  providers: [GameplayService],
-  exports: [GameplayService],
+  providers: [
+    GameplayService,
+    TravelService,
+    WaveService,
+    ItemService,
+    NpcService,
+  ],
+  exports: [
+    GameplayService,
+    TravelService,
+    WaveService,
+    ItemService,
+    NpcService,
+  ],
 })
 export class GameplayModule {}
