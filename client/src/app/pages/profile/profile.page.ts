@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { IPlayer } from '@interfaces';
 import { PlayerService } from '@services/player.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-profile',
@@ -10,6 +11,9 @@ import { PlayerService } from '@services/player.service';
 })
 export class ProfilePage implements OnInit {
   @Input() id!: string;
+
+  public isLoading = false;
+  public isError = false;
 
   public player: IPlayer = {
     cosmetics: {
@@ -38,17 +42,29 @@ export class ProfilePage implements OnInit {
       return;
     }
 
-    this.playerService.getPlayerProfile(this.id).subscribe((player) => {
+    this.isLoading = true;
+
+    forkJoin([
+      this.playerService.getPlayerProfile(this.id),
+      this.playerService.getPlayerStats(this.id),
+    ]).subscribe(([player, stats]) => {
       if (!player) {
         this.leave();
         return;
       }
 
-      this.player = player as IPlayer;
-    });
+      const playerRef = player as IPlayer;
 
-    this.playerService.getPlayerStats(this.id).subscribe((stats) => {
+      if (!playerRef.cosmetics.showcase) {
+        this.isError = true;
+        this.isLoading = false;
+        return;
+      }
+
+      this.player = playerRef;
       this.stats = stats as Array<{ name: string; value: string }>;
+
+      this.isLoading = false;
     });
   }
 

@@ -10,7 +10,15 @@
     <app-header-bar></app-header-bar>
   </ion-header>
 
-  <ng-container *ngIf="player">
+  <ng-container *ngIf="isError && !isLoading">
+    <ion-card>
+      <ion-card-content>
+        <p>There was an error loading this profile.</p>
+      </ion-card-content>
+    </ion-card>
+  </ng-container>
+
+  <ng-container *ngIf="!isError && !isLoading && player; else loadingSpinner">
     <ion-card>
       <app-hero
         [background]="player.cosmetics.background"
@@ -23,7 +31,7 @@
       ></app-hero>
     </ion-card>
 
-    <ion-card>
+    <ion-card *ngIf="player.profile.longBio">
       <ion-card-header>
         <ion-card-title>About</ion-card-title>
       </ion-card-header>
@@ -81,4 +89,16 @@
       </ion-col>
     </ion-row>
   </ng-container>
+
+  <ng-template #loadingSpinner>
+    <ion-row *ngIf="isLoading">
+      <ion-col sizeLg="6" offsetLg="3">
+        <ion-card class="loading-card">
+          <ion-card-content>
+            <ion-spinner></ion-spinner>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ng-template>
 </ion-content>

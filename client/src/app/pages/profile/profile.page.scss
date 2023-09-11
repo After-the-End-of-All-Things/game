@@ -17,3 +17,19 @@ app-hero {
   display: inline-block;
   margin: 8px;
 }
+
+.loading-card {
+  height: 300px;
+
+  ion-card-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
+
+  ion-spinner {
+    height: 100px;
+    width: 100px;
+  }
+}
