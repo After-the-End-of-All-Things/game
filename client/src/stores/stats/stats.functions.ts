@@ -7,6 +7,12 @@ export const defaultStore: () => IStatsStore = () => ({
   version: 0,
   stats: {
     stats: {},
+    discoveries: {},
+    location: '',
+    name: '',
+    discriminator: '',
+    portrait: -1,
+    level: 1,
   },
 });
 
@@ -16,7 +22,7 @@ export function setStats(ctx: StateContext<IStatsStore>, { stats }: SetStats) {
 
 export function applyStatsPatches(
   ctx: StateContext<IStatsStore>,
-  { patches }: ApplyStatsPatches
+  { patches }: ApplyStatsPatches,
 ) {
   const stats = ctx.getState().stats;
 

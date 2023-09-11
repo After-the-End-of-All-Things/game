@@ -54,6 +54,11 @@ export class PlayerStore {
   }
 
   @Selector()
+  static playerShowcase(state: IPlayerStore) {
+    return state.player.cosmetics.showcase || {};
+  }
+
+  @Selector()
   static exploreCooldown(state: IPlayerStore) {
     return state.player.location.cooldown;
   }

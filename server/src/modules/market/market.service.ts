@@ -21,7 +21,11 @@ import { MarketSale } from '@modules/market/marketsale.schema';
 import { Player } from '@modules/player/player.schema';
 import { PlayerService } from '@modules/player/player.service';
 import { UserService } from '@modules/user/user.service';
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { getPatchesAfterPropChanges } from '@utils/patches';
 import { Logger } from 'nestjs-pino';
@@ -50,10 +54,10 @@ export class MarketService {
     quantity = 1,
   ): Promise<UserResponse> {
     const player = await this.playerService.getPlayerForUser(userId);
-    if (!player) throw new BadRequestException('Player not found');
+    if (!player) throw new NotFoundException('Player not found');
 
     const user = await this.userService.findUserById(userId);
-    if (!user) throw new BadRequestException('User not found');
+    if (!user) throw new NotFoundException('User not found');
 
     const isResource = this.contentService.getResource(instanceId);
     let itemRef: IItem | undefined;
@@ -69,7 +73,7 @@ export class MarketService {
       );
 
       if (!inventoryItem)
-        throw new BadRequestException('Inventory item not found');
+        throw new NotFoundException('Inventory item not found');
       if (inventoryItem.isInUse)
         throw new BadRequestException('Item is in use');
 
@@ -77,8 +81,7 @@ export class MarketService {
       itemId = inventoryItem.itemId;
     }
 
-    if (!itemRef || !itemId)
-      throw new BadRequestException('Item ref not found');
+    if (!itemRef || !itemId) throw new NotFoundException('Item ref not found');
 
     const validQuantity = isResource
       ? cleanNumber(quantity, 1, {
@@ -106,7 +109,7 @@ export class MarketService {
     const playerLocation = this.contentService.getLocation(
       player.location.current,
     );
-    if (!playerLocation) throw new BadRequestException('Location not found');
+    if (!playerLocation) throw new NotFoundException('Location not found');
 
     const taxRate = playerLocation.baseStats.taxRate ?? 5;
     const tax = Math.floor(validPrice * (taxRate / 100));
@@ -302,7 +305,7 @@ export class MarketService {
     if (totalValue <= 0) throw new BadRequestException('No value to claim');
 
     const player = await this.playerService.getPlayerForUser(userId);
-    if (!player) throw new BadRequestException('Player not found');
+    if (!player) throw new NotFoundException('Player not found');
 
     const playerPatches = await getPatchesAfterPropChanges<Player>(
       player,
@@ -334,7 +337,7 @@ export class MarketService {
     const listing = await this.marketItem.findOne({
       _id: new ObjectId(listingId),
     });
-    if (!listing) throw new BadRequestException('Listing not found');
+    if (!listing) throw new NotFoundException('Listing not found');
 
     if (listing.meta.listedById === userId)
       throw new BadRequestException('You cannot buy your own listing');
@@ -343,19 +346,19 @@ export class MarketService {
       throw new BadRequestException('Listing is already sold');
 
     const player = await this.playerService.getPlayerForUser(userId);
-    if (!player) throw new BadRequestException('Player not found');
+    if (!player) throw new NotFoundException('Player not found');
 
     const user = await this.userService.findUserById(userId);
-    if (!user) throw new BadRequestException('User not found');
+    if (!user) throw new NotFoundException('User not found');
 
     const isResource = this.contentService.getResource(listing.itemId);
 
     const itemRef = this.contentService.getItem(listing.itemId);
     if (!itemRef && !isResource)
-      throw new BadRequestException('Item ref not found');
+      throw new NotFoundException('Item ref not found');
 
     const inventory = await this.inventoryService.getInventoryForUser(userId);
-    if (!inventory) throw new BadRequestException('Inventory not found');
+    if (!inventory) throw new NotFoundException('Inventory not found');
 
     if (!this.playerHelper.hasCoins(player, listing.price))
       throw new BadRequestException('Not enough coins');
@@ -426,15 +429,15 @@ export class MarketService {
     price: number,
   ): Promise<UserResponse> {
     const player = await this.playerService.getPlayerForUser(userId);
-    if (!player) throw new BadRequestException('Player not found');
+    if (!player) throw new NotFoundException('Player not found');
 
     const user = await this.userService.findUserById(userId);
-    if (!user) throw new BadRequestException('User not found');
+    if (!user) throw new NotFoundException('User not found');
 
     const listing = await this.marketItem.findOne({
       _id: new ObjectId(listingId),
     });
-    if (!listing) throw new BadRequestException('Listing not found');
+    if (!listing) throw new NotFoundException('Listing not found');
 
     if (listing.userId !== userId)
       throw new BadRequestException('You cannot reprice this listing');
@@ -453,7 +456,7 @@ export class MarketService {
     const playerLocation = this.contentService.getLocation(
       player.location.current,
     );
-    if (!playerLocation) throw new BadRequestException('Location not found');
+    if (!playerLocation) throw new NotFoundException('Location not found');
 
     const taxRate = playerLocation.baseStats.taxRate ?? 5;
     const tax = Math.max(1, Math.floor(validPrice * (taxRate / 100)));
@@ -495,15 +498,15 @@ export class MarketService {
 
   async unlistItem(userId: string, listingId: string): Promise<UserResponse> {
     const player = await this.playerService.getPlayerForUser(userId);
-    if (!player) throw new BadRequestException('Player not found');
+    if (!player) throw new NotFoundException('Player not found');
 
     const user = await this.userService.findUserById(userId);
-    if (!user) throw new BadRequestException('User not found');
+    if (!user) throw new NotFoundException('User not found');
 
     const listing = await this.marketItem.findOne({
       _id: new ObjectId(listingId),
     });
-    if (!listing) throw new BadRequestException('Listing not found');
+    if (!listing) throw new NotFoundException('Listing not found');
 
     if (listing.userId !== userId)
       throw new BadRequestException('You cannot remove this listing');

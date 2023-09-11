@@ -1,0 +1,20 @@
+<ng-container *ngIf="item">
+  <app-item-icon [item]="item" [ngxTippy]="tooltip"></app-item-icon>
+
+  <ng-template #tooltip>
+    <strong [ngClass]="['rarity', item.rarity.toLowerCase()]">
+      {{ item.name }}
+    </strong>
+
+    <div #tooltipInsertedContent>
+      <ng-content select="[tooltip]"></ng-content>
+    </div>
+
+    <div *ngIf="tooltipInsertedContent.children.length === 0">
+      <div *ngIf="item.type === 'collectible'">
+        <br />
+        <em>{{ item.description }}</em>
+      </div>
+    </div>
+  </ng-template>
+</ng-container>

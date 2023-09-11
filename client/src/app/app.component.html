@@ -3,7 +3,26 @@
     <ion-menu contentId="main-content" type="overlay">
       <ion-content>
         <ion-list>
-          <app-hero></app-hero>
+          <ng-container
+            *ngIf="{
+            user: user$ | async,
+            player: player$ | async,
+            playerCoins: playerCoins$ | async,
+            playerOats: playerOats$ | async,
+          } as data"
+          >
+            <app-hero
+              [background]="data.player?.cosmetics?.background ?? -1"
+              [portrait]="data.player?.cosmetics?.portrait ?? 4"
+              [level]="data.player?.level ?? 1"
+              [job]="data.player?.job ?? 'Generalist'"
+              [username]="data.user?.username ?? 'hello'"
+              [discriminator]="data.user?.discriminator ?? '0000'"
+              [showCurrencies]="true"
+              [coins]="data.playerCoins ?? 0"
+              [oats]="data.playerOats ?? 0"
+            ></app-hero>
+          </ng-container>
 
           <ion-item-divider>Main</ion-item-divider>
 

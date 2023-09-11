@@ -12,6 +12,7 @@ import { GameIconComponent } from '@components/game-icon/game-icon.component';
 import { HeaderBarComponent } from '@components/header-bar/header-bar.component';
 import { HeroComponent } from '@components/hero/hero.component';
 import { IconComponent } from '@components/icon/icon.component';
+import { ItemDisplayComponent } from '@components/item-display/item-display.component';
 import { ItemElementsComponent } from '@components/item-elements/item-elements.component';
 import { ItemIconComponent } from '@components/item-icon/item-icon.component';
 import { ItemRarityComponent } from '@components/item-rarity/item-rarity.component';
@@ -53,6 +54,7 @@ const components = [
   ElementIconComponent,
   CombatAbilityComponent,
   GameIconComponent,
+  ItemDisplayComponent,
 ];
 
 @NgModule({

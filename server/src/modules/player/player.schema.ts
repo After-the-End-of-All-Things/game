@@ -28,7 +28,7 @@ export class Player implements IPlayer {
   id!: string;
 
   @Unique()
-  @Property({ hidden: true })
+  @Property()
   userId: string;
 
   @Property()
@@ -101,6 +101,7 @@ export class Player implements IPlayer {
 
     this.profile = {
       displayName: '',
+      discriminator: '',
       shortBio: '',
       longBio: '',
     };
@@ -108,6 +109,10 @@ export class Player implements IPlayer {
     this.cosmetics = {
       portrait: 4,
       background: -1,
+      showcase: {
+        collectibles: [],
+        items: [],
+      },
     };
 
     this.action = {

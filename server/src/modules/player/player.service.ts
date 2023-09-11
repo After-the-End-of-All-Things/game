@@ -1,3 +1,4 @@
+import { cleanNumber } from '@helpers/input';
 import { zeroResistances, zeroStats } from '@helpers/stats';
 import {
   Element,
@@ -12,6 +13,7 @@ import { EntityManager, EntityRepository } from '@mikro-orm/mongodb';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { ConstantsService } from '@modules/content/constants.service';
 import { ContentService } from '@modules/content/content.service';
+import { DiscoveriesService } from '@modules/discoveries/discoveries.service';
 import { InventoryService } from '@modules/inventory/inventory.service';
 import { NpcService } from '@modules/player/npc.service';
 import { Player } from '@modules/player/player.schema';
@@ -19,11 +21,12 @@ import {
   BadRequestException,
   ForbiddenException,
   Injectable,
+  NotFoundException,
 } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { getPatchesAfterPropChanges } from '@utils/patches';
 import { pickWeighted } from '@utils/weighted';
-import { sample } from 'lodash';
+import { pick, sample } from 'lodash';
 import { Logger } from 'nestjs-pino';
 
 @Injectable()
@@ -36,6 +39,7 @@ export class PlayerService {
     private readonly contentService: ContentService,
     private readonly constants: ConstantsService,
     private readonly inventoryService: InventoryService,
+    private readonly discoveriesService: DiscoveriesService,
     private readonly npcService: NpcService,
     private readonly events: EventEmitter2,
   ) {}
@@ -70,12 +74,26 @@ export class PlayerService {
     return player;
   }
 
+  async getPlayerProfile(userId: string): Promise<Partial<Player> | undefined> {
+    const player = await this.getPlayerForUser(userId);
+    if (!player) throw new NotFoundException('Player not found');
+
+    return pick(player, [
+      'userId',
+      'level',
+      'job',
+      'location',
+      'profile',
+      'cosmetics',
+    ]);
+  }
+
   async updatePortraitForPlayer(
     userId: string,
     portrait: number,
   ): Promise<UserResponse> {
     const player = await this.getPlayerForUser(userId);
-    if (!player) throw new ForbiddenException('Player not found');
+    if (!player) throw new NotFoundException('Player not found');
 
     const playerPatches = await getPatchesAfterPropChanges<Player>(
       player,
@@ -105,7 +123,7 @@ export class PlayerService {
     background: number,
   ): Promise<UserResponse> {
     const player = await this.getPlayerForUser(userId);
-    if (!player) throw new ForbiddenException('Player not found');
+    if (!player) throw new NotFoundException('Player not found');
 
     const playerPatches = await getPatchesAfterPropChanges<Player>(
       player,
@@ -135,7 +153,7 @@ export class PlayerService {
     shortBio: string,
   ): Promise<UserResponse> {
     const player = await this.getPlayerForUser(userId);
-    if (!player) throw new ForbiddenException('Player not found');
+    if (!player) throw new NotFoundException('Player not found');
 
     shortBio = this.contentService.censor.cleanProfanityIsh(
       shortBio.substring(0, 30).trim(),
@@ -171,7 +189,7 @@ export class PlayerService {
     longBio: string,
   ): Promise<UserResponse> {
     const player = await this.getPlayerForUser(userId);
-    if (!player) throw new ForbiddenException('Player not found');
+    if (!player) throw new NotFoundException('Player not found');
 
     longBio = this.contentService.censor.cleanProfanityIsh(
       longBio.substring(0, 500).trim(),
@@ -200,6 +218,124 @@ export class PlayerService {
     };
   }
 
+  async updateShowcaseCollectibles(
+    userId: string,
+    itemId: string,
+    slot: number,
+  ): Promise<UserResponse> {
+    const player = await this.getPlayerForUser(userId);
+    if (!player) throw new NotFoundException('Player not found');
+
+    const discoveries = await this.discoveriesService.getDiscoveriesForUser(
+      userId,
+    );
+    if (!discoveries) throw new NotFoundException('Discoveries not found');
+
+    if (itemId && !discoveries.collectibles[itemId])
+      throw new ForbiddenException('Collectible not discovered');
+
+    const validSlot = cleanNumber(slot, 0, {
+      round: true,
+      abs: true,
+      min: 0,
+    });
+
+    if (validSlot >= this.constants.showcaseCollectibleSlots)
+      throw new BadRequestException(
+        'You do not have enough space in your showcase for that. Try removing something first.',
+      );
+
+    const playerPatches = await getPatchesAfterPropChanges<Player>(
+      player,
+      async (playerRef) => {
+        const baseShowcase = player.cosmetics.showcase || {};
+        const baseCollectibles = baseShowcase.collectibles || [];
+
+        baseCollectibles[validSlot] = itemId;
+
+        const newCollectibles = baseCollectibles.filter(Boolean);
+
+        playerRef.cosmetics = {
+          ...playerRef.cosmetics,
+          showcase: {
+            ...baseShowcase,
+            collectibles: newCollectibles,
+          },
+        };
+      },
+    );
+
+    return {
+      player: playerPatches,
+      actions: [
+        {
+          type: 'Notify',
+          messageType: 'success',
+          message: `Collectible added to showcase!`,
+        },
+      ],
+    };
+  }
+
+  async updateShowcaseItems(
+    userId: string,
+    itemId: string,
+    slot: number,
+  ): Promise<UserResponse> {
+    const player = await this.getPlayerForUser(userId);
+    if (!player) throw new NotFoundException('Player not found');
+
+    const discoveries = await this.discoveriesService.getDiscoveriesForUser(
+      userId,
+    );
+    if (!discoveries) throw new NotFoundException('Discoveries not found');
+
+    if (itemId && !discoveries.items[itemId])
+      throw new ForbiddenException('Item not discovered');
+
+    const validSlot = cleanNumber(slot, 0, {
+      round: true,
+      abs: true,
+      min: 0,
+    });
+
+    if (validSlot >= this.constants.showcaseItemSlots)
+      throw new BadRequestException(
+        'You do not have enough space in your showcase for that. Try removing something first.',
+      );
+
+    const playerPatches = await getPatchesAfterPropChanges<Player>(
+      player,
+      async (playerRef) => {
+        const baseShowcase = player.cosmetics.showcase || {};
+        const baseItems = baseShowcase.items || [];
+
+        baseItems[validSlot] = itemId;
+
+        const newItems = baseItems.filter(Boolean);
+
+        playerRef.cosmetics = {
+          ...playerRef.cosmetics,
+          showcase: {
+            ...baseShowcase,
+            items: newItems,
+          },
+        };
+      },
+    );
+
+    return {
+      player: playerPatches,
+      actions: [
+        {
+          type: 'Notify',
+          messageType: 'success',
+          message: `Item added to showcase!`,
+        },
+      ],
+    };
+  }
+
   getMicroPlayer(player: Player): Partial<Player> {
     return {
       userId: player.userId,
@@ -208,9 +344,11 @@ export class PlayerService {
       cosmetics: {
         portrait: player.cosmetics.portrait,
         background: player.cosmetics.background,
+        showcase: player.cosmetics.showcase,
       },
       profile: {
         displayName: player.profile.displayName,
+        discriminator: player.profile.discriminator,
         shortBio: player.profile.shortBio,
         longBio: '',
       },

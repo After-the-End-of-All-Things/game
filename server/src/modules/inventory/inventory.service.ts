@@ -7,8 +7,8 @@ import { Inventory } from '@modules/inventory/inventory.schema';
 import { InventoryItem } from '@modules/inventory/inventoryitem.schema';
 import {
   BadRequestException,
-  ForbiddenException,
   Injectable,
+  NotFoundException,
 } from '@nestjs/common';
 import { Logger } from 'nestjs-pino';
 import { v4 as uuid } from 'uuid';
@@ -86,7 +86,7 @@ export class InventoryService {
     instanceId: string,
   ): Promise<Partial<Record<Stat, number>>> {
     const item = await this.getInventoryItemForUser(userId, instanceId);
-    if (!item) throw new ForbiddenException('Item not found.');
+    if (!item) throw new NotFoundException('Item not found.');
 
     const itemRef = this.contentService.getEquipment(item.itemId);
     if (!itemRef) return {};
@@ -105,7 +105,7 @@ export class InventoryService {
 
   async acquireItem(userId: string, itemId: string) {
     const itemRef = this.contentService.getItem(itemId);
-    if (!itemRef) throw new BadRequestException('Item not found.');
+    if (!itemRef) throw new NotFoundException('Item not found.');
 
     if (itemRef.type === 'resource') {
       await this.acquireResource(userId, itemId, 1);
@@ -204,7 +204,7 @@ export class InventoryService {
     userId: string,
   ): Promise<Record<ItemSlot, IEquipment | undefined>> {
     const inventory = await this.getInventoryForUser(userId);
-    if (!inventory) throw new ForbiddenException('Inventory not found.');
+    if (!inventory) throw new NotFoundException('Inventory not found.');
 
     return inventory.equippedItems;
   }

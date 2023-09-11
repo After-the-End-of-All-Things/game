@@ -4,7 +4,11 @@ import { NotificationService } from '@modules/notification/notification.service'
 import { Player } from '@modules/player/player.schema';
 import { PlayerService } from '@modules/player/player.service';
 import { StatsService } from '@modules/stats/stats.service';
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { getPatchesAfterPropChanges } from '@utils/patches';
 import { Logger } from 'nestjs-pino';
@@ -22,7 +26,7 @@ export class WaveService {
 
   async waveToPlayerFromExplore(userId: string): Promise<UserResponse> {
     const player = await this.playerService.getPlayerForUser(userId);
-    if (!player) throw new ForbiddenException('Player not found');
+    if (!player) throw new NotFoundException('Player not found');
 
     if (!player.action) throw new ForbiddenException('Player has no action');
 
@@ -34,13 +38,13 @@ export class WaveService {
     notificationId: string,
   ): Promise<UserResponse> {
     const player = await this.playerService.getPlayerForUser(userId);
-    if (!player) throw new ForbiddenException('Player not found');
+    if (!player) throw new NotFoundException('Player not found');
 
     const notification = await this.notificationService.getNotificationForUser(
       userId,
       notificationId,
     );
-    if (!notification) throw new ForbiddenException('Notification not found');
+    if (!notification) throw new NotFoundException('Notification not found');
 
     const notificationAction = notification.actions?.[0];
     if (!notificationAction)
@@ -61,10 +65,10 @@ export class WaveService {
     const { targetUserId, isWaveBack } = action?.urlData ?? {};
 
     const otherPlayer = await this.playerService.getPlayerForUser(targetUserId);
-    if (!otherPlayer) throw new ForbiddenException('Target player not found');
+    if (!otherPlayer) throw new NotFoundException('Target player not found');
 
     const stats = await this.statsService.getStatsForUser(targetUserId);
-    if (!stats) throw new ForbiddenException('Stats not found');
+    if (!stats) throw new NotFoundException('Stats not found');
 
     // tell the user they waved
     const playerPatches = await getPatchesAfterPropChanges<Player>(

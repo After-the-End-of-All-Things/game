@@ -1,12 +1,13 @@
 import { Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { IDiscoveries } from '@interfaces';
+import { IDiscoveries, IPlayerShowcase } from '@interfaces';
 import { Select } from '@ngxs/store';
 import { ContentService } from '@services/content.service';
 import { GameplayService } from '@services/gameplay.service';
-import { DiscoveriesStore } from '@stores';
+import { PlayerService } from '@services/player.service';
+import { DiscoveriesStore, PlayerStore } from '@stores';
 import { sum } from 'lodash';
-import { Observable } from 'rxjs';
+import { Observable, first } from 'rxjs';
 
 @Component({
   selector: 'app-collections',
@@ -16,6 +17,7 @@ import { Observable } from 'rxjs';
 export class CollectionsPage {
   private destroyRef = inject(DestroyRef);
   @Select(DiscoveriesStore.discoveries) discoveries$!: Observable<IDiscoveries>;
+  @Select(PlayerStore.playerShowcase) showcase$!: Observable<IPlayerShowcase>;
 
   public readonly collectibleUniqueMax = 10;
   public readonly collectibleTotalMax = 100;
@@ -30,7 +32,7 @@ export class CollectionsPage {
 
   public readonly allPortraits = Array(this.contentService.maxPortraits)
     .fill(0)
-    .map((_, i) => i);
+    .map((_, i) => i + 1);
 
   public readonly allBackgrounds = Array(this.contentService.maxBackgrounds)
     .fill(0)
@@ -65,6 +67,7 @@ export class CollectionsPage {
   constructor(
     private gameplayService: GameplayService,
     public contentService: ContentService,
+    private playerService: PlayerService,
   ) {}
 
   ionViewDidEnter() {
@@ -184,5 +187,27 @@ export class CollectionsPage {
 
   claimMonstersTotal() {
     this.gameplayService.claimMonstersTotal().subscribe();
+  }
+
+  showcaseCollectible(itemId: string) {
+    this.showcase$.pipe(first()).subscribe((showcase) => {
+      const collectibles = showcase.collectibles || [];
+      const index = collectibles.findIndex((c) => c === itemId);
+      const setValue = index === -1 ? itemId : undefined;
+      const setIndex = index === -1 ? collectibles.length : index;
+
+      this.playerService.changeShowcaseCollectible(setValue, setIndex);
+    });
+  }
+
+  showcaseItem(itemId: string) {
+    this.showcase$.pipe(first()).subscribe((showcase) => {
+      const items = showcase.items || [];
+      const index = items.findIndex((c) => c === itemId);
+      const setValue = index === -1 ? itemId : undefined;
+      const setIndex = index === -1 ? items.length : index;
+
+      this.playerService.changeShowcaseItem(setValue, setIndex);
+    });
   }
 }

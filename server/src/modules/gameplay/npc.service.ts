@@ -1,39 +1,35 @@
 import { TrackedStat, UserResponse } from '@interfaces';
 import { EntityManager } from '@mikro-orm/mongodb';
 import { AnalyticsService } from '@modules/content/analytics.service';
-import { ConstantsService } from '@modules/content/constants.service';
-import { ContentService } from '@modules/content/content.service';
 import { PlayerHelperService } from '@modules/content/playerhelper.service';
 import { Discoveries } from '@modules/discoveries/discoveries.schema';
 import { DiscoveriesService } from '@modules/discoveries/discoveries.service';
-import { FightService } from '@modules/fight/fight.service';
 import { Player } from '@modules/player/player.schema';
 import { PlayerService } from '@modules/player/player.service';
 import { StatsService } from '@modules/stats/stats.service';
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { getPatchesAfterPropChanges } from '@utils/patches';
-import { Logger } from 'nestjs-pino';
 
 @Injectable()
 export class NpcService {
   constructor(
     private readonly em: EntityManager,
-    private readonly logger: Logger,
     private readonly playerService: PlayerService,
     private readonly discoveriesService: DiscoveriesService,
     private readonly statsService: StatsService,
-    private readonly constantsService: ConstantsService,
-    private readonly contentService: ContentService,
     private readonly analyticsService: AnalyticsService,
     private readonly playerHelper: PlayerHelperService,
-    private readonly fights: FightService,
   ) {}
   async changeClass(userId: string): Promise<UserResponse> {
     const player = await this.playerService.getPlayerForUser(userId);
-    if (!player) throw new ForbiddenException('Player not found.');
+    if (!player) throw new NotFoundException('Player not found.');
 
     const newJob = player.action?.actionData.newJob;
-    if (!newJob) throw new ForbiddenException('New job not found.');
+    if (!newJob) throw new NotFoundException('New job not found.');
 
     const playerPatches = await getPatchesAfterPropChanges<Player>(
       player,
@@ -69,7 +65,7 @@ export class NpcService {
 
   async buyPortrait(userId: string): Promise<UserResponse> {
     const player = await this.playerService.getPlayerForUser(userId);
-    if (!player) throw new ForbiddenException('Player not found.');
+    if (!player) throw new NotFoundException('Player not found.');
 
     const { unlockSprite, unlockCost } =
       player.action?.actionData.npc.properties;
@@ -80,7 +76,7 @@ export class NpcService {
     const discoveries = await this.discoveriesService.getDiscoveriesForUser(
       userId,
     );
-    if (!discoveries) throw new ForbiddenException('Discoveries not found.');
+    if (!discoveries) throw new NotFoundException('Discoveries not found.');
 
     const playerPatches = await getPatchesAfterPropChanges<Player>(
       player,
@@ -114,7 +110,7 @@ export class NpcService {
 
   async buyBackground(userId: string): Promise<UserResponse> {
     const player = await this.playerService.getPlayerForUser(userId);
-    if (!player) throw new ForbiddenException('Player not found.');
+    if (!player) throw new NotFoundException('Player not found.');
 
     const { unlockBackground, unlockCost } =
       player.action?.actionData.npc.properties;
@@ -125,7 +121,7 @@ export class NpcService {
     const discoveries = await this.discoveriesService.getDiscoveriesForUser(
       userId,
     );
-    if (!discoveries) throw new ForbiddenException('Discoveries not found.');
+    if (!discoveries) throw new NotFoundException('Discoveries not found.');
 
     const playerPatches = await getPatchesAfterPropChanges<Player>(
       player,

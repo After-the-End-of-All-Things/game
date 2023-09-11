@@ -25,6 +25,7 @@ import {
   BadRequestException,
   ForbiddenException,
   Injectable,
+  NotFoundException,
 } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { getPatchesAfterPropChanges } from '@utils/patches';
@@ -49,10 +50,10 @@ export class ItemService {
 
   async takeItem(userId: string): Promise<UserResponse> {
     const player = await this.playerService.getPlayerForUser(userId);
-    if (!player) throw new ForbiddenException('Player not found');
+    if (!player) throw new NotFoundException('Player not found');
 
     const inventory = await this.inventoryService.getInventoryForUser(userId);
-    if (!inventory) throw new ForbiddenException('Inventory not found');
+    if (!inventory) throw new NotFoundException('Inventory not found');
 
     const isResource = player.action?.action === 'resource';
 
@@ -117,19 +118,19 @@ export class ItemService {
   }
 
   async sellItem(userId: string, instanceId: string): Promise<UserResponse> {
-    if (!instanceId) throw new ForbiddenException('Item instance not found!');
+    if (!instanceId) throw new NotFoundException('Item instance not found!');
 
     const player = await this.playerService.getPlayerForUser(userId);
-    if (!player) throw new ForbiddenException('Player not found');
+    if (!player) throw new NotFoundException('Player not found');
 
     const itemRef = await this.inventoryService.getInventoryItemForUser(
       userId,
       instanceId,
     );
-    if (!itemRef) throw new ForbiddenException('Item ref not found!');
+    if (!itemRef) throw new NotFoundException('Item ref not found!');
 
     const item = this.contentService.getItem(itemRef.itemId);
-    if (!item) throw new ForbiddenException('Item existence not found!');
+    if (!item) throw new NotFoundException('Item existence not found!');
 
     const coinsGained = itemValue(item);
     await this.inventoryService.removeInventoryItemForUser(userId, instanceId);
@@ -180,10 +181,10 @@ export class ItemService {
     instanceId: string,
   ): Promise<UserResponse> {
     const player = await this.playerService.getPlayerForUser(userId);
-    if (!player) throw new ForbiddenException('Player not found.');
+    if (!player) throw new NotFoundException('Player not found.');
 
     const inventory = await this.inventoryService.getInventoryForUser(userId);
-    if (!inventory) throw new ForbiddenException('Inventory not found.');
+    if (!inventory) throw new NotFoundException('Inventory not found.');
 
     const fight = await this.fights.getFightForUser(userId);
     if (fight)
@@ -193,13 +194,13 @@ export class ItemService {
       userId,
       instanceId,
     );
-    if (!item) throw new ForbiddenException('Inventory item not found.');
+    if (!item) throw new NotFoundException('Inventory item not found.');
 
     const itemRef = await this.contentService.getItem(item.itemId);
-    if (!itemRef) throw new ForbiddenException('Item ref not found.');
+    if (!itemRef) throw new NotFoundException('Item ref not found.');
 
     const job = await this.contentService.getJob(player.job);
-    if (!job) throw new ForbiddenException('Job not found.');
+    if (!job) throw new NotFoundException('Job not found.');
 
     if (
       !job.armorSlots[itemRef.type] &&
@@ -267,13 +268,13 @@ export class ItemService {
     instanceId: string,
   ): Promise<UserResponse> {
     const inventory = await this.inventoryService.getInventoryForUser(userId);
-    if (!inventory) throw new ForbiddenException('Inventory not found.');
+    if (!inventory) throw new NotFoundException('Inventory not found.');
 
     const item = await this.inventoryService.getInventoryItemForUser(
       userId,
       instanceId,
     );
-    if (!item) throw new ForbiddenException('Equipped item not found.');
+    if (!item) throw new NotFoundException('Equipped item not found.');
 
     item.isInUse = false;
     inventory.equippedItems = {
@@ -288,16 +289,16 @@ export class ItemService {
 
   async craftItem(userId: string, itemId: string): Promise<UserResponse> {
     const crafting = await this.craftingService.getCraftingForUser(userId);
-    if (!crafting) throw new ForbiddenException('Crafting not found.');
+    if (!crafting) throw new NotFoundException('Crafting not found.');
 
     const inventory = await this.inventoryService.getInventoryForUser(userId);
-    if (!inventory) throw new ForbiddenException('Inventory not found.');
+    if (!inventory) throw new NotFoundException('Inventory not found.');
 
     const recipe = this.contentService.getRecipe(itemId);
-    if (!recipe) throw new ForbiddenException('Recipe not found.');
+    if (!recipe) throw new NotFoundException('Recipe not found.');
 
     const item = this.contentService.getItem(itemId);
-    if (!item) throw new ForbiddenException('Craft item not found.');
+    if (!item) throw new NotFoundException('Craft item not found.');
 
     if (crafting.currentlyCrafting)
       throw new ForbiddenException('You are already crafting an item.');
@@ -371,22 +372,22 @@ export class ItemService {
 
   async takeCraftedItem(userId: string): Promise<UserResponse> {
     const crafting = await this.craftingService.getCraftingForUser(userId);
-    if (!crafting) throw new ForbiddenException('Crafting not found.');
+    if (!crafting) throw new NotFoundException('Crafting not found.');
 
     const inventory = await this.inventoryService.getInventoryForUser(userId);
-    if (!inventory) throw new ForbiddenException('Inventory not found.');
+    if (!inventory) throw new NotFoundException('Inventory not found.');
 
     const craftItem = crafting.currentlyCrafting;
-    if (!craftItem) throw new ForbiddenException('Crafting item not found.');
+    if (!craftItem) throw new NotFoundException('Crafting item not found.');
 
     const recipe = this.contentService.getRecipe(craftItem);
-    if (!recipe) throw new ForbiddenException('Recipe not found.');
+    if (!recipe) throw new NotFoundException('Recipe not found.');
 
     if (Date.now() < crafting.currentlyCraftingDoneAt)
       throw new ForbiddenException('Crafting not done yet.');
 
     const item = this.contentService.getItem(craftItem);
-    if (!item) throw new ForbiddenException('Crafted item not found.');
+    if (!item) throw new NotFoundException('Crafted item not found.');
 
     if (
       item.type !== 'resource' &&

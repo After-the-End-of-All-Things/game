@@ -6,7 +6,11 @@ import { DiscoveriesService } from '@modules/discoveries/discoveries.service';
 import { Player } from '@modules/player/player.schema';
 import { PlayerService } from '@modules/player/player.service';
 import { StatsService } from '@modules/stats/stats.service';
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { getPatchesAfterPropChanges } from '@utils/patches';
 import { Logger } from 'nestjs-pino';
@@ -29,7 +33,7 @@ export class TravelService {
     locationName: string,
   ): Promise<UserResponse> {
     const player = await this.playerService.getPlayerForUser(userId);
-    if (!player) throw new ForbiddenException('Player not found');
+    if (!player) throw new NotFoundException('Player not found');
 
     if (player.location.goingTo === locationName)
       throw new ForbiddenException(
@@ -43,10 +47,10 @@ export class TravelService {
       userId,
     );
 
-    if (!discoveries) throw new ForbiddenException('Discoveries not found');
+    if (!discoveries) throw new NotFoundException('Discoveries not found');
 
     const location = this.contentService.getLocation(locationName);
-    if (!location) throw new ForbiddenException('Location does not exist!');
+    if (!location) throw new NotFoundException('Location does not exist!');
 
     if (player.level < location.level)
       throw new ForbiddenException('You are not high enough level to go here!');
@@ -84,7 +88,7 @@ export class TravelService {
     locationName: string,
   ): Promise<UserResponse> {
     const player = await this.playerService.getPlayerForUser(userId);
-    if (!player) throw new ForbiddenException('Player not found');
+    if (!player) throw new NotFoundException('Player not found');
 
     if (player.location.current === locationName)
       throw new ForbiddenException('You are already here!');
@@ -92,7 +96,7 @@ export class TravelService {
     const discoveries = await this.discoveriesService.getDiscoveriesForUser(
       userId,
     );
-    if (!discoveries) throw new ForbiddenException('Discoveries not found');
+    if (!discoveries) throw new NotFoundException('Discoveries not found');
 
     const location = this.contentService.getLocation(locationName);
     if (!location) throw new ForbiddenException('Location does not exist!');

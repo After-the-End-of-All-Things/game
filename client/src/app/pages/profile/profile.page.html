@@ -1,0 +1,84 @@
+<ion-header [translucent]="true">
+  <app-header-bar></app-header-bar>
+</ion-header>
+
+<ion-content
+  [fullscreen]="true"
+  [style.--bg-image]="player.cosmetics.background.toString().padStart(4, '0')"
+>
+  <ion-header collapse="condense">
+    <app-header-bar></app-header-bar>
+  </ion-header>
+
+  <ng-container *ngIf="player">
+    <ion-card>
+      <app-hero
+        [background]="player.cosmetics.background"
+        [portrait]="player.cosmetics.portrait"
+        [level]="player.level"
+        [job]="player.job"
+        [username]="player.profile.displayName"
+        [discriminator]="player.profile.discriminator"
+        [tagline]="player.profile.shortBio"
+      ></app-hero>
+    </ion-card>
+
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>About</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>{{ player.profile.longBio }}</ion-card-content>
+    </ion-card>
+
+    <ion-row>
+      <ion-col>
+        <ion-card *ngIf="player.cosmetics.showcase.collectibles.length > 0">
+          <ion-card-header>
+            <ion-card-title>Collectible Showcase</ion-card-title>
+          </ion-card-header>
+
+          <ion-card-content>
+            <div
+              class="showcase-item"
+              *ngFor="let id of player.cosmetics.showcase.collectibles"
+            >
+              <app-item-display [itemId]="id"></app-item-display>
+            </div>
+          </ion-card-content>
+        </ion-card>
+
+        <ion-card *ngIf="player.cosmetics.showcase.items.length > 0">
+          <ion-card-header>
+            <ion-card-title>Equipment Showcase</ion-card-title>
+          </ion-card-header>
+
+          <ion-card-content>
+            <div
+              class="showcase-item"
+              *ngFor="let id of player.cosmetics.showcase.items"
+            >
+              <app-item-display [itemId]="id"></app-item-display>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+
+      <ion-col *ngIf="stats.length > 0">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Stats</ion-card-title>
+          </ion-card-header>
+
+          <ion-card-content>
+            <ion-list>
+              <ion-item *ngFor="let stat of stats">
+                <ion-label>{{ stat.name }}</ion-label>
+                <ion-label slot="end">{{ stat.value }}</ion-label>
+              </ion-item>
+            </ion-list>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ng-container>
+</ion-content>

@@ -1,6 +1,8 @@
 
 .hero-container {
+  position: relative;
   min-height: 230px;
+  height: var(--hero-height, 230px);
 
   display: flex;
   flex-direction: column;
@@ -38,11 +40,17 @@
     }
   }
 
-  .relevant-stats, .currencies {
+  .tagline {
+    margin-top: 24px;
+    font-style: italic;
+  }
+
+  .relevant-stats, .currencies, .tagline {
     text-align: center;
   }
 
-  .username, .discriminator, .level, .coins {
+  .username, .discriminator, .level, .coins, .tagline {
+    color: #fff;
     text-shadow: 1px 1px 0px #000, -1px -1px 0px #000, 1px -1px 0px #000, -1px 1px 0px #000;
   }
 }

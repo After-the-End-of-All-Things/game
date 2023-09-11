@@ -1,62 +1,47 @@
-<div
-  class="hero-container"
-  *ngIf="{
-    user: user$ | async,
-    player: player$ | async,
-    coins: playerCoins$ | async,
-    oats: playerOats$ | async
-  } as data"
->
-  <ng-container *ngIf="data.player?.cosmetics?.background as background">
-    <app-background-art
-      [sprite]="background"
-      *ngIf="background !== -1"
-    ></app-background-art>
-  </ng-container>
+<div class="hero-container">
+  <app-background-art
+    [sprite]="background"
+    *ngIf="background !== -1"
+  ></app-background-art>
 
-  <app-avatar [avatar]="data.player?.cosmetics?.portrait ?? 4"></app-avatar>
+  <app-avatar [avatar]="portrait"></app-avatar>
 
   <div class="user-info">
     <span class="username">
-      <app-store-text storeKey="user.user.username"></app-store-text>
+      {{ username }}
     </span>
 
-    <span class="discriminator">
-      #
-      <app-store-text storeKey="user.user.discriminator"></app-store-text>
-    </span>
+    <span class="discriminator">#{{ discriminator }}</span>
   </div>
 
   <div class="player-info">
     <div class="relevant-stats">
-      <span class="level">
-        Level {{ data.player?.level ?? 0 | number }} {{ data.player?.job }}
+      <span class="level">Level {{ level | number }} {{ job }}</span>
+    </div>
+
+    <div class="currencies" *ngIf="showCurrencies">
+      <span class="coins icon-and-text-container">
+        <app-game-icon
+          cssColor="#daa520"
+          [rounded]="true"
+          [backgroundColor]="background === -1 ? '' : '#000'"
+          icon="currency-coin"
+        ></app-game-icon>
+        {{ coins | number }} Coins
+      </span>
+      <span class="coins icon-and-text-container">
+        <app-game-icon
+          cssColor="#daa520"
+          [rounded]="true"
+          [backgroundColor]="background === -1 ? '' : '#000'"
+          icon="currency-oat"
+        ></app-game-icon>
+        {{ oats | number }} Oats
       </span>
     </div>
 
-    <div class="currencies">
-      <span class="coins icon-and-text-container">
-        <app-game-icon
-          cssColor="#daa520"
-          [rounded]="true"
-          [backgroundColor]="
-            data.player?.cosmetics?.background === -1 ? '' : '#000'
-          "
-          icon="currency-coin"
-        ></app-game-icon>
-        {{ data.coins ?? 0 | number }} Coins
-      </span>
-      <span class="coins icon-and-text-container">
-        <app-game-icon
-          cssColor="#daa520"
-          [rounded]="true"
-          [backgroundColor]="
-            data.player?.cosmetics?.background === -1 ? '' : '#000'
-          "
-          icon="currency-oat"
-        ></app-game-icon>
-        {{ data.oats ?? 0 | number }} Oats
-      </span>
+    <div class="tagline" *ngIf="tagline">
+      {{ tagline }}
     </div>
   </div>
 </div>

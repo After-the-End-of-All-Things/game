@@ -89,6 +89,11 @@ we love eating our oats
 
 - `INVENTORY_MAX_SIZE` - the maximum inventory size per player (default: 100)
 
+#### Showcase
+
+- `SHOWCASE_COLLECTIBLE_SLOTS` - the number of collectible slots in the showcase (default: 3)
+- `SHOWCASE_ITEM_SLOTS` - the number of item slots in the showcase (default: 3)
+
 ### Notes
 
 - Setup scripts must be non-mandatory (at this time).

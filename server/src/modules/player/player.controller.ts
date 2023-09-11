@@ -1,11 +1,14 @@
 import { UserResponse } from '@interfaces';
 import { JwtAuthGuard } from '@modules/auth/jwt.guard';
 import { DiscoveriesService } from '@modules/discoveries/discoveries.service';
+import { Player } from '@modules/player/player.schema';
 import { PlayerService } from '@modules/player/player.service';
 import {
   Body,
   Controller,
+  Get,
   NotFoundException,
+  Param,
   Patch,
   UseGuards,
 } from '@nestjs/common';
@@ -19,6 +22,15 @@ export class PlayerController {
     private readonly discoveriesService: DiscoveriesService,
     private readonly playerService: PlayerService,
   ) {}
+
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Get Specific Player Profile' })
+  @Get('profile/:id')
+  async getPlayerProfile(
+    @Param('id') id: string,
+  ): Promise<Partial<Player> | undefined> {
+    return this.playerService.getPlayerProfile(id);
+  }
 
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Change Player Tagline' })
@@ -95,5 +107,31 @@ export class PlayerController {
       user.userId,
       backgroundId,
     );
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Change Player Showcase Collectible/Slot' })
+  @Patch('showcase/collectible')
+  async changeShowcaseCollectible(
+    @User() user,
+    @Body('itemId') itemId: string,
+    @Body('slot') slot: number,
+  ): Promise<UserResponse> {
+    return this.playerService.updateShowcaseCollectibles(
+      user.userId,
+      itemId,
+      slot,
+    );
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Change Player Showcase Item/Slot' })
+  @Patch('showcase/item')
+  async changeShowcaseItem(
+    @User() user,
+    @Body('itemId') itemId: string,
+    @Body('slot') slot: number,
+  ): Promise<UserResponse> {
+    return this.playerService.updateShowcaseItems(user.userId, itemId, slot);
   }
 }

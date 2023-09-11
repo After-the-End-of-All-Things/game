@@ -48,7 +48,11 @@ import { Player } from '@modules/player/player.schema';
 import { PlayerService } from '@modules/player/player.service';
 import { StatsService } from '@modules/stats/stats.service';
 import { UserService } from '@modules/user/user.service';
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { getPatchesAfterPropChanges } from '@utils/patches';
 import { Operation } from 'fast-json-patch';
@@ -126,12 +130,12 @@ export class FightService {
     player: Player,
   ): Promise<IFightCharacter> {
     const user = await this.userService.findUserById(player.userId);
-    if (!user) throw new BadRequestException('User not found');
+    if (!user) throw new NotFoundException('User not found');
 
     const inventory = await this.inventoryService.getInventoryForUser(
       player.userId,
     );
-    if (!inventory) throw new BadRequestException('Inventory not found');
+    if (!inventory) throw new NotFoundException('Inventory not found');
 
     const totalStats = await this.playerService.getTotalStats(player);
     const totalResistances = await this.playerService.getTotalResistances(
@@ -270,7 +274,7 @@ export class FightService {
     await Promise.all(
       fight.involvedPlayers.map(async (playerId) => {
         const player = await this.playerService.getPlayerForUser(playerId);
-        if (!player) throw new BadRequestException('Player not found');
+        if (!player) throw new NotFoundException('Player not found');
 
         this.playerService.setPlayerAction(player, undefined);
 
@@ -344,13 +348,12 @@ export class FightService {
     await Promise.all(
       fight.involvedPlayers.map(async (playerId) => {
         const player = await this.playerService.getPlayerForUser(playerId);
-        if (!player) throw new BadRequestException('Player not found');
+        if (!player) throw new NotFoundException('Player not found');
 
         const discoveries = await this.discoveriesService.getDiscoveriesForUser(
           player.userId,
         );
-        if (!discoveries)
-          throw new BadRequestException('Discoveries not found');
+        if (!discoveries) throw new NotFoundException('Discoveries not found');
 
         if (fight.defenders.length > 0 && fight.attackers.length > 0) {
           await this.statsService.incrementStat(
@@ -427,7 +430,7 @@ export class FightService {
       fight.currentTurn,
     );
 
-    if (!currentCharacter) throw new BadRequestException('Character not found');
+    if (!currentCharacter) throw new NotFoundException('Character not found');
 
     this.logger.verbose(
       `Setting next turn for fight ${fight._id} - ${fight.currentTurn}`,
@@ -442,7 +445,7 @@ export class FightService {
       fight.currentTurn,
     );
 
-    if (!nextCharacter) throw new BadRequestException('Character not found');
+    if (!nextCharacter) throw new NotFoundException('Character not found');
 
     if (isDead(nextCharacter)) {
       this.logger.verbose(
@@ -461,7 +464,7 @@ export class FightService {
       fight.currentTurn,
     );
 
-    if (!nextCharacter) throw new BadRequestException('Character not found');
+    if (!nextCharacter) throw new NotFoundException('Character not found');
 
     if (isDead(nextCharacter)) {
       this.logger.verbose(
@@ -493,15 +496,15 @@ export class FightService {
     targetParams: ICombatTargetParams,
   ): Promise<void> {
     const fight = await this.getFightForUser(userId);
-    if (!fight) throw new BadRequestException('Fight not found');
+    if (!fight) throw new NotFoundException('Fight not found');
     if (!isActiveTurn(fight, userId))
       throw new BadRequestException('Not your turn');
 
     const action = this.contentService.getAbility(actionId);
-    if (!action) throw new BadRequestException('Action not found');
+    if (!action) throw new NotFoundException('Action not found');
 
     const character = getCharacterFromFightForUserId(fight, userId);
-    if (!character) throw new BadRequestException('Character not found');
+    if (!character) throw new NotFoundException('Character not found');
 
     this.logger.verbose(
       `Taking action ${action.name} for character ${character.characterId} in fight ${fight._id}`,
@@ -720,14 +723,14 @@ export class FightService {
     newTileCoordinates: { x: number; y: number },
   ): Promise<void> {
     const tile = getTileContainingCharacter(fight, character.characterId);
-    if (!tile) throw new BadRequestException('Tile not found');
+    if (!tile) throw new NotFoundException('Tile not found');
 
     const newTile = getTileAtPosition(
       fight,
       newTileCoordinates.x,
       newTileCoordinates.y,
     );
-    if (!newTile) throw new BadRequestException('New tile not found');
+    if (!newTile) throw new NotFoundException('New tile not found');
 
     const dist = distBetweenTiles(tile, newTile);
     if (dist > 1) throw new BadRequestException('Too far away');
@@ -787,7 +790,7 @@ export class FightService {
     await Promise.all(
       fight.involvedPlayers.map(async (playerId) => {
         const player = await this.playerService.getPlayerForUser(playerId);
-        if (!player) throw new BadRequestException('Player not found');
+        if (!player) throw new NotFoundException('Player not found');
 
         this.emit(playerId, {
           fight,

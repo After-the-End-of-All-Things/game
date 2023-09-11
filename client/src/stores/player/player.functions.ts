@@ -16,6 +16,7 @@ export const defaultStore: () => IPlayerStore = () => ({
     xp: 0,
     level: 1,
     job: 'Generalist',
+    userId: '',
 
     location: {
       current: '',
@@ -26,6 +27,7 @@ export const defaultStore: () => IPlayerStore = () => ({
 
     profile: {
       displayName: '',
+      discriminator: '',
       shortBio: '',
       longBio: '',
     },
@@ -41,7 +43,11 @@ export const defaultStore: () => IPlayerStore = () => ({
 
     cosmetics: {
       portrait: 4,
-      background: 0,
+      background: -1,
+      showcase: {
+        collectibles: [],
+        items: [],
+      },
     },
 
     currencies: {

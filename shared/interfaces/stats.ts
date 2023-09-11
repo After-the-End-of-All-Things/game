@@ -1,3 +1,5 @@
+import { IDiscoveries } from '@interfaces';
+
 export enum TrackedStat {
   WavesTo = 'wavesTo',
   WavesFrom = 'wavesFrom',
@@ -20,4 +22,11 @@ export enum TrackedStat {
 
 export interface IStats {
   stats: Partial<Record<TrackedStat, number>>;
+
+  location: string;
+  name: string;
+  discriminator: string;
+  portrait: number;
+  level: number;
+  discoveries: Partial<Record<keyof IDiscoveries, number>>;
 }

@@ -51,6 +51,9 @@ export class ConstantsService {
   public readonly findRateDivine: number = 2;
   public readonly findRateUnique: number = 1;
 
+  public readonly showcaseItemSlots: number = 3;
+  public readonly showcaseCollectibleSlots: number = 3;
+
   constructor(private readonly configService: ConfigService) {
     this.exploreSpeedMultiplier = +this.configService.get<number>(
       'EXPLORE_SPEED_MULTIPLIER',
@@ -216,6 +219,16 @@ export class ConstantsService {
     this.findRateUnique = +this.configService.get<number>(
       'FIND_RATE_UNIQUE',
       1,
+    );
+
+    this.showcaseItemSlots = +this.configService.get<number>(
+      'SHOWCASE_ITEM_SLOTS',
+      3,
+    );
+
+    this.showcaseCollectibleSlots = +this.configService.get<number>(
+      'SHOWCASE_COLLECTIBLE_SLOTS',
+      3,
     );
   }
 }

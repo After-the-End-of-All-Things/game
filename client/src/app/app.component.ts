@@ -2,7 +2,9 @@ import { Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { environment } from '@environment';
-import { Store } from '@ngxs/store';
+import { IPlayer, IUser } from '@interfaces';
+import { Select, Store } from '@ngxs/store';
+import { PlayerStore, UserStore } from '@stores';
 import { Observable, timer } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
 
@@ -21,6 +23,11 @@ interface IMenuItem {
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
+  @Select(UserStore.user) user$!: Observable<IUser>;
+  @Select(PlayerStore.player) player$!: Observable<IPlayer>;
+  @Select(PlayerStore.playerCoins) playerCoins$!: Observable<number>;
+  @Select(PlayerStore.playerOats) playerOats$!: Observable<number>;
+
   public appPages: IMenuItem[] = [
     {
       title: 'Home',

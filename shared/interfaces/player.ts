@@ -19,16 +19,25 @@ export interface IPlayerLocation {
 
 export interface IPlayerProfile {
   displayName: string;
+  discriminator: string;
   shortBio: string;
   longBio: string;
+}
+
+export interface IPlayerShowcase {
+  collectibles: string[];
+  items: string[];
 }
 
 export interface IPlayerCosmetics {
   portrait: number;
   background: number;
+  showcase: IPlayerShowcase;
 }
 
 export interface IPlayer {
+  userId: string;
+
   xp: number;
   level: number;
   stats: Record<Stat, number>;

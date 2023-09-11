@@ -38,37 +38,35 @@
               </ion-segment-button>
             </ion-segment>
 
-            <ng-container *ngIf="discoveries$ | async as discoveries">
-              <ng-container [ngSwitch]="selectedCategory">
-                <ng-container *ngSwitchCase="'collectibles'">
-                  <ng-container
-                    *ngTemplateOutlet="collectibles; context: { discoveries }"
-                  ></ng-container>
-                </ng-container>
+            <ng-container [ngSwitch]="selectedCategory">
+              <ng-container *ngSwitchCase="'collectibles'">
+                <ng-container
+                  *ngTemplateOutlet="collectibles; context: { discoveries: discoveries$ | async, showcase: showcase$ | async }"
+                ></ng-container>
+              </ng-container>
 
-                <ng-container *ngSwitchCase="'items'">
-                  <ng-container
-                    *ngTemplateOutlet="items; context: { discoveries }"
-                  ></ng-container>
-                </ng-container>
+              <ng-container *ngSwitchCase="'items'">
+                <ng-container
+                  *ngTemplateOutlet="items; context: { discoveries: discoveries$ | async, showcase: showcase$ | async }"
+                ></ng-container>
+              </ng-container>
 
-                <ng-container *ngSwitchCase="'monsters'">
-                  <ng-container
-                    *ngTemplateOutlet="monsters; context: { discoveries }"
-                  ></ng-container>
-                </ng-container>
+              <ng-container *ngSwitchCase="'monsters'">
+                <ng-container
+                  *ngTemplateOutlet="monsters; context: { discoveries: discoveries$ | async, showcase: showcase$ | async }"
+                ></ng-container>
+              </ng-container>
 
-                <ng-container *ngSwitchCase="'portraits'">
-                  <ng-container
-                    *ngTemplateOutlet="portraits; context: { discoveries }"
-                  ></ng-container>
-                </ng-container>
+              <ng-container *ngSwitchCase="'portraits'">
+                <ng-container
+                  *ngTemplateOutlet="portraits; context: { discoveries: discoveries$ | async, showcase: showcase$ | async }"
+                ></ng-container>
+              </ng-container>
 
-                <ng-container *ngSwitchCase="'backgrounds'">
-                  <ng-container
-                    *ngTemplateOutlet="backgrounds; context: { discoveries }"
-                  ></ng-container>
-                </ng-container>
+              <ng-container *ngSwitchCase="'backgrounds'">
+                <ng-container
+                  *ngTemplateOutlet="backgrounds; context: { discoveries: discoveries$ | async, showcase: showcase$ | async }"
+                ></ng-container>
               </ng-container>
             </ng-container>
           </ion-card-content>
@@ -78,7 +76,11 @@
   </ion-grid>
 </ion-content>
 
-<ng-template #collectibles let-discoveries="discoveries">
+<ng-template
+  #collectibles
+  let-discoveries="discoveries"
+  let-showcase="showcase"
+>
   <div class="collectibles">
     <ion-row class="unlocked">
       <ion-col>
@@ -197,39 +199,46 @@
       </ion-col>
     </ion-row>
 
+    <ion-row class="notice">
+      <ion-col>
+        You can click any discovered collectible to add it to your showcase!
+        Click it again to remove it.
+      </ion-col>
+    </ion-row>
+
     <ion-row class="collect-row">
       <ion-col
         class="collect-col"
         *ngFor="let collectible of allCollectibles; trackBy: trackBy"
-        [ngxTippy]="tooltip"
       >
-        <app-item-icon
-          [item]="collectible"
+        <app-item-display
           [class.uncollected]="!discoveries.collectibles?.[collectible.itemId]"
-        ></app-item-icon>
+          [class.cursor-pointer]="discoveries.collectibles?.[collectible.itemId]"
+          [class.showcased]="showcase?.collectibles?.includes(collectible.itemId)"
+          (click)="showcaseCollectible(collectible.itemId)"
+          [itemId]="collectible.itemId"
+        >
+          <ng-container tooltip>
+            <div *ngIf="discoveries.collectibles?.[collectible.itemId]">
+              <br />
+              <em>Found in {{ collectible.location }}</em>
+              <br />
+              <br />
+              <em>{{ collectible.description }}</em>
+            </div>
 
-        <ng-template #tooltip>
-          <strong>{{ collectible.name }}</strong>
-
-          <div *ngIf="discoveries.collectibles?.[collectible.itemId]">
-            <br />
-            <em>Found in {{ collectible.location }}</em>
-            <br />
-            <br />
-            <em>{{ collectible.description }}</em>
-          </div>
-
-          <div *ngIf="!discoveries.collectibles?.[collectible.itemId]">
-            <br />
-            <em>Not yet found</em>
-          </div>
-        </ng-template>
+            <div *ngIf="!discoveries.collectibles?.[collectible.itemId]">
+              <br />
+              <em>Not yet found</em>
+            </div>
+          </ng-container>
+        </app-item-display>
       </ion-col>
     </ion-row>
   </div>
 </ng-template>
 
-<ng-template #items let-discoveries="discoveries">
+<ng-template #items let-discoveries="discoveries" let-showcase="showcase">
   <div class="items">
     <ion-row class="unlocked">
       <ion-col>
@@ -346,26 +355,31 @@
       </ion-col>
     </ion-row>
 
+    <ion-row class="notice">
+      <ion-col>
+        You can click any discovered item to add it to your showcase! Click it
+        again to remove it.
+      </ion-col>
+    </ion-row>
+
     <ion-row class="collect-row">
       <ion-col
         class="collect-col"
         *ngFor="let item of allEquipment; trackBy: trackBy"
-        [ngxTippy]="tooltip"
       >
-        <app-item-icon
-          [item]="item"
+        <app-item-display
+          [itemId]="item.itemId"
           [class.uncollected]="!discoveries.items?.[item.itemId]"
-        ></app-item-icon>
-
-        <ng-template #tooltip>
-          <strong>{{ item.name }}</strong>
-        </ng-template>
+          [class.cursor-pointer]="discoveries.items?.[item.itemId]"
+          [class.showcased]="showcase?.items?.includes(item.itemId)"
+          (click)="showcaseItem(item.itemId)"
+        ></app-item-display>
       </ion-col>
     </ion-row>
   </div>
 </ng-template>
 
-<ng-template #monsters let-discoveries="discoveries">
+<ng-template #monsters let-discoveries="discoveries" let-showcase="showcase">
   <div class="items">
     <ion-row class="unlocked">
       <ion-col>
@@ -502,7 +516,7 @@
   </div>
 </ng-template>
 
-<ng-template #portraits let-discoveries="discoveries">
+<ng-template #portraits let-discoveries="discoveries" let-showcase="showcase">
   <div class="portraits">
     <ion-row class="unlocked">
       <ion-col>
@@ -533,7 +547,7 @@
   </div>
 </ng-template>
 
-<ng-template #backgrounds let-discoveries="discoveries">
+<ng-template #backgrounds let-discoveries="discoveries" let-showcase="showcase">
   <div class="backgrounds">
     <ion-row class="unlocked">
       <ion-col>

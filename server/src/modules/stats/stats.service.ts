@@ -5,8 +5,13 @@ import { Discoveries } from '@modules/discoveries/discoveries.schema';
 import { Player } from '@modules/player/player.schema';
 import { Stats } from '@modules/stats/stats.schema';
 import { UserService } from '@modules/user/user.service';
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
+import { leaderboardQueries } from '@utils/leaderboard-queries';
 import { Logger } from 'nestjs-pino';
 
 @Injectable()
@@ -49,9 +54,21 @@ export class StatsService {
     return stats;
   }
 
+  async getLeaderboardStatsForUser(
+    userId: string,
+  ): Promise<Array<{ name: string; value: string }>> {
+    const stats = await this.getStatsForUser(userId);
+    if (!stats) throw new NotFoundException('Stats not found');
+
+    return leaderboardQueries.map((query) => ({
+      name: query.singleUserName,
+      value: query.formatter(stats).value,
+    }));
+  }
+
   async incrementStat(userId: string, stat: TrackedStat, byValue = 1) {
     const stats = await this.getStatsForUser(userId);
-    if (!stats) throw new BadRequestException('Stats not found');
+    if (!stats) throw new NotFoundException('Stats not found');
 
     this.logger.verbose(
       `Incrementing stat ${stat} by ${byValue} for user ${userId}`,
@@ -66,10 +83,10 @@ export class StatsService {
   @OnEvent('sync.player')
   async syncPlayer(player: Player): Promise<void> {
     const stats = await this.getStatsForUser(player.userId);
-    if (!stats) throw new BadRequestException('Stats not found');
+    if (!stats) throw new NotFoundException('Stats not found');
 
     const user = await this.userService.findUserById(player.userId);
-    if (!user) throw new BadRequestException('User not found');
+    if (!user) throw new NotFoundException('User not found');
 
     stats.name = user.username;
     stats.discriminator = user.discriminator;
@@ -83,7 +100,7 @@ export class StatsService {
   @OnEvent('sync.discoveries')
   async syncDiscoveries(discoveries: Discoveries): Promise<void> {
     const stats = await this.getStatsForUser(discoveries.userId);
-    if (!stats) throw new BadRequestException('Stats not found');
+    if (!stats) throw new NotFoundException('Stats not found');
 
     stats.discoveries = {
       locations: Object.keys(discoveries.locations || {}).length,

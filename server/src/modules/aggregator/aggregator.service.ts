@@ -72,6 +72,13 @@ export class AggregatorService {
       };
     }
 
+    if (!user.player.profile.discriminator) {
+      user.player.profile = {
+        ...user.player.profile,
+        discriminator: user.user.discriminator,
+      };
+    }
+
     const equippedItems = user.inventory.equippedItems;
     await Promise.all(
       Object.keys(equippedItems).map(async (slot: ItemSlot) => {

@@ -9,7 +9,11 @@ import { FightService } from '@modules/fight/fight.service';
 import { Player } from '@modules/player/player.schema';
 import { PlayerService } from '@modules/player/player.service';
 import { StatsService } from '@modules/stats/stats.service';
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { getPatchesAfterPropChanges } from '@utils/patches';
 import { sample } from 'lodash';
 import { Logger } from 'nestjs-pino';
@@ -43,7 +47,7 @@ export class GameplayService {
 
   async explore(userId: string): Promise<UserResponse> {
     const player = await this.playerService.getPlayerForUser(userId);
-    if (!player) throw new ForbiddenException('Player not found');
+    if (!player) throw new NotFoundException('Player not found');
 
     const fight = await this.fights.getFightForUser(userId);
     if (fight) throw new ForbiddenException('Cannot explore while fighting');
@@ -59,7 +63,7 @@ export class GameplayService {
       userId,
     );
 
-    if (!discoveries) throw new ForbiddenException('Discoveries not found');
+    if (!discoveries) throw new NotFoundException('Discoveries not found');
 
     let foundLocation: ILocation | undefined;
 
@@ -252,7 +256,7 @@ export class GameplayService {
 
   async startFight(userId: string): Promise<UserResponse> {
     const player = await this.playerService.getPlayerForUser(userId);
-    if (!player) throw new ForbiddenException('Player not found');
+    if (!player) throw new NotFoundException('Player not found');
 
     const existingFight = await this.fights.getFightForUser(userId);
     if (existingFight)
@@ -260,7 +264,7 @@ export class GameplayService {
 
     const formationId = player.action?.actionData.formation.itemId;
     const formation = this.contentService.getFormation(formationId);
-    if (!formation) throw new ForbiddenException('Formation not found');
+    if (!formation) throw new NotFoundException('Formation not found');
 
     const fight = await this.fights.createPvEFightForSinglePlayer(
       player,

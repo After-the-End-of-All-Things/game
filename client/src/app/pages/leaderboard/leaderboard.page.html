@@ -28,7 +28,11 @@
           <ion-col>
             <div class="board-header">{{ board.title }}</div>
             <ion-list>
-              <ion-item *ngFor="let entry of board.data">
+              <ion-item
+                *ngFor="let entry of board.data"
+                class="cursor-pointer"
+                [routerLink]="['/profile', entry.userId]"
+              >
                 <app-avatar
                   size="small"
                   [padding]="0"

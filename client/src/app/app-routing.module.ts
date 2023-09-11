@@ -118,6 +118,13 @@ const routes: Routes = [
         (m) => m.LeaderboardPageModule,
       ),
   },
+  {
+    path: 'profile/:id',
+    canActivate: [AuthGuard],
+    data: { title: 'Profile' },
+    loadChildren: () =>
+      import('./pages/profile/profile.module').then((m) => m.ProfilePageModule),
+  },
 
   {
     path: '**',
@@ -128,7 +135,10 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
-    RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules }),
+    RouterModule.forRoot(routes, {
+      preloadingStrategy: PreloadAllModules,
+      bindToComponentInputs: true,
+    }),
   ],
   exports: [RouterModule],
 })

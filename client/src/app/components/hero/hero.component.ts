@@ -1,8 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import { IPlayer, IUser } from '@interfaces';
-import { Select } from '@ngxs/store';
-import { PlayerStore, UserStore } from '@stores';
-import { Observable } from 'rxjs';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-hero',
@@ -10,10 +6,19 @@ import { Observable } from 'rxjs';
   styleUrls: ['./hero.component.scss'],
 })
 export class HeroComponent implements OnInit {
-  @Select(UserStore.user) user$!: Observable<IUser>;
-  @Select(PlayerStore.player) player$!: Observable<IPlayer>;
-  @Select(PlayerStore.playerCoins) playerCoins$!: Observable<number>;
-  @Select(PlayerStore.playerOats) playerOats$!: Observable<number>;
+  @Input() public background = -1;
+  @Input({ required: true }) public portrait!: number;
+  @Input({ required: true }) public level!: number;
+  @Input({ required: true }) public job!: string;
+
+  @Input({ required: true }) public username!: string;
+  @Input({ required: true }) public discriminator!: string;
+
+  @Input() public tagline = '';
+
+  @Input() public showCurrencies = false;
+  @Input() public coins!: number;
+  @Input() public oats!: number;
 
   ngOnInit() {}
 }
