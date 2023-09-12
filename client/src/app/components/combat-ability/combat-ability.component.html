@@ -29,7 +29,7 @@
       </ion-badge>
 
       <ion-badge class="type" color="primary" *ngIf="ability.requiredEquipment">
-        {{ ability.requiredEquipment }}
+        {{ ability.requiredEquipment | titlecase }}
       </ion-badge>
 
       <ion-badge class="cd" color="secondary" *ngIf="ability.cooldown">
