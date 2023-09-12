@@ -17,6 +17,8 @@ export const defaultStore: () => IPlayerStore = () => ({
     level: 1,
     job: 'Generalist',
     userId: '',
+    otherJobLevels: {},
+    otherJobXp: {},
 
     location: {
       current: '',

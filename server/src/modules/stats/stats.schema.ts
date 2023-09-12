@@ -37,6 +37,9 @@ export class Stats implements IStats {
   level: number;
 
   @Property()
+  job: string;
+
+  @Property()
   discoveries: Partial<Record<keyof Discoveries, number>>;
 
   @Property()
@@ -47,6 +50,7 @@ export class Stats implements IStats {
 
     this.location = '';
     this.name = '';
+    this.job = '';
     this.discriminator = '';
     this.portrait = -1;
     this.level = 1;

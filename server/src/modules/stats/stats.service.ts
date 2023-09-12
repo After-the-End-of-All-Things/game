@@ -91,8 +91,12 @@ export class StatsService {
     stats.name = user.username;
     stats.discriminator = user.discriminator;
     stats.portrait = player.cosmetics.portrait;
-    stats.level = player.level;
     stats.location = player.location.current;
+
+    if (player.level > stats.level) {
+      stats.level = player.level;
+      stats.job = player.job;
+    }
 
     await this.em.flush();
   }

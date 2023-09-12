@@ -13,6 +13,7 @@ export const defaultStore: () => IStatsStore = () => ({
     discriminator: '',
     portrait: -1,
     level: 1,
+    job: '',
   },
 });
 

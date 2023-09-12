@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ChooseAvatarModalComponent } from '@components/modals/choose-avatar/choose-avatar.component';
 import { ChooseBackgroundComponent } from '@components/modals/choose-background/choose-background.component';
+import { xpForLevel } from '@helpers/xp';
 import { IEquipment, IPlayer, ItemSlot, Stat } from '@interfaces';
 import { AlertController, ModalController } from '@ionic/angular';
 import { Select } from '@ngxs/store';
@@ -21,6 +22,8 @@ export class MePage implements OnInit {
   @Select(InventoryStore.equipped) equipment$!: Observable<
     Record<ItemSlot, IEquipment>
   >;
+
+  public view: 'stats' | 'levels' = 'stats';
 
   public readonly stats = [
     {
@@ -66,6 +69,10 @@ export class MePage implements OnInit {
   ) {}
 
   ngOnInit() {}
+
+  changeView($event: any) {
+    this.view = $event.detail.value;
+  }
 
   async changePortrait(defaultPortrait: number) {
     const modal = await this.modal.create({
@@ -184,5 +191,34 @@ export class MePage implements OnInit {
     });
 
     await alert.present();
+  }
+
+  jobLevels(
+    player: IPlayer,
+  ): Array<{ name: string; level: number; xp: number; nextXp: number }> {
+    return [
+      {
+        name: player.job,
+        level: player.level,
+        xp: player.xp,
+        nextXp: this.nextLevelXp(player.level),
+      },
+      ...Object.keys(player.otherJobLevels).map((job) => {
+        return {
+          name: job,
+          level: player.otherJobLevels[job],
+          xp: player.otherJobXp[job],
+          nextXp: this.nextLevelXp(player.otherJobLevels[job]),
+        };
+      }),
+    ];
+  }
+
+  nextLevelXp(level: number) {
+    return xpForLevel(level + 1);
+  }
+
+  trackBy(index: number) {
+    return index;
   }
 }

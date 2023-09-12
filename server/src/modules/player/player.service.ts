@@ -14,6 +14,7 @@ import { InjectRepository } from '@mikro-orm/nestjs';
 import { ConstantsService } from '@modules/content/constants.service';
 import { ContentService } from '@modules/content/content.service';
 import { DiscoveriesService } from '@modules/discoveries/discoveries.service';
+import { Inventory } from '@modules/inventory/inventory.schema';
 import { InventoryService } from '@modules/inventory/inventory.service';
 import { NpcService } from '@modules/player/npc.service';
 import { Player } from '@modules/player/player.schema';
@@ -85,6 +86,7 @@ export class PlayerService {
       'location',
       'profile',
       'cosmetics',
+      'otherJobLevels',
     ]);
   }
 
@@ -613,5 +615,41 @@ export class PlayerService {
     if (!action) return;
 
     this.setPlayerAction(player, action);
+  }
+
+  changeJob(player: Player, currentJob: string, newJob: string) {
+    player.otherJobLevels = {
+      ...(player.otherJobLevels || {}),
+      [currentJob]: player.level,
+    };
+
+    player.otherJobXp = {
+      ...(player.otherJobXp || {}),
+      [currentJob]: player.xp,
+    };
+
+    const newJobLevel = player.otherJobLevels?.[newJob] ?? 1;
+    const newJobXp = player.otherJobXp?.[newJob] ?? 0;
+
+    player.job = newJob;
+    player.level = newJobLevel;
+    player.xp = newJobXp;
+
+    delete player.otherJobLevels?.[newJob];
+    delete player.otherJobXp?.[newJob];
+
+    this.events.emit('sync.player', player);
+  }
+
+  changeJobEquipment(inventory: Inventory, currentJob: string, newJob: string) {
+    const newJobEquipment = inventory.otherJobEquipment?.[newJob] || {};
+    inventory.otherJobEquipment = {
+      ...(inventory.otherJobEquipment || {}),
+      [currentJob]: inventory.equippedItems,
+    };
+
+    inventory.equippedItems = newJobEquipment;
+
+    delete inventory.otherJobEquipment?.[newJob];
   }
 }

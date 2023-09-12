@@ -71,4 +71,19 @@ export class ProfilePage implements OnInit {
   private leave() {
     this.router.navigate(['/me']);
   }
+
+  jobLevels(player: IPlayer): Array<{ name: string; level: number }> {
+    return [
+      {
+        name: player.job,
+        level: player.level,
+      },
+      ...Object.keys(player.otherJobLevels).map((job) => {
+        return {
+          name: job,
+          level: player.otherJobLevels[job],
+        };
+      }),
+    ];
+  }
 }

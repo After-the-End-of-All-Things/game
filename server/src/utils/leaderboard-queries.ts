@@ -10,14 +10,14 @@ const alwaysData = (data) => ({
 export const leaderboardQueries = [
   {
     name: 'Player: Highest Level',
-    singleUserName: 'Level',
+    singleUserName: 'Highest Level',
     query: { level: { $gt: 0 } },
-    fields: { ...alwaysFields, level: 1 },
+    fields: { ...alwaysFields, level: 1, job: 1 },
     params: { sort: { level: -1 }, limit: numPlayersPerCategory },
     formatter: (data) => {
       return {
         ...alwaysData(data),
-        value: `Lv. ${data.level.toLocaleString()}`,
+        value: `Lv. ${data.level.toLocaleString()} ${data.job || ''}`,
       };
     },
   },

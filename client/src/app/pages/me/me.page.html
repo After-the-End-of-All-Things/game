@@ -11,6 +11,28 @@
     *ngIf="{ player: player$ | async, equipment: equipment$ | async } as data"
   >
     <ion-row>
+      <ion-col>
+        <ion-card>
+          <ion-card-content>
+            <ion-segment
+              color="tertiary"
+              value="stats"
+              (ionChange)="changeView($event)"
+            >
+              <ion-segment-button value="stats">
+                <ion-label>{{ data.player?.job }} Stats</ion-label>
+              </ion-segment-button>
+
+              <ion-segment-button value="levels">
+                <ion-label>Job Levels</ion-label>
+              </ion-segment-button>
+            </ion-segment>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+
+    <ion-row *ngIf="view === 'stats'">
       <ion-col sizeSm="4" *ngFor="let stat of stats">
         <ion-card class="number-card center-title-card">
           <ion-card-header>
@@ -37,6 +59,37 @@
         </ion-card>
       </ion-col>
     </ion-row>
+
+    <ng-container *ngIf="data.player as player">
+      <ion-row *ngIf="view === 'levels'">
+        <ion-col
+          sizeSm="4"
+          *ngFor="let jobLevel of jobLevels(player); trackBy: trackBy"
+        >
+          <ion-card class="job-card number-card center-title-card">
+            <ion-card-header>
+              <ion-card-title>{{ jobLevel.name }}</ion-card-title>
+            </ion-card-header>
+
+            <ion-card-content>
+              <div class="number">
+                <span class="main-number">{{ jobLevel.level }}</span>
+              </div>
+
+              <div
+                class="xp"
+                [ngxTippy]="(jobLevel.xp | number) + ' / ' + (jobLevel.nextXp | number) + ' XP'"
+              >
+                <div
+                  class="current"
+                  [style.width]="(jobLevel.xp / jobLevel.nextXp * 100) + '%'"
+                ></div>
+              </div>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ng-container>
 
     <ion-row>
       <ion-col>

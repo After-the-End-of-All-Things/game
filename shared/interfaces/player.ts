@@ -44,6 +44,9 @@ export interface IPlayer {
   recharges: Record<RechargeableStat, number>;
   job: string;
 
+  otherJobLevels: Record<string, number>;
+  otherJobXp: Record<string, number>;
+
   currencies: Record<Currency, number>;
 
   location: IPlayerLocation;

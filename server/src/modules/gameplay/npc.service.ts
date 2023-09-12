@@ -4,6 +4,8 @@ import { AnalyticsService } from '@modules/content/analytics.service';
 import { PlayerHelperService } from '@modules/content/playerhelper.service';
 import { Discoveries } from '@modules/discoveries/discoveries.schema';
 import { DiscoveriesService } from '@modules/discoveries/discoveries.service';
+import { Inventory } from '@modules/inventory/inventory.schema';
+import { InventoryService } from '@modules/inventory/inventory.service';
 import { Player } from '@modules/player/player.schema';
 import { PlayerService } from '@modules/player/player.service';
 import { StatsService } from '@modules/stats/stats.service';
@@ -20,21 +22,30 @@ export class NpcService {
     private readonly em: EntityManager,
     private readonly playerService: PlayerService,
     private readonly discoveriesService: DiscoveriesService,
+    private readonly inventoryService: InventoryService,
     private readonly statsService: StatsService,
     private readonly analyticsService: AnalyticsService,
     private readonly playerHelper: PlayerHelperService,
   ) {}
+
   async changeClass(userId: string): Promise<UserResponse> {
     const player = await this.playerService.getPlayerForUser(userId);
     if (!player) throw new NotFoundException('Player not found.');
 
+    const inventory = await this.inventoryService.getInventoryForUser(
+      player.userId,
+    );
+    if (!inventory) throw new NotFoundException('Inventory not found.');
+
     const newJob = player.action?.actionData.newJob;
     if (!newJob) throw new NotFoundException('New job not found.');
+
+    const currentJob = player.job;
 
     const playerPatches = await getPatchesAfterPropChanges<Player>(
       player,
       async (playerRef) => {
-        playerRef.job = newJob;
+        this.playerService.changeJob(player, currentJob, newJob);
 
         this.playerService.setPlayerAction(playerRef, undefined);
 
@@ -51,8 +62,16 @@ export class NpcService {
       },
     );
 
+    const inventoryPatches = await getPatchesAfterPropChanges<Inventory>(
+      inventory,
+      async (inventoryRef) => {
+        this.playerService.changeJobEquipment(inventoryRef, currentJob, newJob);
+      },
+    );
+
     return {
       player: playerPatches,
+      inventory: inventoryPatches,
       actions: [
         {
           type: 'Notify',

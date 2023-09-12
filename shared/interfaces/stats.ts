@@ -25,6 +25,7 @@ export interface IStats {
 
   location: string;
   name: string;
+  job: string;
   discriminator: string;
   portrait: number;
   level: number;

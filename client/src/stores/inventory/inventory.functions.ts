@@ -25,6 +25,7 @@ export const defaultStore: () => IInventoryStore = () => ({
       accessory2: undefined,
       accessory3: undefined,
     },
+    otherJobEquipment: {},
     resources: {},
   },
   items: [],

@@ -24,6 +24,9 @@ export class Inventory implements IInventory {
   equippedItems: Record<ItemSlot, IEquipment | undefined>;
 
   @Property()
+  otherJobEquipment: Record<string, Record<ItemSlot, IEquipment | undefined>>;
+
+  @Property()
   resources: Record<string, number>;
 
   constructor(userId: string) {
@@ -41,6 +44,8 @@ export class Inventory implements IInventory {
       accessory2: undefined,
       accessory3: undefined,
     };
+
+    this.otherJobEquipment = {};
 
     this.resources = {};
   }
