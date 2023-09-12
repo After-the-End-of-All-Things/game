@@ -20,6 +20,7 @@ import { AppComponent } from './app.component';
 import { ErrorInterceptor } from './helpers/error.interceptor';
 
 import { BrowserModule } from '@angular/platform-browser';
+import { environment } from '@environment';
 import { DataGrabberInterceptor } from '@helpers/data-grabber.interceptor';
 import { ActionsService } from '@services/actions.service';
 import { AuthService } from '@services/auth.service';
@@ -100,6 +101,11 @@ export function getAuthToken() {
           metaService: MetaService,
         ) =>
         async () => {
+          const isProduction = environment.production;
+          if (!isProduction) {
+            document.body.classList.add('dev');
+          }
+
           await assetService.init();
           await contentService.init();
           await authService.init();

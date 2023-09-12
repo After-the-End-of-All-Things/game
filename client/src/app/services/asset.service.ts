@@ -28,6 +28,15 @@ export class AssetService {
   ) {}
 
   async init() {
+    const { setTotalAssetNumber, setCurrentAssetNumber, loadingStatusMessage } =
+      window as any;
+    let loaderRunningTotal = 0;
+
+    const incrementTotal = () => {
+      loaderRunningTotal++;
+      setCurrentAssetNumber(loaderRunningTotal);
+    };
+
     const manifest = await fetch(`${environment.assetsUrl}/manifest.json`);
     const manifestData = await manifest.json();
 
@@ -39,8 +48,18 @@ export class AssetService {
 
     this.maxBackgrounds = manifestData.assets.backgrounds.length;
 
+    setTotalAssetNumber(
+      this.maxBackgrounds +
+        manifestData.assets.spritesheetPQ.length +
+        manifestData.assets.spritesheetLQ.length +
+        manifestData.assets.spritesheetMQ.length +
+        manifestData.assets.spritesheetHQ.length,
+    );
+
     await Promise.all(
       manifestData.assets.backgrounds.map(async ({ name, path, hash }: any) => {
+        incrementTotal();
+
         const fullUrl = `${environment.assetsUrl}/${path}`;
 
         const oldImage = await this.backgroundImageService.getImageDataById(
@@ -48,6 +67,8 @@ export class AssetService {
         );
 
         if (!oldImage || oldImage.hash !== hash) {
+          loadingStatusMessage(`Downloading image: ${name}...`);
+
           const blob = await lastValueFrom(
             this.imageService.fetchImage(fullUrl),
           );
@@ -76,6 +97,8 @@ export class AssetService {
       qualitiesAndSheets.map(async ({ quality, sheets }) => {
         await Promise.all(
           sheets.map(async ({ name, path, hash }: any) => {
+            incrementTotal();
+
             const fullUrl = `${environment.assetsUrl}/${path}`;
 
             this.spritesheetUrlsByQuality[quality] = {};
@@ -83,6 +106,7 @@ export class AssetService {
             const oldImage = await this.imageService.getImageDataByUrl(fullUrl);
 
             if (!oldImage || oldImage.hash !== hash) {
+              loadingStatusMessage(`Downloading spritesheet: ${name}...`);
               const blob = await lastValueFrom(
                 this.imageService.fetchImage(fullUrl),
               );
@@ -102,6 +126,8 @@ export class AssetService {
         );
       }),
     );
+
+    loadingStatusMessage('All assets loaded!');
   }
 
   public getSpritesheetUrl(name: string, quality: string): string {
