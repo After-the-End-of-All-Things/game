@@ -65,7 +65,7 @@ export class IconComponent implements OnInit, OnChanges {
 
   private getSpriteLocation() {
     const divisor = 16;
-    const realSprite = this.sprite - 1;
+    const realSprite = this.sprite;
     const y = Math.floor(realSprite / divisor);
     const x = realSprite % divisor;
     return `-${x * 64}px -${y * 64}px`;
