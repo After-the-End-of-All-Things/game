@@ -220,7 +220,7 @@ export class MePage implements OnInit {
     ];
   }
 
-  getAbilities(
+  getBasicAbilities(
     player: IPlayer,
     equipment: Record<ItemSlot, IEquipment>,
   ): ICombatAbility[] {
@@ -236,6 +236,13 @@ export class MePage implements OnInit {
         .flat(),
     ];
 
+    return [...itemAbilities].filter(Boolean) as ICombatAbility[];
+  }
+
+  getJobAbilities(
+    player: IPlayer,
+    equipment: Record<ItemSlot, IEquipment>,
+  ): ICombatAbility[] {
     const jobAbilities = Object.values(this.contentService.abilities).filter(
       (ability) => {
         return (
@@ -245,9 +252,7 @@ export class MePage implements OnInit {
       },
     );
 
-    return [...itemAbilities, ...jobAbilities].filter(
-      Boolean,
-    ) as ICombatAbility[];
+    return [...jobAbilities].filter(Boolean) as ICombatAbility[];
   }
 
   nextLevelXp(level: number) {

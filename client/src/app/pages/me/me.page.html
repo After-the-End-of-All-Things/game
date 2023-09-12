@@ -24,7 +24,7 @@
               </ion-segment-button>
 
               <ion-segment-button value="abilities">
-                <ion-label>{{ data.player?.job }} Abilities</ion-label>
+                <ion-label>Your Abilities</ion-label>
               </ion-segment-button>
 
               <ion-segment-button value="levels">
@@ -67,10 +67,30 @@
     <ion-row *ngIf="view === 'abilities'">
       <ion-col>
         <ion-card>
+          <ion-card-header>
+            <ion-card-title>Basic Abilities</ion-card-title>
+          </ion-card-header>
+
           <ion-card-content>
             <ion-list *ngIf="data.player && data.equipment">
               <ion-item
-                *ngFor="let ability of getAbilities(data.player, data.equipment)"
+                *ngFor="let ability of getBasicAbilities(data.player, data.equipment)"
+              >
+                <app-combat-ability [ability]="ability"></app-combat-ability>
+              </ion-item>
+            </ion-list>
+          </ion-card-content>
+        </ion-card>
+
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Job Abilities</ion-card-title>
+          </ion-card-header>
+
+          <ion-card-content>
+            <ion-list *ngIf="data.player && data.equipment">
+              <ion-item
+                *ngFor="let ability of getJobAbilities(data.player, data.equipment)"
               >
                 <app-combat-ability [ability]="ability"></app-combat-ability>
               </ion-item>
