@@ -1,9 +1,7 @@
 <ion-row [class.cooling-down]="cooldownRemaining > 0">
-  <ion-col class="target-image">
-    <div class="target-image-container">
-      <ion-img
-        [src]="'assets/combat/targetting/' + imageName + '.png'"
-      ></ion-img>
+  <ion-col class="ability-image">
+    <div class="ability-image-container">
+      <app-icon spritesheet="skills" [sprite]="ability.sprite"></app-icon>
     </div>
   </ion-col>
 
@@ -45,9 +43,21 @@
       </span>
     </h3>
 
-    <p>
-      {{ ability.description }}
-      <strong>{{ abilityDamage() }} damage</strong>
-    </p>
+    <ion-row>
+      <ion-col class="target-image">
+        <div class="target-image-container">
+          <ion-img
+            [src]="'assets/combat/targetting/' + imageName + '.png'"
+          ></ion-img>
+        </div>
+      </ion-col>
+
+      <ion-col>
+        <p class="ability-desc">
+          {{ ability.description }}
+          <strong>{{ abilityDamage() }} damage</strong>
+        </p>
+      </ion-col>
+    </ion-row>
   </ion-col>
 </ion-row>

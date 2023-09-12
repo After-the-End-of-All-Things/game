@@ -1,13 +1,27 @@
 
 .target-image {
-  max-width: 64px;
+  max-width: 48px;
 
   .target-image-container {
-    margin-top: 20px;
-    max-height: 64px;
+    max-height: 48px;
     background-color: #ccc;
     border-color: #000;
   }
+}
+
+.ability-image {
+  max-width: 64px;
+  margin-right: 12px;
+
+  .ability-image-container {
+    margin-top: 20px;
+    max-height: 48px;
+    border-color: #000;
+  }
+}
+
+.ability-desc {
+  margin: 0;
 }
 
 .title {
