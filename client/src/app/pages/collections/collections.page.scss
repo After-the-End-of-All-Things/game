@@ -62,3 +62,25 @@ ion-avatar {
   margin-top: 8px;
   margin-bottom: 8px;
 }
+
+.number {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  &.total {
+    padding-bottom: 28px;
+    align-items: center;
+  }
+
+  .main-number {
+    display: flex;
+    justify-content: center;
+  }
+
+  .sub-number {
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 16px;
+  }
+}
