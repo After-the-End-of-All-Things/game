@@ -8,7 +8,7 @@ import {
   Stat,
 } from '@interfaces';
 import { Fight } from '@modules/fight/fight.schema';
-import { sample } from 'lodash';
+import { random, sample } from 'lodash';
 
 // calculation functions
 export function calculateAbilityDamage(
@@ -23,12 +23,14 @@ export function calculateAbilityDamage(
 
       if (stat === 'power') {
         const otherTough = Math.max(0, target.totalStats.toughness);
-        return Math.max(0, statBase - otherTough);
+        const baseValue = +random(-otherTough, statBase).toFixed(1);
+        return Math.max(0, baseValue);
       }
 
       if (stat === 'magic') {
         const otherResist = Math.max(0, target.totalStats.resistance);
-        return Math.max(0, statBase - otherResist);
+        const baseValue = +random(-otherResist, statBase).toFixed(1);
+        return Math.max(0, baseValue);
       }
 
       return statBase;
@@ -441,6 +443,16 @@ export function doDamageToTargetForAbility(
   const dealtDamage = +damage.toFixed(1);
 
   defender.health.current = Math.max(0, defender.health.current - dealtDamage);
+
+  if (dealtDamage === 0) {
+    addStatusMessage(
+      fight,
+      attacker.name,
+      `${attacker.name}'s attack against ${defender.name} was blocked! `,
+    );
+
+    return;
+  }
 
   addStatusMessage(
     fight,
