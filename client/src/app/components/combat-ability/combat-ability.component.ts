@@ -33,6 +33,8 @@ export class CombatAbilityComponent implements OnInit {
   ngOnInit() {}
 
   abilityDamage(): number {
+    if (!this.stats) return 0;
+
     return +Object.keys(this.ability.statScaling)
       .map(
         (stat) =>

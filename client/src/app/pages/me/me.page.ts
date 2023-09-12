@@ -2,7 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { ChooseAvatarModalComponent } from '@components/modals/choose-avatar/choose-avatar.component';
 import { ChooseBackgroundComponent } from '@components/modals/choose-background/choose-background.component';
 import { xpForLevel } from '@helpers/xp';
-import { IEquipment, IPlayer, ItemSlot, Stat } from '@interfaces';
+import {
+  ICombatAbility,
+  IEquipment,
+  IPlayer,
+  ItemSlot,
+  Stat,
+} from '@interfaces';
 import { AlertController, ModalController } from '@ionic/angular';
 import { Select } from '@ngxs/store';
 import { AuthService } from '@services/auth.service';
@@ -23,7 +29,7 @@ export class MePage implements OnInit {
     Record<ItemSlot, IEquipment>
   >;
 
-  public view: 'stats' | 'levels' = 'stats';
+  public view: 'stats' | 'abilities' | 'levels' = 'stats';
 
   public readonly stats = [
     {
@@ -212,6 +218,36 @@ export class MePage implements OnInit {
         };
       }),
     ];
+  }
+
+  getAbilities(
+    player: IPlayer,
+    equipment: Record<ItemSlot, IEquipment>,
+  ): ICombatAbility[] {
+    const itemAbilities = [
+      this.contentService.getAbilityByName('Unarmed Attack'),
+      ...Object.values(equipment)
+        .filter(Boolean)
+        .map((item) => {
+          return (item.abilities ?? [])
+            .map((ability) => this.contentService.getAbility(ability))
+            .flat();
+        })
+        .flat(),
+    ];
+
+    const jobAbilities = Object.values(this.contentService.abilities).filter(
+      (ability) => {
+        return (
+          ability.requiredJob === player.job &&
+          ability.requiredLevel <= player.level
+        );
+      },
+    );
+
+    return [...itemAbilities, ...jobAbilities].filter(
+      Boolean,
+    ) as ICombatAbility[];
   }
 
   nextLevelXp(level: number) {

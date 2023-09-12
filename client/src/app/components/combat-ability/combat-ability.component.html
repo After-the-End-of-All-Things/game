@@ -62,7 +62,9 @@
       <ion-col>
         <p class="ability-desc">
           {{ ability.description }}
-          <strong>{{ abilityDamage() }} damage</strong>
+          <strong *ngIf="abilityDamage() as abilityDamage">
+            {{ abilityDamage }} damage
+          </strong>
         </p>
       </ion-col>
     </ion-row>

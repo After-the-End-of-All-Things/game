@@ -23,6 +23,10 @@
                 <ion-label>{{ data.player?.job }} Stats</ion-label>
               </ion-segment-button>
 
+              <ion-segment-button value="abilities">
+                <ion-label>{{ data.player?.job }} Abilities</ion-label>
+              </ion-segment-button>
+
               <ion-segment-button value="levels">
                 <ion-label>Job Levels</ion-label>
               </ion-segment-button>
@@ -55,6 +59,22 @@
               <span class="main-number">{{ getMainNumber(value) }}</span>
               <span class="sub-number">{{ getSubNumber(value) }}</span>
             </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+
+    <ion-row *ngIf="view === 'abilities'">
+      <ion-col>
+        <ion-card>
+          <ion-card-content>
+            <ion-list *ngIf="data.player && data.equipment">
+              <ion-item
+                *ngFor="let ability of getAbilities(data.player, data.equipment)"
+              >
+                <app-combat-ability [ability]="ability"></app-combat-ability>
+              </ion-item>
+            </ion-list>
           </ion-card-content>
         </ion-card>
       </ion-col>
