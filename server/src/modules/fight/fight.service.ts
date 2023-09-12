@@ -548,6 +548,14 @@ export class FightService {
     }
   }
 
+  canUseAbility(character: IFightCharacter, ability: ICombatAbility): boolean {
+    if (!ability.requiredEquipment) return true;
+
+    return Object.values(character.equipment || {}).some((item) => {
+      return item.type === ability.requiredEquipment;
+    });
+  }
+
   async handleAbility(
     fight: Fight,
     character: IFightCharacter,
@@ -564,6 +572,8 @@ export class FightService {
     if (!isValidTarget(fight, character, action, targetParams)) {
       throw new BadRequestException('Invalid target');
     }
+    if (!this.canUseAbility(character, action))
+      throw new BadRequestException('Cannot use this ability');
 
     addAbilityElementsToFight(fight, action);
     applyAbilityCooldown(character, action);

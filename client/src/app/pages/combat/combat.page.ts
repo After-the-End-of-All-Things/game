@@ -144,8 +144,9 @@ export class CombatPage implements OnInit {
     ) as ICombatAbility[];
   }
 
-  selectAbility(ability: ICombatAbility) {
-    if (this.myCharacter.cooldowns[ability.itemId] > 0) return;
+  selectAbility(character: IFightCharacter, ability: ICombatAbility) {
+    if (character.cooldowns[ability.itemId] > 0) return;
+    if (!this.canUseAbility(character, ability)) return;
 
     this.selectedAbility = ability;
     this.staticSelectedTiles = {};
@@ -153,6 +154,14 @@ export class CombatPage implements OnInit {
     this.abilitiesModal.dismiss();
 
     this.chooseSelectedTiles(ability);
+  }
+
+  canUseAbility(char: IFightCharacter, ability: ICombatAbility): boolean {
+    if (!ability.requiredEquipment) return true;
+
+    return Object.values(char.equipment || {}).some((item) => {
+      return item.type === ability.requiredEquipment;
+    });
   }
 
   findTileWithCharacter(characterId: string): [number, number] | undefined {
@@ -324,7 +333,7 @@ export class CombatPage implements OnInit {
     const moveAction = this.contentService.getAbilityByName('Move');
     if (!moveAction) return;
 
-    this.selectAbility(moveAction);
+    this.selectAbility(this.myCharacter, moveAction);
   }
 
   finalizeAction(targetParams: ICombatTargetParams) {

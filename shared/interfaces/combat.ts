@@ -1,4 +1,9 @@
-import { IEquipment, IMonsterReward, ItemSlot } from '@interfaces';
+import {
+  EquipmentType,
+  IEquipment,
+  IMonsterReward,
+  ItemSlot,
+} from '@interfaces';
 import { Element, Stat } from './buildingblocks';
 
 export type ICombatAbilityTargetting = 'Creature' | 'Ground' | 'Self';
@@ -31,6 +36,7 @@ export interface ICombatAbility {
   requiresTileSelection: boolean;
   restrictTileSelectionToUserSide: boolean;
   description: string;
+  requiredEquipment?: EquipmentType;
   requiredJob: string;
   requiredLevel: number;
   specialAction?: string;

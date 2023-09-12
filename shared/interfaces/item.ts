@@ -15,7 +15,9 @@ export type Weapon =
 
 export type Accessory = 'jewelry' | 'wrist' | 'hands' | 'ammo' | 'back';
 
-export type ItemType = Armor | Weapon | Accessory | 'collectible' | 'resource';
+export type EquipmentType = Armor | Weapon | Accessory;
+
+export type ItemType = EquipmentType | 'collectible' | 'resource';
 
 export type ItemSlot =
   | 'body'

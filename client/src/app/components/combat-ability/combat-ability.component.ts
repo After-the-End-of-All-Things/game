@@ -10,6 +10,7 @@ export class CombatAbilityComponent implements OnInit {
   @Input() ability!: ICombatAbility;
   @Input() stats!: Record<Stat, number>;
   @Input() cooldownRemaining = 0;
+  @Input() disabled = false;
 
   public get imageName() {
     const pattern = this.ability.pattern.toLowerCase();

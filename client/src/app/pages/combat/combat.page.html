@@ -181,12 +181,13 @@
           lines="none"
           class="ability"
           *ngFor="let ability of getAbilities()"
-          (click)="selectAbility(ability)"
+          (click)="selectAbility(myCharacter, ability)"
         >
           <app-combat-ability
             [ability]="ability"
             [stats]="myCharacter.totalStats"
             [cooldownRemaining]="myCharacter.cooldowns[ability.itemId]"
+            [disabled]="!canUseAbility(myCharacter, ability)"
           ></app-combat-ability>
         </ion-item>
       </ion-list>
