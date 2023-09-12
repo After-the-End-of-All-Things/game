@@ -537,9 +537,7 @@
         class="collect-col"
         *ngFor="let portrait of allPortraits; trackBy: trackBy"
       >
-        <ion-avatar
-          [class.uncollected]="!discoveries.portraits?.[portrait - 1]"
-        >
+        <ion-avatar [class.uncollected]="!discoveries.portraits?.[portrait]">
           <app-icon spritesheet="portraits" [sprite]="portrait"></app-icon>
         </ion-avatar>
       </ion-col>

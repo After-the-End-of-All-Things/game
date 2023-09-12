@@ -32,7 +32,7 @@ export class CollectionsPage {
 
   public readonly allPortraits = Array(this.contentService.maxPortraits)
     .fill(0)
-    .map((_, i) => i + 1);
+    .map((_, i) => i);
 
   public readonly allBackgrounds = Array(this.contentService.maxBackgrounds)
     .fill(0)

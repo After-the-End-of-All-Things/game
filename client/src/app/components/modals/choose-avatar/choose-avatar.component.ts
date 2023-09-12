@@ -27,10 +27,10 @@ export class ChooseAvatarModalComponent implements OnInit {
   ngOnInit() {
     this.userService.getDiscoveries().subscribe(({ discoveries }: any) => {
       const portraits = discoveries.portraits || {};
-      this.selectablePortraits = Object.keys(portraits).map((x) => +x + 1);
+      this.selectablePortraits = Object.keys(portraits).map((x) => +x);
     });
 
-    this.selectedPortrait = this.defaultPortrait + 1;
+    this.selectedPortrait = this.defaultPortrait;
   }
 
   selectPortrait(portrait: number) {
@@ -43,6 +43,6 @@ export class ChooseAvatarModalComponent implements OnInit {
       return;
     }
 
-    this.modalCtrl.dismiss(this.selectedPortrait - 1);
+    this.modalCtrl.dismiss(this.selectedPortrait);
   }
 }
