@@ -17,6 +17,7 @@ import {
   IMonster,
   IPlayer,
   IUser,
+  Stat,
 } from '@interfaces';
 import { AlertController, IonModal } from '@ionic/angular';
 import { Select, Store } from '@ngxs/store';
@@ -24,6 +25,7 @@ import { ContentService } from '@services/content.service';
 import { FightService } from '@services/fight.service';
 import { FightStore, PlayerStore, UserStore } from '@stores';
 import { ChangePage } from '@stores/user/user.actions';
+import { mean, sum } from 'lodash';
 import { Observable, combineLatest } from 'rxjs';
 
 @Component({
@@ -367,5 +369,52 @@ export class CombatPage implements OnInit {
     });
 
     await confirm.present();
+  }
+
+  hitChance(character: IFightCharacter): number {
+    if (!this.selectedAbility) return 0;
+
+    const elementMultiplier =
+      1 +
+      sum(
+        this.selectedAbility.elements.map(
+          (el) => this.fight.generatedElements[el] ?? 0,
+        ),
+      ) *
+        0.05;
+
+    const me = this.myCharacter;
+    return mean(
+      Object.keys(this.selectedAbility.statScaling)
+        .filter(
+          (stat) => (this.selectedAbility?.statScaling[stat as Stat] ?? 0) > 0,
+        )
+        .map((stat) => ({
+          stat,
+          value: (me.baseStats[stat as Stat] ?? 0) * elementMultiplier,
+        }))
+        .filter(({ value }) => value > 0)
+        .map(({ stat, value }) => {
+          switch (stat) {
+            case 'power': {
+              const otherTough = Math.max(
+                character.baseStats[Stat.Toughness] ?? 0,
+              );
+              return value / (value + otherTough);
+            }
+
+            case 'magic': {
+              const otherResist = Math.max(
+                character.baseStats[Stat.Resistance] ?? 0,
+              );
+              return value / (value + otherResist);
+            }
+
+            default: {
+              return 1;
+            }
+          }
+        }),
+    );
   }
 }

@@ -153,6 +153,39 @@
   }
 }
 
+.hit-chance {
+  position: absolute;
+  top: -24px;
+  width: 100%;
+  left: 0;
+  right: 0;
+  text-align: center;
+  background-color: #000;
+  color: #fff;
+  border-radius: 8px;
+
+  &.unlikely {
+    background-color: #800000;
+    border: 1px solid #fff;
+  }
+
+  &.possibly {
+    background-color: #83831c;
+    border: 1px solid #fff;
+  }
+
+  &.likely {
+    background-color: #00b93e;
+    border: 1px solid #fff;
+  }
+
+  &.certain {
+    background-color: #6505b4;
+    border: 1px solid #fff;
+  }
+
+}
+
 .health-bar {
   position: absolute;
   top: 0;

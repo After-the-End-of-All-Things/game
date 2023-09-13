@@ -106,6 +106,21 @@
                   </ng-template>
                 </div>
 
+                <ng-container
+                  *ngIf="selectedAbility && col.x > 3 && fightCharacters[char].health.current > 0"
+                >
+                  <div
+                    class="hit-chance"
+                    *ngIf="hitChance(fightCharacters[char]) as chance"
+                    [class.unlikely]="chance < 0.2"
+                    [class.possibly]="chance >= 0.2 && chance < 0.5"
+                    [class.likely]="chance >= 0.5 && chance < 0.8"
+                    [class.certain]="chance >= 0.8"
+                  >
+                    {{ chance | percent }}
+                  </div>
+                </ng-container>
+
                 <div
                   class="avatar-container"
                   [class.dead]="fightCharacters[char].health.current <= 0"
