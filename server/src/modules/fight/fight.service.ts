@@ -112,6 +112,12 @@ export class FightService {
       return null;
     }
 
+    if (didAttackersWinFight(fight)) {
+      this.logger.log(`Fight ${fight._id} is over; removing...`);
+      await this.removeFight(fight);
+      return null;
+    }
+
     return fight;
   }
 
