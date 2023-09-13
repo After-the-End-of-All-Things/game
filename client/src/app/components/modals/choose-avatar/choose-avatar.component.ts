@@ -16,7 +16,7 @@ export class ChooseAvatarModalComponent implements OnInit {
 
   public readonly allPortraits = Array(this.contentService.maxPortraits)
     .fill(0)
-    .map((_, i) => i + 1);
+    .map((_, i) => i);
 
   constructor(
     private modalCtrl: ModalController,
