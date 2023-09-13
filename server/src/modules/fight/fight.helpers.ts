@@ -15,58 +15,51 @@ export function calculateAbilityDamage(
   ability: ICombatAbility,
   character: IFightCharacter,
   target: IFightCharacter,
-  bonusDamage = 0,
-): number {
-  return +Object.keys(ability.statScaling)
-    .map((stat: Stat) => {
-      const statBase =
-        (ability.statScaling?.[stat] ?? 0) * character.totalStats[stat];
-
-      const totalStat = statBase + bonusDamage;
-
-      if (stat === 'power') {
-        const otherTough = Math.max(0, target.totalStats.toughness);
-        const baseValue = +random(-otherTough, totalStat).toFixed(1);
-        return Math.max(0, baseValue);
-      }
-
-      if (stat === 'magic') {
-        const otherResist = Math.max(0, target.totalStats.resistance);
-        const baseValue = +random(-otherResist, totalStat).toFixed(1);
-        return Math.max(0, baseValue);
-      }
-
-      return totalStat;
-    })
-    .reduce((a, b) => a + b, 0)
-    .toFixed(1);
-}
-
-export function calculateAbilityDamageWithElements(
   elements: Record<Element, number>,
-  ability: ICombatAbility,
-  character: IFightCharacter,
-  target: IFightCharacter,
 ): number {
-  const damage = calculateAbilityDamage(ability, character, target);
-
-  const elementDamage = Math.max(
+  return Math.max(
     0,
-    Object.keys(elements)
-      .map((element) => {
-        const elementTotal = elements?.[element as Element] ?? 0;
-        if (elementTotal === 0) return 0;
+    +Object.keys(ability.statScaling)
+      .map((stat: Stat) => {
+        const statBase =
+          (ability.statScaling?.[stat] ?? 0) * character.totalStats[stat];
 
-        const resistance = target.totalResistances[element as Element] ?? 1;
-        const baseDamage = damage * resistance;
-        const elementDamageTotal = baseDamage * (elementTotal * 0.05);
+        const elementDamage = Math.max(
+          0,
+          Object.keys(elements)
+            .map((element) => {
+              const elementTotal = elements?.[element as Element] ?? 0;
+              if (elementTotal === 0) return 0;
 
-        return elementDamageTotal;
+              const resistance =
+                target.totalResistances[element as Element] ?? 1;
+              const baseDamage = statBase * resistance;
+              const elementDamageTotal = baseDamage * (elementTotal * 0.05);
+
+              return elementDamageTotal;
+            })
+            .reduce((a, b) => a + b, 0),
+        );
+
+        const totalStat = statBase + elementDamage;
+
+        if (stat === 'power') {
+          const otherTough = Math.max(0, target.totalStats.toughness);
+          const baseValue = +random(-otherTough, totalStat).toFixed(1);
+          return Math.max(0, baseValue);
+        }
+
+        if (stat === 'magic') {
+          const otherResist = Math.max(0, target.totalStats.resistance);
+          const baseValue = +random(-otherResist, totalStat).toFixed(1);
+          return Math.max(0, baseValue);
+        }
+
+        return totalStat;
       })
-      .reduce((a, b) => a + b, 0),
+      .reduce((a, b) => a + b, 0)
+      .toFixed(1),
   );
-
-  return Math.max(0, damage + elementDamage);
 }
 
 export function distBetweenTiles(tileA: IFightTile, tileB: IFightTile): number {

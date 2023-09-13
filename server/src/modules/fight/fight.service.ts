@@ -19,7 +19,7 @@ import {
   addAbilityElementsToFight,
   addStatusMessage,
   applyAbilityCooldown,
-  calculateAbilityDamageWithElements,
+  calculateAbilityDamage,
   clearStatusMessage,
   didAttackersWinFight,
   distBetweenTiles,
@@ -618,18 +618,15 @@ export class FightService {
     if (!this.canUseAbility(character, action))
       throw new BadRequestException('Cannot use this ability');
 
-    addAbilityElementsToFight(fight, action);
-    applyAbilityCooldown(character, action);
-
     const targets = getTargetsForAbility(fight, action, targetParams);
     await Promise.all(
       targets.map(async (target) => {
         for (let i = 0; i < action.hits; i++) {
-          const damage = calculateAbilityDamageWithElements(
-            fight.generatedElements,
+          const damage = calculateAbilityDamage(
             action,
             character,
             target,
+            fight.generatedElements,
           );
 
           doDamageToTargetForAbility(fight, character, target, damage);
@@ -668,6 +665,9 @@ export class FightService {
         }
       }),
     );
+
+    addAbilityElementsToFight(fight, action);
+    applyAbilityCooldown(character, action);
 
     this.logger.verbose(
       `Handling ability ${action.name} for character ${character.characterId} in fight ${fight._id}`,
