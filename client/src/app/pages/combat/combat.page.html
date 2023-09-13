@@ -188,6 +188,7 @@
             [stats]="myCharacter.totalStats"
             [cooldownRemaining]="myCharacter.cooldowns[ability.itemId]"
             [disabled]="!canUseAbility(myCharacter, ability)"
+            [elements]="fight.generatedElements"
           ></app-combat-ability>
         </ion-item>
       </ion-list>

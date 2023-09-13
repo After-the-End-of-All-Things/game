@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ICombatAbility, Stat } from '@interfaces';
+import { Element, ICombatAbility, Stat } from '@interfaces';
+import { sum } from 'lodash';
 
 @Component({
   selector: 'app-combat-ability',
@@ -11,6 +12,7 @@ export class CombatAbilityComponent implements OnInit {
   @Input() stats!: Record<Stat, number>;
   @Input() cooldownRemaining = 0;
   @Input() disabled = false;
+  @Input() elements: Partial<Record<Element, number>> = {};
 
   public get imageName() {
     const pattern = this.ability.pattern.toLowerCase();
@@ -32,6 +34,12 @@ export class CombatAbilityComponent implements OnInit {
 
   ngOnInit() {}
 
+  elementMultiplier(): number {
+    return (
+      1 + sum(this.ability.elements.map((el) => this.elements[el] ?? 0)) * 0.05
+    );
+  }
+
   abilityDamage(): number {
     if (!this.stats) return 0;
 
@@ -39,7 +47,8 @@ export class CombatAbilityComponent implements OnInit {
       .map(
         (stat) =>
           (this.ability.statScaling?.[stat as Stat] ?? 0) *
-          this.stats[stat as Stat],
+          this.stats[stat as Stat] *
+          this.elementMultiplier(),
       )
       .reduce((a, b) => a + b * Math.max(this.ability.hits, 1), 0)
       .toFixed(1);
