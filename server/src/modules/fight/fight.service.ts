@@ -104,7 +104,7 @@ export class FightService {
       fight,
       fight.currentTurn,
     );
-    if (!currentTurnCharacter || !currentTurnCharacter.characterId) {
+    if (!currentTurnCharacter || !currentTurnCharacter.userId) {
       this.logger.log(
         `Fight ${fight._id} has no valid current turn player; removing...`,
       );

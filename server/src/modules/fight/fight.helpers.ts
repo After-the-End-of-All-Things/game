@@ -273,8 +273,6 @@ export function isValidTarget(
 ): boolean {
   const { targetting, pattern, targetInOrder } = action;
 
-  console.log(targetting, pattern, targetInOrder, targetParams);
-
   const { tile, characterIds } = targetParams;
   if (!tile && !characterIds) return false;
 
