@@ -78,7 +78,7 @@ export class ProfilePage implements OnInit {
         name: player.job,
         level: player.level,
       },
-      ...Object.keys(player.otherJobLevels).map((job) => {
+      ...Object.keys(player.otherJobLevels || {}).map((job) => {
         return {
           name: job,
           level: player.otherJobLevels[job],
