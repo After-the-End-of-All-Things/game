@@ -56,7 +56,7 @@ import {
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { getPatchesAfterPropChanges } from '@utils/patches';
 import { Operation } from 'fast-json-patch';
-import { sample, sampleSize, sum } from 'lodash';
+import { random, sample, sampleSize, sum } from 'lodash';
 import { Logger } from 'nestjs-pino';
 import { v4 as uuid } from 'uuid';
 
@@ -276,7 +276,9 @@ export class FightService {
         const player = await this.playerService.getPlayerForUser(playerId);
         if (!player) throw new NotFoundException('Player not found');
 
-        this.playerService.setPlayerAction(player, undefined);
+        if (player.action?.action === 'fight') {
+          this.playerService.setPlayerAction(player, undefined);
+        }
 
         this.emit(playerId, {
           fight: null,
@@ -341,8 +343,27 @@ export class FightService {
       coinDelta = coinsGained;
     }
 
+    const randomDropPossibility = sample(
+      fight.defenders.map((c) => c.killRewards?.items ?? []).flat(),
+    );
+
+    let randomDrop;
+
+    if (
+      randomDropPossibility &&
+      random(0, 100) <= randomDropPossibility.chance
+    ) {
+      randomDrop = this.contentService.getItem(randomDropPossibility.item);
+      addStatusMessage(fight, 'Fight', `You found "${randomDrop.name}"!`);
+    }
+
+    await this.updateFightForAllPlayers(fight);
+    await delayTime(1000);
+
     this.logger.verbose(
-      `Fight ${fight._id} rewarded ${xpDelta} XP and ${coinDelta} coins.`,
+      `Fight ${fight._id} rewarded ${xpDelta} XP and ${coinDelta} coins and ${
+        randomDrop?.item ?? 'no'
+      } item drop.`,
     );
 
     await Promise.all(
@@ -372,6 +393,18 @@ export class FightService {
           async (player) => {
             this.playerHelperService.gainXp(player, xpDelta);
             this.playerHelperService.gainCoins(player, coinDelta);
+
+            if (isWin && randomDrop) {
+              this.playerService.setPlayerAction(player, {
+                text: 'Take',
+                action: 'fightreward',
+                actionData: {
+                  item: randomDrop,
+                },
+                url: 'gameplay/item/take',
+                urlData: {},
+              });
+            }
           },
         );
 
