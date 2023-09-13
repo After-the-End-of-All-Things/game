@@ -41,7 +41,7 @@ export class CombatAbilityComponent implements OnInit {
           (this.ability.statScaling?.[stat as Stat] ?? 0) *
           this.stats[stat as Stat],
       )
-      .reduce((a, b) => a + b, 0)
+      .reduce((a, b) => a + b * Math.max(this.ability.hits, 1), 0)
       .toFixed(1);
   }
 }

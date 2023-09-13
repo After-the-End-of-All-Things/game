@@ -613,9 +613,8 @@ export class FightService {
       throw new BadRequestException('Not high enough level');
     if (character.cooldowns[action.itemId])
       throw new BadRequestException('Ability is on cooldown');
-    if (!isValidTarget(fight, character, action, targetParams)) {
+    if (!isValidTarget(fight, character, action, targetParams))
       throw new BadRequestException('Invalid target');
-    }
     if (!this.canUseAbility(character, action))
       throw new BadRequestException('Cannot use this ability');
 
@@ -625,44 +624,46 @@ export class FightService {
     const targets = getTargetsForAbility(fight, action, targetParams);
     await Promise.all(
       targets.map(async (target) => {
-        const damage = calculateAbilityDamageWithElements(
-          fight.generatedElements,
-          action,
-          character,
-          target,
-        );
-
-        doDamageToTargetForAbility(fight, character, target, damage);
-
-        if (target.userId) {
-          await this.statsService.incrementStat(
-            target.userId,
-            'combatAttacksReceived' as TrackedStat,
-            1,
+        for (let i = 0; i < action.hits; i++) {
+          const damage = calculateAbilityDamageWithElements(
+            fight.generatedElements,
+            action,
+            character,
+            target,
           );
 
-          if (isDead(target)) {
+          doDamageToTargetForAbility(fight, character, target, damage);
+
+          if (target.userId) {
             await this.statsService.incrementStat(
               target.userId,
-              'combatDeaths' as TrackedStat,
+              'combatAttacksReceived' as TrackedStat,
               1,
             );
+
+            if (isDead(target)) {
+              await this.statsService.incrementStat(
+                target.userId,
+                'combatDeaths' as TrackedStat,
+                1,
+              );
+            }
           }
-        }
 
-        if (target.monsterId && character.userId) {
-          await this.statsService.incrementStat(
-            character.userId,
-            'combatAttacksGiven' as TrackedStat,
-            1,
-          );
-
-          if (isDead(target)) {
+          if (target.monsterId && character.userId) {
             await this.statsService.incrementStat(
               character.userId,
-              'combatKills' as TrackedStat,
+              'combatAttacksGiven' as TrackedStat,
               1,
             );
+
+            if (isDead(target)) {
+              await this.statsService.incrementStat(
+                character.userId,
+                'combatKills' as TrackedStat,
+                1,
+              );
+            }
           }
         }
       }),

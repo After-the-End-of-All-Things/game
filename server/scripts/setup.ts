@@ -8,6 +8,9 @@ const getData = async () => {
     fs.writeJsonSync('./content.json', json);
 
     console.log('Data fetched and saved to ./content.json');
+    console.log(
+      `Data last updated: ${json.meta.buildDate} (${json.meta.hash})`,
+    );
   } catch (e) {
     console.error(e);
   }

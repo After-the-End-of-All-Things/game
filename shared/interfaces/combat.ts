@@ -31,6 +31,7 @@ export interface ICombatAbility {
   cooldown: number;
   targetting: ICombatAbilityTargetting;
   pattern: ICombatAbilityPattern;
+  hits: number;
   targetInOrder: boolean;
   restrictToUserSide: boolean;
   requiresTileSelection: boolean;
