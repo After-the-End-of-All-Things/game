@@ -170,6 +170,10 @@ export class ContentService {
     return this.monsters[monster];
   }
 
+  public allAbilities(): ICombatAbility[] {
+    return Object.values(this.abilities);
+  }
+
   public getAbility(ability: string): ICombatAbility | undefined {
     return this.abilities[ability];
   }

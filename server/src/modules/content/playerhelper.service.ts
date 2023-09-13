@@ -1,12 +1,16 @@
 import { xpForLevel } from '@helpers/xp';
-import { Currency } from '@interfaces';
+import { Currency, ICombatAbility } from '@interfaces';
+import { ContentService } from '@modules/content/content.service';
 import { Player } from '@modules/player/player.schema';
 import { Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 
 @Injectable()
 export class PlayerHelperService {
-  constructor(private events: EventEmitter2) {}
+  constructor(
+    private contentService: ContentService,
+    private events: EventEmitter2,
+  ) {}
 
   gainXp(player: Player, xp = 1) {
     player.xp = Math.max(0, player.xp + xp);
@@ -49,6 +53,18 @@ export class PlayerHelperService {
     return this.hasCurrency(player, amount, 'coins' as Currency);
   }
 
+  private abilitiesLearnedAtLevelForJob(
+    job: string,
+    level: number,
+  ): ICombatAbility[] {
+    return this.contentService
+      .allAbilities()
+      .filter(
+        (ability) =>
+          ability.requiredLevel === level && ability.requiredJob === job,
+      );
+  }
+
   private attemptLevelUpForPlayer(player: Player) {
     const requiredXp = xpForLevel(player.level + 1);
     if (player.xp < requiredXp) return;
@@ -58,11 +74,23 @@ export class PlayerHelperService {
 
     this.events.emit('sync.player', player);
 
+    const newAbilities = this.abilitiesLearnedAtLevelForJob(
+      player.job,
+      player.level,
+    );
+
+    const newAbilitiesString =
+      newAbilities.length > 0
+        ? `You have learned the following abilities: ${newAbilities
+            .map((ability) => `"${ability.name}"`)
+            .join(', ')}`
+        : ``;
+
     this.events.emit('notification.create', {
       userId: player.userId,
       notification: {
         liveAt: new Date(),
-        text: `You have reached level ${player.level}!`,
+        text: `You have reached level ${player.level}! ${newAbilitiesString}`,
         actions: [],
       },
       expiresAfterHours: 1,
