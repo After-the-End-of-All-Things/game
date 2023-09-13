@@ -83,14 +83,41 @@ export class ContentService {
   constructor(private assetService: AssetService) {}
 
   public async init() {
-    const version = await fetch(`${environment.contentUrl}/version.json`);
+    try {
+      await this.loadServerContent();
+      console.log(`Loaded content from server; skipping global content load.`);
+    } catch {
+      console.error(
+        `Could not load server content; server may be down. Loading global content instead.`,
+      );
+
+      await this.loadGlobalContent();
+    }
+  }
+
+  private async loadServerContent() {
+    await this.loadContent(
+      `${environment.apiUrl}/game/content/version`,
+      `${environment.apiUrl}/game/content`,
+    );
+  }
+
+  private async loadGlobalContent() {
+    await this.loadContent(
+      `${environment.contentUrl}/version.json`,
+      `${environment.contentUrl}/content.json`,
+    );
+  }
+
+  private async loadContent(versionUrl: string, contentUrl: string) {
+    const version = await fetch(versionUrl);
     const versionData = await version.json();
 
     const oldVersion = localStorage.getItem('contentVersion');
     const localContent = localStorage.getItem('content');
 
     if (oldVersion !== versionData.hash || !localContent) {
-      const content = await fetch(`${environment.contentUrl}/content.json`);
+      const content = await fetch(contentUrl);
       const contentData = await content.json();
 
       this.content = contentData;

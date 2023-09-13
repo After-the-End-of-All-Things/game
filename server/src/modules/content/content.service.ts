@@ -29,6 +29,7 @@ export class ContentService {
   }
 
   public content = {
+    meta: {},
     locations: {},
     jobs: {},
     collectibles: {},
