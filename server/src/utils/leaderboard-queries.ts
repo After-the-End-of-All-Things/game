@@ -17,7 +17,7 @@ export const leaderboardQueries = [
     formatter: (data) => {
       return {
         ...alwaysData(data),
-        value: `Lv. ${data.level.toLocaleString()} ${data.job || ''}`,
+        value: `Lv. ${data.level?.toLocaleString() ?? '???'} ${data.job || ''}`,
       };
     },
   },
@@ -98,7 +98,7 @@ export const leaderboardQueries = [
     formatter: (data) => {
       return {
         ...alwaysData(data),
-        value: data.stats?.[stat]?.toLocaleString() || '0',
+        value: data.stats?.[stat]?.toLocaleString() ?? '0',
       };
     },
   })),
