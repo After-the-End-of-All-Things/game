@@ -368,8 +368,10 @@ export class FightService {
       }
     }
 
-    await this.updateFightForAllPlayers(fight);
-    await delayTime(1000);
+    if (isWin && fight.defenders.length > 0) {
+      await this.updateFightForAllPlayers(fight);
+      await delayTime(1000);
+    }
 
     this.logger.verbose(
       `Fight ${fight._id} rewarded ${xpDelta} XP and ${coinDelta} coins and ${

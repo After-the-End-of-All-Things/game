@@ -222,26 +222,27 @@
 
   .ability-modal {
     --padding-top: 16px;
-  }
-}
+    --overflow: hidden;
 
-.ability-list {
-  --ion-background-color: transparent;
-  --ion-item-background: transparent;
-  overflow-y: auto;
-  max-height: 555px;
-  padding-bottom: 20px !important;
+    .ability-list {
+      --ion-background-color: transparent;
+      --ion-item-background: transparent;
+      overflow-y: auto;
+      max-height: 555px;
+      padding-bottom: 20px !important;
 
 
-  .ability {
-    cursor: pointer;
+      .ability {
+        cursor: pointer;
 
-    &:hover {
-      background: #222;
-    }
+        &:hover {
+          background: #222;
+        }
 
-    app-combat-ability {
-      width: 100%;
+        app-combat-ability {
+          width: 100%;
+        }
+      }
     }
   }
 }
