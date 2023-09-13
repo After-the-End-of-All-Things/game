@@ -55,7 +55,9 @@
           </ion-card-content>
         </ion-card>
 
-        <ion-card *ngIf="player.cosmetics.showcase.collectibles.length > 0">
+        <ion-card
+          *ngIf="(player.cosmetics.showcase.collectibles?.length ?? 0) > 0"
+        >
           <ion-card-header>
             <ion-card-title>Collectible Showcase</ion-card-title>
           </ion-card-header>
@@ -70,7 +72,7 @@
           </ion-card-content>
         </ion-card>
 
-        <ion-card *ngIf="player.cosmetics.showcase.items.length > 0">
+        <ion-card *ngIf="(player.cosmetics.showcase.items?.length ?? 0) > 0">
           <ion-card-header>
             <ion-card-title>Equipment Showcase</ion-card-title>
           </ion-card-header>
