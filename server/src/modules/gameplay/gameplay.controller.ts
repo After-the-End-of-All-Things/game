@@ -16,10 +16,11 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
+import { isProduction } from '@utils/isprod';
 import { User } from '@utils/user.decorator';
 
 @ApiBearerAuth()
-@Throttle({ default: { limit: 1, ttl: 1000 } })
+@Throttle({ default: { limit: isProduction() ? 1 : 100, ttl: 1000 } })
 @Controller('gameplay')
 export class GameplayController {
   constructor(

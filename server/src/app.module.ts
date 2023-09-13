@@ -23,6 +23,7 @@ import { FightModule } from '@modules/fight/fight.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { JwtModule } from '@nestjs/jwt';
 import { HttpExceptionFilter } from '@utils/http-exception.filter';
+import { isProduction } from '@utils/isprod';
 import { AggregatorModule } from './modules/aggregator/aggregator.module';
 import { CraftingModule } from './modules/crafting/crafting.module';
 import { EventsModule } from './modules/events/events.module';
@@ -66,7 +67,7 @@ const logLevel = process.env.LOG_LEVEL || 'trace';
     ThrottlerModule.forRoot({
       throttlers: [
         {
-          limit: 1,
+          limit: isProduction() ? 1 : 100,
           ttl: 1000,
         },
       ],
