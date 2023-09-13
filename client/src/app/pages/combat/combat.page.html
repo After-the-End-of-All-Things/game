@@ -79,67 +79,66 @@
                 [class.small]="col.containedCharacters.length > 1"
                 *ngFor="let char of col.containedCharacters"
               >
-                <div
-                  class="health-bar"
-                  *ngIf="fightCharacters[char].health.current > 0"
-                >
+                <ng-container *ngIf="fightCharacters[char] as character">
+                  <div class="health-bar" *ngIf="character.health.current > 0">
+                    <div
+                      class="current-health"
+                      [style.width]="(character.health.current / character.health.max * 100) + '%'"
+                    ></div>
+                  </div>
+
                   <div
-                    class="current-health"
-                    [style.width]="(fightCharacters[char].health.current / fightCharacters[char].health.max * 100) + '%'"
-                  ></div>
-                </div>
-
-                <div
-                  class="letter-container"
-                  [ngxTippy]="fightCharacters[char].name"
-                  *ngIf="fightCharacters[char].health.current > 0"
-                >
-                  <ion-badge
-                    color="light"
-                    *ngIf="getMonsterLetter(fightCharacters[char]) as letter; else player"
+                    class="letter-container"
+                    [ngxTippy]="character.name"
+                    *ngIf="character.health.current > 0"
                   >
-                    {{ letter }}
-                  </ion-badge>
+                    <ion-badge
+                      color="light"
+                      *ngIf="getMonsterLetter(character) as letter; else player"
+                    >
+                      {{ letter }}
+                    </ion-badge>
 
-                  <ng-template #player>
-                    <ion-badge color="light">?</ion-badge>
-                  </ng-template>
-                </div>
+                    <ng-template #player>
+                      <ion-badge color="light">?</ion-badge>
+                    </ng-template>
+                  </div>
 
-                <ng-container
-                  *ngIf="selectedAbility && col.x > 3 && fightCharacters[char].health.current > 0"
-                >
+                  <ng-container
+                    *ngIf="selectedAbility && col.x > 3 && character.health.current > 0"
+                  >
+                    <div
+                      class="hit-chance"
+                      *ngIf="hitChance(character) as chance"
+                      [class.unlikely]="chance < 0.2"
+                      [class.possibly]="chance >= 0.2 && chance < 0.5"
+                      [class.likely]="chance >= 0.5 && chance < 0.8"
+                      [class.certain]="chance >= 0.8"
+                    >
+                      {{ chance | percent }}
+                    </div>
+                  </ng-container>
+
                   <div
-                    class="hit-chance"
-                    *ngIf="hitChance(fightCharacters[char]) as chance"
-                    [class.unlikely]="chance < 0.2"
-                    [class.possibly]="chance >= 0.2 && chance < 0.5"
-                    [class.likely]="chance >= 0.5 && chance < 0.8"
-                    [class.certain]="chance >= 0.8"
+                    class="avatar-container"
+                    [class.dead]="character.health.current <= 0"
                   >
-                    {{ chance | percent }}
+                    <app-avatar
+                      *ngIf="character.userId"
+                      [avatar]="character.sprite"
+                      size="small"
+                      [padding]="0"
+                      [noScale]="true"
+                      [active]="isMyCharacterActive && !selectedAbility"
+                    ></app-avatar>
+
+                    <app-monster-icon
+                      *ngIf="character.monsterId as monsterId"
+                      [monster]="getMonster(monsterId)"
+                      [active]="fight.currentTurn === char"
+                    ></app-monster-icon>
                   </div>
                 </ng-container>
-
-                <div
-                  class="avatar-container"
-                  [class.dead]="fightCharacters[char].health.current <= 0"
-                >
-                  <app-avatar
-                    *ngIf="fightCharacters[char].userId"
-                    [avatar]="fightCharacters[char].sprite"
-                    size="small"
-                    [padding]="0"
-                    [noScale]="true"
-                    [active]="isMyCharacterActive && !selectedAbility"
-                  ></app-avatar>
-
-                  <app-monster-icon
-                    *ngIf="fightCharacters[char].monsterId as monsterId"
-                    [monster]="getMonster(monsterId)"
-                    [active]="fight.currentTurn === char"
-                  ></app-monster-icon>
-                </div>
               </div>
             </div>
           </div>

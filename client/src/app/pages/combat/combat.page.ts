@@ -223,6 +223,15 @@ export class CombatPage implements OnInit {
         return staticSelectedTiles;
       }
 
+      case 'AllCreatures': {
+        for (let y = 0; y < 4; y++) {
+          for (let x = 4; x < 8; x++) {
+            staticSelectedTiles[`${x}-${y}`] = true;
+          }
+        }
+        return staticSelectedTiles;
+      }
+
       default:
         return pattern satisfies never;
     }
@@ -283,6 +292,19 @@ export class CombatPage implements OnInit {
         });
         return;
       }
+
+      case 'Ground': {
+        return;
+      }
+
+      case 'AllCreatures': {
+        this.drawPatternAroundCenter(0, 0, ability);
+        return;
+      }
+
+      default: {
+        return ability.targetting satisfies never;
+      }
     }
   }
 
@@ -318,10 +340,18 @@ export class CombatPage implements OnInit {
     if (!this.selectedAbility) return;
 
     if (this.isTileActive(x, y)) {
-      const targetArgs =
+      let targetArgs =
         this.selectedAbility.targetting === 'Creature'
           ? { characterIds: tile.containedCharacters }
           : { tile: { x, y } };
+
+      if (this.selectedAbility.targetting === 'AllCreatures') {
+        targetArgs = {
+          characterIds: this.fight.defenders.map(
+            (defender) => defender.characterId,
+          ),
+        };
+      }
 
       this.fightService
         .takeAction(this.selectedAbility.itemId, targetArgs)

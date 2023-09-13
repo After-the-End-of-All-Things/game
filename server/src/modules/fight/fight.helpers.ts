@@ -180,6 +180,15 @@ export function getTargettedTilesForPattern(
       return staticSelectedTiles;
     }
 
+    case 'AllCreatures': {
+      for (let y = 0; y < 4; y++) {
+        for (let x = 4; x < 8; x++) {
+          staticSelectedTiles[`${x}-${y}`] = true;
+        }
+      }
+      return staticSelectedTiles;
+    }
+
     default:
       return pattern satisfies never;
   }
@@ -212,6 +221,15 @@ export function getTargetsForAbility(
     }
 
     case 'Self': {
+      const { characterIds } = targetParams;
+      if (!characterIds) return [];
+
+      return characterIds
+        .map((id) => getCharacterFromFightForCharacterId(fight, id))
+        .filter(Boolean) as IFightCharacter[];
+    }
+
+    case 'AllCreatures': {
       const { characterIds } = targetParams;
       if (!characterIds) return [];
 
@@ -254,6 +272,8 @@ export function isValidTarget(
   targetParams: ICombatTargetParams,
 ): boolean {
   const { targetting, pattern, targetInOrder } = action;
+
+  console.log(targetting, pattern, targetInOrder, targetParams);
 
   const { tile, characterIds } = targetParams;
   if (!tile && !characterIds) return false;
@@ -514,6 +534,17 @@ export function getTargetsForAIAbility(
 
     case 'Self': {
       return { characterIds: [attacker.characterId] };
+    }
+
+    case 'AllCreatures': {
+      const validTargets = oppositeSide.filter((c) => {
+        const tile = getTileContainingCharacter(fight, c.characterId);
+        if (!tile) return false;
+
+        return !isDead(c);
+      });
+
+      return { characterIds: validTargets.map((t) => t.characterId) };
     }
 
     default:

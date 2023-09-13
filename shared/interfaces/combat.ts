@@ -6,14 +6,19 @@ import {
 } from '@interfaces';
 import { Element, Stat } from './buildingblocks';
 
-export type ICombatAbilityTargetting = 'Creature' | 'Ground' | 'Self';
+export type ICombatAbilityTargetting =
+  | 'Creature'
+  | 'Ground'
+  | 'Self'
+  | 'AllCreatures';
 
 export type ICombatAbilityPattern =
   | 'Single'
   | 'Cross'
   | 'CrossNoCenter'
   | 'ThreeVertical'
-  | 'TwoHorizontal';
+  | 'TwoHorizontal'
+  | 'AllCreatures';
 
 export interface ICombatTargetParams {
   tile?: {
