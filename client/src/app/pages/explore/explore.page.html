@@ -353,7 +353,8 @@
                     *ngIf="visualService.xp$ | async as xp"
                   >
                     <strong *ngIf="xp < 0">Level up!</strong>
-                    <span *ngIf="xp > 0">+{{ xp | number }} XP</span>
+                    <span></span>
+                    <span *ngIf="xp > 0">+ {{ xp | number }} XP</span>
                   </span>
                 </span>
 
@@ -362,8 +363,10 @@
                     class="coin-value"
                     *ngIf="visualService.coin$ | async as coin"
                   >
-                    <span *ngIf="coin > 0">+</span>
-                    {{ coin | number }} Coins
+                    <span>
+                      <span *ngIf="coin > 0">+</span>
+                      {{ coin | number }} Coins
+                    </span>
                   </span>
                 </span>
               </div>

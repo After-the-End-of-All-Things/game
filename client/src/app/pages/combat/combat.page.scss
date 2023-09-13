@@ -101,10 +101,19 @@
     }
 
     &.glowing {
-      --glow-color-start: #099;
-      --glow-color-end: #0cc;
+      --glow-color-start: #7f0099;
+      --glow-color-end: #d539f5;
 
       cursor: pointer;
+
+      animation: glow 1s ease-in-out infinite alternate;
+    }
+
+    &.glowing-less {
+      --glow-color-start: #458d8d;
+      --glow-color-end: #44c4c4;
+
+      cursor: not-allowed;
 
       animation: glow 1s ease-in-out infinite alternate;
     }

@@ -57,7 +57,7 @@ export class CombatPage implements OnInit {
   public myCharacterJob = '';
   public myCharacterLevel = 0;
   public selectedAbility: ICombatAbility | undefined;
-  public staticSelectedTiles: Record<string, boolean> = {};
+  public staticSelectedTiles: Record<string, 'primary' | 'secondary'> = {};
   public locationSprite = -1;
 
   public get myCharacter(): IFightCharacter {
@@ -184,49 +184,49 @@ export class CombatPage implements OnInit {
     x: number,
     y: number,
     pattern: ICombatAbilityPattern,
-  ): Record<string, boolean> {
-    const staticSelectedTiles: Record<string, boolean> = {};
+  ): Record<string, 'primary' | 'secondary'> {
+    const staticSelectedTiles: Record<string, 'primary' | 'secondary'> = {};
 
     switch (pattern) {
       case 'Single': {
-        staticSelectedTiles[`${x}-${y}`] = true;
+        staticSelectedTiles[`${x}-${y}`] = 'primary';
         return staticSelectedTiles;
       }
 
       case 'Cross': {
-        staticSelectedTiles[`${x}-${y}`] = true;
-        staticSelectedTiles[`${x - 1}-${y}`] = true;
-        staticSelectedTiles[`${x + 1}-${y}`] = true;
-        staticSelectedTiles[`${x}-${y - 1}`] = true;
-        staticSelectedTiles[`${x}-${y + 1}`] = true;
+        staticSelectedTiles[`${x}-${y}`] = 'primary';
+        staticSelectedTiles[`${x - 1}-${y}`] = 'secondary';
+        staticSelectedTiles[`${x + 1}-${y}`] = 'secondary';
+        staticSelectedTiles[`${x}-${y - 1}`] = 'secondary';
+        staticSelectedTiles[`${x}-${y + 1}`] = 'secondary';
         return staticSelectedTiles;
       }
 
       case 'CrossNoCenter': {
-        staticSelectedTiles[`${x - 1}-${y}`] = true;
-        staticSelectedTiles[`${x + 1}-${y}`] = true;
-        staticSelectedTiles[`${x}-${y - 1}`] = true;
-        staticSelectedTiles[`${x}-${y + 1}`] = true;
+        staticSelectedTiles[`${x - 1}-${y}`] = 'primary';
+        staticSelectedTiles[`${x + 1}-${y}`] = 'primary';
+        staticSelectedTiles[`${x}-${y - 1}`] = 'primary';
+        staticSelectedTiles[`${x}-${y + 1}`] = 'primary';
         return staticSelectedTiles;
       }
 
       case 'ThreeVertical': {
-        staticSelectedTiles[`${x}-${y}`] = true;
-        staticSelectedTiles[`${x}-${y - 1}`] = true;
-        staticSelectedTiles[`${x}-${y + 1}`] = true;
+        staticSelectedTiles[`${x}-${y}`] = 'primary';
+        staticSelectedTiles[`${x}-${y - 1}`] = 'secondary';
+        staticSelectedTiles[`${x}-${y + 1}`] = 'secondary';
         return staticSelectedTiles;
       }
 
       case 'TwoHorizontal': {
-        staticSelectedTiles[`${x}-${y}`] = true;
-        staticSelectedTiles[`${x + 1}-${y}`] = true;
+        staticSelectedTiles[`${x}-${y}`] = 'primary';
+        staticSelectedTiles[`${x + 1}-${y}`] = 'secondary';
         return staticSelectedTiles;
       }
 
       case 'AllCreatures': {
         for (let y = 0; y < 4; y++) {
           for (let x = 4; x < 8; x++) {
-            staticSelectedTiles[`${x}-${y}`] = true;
+            staticSelectedTiles[`${x}-${y}`] = 'primary';
           }
         }
         return staticSelectedTiles;
@@ -339,7 +339,7 @@ export class CombatPage implements OnInit {
   clickTile(tile: IFightTile, x: number, y: number) {
     if (!this.selectedAbility) return;
 
-    if (this.isTileActive(x, y)) {
+    if (this.isTileActive(x, y) === 'primary') {
       let targetArgs =
         this.selectedAbility.targetting === 'Creature'
           ? { characterIds: tile.containedCharacters }

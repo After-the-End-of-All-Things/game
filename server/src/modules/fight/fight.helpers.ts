@@ -195,47 +195,60 @@ export function getTargettedTilesForPattern(
 }
 
 export function getTargetsForAbility(
+  character: IFightCharacter,
   fight: Fight,
   action: ICombatAbility,
   targetParams: ICombatTargetParams,
 ): IFightCharacter[] {
+  const getCreaturesFromTilesCenteredOn = (x: number, y: number) => {
+    const tiles = getTargettedTilesForPattern(x, y, action.pattern);
+    return getAllTilesMatchingPatternTargets(fight, tiles)
+      .flatMap((tile) => tile.containedCharacters)
+      .flatMap((id) => getCharacterFromFightForCharacterId(fight, id))
+      .filter(Boolean) as IFightCharacter[];
+  };
+
   switch (action.targetting) {
     case 'Creature': {
       const { characterIds } = targetParams;
       if (!characterIds) return [];
 
-      return characterIds
-        .map((id) => getCharacterFromFightForCharacterId(fight, id))
-        .filter(Boolean) as IFightCharacter[];
+      const primaryTarget = characterIds[0];
+      const primaryTargetCharacter = getCharacterFromFightForCharacterId(
+        fight,
+        primaryTarget,
+      );
+      if (!primaryTargetCharacter) return [];
+
+      const primaryTargetTile = getTileContainingCharacter(
+        fight,
+        primaryTarget,
+      );
+      if (!primaryTargetTile) return [];
+
+      return getCreaturesFromTilesCenteredOn(
+        primaryTargetTile.x,
+        primaryTargetTile.y,
+      );
     }
 
     case 'Ground': {
       const { tile } = targetParams;
       if (!tile) return [];
 
-      const tiles = getTargettedTilesForPattern(tile.x, tile.y, action.pattern);
-      return getAllTilesMatchingPatternTargets(fight, tiles)
-        .flatMap((tile) => tile.containedCharacters)
-        .flatMap((id) => getCharacterFromFightForCharacterId(fight, id))
-        .filter(Boolean) as IFightCharacter[];
+      return getCreaturesFromTilesCenteredOn(tile.x, tile.y);
     }
 
     case 'Self': {
-      const { characterIds } = targetParams;
-      if (!characterIds) return [];
+      const tile = getTileContainingCharacter(fight, character.characterId);
+      if (!tile) return [character];
 
-      return characterIds
-        .map((id) => getCharacterFromFightForCharacterId(fight, id))
-        .filter(Boolean) as IFightCharacter[];
+      return getCreaturesFromTilesCenteredOn(tile.x, tile.y);
     }
 
     case 'AllCreatures': {
-      const { characterIds } = targetParams;
-      if (!characterIds) return [];
-
-      return characterIds
-        .map((id) => getCharacterFromFightForCharacterId(fight, id))
-        .filter(Boolean) as IFightCharacter[];
+      const side = getCharacterSide(fight, character);
+      return side === 'attacker' ? fight.defenders : fight.attackers;
     }
 
     default:

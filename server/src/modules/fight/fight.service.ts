@@ -620,7 +620,12 @@ export class FightService {
     if (!this.canUseAbility(character, action))
       throw new BadRequestException('Cannot use this ability');
 
-    const targets = getTargetsForAbility(fight, action, targetParams);
+    const targets = getTargetsForAbility(
+      character,
+      fight,
+      action,
+      targetParams,
+    );
     await Promise.all(
       targets.map(async (target) => {
         for (let i = 0; i < action.hits; i++) {
