@@ -90,7 +90,7 @@ export class PlayerHelperService {
       userId: player.userId,
       notification: {
         liveAt: new Date(),
-        text: `You have reached level ${player.level}! ${newAbilitiesString}`,
+        text: `You have reached ${player.job} level ${player.level}! ${newAbilitiesString}`,
         actions: [],
       },
       expiresAfterHours: 1,
