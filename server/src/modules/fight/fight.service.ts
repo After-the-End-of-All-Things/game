@@ -702,7 +702,7 @@ export class FightService {
     );
     if (validAbilities.length === 0) return this.setAndTakeNextTurn(fight);
 
-    const ability = sample(abilities);
+    const ability = sample(validAbilities);
     if (!ability) return this.setAndTakeNextTurn(fight);
 
     const abilityRef = this.contentService.getAbility(ability.ability);
