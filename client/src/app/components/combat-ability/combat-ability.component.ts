@@ -47,10 +47,13 @@ export class CombatAbilityComponent implements OnInit {
       .map(
         (stat) =>
           (this.ability.statScaling?.[stat as Stat] ?? 0) *
-          this.stats[stat as Stat] *
-          this.elementMultiplier(),
+          this.stats[stat as Stat],
       )
       .reduce((a, b) => a + b * Math.max(this.ability.hits, 1), 0)
       .toFixed(1);
+  }
+
+  totalDamage(): number {
+    return this.abilityDamage() * this.elementMultiplier();
   }
 }

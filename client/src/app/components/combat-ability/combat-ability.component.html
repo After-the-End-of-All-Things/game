@@ -63,9 +63,26 @@
         <p class="ability-desc">
           {{ ability.description }}
           <br />
-          <strong *ngIf="abilityDamage() as abilityDamage">
-            Base max damage: {{ abilityDamage }}
+          <strong *ngIf="totalDamage() as abilityDamage" [ngxTippy]="tooltip">
+            Max damage: {{ abilityDamage | number : '1.0-1' }}
           </strong>
+
+          <ng-template #tooltip>
+            <table class="tooltip-table">
+              <tr>
+                <td>Base damage</td>
+                <td>{{ abilityDamage() / this.ability.hits }}</td>
+              </tr>
+              <tr>
+                <td>Total hits</td>
+                <td>x{{ ability.hits }}</td>
+              </tr>
+              <tr>
+                <td>Element boost</td>
+                <td>x{{ elementMultiplier() }}</td>
+              </tr>
+            </table>
+          </ng-template>
         </p>
       </ion-col>
     </ion-row>
