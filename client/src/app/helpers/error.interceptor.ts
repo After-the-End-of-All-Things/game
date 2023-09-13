@@ -21,6 +21,13 @@ export class ErrorInterceptor implements HttpInterceptor {
       catchError((error: HttpErrorResponse) => {
         let errorMsg = '';
 
+        if (error.status === 429) {
+          this.notify.error(
+            'You are doing that too fast. Try again in a second.',
+          );
+          return throwError(error);
+        }
+
         // client side error
         if (error.error instanceof ErrorEvent) {
           errorMsg = `Error: ${error.error?.message || error.message}`;

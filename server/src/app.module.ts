@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
-import { ThrottlerModule } from '@nestjs/throttler';
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { LoggerModule } from 'nestjs-pino';
 import { FlushInterceptor } from 'src/utils/flush.interceptor';
 import { AppController } from './app.controller';
@@ -27,9 +27,9 @@ import { AggregatorModule } from './modules/aggregator/aggregator.module';
 import { CraftingModule } from './modules/crafting/crafting.module';
 import { EventsModule } from './modules/events/events.module';
 import { GameplayModule } from './modules/gameplay/gameplay.module';
+import { LeaderboardModule } from './modules/leaderboard/leaderboard.module';
 import { MarketModule } from './modules/market/market.module';
 import { UpdateAuthTimeInterceptor } from './utils/updatetime.interceptor';
-import { LeaderboardModule } from './modules/leaderboard/leaderboard.module';
 
 const logLevel = process.env.LOG_LEVEL || 'trace';
 
@@ -63,12 +63,14 @@ const logLevel = process.env.LOG_LEVEL || 'trace';
         },
       },
     }),
-    ThrottlerModule.forRoot([
-      {
-        ttl: 60,
-        limit: 10,
-      },
-    ]),
+    ThrottlerModule.forRoot({
+      throttlers: [
+        {
+          limit: 1,
+          ttl: 1000,
+        },
+      ],
+    }),
     NotificationModule,
     PlayerModule,
     StatsModule,
@@ -109,6 +111,10 @@ const logLevel = process.env.LOG_LEVEL || 'trace';
     {
       provide: APP_FILTER,
       useClass: HttpExceptionFilter,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
     },
   ],
 })

@@ -16,8 +16,6 @@ import { io } from 'socket.io-client';
   providedIn: 'root',
 })
 export class ActionsService {
-  private events!: EventSource;
-
   constructor(
     private store: Store,
     private router: Router,
