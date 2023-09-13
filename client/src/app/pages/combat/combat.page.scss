@@ -181,8 +181,15 @@
   }
 }
 
-.ability-modal {
-  --padding-top: 16px;
+.ability-modal-container {
+
+  @media screen and (min-width: 1401px) {
+    --width: 50%;
+  }
+
+  .ability-modal {
+    --padding-top: 16px;
+  }
 }
 
 .ability-list {
@@ -197,6 +204,10 @@
 
     &:hover {
       background: #222;
+    }
+
+    app-combat-ability {
+      width: 100%;
     }
   }
 }
