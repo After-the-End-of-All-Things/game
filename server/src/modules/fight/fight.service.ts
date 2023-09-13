@@ -344,7 +344,10 @@ export class FightService {
     }
 
     const randomDropPossibility = sample(
-      fight.defenders.map((c) => c.killRewards?.items ?? []).flat(),
+      fight.defenders
+        .map((c) => c.killRewards?.items ?? [])
+        .flat()
+        .filter(Boolean),
     );
 
     let randomDrop;
@@ -354,7 +357,9 @@ export class FightService {
       random(0, 100) <= randomDropPossibility.chance
     ) {
       randomDrop = this.contentService.getItem(randomDropPossibility.item);
-      addStatusMessage(fight, 'Fight', `You found "${randomDrop.name}"!`);
+      if (randomDrop) {
+        addStatusMessage(fight, 'Fight', `You found "${randomDrop.name}"!`);
+      }
     }
 
     await this.updateFightForAllPlayers(fight);
