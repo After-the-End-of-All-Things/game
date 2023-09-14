@@ -28,6 +28,7 @@ import { ContentService } from '@services/content.service';
 import { MetaService } from '@services/meta.service';
 import { RollbarErrorHandler, RollbarService } from '@services/rollbar.service';
 import { NgxTippyModule } from 'ngx-tippy-wrapper';
+import { NgxWebstorageModule } from 'ngx-webstorage';
 import * as Stores from '../stores';
 import * as Migrations from '../stores/migrations';
 import { AssetService } from './services/asset.service';
@@ -46,6 +47,7 @@ export function getAuthToken() {
   imports: [
     BrowserModule,
     IonicModule.forRoot(),
+    NgxWebstorageModule.forRoot(),
     AppRoutingModule,
     HttpClientModule,
     NgxTippyModule,

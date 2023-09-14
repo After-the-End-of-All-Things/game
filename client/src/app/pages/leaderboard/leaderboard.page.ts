@@ -3,6 +3,7 @@ import { IPlayerLocation } from '@interfaces';
 import { Select } from '@ngxs/store';
 import { LeaderboardService } from '@services/leaderboard.service';
 import { PlayerStore } from '@stores';
+import { LocalStorage } from 'ngx-webstorage';
 import { Observable, first, forkJoin } from 'rxjs';
 
 @Component({
@@ -14,7 +15,7 @@ export class LeaderboardPage {
   @Select(PlayerStore.playerLocation)
   playerLocation$!: Observable<IPlayerLocation>;
 
-  public leaderboardType: 'local' | 'global' = 'local';
+  @LocalStorage() leaderboardType!: 'local' | 'global';
 
   public location = 'Local';
 
@@ -26,6 +27,8 @@ export class LeaderboardPage {
   constructor(private leaderboard: LeaderboardService) {}
 
   ionViewDidEnter() {
+    if (!this.leaderboardType) this.leaderboardType = 'local';
+
     this.playerLocation$.pipe(first()).subscribe((location) => {
       this.location = location.current;
 

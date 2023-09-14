@@ -16,7 +16,7 @@
           <ion-card-content>
             <ion-segment
               color="tertiary"
-              value="stats"
+              [value]="view"
               (ionChange)="changeView($event)"
             >
               <ion-segment-button value="stats">

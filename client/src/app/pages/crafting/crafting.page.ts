@@ -8,6 +8,7 @@ import { GameplayService } from '@services/gameplay.service';
 import { UserService } from '@services/user.service';
 import { CraftingStore, InventoryStore } from '@stores';
 import { ClearNotificationActionsMatchingUrl } from '@stores/notifications/notifications.actions';
+import { LocalStorage } from 'ngx-webstorage';
 import { Observable, first, forkJoin } from 'rxjs';
 
 @Component({
@@ -39,7 +40,7 @@ export class CraftingPage implements OnInit {
   }>;
 
   public availableResources: Record<string, number> = {};
-  public discipline: RecipeType = 'armorer';
+  @LocalStorage() discipline!: RecipeType;
 
   public recipes: Array<IRecipe & { item: IItem | undefined }> = [];
   public discoveries!: IDiscoveries;
@@ -53,6 +54,8 @@ export class CraftingPage implements OnInit {
   ) {}
 
   ngOnInit() {
+    if (!this.discipline) this.discipline = 'armorer';
+
     forkJoin({
       armorer: this.armorer$.pipe(first()),
       artisan: this.artisan$.pipe(first()),

@@ -7,6 +7,7 @@ import { GameplayService } from '@services/gameplay.service';
 import { PlayerService } from '@services/player.service';
 import { DiscoveriesStore, PlayerStore } from '@stores';
 import { sum } from 'lodash';
+import { LocalStorage } from 'ngx-webstorage';
 import { Observable, first } from 'rxjs';
 
 @Component({
@@ -28,7 +29,12 @@ export class CollectionsPage {
   public readonly monstersUniqueMax = 25;
   public readonly monstersTotalMax = 250;
 
-  public selectedCategory = 'collectibles';
+  @LocalStorage() selectedCategory!:
+    | 'collectibles'
+    | 'equipment'
+    | 'monsters'
+    | 'portraits'
+    | 'backgrounds';
 
   public readonly allPortraits = Array(this.contentService.maxPortraits)
     .fill(0)
@@ -71,6 +77,8 @@ export class CollectionsPage {
   ) {}
 
   ionViewDidEnter() {
+    if (!this.selectedCategory) this.selectedCategory = 'collectibles';
+
     this.discoveries$
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((discoveries) => {

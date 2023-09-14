@@ -76,7 +76,7 @@
       <ion-card-content>
         <ion-segment
           color="tertiary"
-          value="armorer"
+          [value]="discipline"
           (ionChange)="selectDiscipline($event, craftData)"
         >
           <ion-segment-button value="armorer">

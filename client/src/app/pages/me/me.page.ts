@@ -16,6 +16,7 @@ import { ContentService } from '@services/content.service';
 import { PlayerService } from '@services/player.service';
 import { InventoryStore, PlayerStore } from '@stores';
 import { sum } from 'lodash';
+import { LocalStorage } from 'ngx-webstorage';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -29,7 +30,7 @@ export class MePage implements OnInit {
     Record<ItemSlot, IEquipment>
   >;
 
-  public view: 'stats' | 'abilities' | 'levels' = 'stats';
+  @LocalStorage() view!: 'stats' | 'abilities' | 'levels';
 
   public readonly stats = [
     {
@@ -74,7 +75,9 @@ export class MePage implements OnInit {
     public authService: AuthService,
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    if (!this.view) this.view = 'stats';
+  }
 
   changeView($event: any) {
     this.view = $event.detail.value;

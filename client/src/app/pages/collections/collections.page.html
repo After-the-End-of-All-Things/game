@@ -14,7 +14,7 @@
           <ion-card-content>
             <ion-segment
               color="tertiary"
-              value="collectibles"
+              [value]="selectedCategory"
               (ionChange)="selectCategory($event)"
             >
               <ion-segment-button value="collectibles">
