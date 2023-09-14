@@ -28,7 +28,7 @@ export function setNotifications(
   const currentNotifications = ctx.getState().notifications;
   const allNotifications = [...notifications, ...currentNotifications];
 
-  const splicedNotifications = uniqBy(allNotifications, 'id');
+  const splicedNotifications = uniqBy(allNotifications, 'internalId');
 
   ctx.patchState({ notifications: splicedNotifications });
 }
@@ -91,7 +91,7 @@ export function addNotification(
   const currentNotifications = ctx.getState().notifications;
   const allNotifications = [notification, ...currentNotifications];
 
-  const splicedNotifications = uniqBy(allNotifications, 'id');
+  const splicedNotifications = uniqBy(allNotifications, 'internalId');
 
   ctx.patchState({ notifications: splicedNotifications });
 }
