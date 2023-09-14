@@ -17,7 +17,7 @@ Writing up a bug the right way is important! It helps us fix it faster and more 
 
 ## Writing Code
 
-The most obvious way to directly contribute is to write code. You can do this by forking the repository, making your changes, and then submitting a pull request. If you're not sure what to work on, check out the [issues](https://github.com/After-the-End-of-All-Things/game/issues) or the [project board](https://github.com/orgs/After-the-End-of-All-Things/projects/1).
+The most obvious way to directly contribute is to write code. You can do this by forking the repository, making your changes, and then submitting a pull request. If you're not sure what to work on, check out the [issues](https://github.com/After-the-End-of-All-Things/game/issues) or the [project board](https://github.com/orgs/After-the-End-of-All-Things/projects/1). You can specifically look for [good first issue](https://github.com/After-the-End-of-All-Things/game/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3A%22good+first+issue%22) issues or if you're more acquainted with the codebase, the [help wanted](https://github.com/After-the-End-of-All-Things/game/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3A%22help+wanted%22) issues.
 
 ## Creating Content
 
