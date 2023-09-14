@@ -114,6 +114,17 @@ export class GameplayController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Unequip an item' })
+  @Patch('item/unequip/:slot')
+  async unequipItem(
+    @User() user,
+    @Param('slot') equipmentSlot: ItemSlot,
+    @Body('instanceId') instanceId: string,
+  ): Promise<UserResponse> {
+    return this.itemService.unequipItem(user.userId, equipmentSlot, instanceId);
+  }
+
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Craft an item' })
   @Put('item/craft/start')
   async craftItem(

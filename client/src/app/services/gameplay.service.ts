@@ -101,6 +101,16 @@ export class GameplayService {
     );
   }
 
+  unequipItem(slot: ItemSlot, instanceId: string) {
+    return this.http.patch(
+      `${environment.apiUrl}/gameplay/item/unequip/${slot}`,
+      {
+        slot,
+        instanceId,
+      },
+    );
+  }
+
   craftItem(itemId: string) {
     return this.http.put(`${environment.apiUrl}/gameplay/item/craft/start`, {
       itemId,

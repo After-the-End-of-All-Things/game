@@ -78,5 +78,17 @@
     </ion-col>
   </ion-row>
 
-  <ion-label class="slot" slot="end"><em>{{ slotName }}</em></ion-label>
+  <ion-label class="slot" slot="end">
+    <em>{{ slotName }}</em>
+    <div *ngIf="inventory.equippedItems[slotKey] as item">
+      <ion-button
+        color="warning"
+        size="small"
+        fill="outline"
+        (click)="unequipItem(slotKey, item.instanceId)"
+      >
+        Unequip
+      </ion-button>
+    </div>
+  </ion-label>
 </ng-template>

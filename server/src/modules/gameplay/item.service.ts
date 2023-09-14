@@ -276,15 +276,33 @@ export class ItemService {
     );
     if (!item) throw new NotFoundException('Equipped item not found.');
 
+    const itemRef = this.contentService.getItem(item.itemId);
+    if (!itemRef) throw new NotFoundException('Item ref not found.');
+
     item.isInUse = false;
-    inventory.equippedItems = {
-      ...inventory.equippedItems,
-      [equipmentSlot]: undefined,
-    };
+
+    const inventoryPatches = await getPatchesAfterPropChanges<Inventory>(
+      inventory,
+      async (inventoryRef) => {
+        inventoryRef.equippedItems = {
+          ...inventory.equippedItems,
+          [equipmentSlot]: undefined,
+        };
+      },
+    );
 
     this.logger.verbose(`Player ${userId} unequipped item ${item.itemId}.`);
 
-    return {};
+    return {
+      inventory: inventoryPatches,
+      actions: [
+        {
+          type: 'Notify',
+          messageType: 'success',
+          message: `You unequipped ${itemRef.name}!`,
+        },
+      ],
+    };
   }
 
   async craftItem(userId: string, itemId: string): Promise<UserResponse> {
