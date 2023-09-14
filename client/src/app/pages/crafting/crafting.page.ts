@@ -45,6 +45,12 @@ export class CraftingPage implements OnInit {
   public recipes: Array<IRecipe & { item: IItem | undefined }> = [];
   public discoveries!: IDiscoveries;
 
+  public levels: Record<RecipeType, number> = {
+    armorer: 1,
+    artisan: 1,
+    smith: 1,
+  };
+
   constructor(
     private store: Store,
     private alert: AlertController,
@@ -62,7 +68,11 @@ export class CraftingPage implements OnInit {
       smith: this.smith$.pipe(first()),
     }).subscribe((data) => {
       this.selectDiscipline({ detail: { value: this.discipline } }, data);
+      Object.keys(data).forEach((key) => {
+        this.levels[key as RecipeType] = data[key as RecipeType].level;
+      });
     });
+
     this.updateDiscoveries();
 
     this.resources$.pipe(first()).subscribe((resources) => {
@@ -156,5 +166,9 @@ export class CraftingPage implements OnInit {
 
   nextCraftingLevelXp(level: number) {
     return xpForCraftingLevel(level);
+  }
+
+  givesXp(recipe: IRecipe): boolean {
+    return recipe.maxLevel > this.levels[recipe.type];
   }
 }
