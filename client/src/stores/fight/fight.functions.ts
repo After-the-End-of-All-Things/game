@@ -6,7 +6,7 @@ import { ApplyFightPatches, SetFight } from './fight.actions';
 export const defaultStore: () => IFightStore = () => ({
   version: 0,
   fight: {
-    id: '',
+    internalId: '',
     attackers: [],
     defenders: [],
     turnOrder: [],

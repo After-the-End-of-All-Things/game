@@ -190,9 +190,7 @@ export class MarketModalComponent implements OnInit {
     );
   }
 
-  public async buyItem(
-    listing: Partial<IMarketItem & { id: string; itemData: IItem }>,
-  ) {
+  public async buyItem(listing: Partial<IMarketItem & { itemData: IItem }>) {
     const alert = await this.alertCtrl.create({
       header: 'Buy Item',
       message: `Are you sure you want to buy "${
@@ -206,7 +204,7 @@ export class MarketModalComponent implements OnInit {
         {
           text: 'Buy',
           handler: async () => {
-            this.marketService.buyItem(listing.id!).subscribe();
+            this.marketService.buyItem(listing.internalId!).subscribe();
           },
         },
       ],

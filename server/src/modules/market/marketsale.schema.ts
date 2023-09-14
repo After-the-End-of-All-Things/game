@@ -7,14 +7,19 @@ import {
   SerializedPrimaryKey,
 } from '@mikro-orm/core';
 import { ObjectId } from '@mikro-orm/mongodb';
+import { v4 as uuid } from 'uuid';
 
 @Entity()
 export class MarketSale implements IMarketSale {
-  @PrimaryKey()
+  @PrimaryKey({ hidden: true })
   _id!: ObjectId;
 
   @SerializedPrimaryKey({ hidden: true })
   id!: string;
+
+  @Index()
+  @Property()
+  internalId: string;
 
   @Property()
   createdAt: Date;
@@ -54,6 +59,7 @@ export class MarketSale implements IMarketSale {
     expiresAfterHours = 24 * 7,
   ) {
     this.createdAt = new Date();
+    this.internalId = uuid();
 
     this.seller = seller;
     this.buyer = buyer;

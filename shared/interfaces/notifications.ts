@@ -8,7 +8,7 @@ export interface INotificationAction {
 }
 
 export interface INotification {
-  id?: string;
+  internalId: string;
   createdAt: Date;
   liveAt: Date;
   text: string;

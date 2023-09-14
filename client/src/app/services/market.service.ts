@@ -48,14 +48,14 @@ export class MarketService {
 
   repriceItem(listing: IMarketItemExpanded, price: number) {
     return this.http.patch(
-      `${environment.apiUrl}/market/listings/${listing.id}`,
+      `${environment.apiUrl}/market/listings/${listing.internalId}`,
       { price },
     );
   }
 
   unsellItem(listing: IMarketItemExpanded) {
     return this.http.delete(
-      `${environment.apiUrl}/market/listings/${listing.id}`,
+      `${environment.apiUrl}/market/listings/${listing.internalId}`,
     );
   }
 }

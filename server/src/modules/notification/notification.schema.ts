@@ -7,18 +7,23 @@ import {
   SerializedPrimaryKey,
 } from '@mikro-orm/core';
 import { ObjectId } from '@mikro-orm/mongodb';
+import { v4 as uuid } from 'uuid';
 
 @Entity()
 export class Notification implements INotification {
-  @PrimaryKey()
+  @PrimaryKey({ hidden: true })
   _id!: ObjectId;
 
-  @SerializedPrimaryKey()
+  @SerializedPrimaryKey({ hidden: true })
   id!: string;
 
   @Index()
   @Property({ hidden: true })
   userId: string;
+
+  @Index()
+  @Property()
+  internalId: string;
 
   @Property()
   createdAt: Date;
@@ -47,6 +52,7 @@ export class Notification implements INotification {
     expiresAfterHours = 24 * 7,
   ) {
     this._id = new ObjectId();
+    this.internalId = uuid();
 
     this.userId = userId;
     this.text = text;

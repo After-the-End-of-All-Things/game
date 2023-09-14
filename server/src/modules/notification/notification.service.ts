@@ -1,6 +1,6 @@
 import { isNotificationLive } from '@helpers/notifications';
 import { INotificationAction } from '@interfaces';
-import { EntityManager, EntityRepository, ObjectId } from '@mikro-orm/mongodb';
+import { EntityManager, EntityRepository } from '@mikro-orm/mongodb';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { Notification } from '@modules/notification/notification.schema';
 import { BadRequestException, Injectable } from '@nestjs/common';
@@ -22,7 +22,7 @@ export class NotificationService {
     userId: string,
     notificationId: string,
   ): Promise<Notification | null> {
-    return this.notifications.findOne({ userId, id: notificationId });
+    return this.notifications.findOne({ userId, internalId: notificationId });
   }
 
   async getNotificationsForUserAfter(
@@ -94,7 +94,7 @@ export class NotificationService {
 
   async markNotificationRead(notificationId: string) {
     const notif = await this.notifications.findOne({
-      _id: new ObjectId(notificationId),
+      internalId: notificationId,
     });
     if (!notif) return;
 
@@ -103,7 +103,7 @@ export class NotificationService {
 
   async clearNotificationActions(notificationId: string) {
     const notif = await this.notifications.findOne({
-      _id: new ObjectId(notificationId),
+      internalId: notificationId,
     });
     if (!notif) return;
 

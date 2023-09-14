@@ -2,12 +2,12 @@ import { Rarity } from './buildingblocks';
 import { IItem } from './item';
 
 export type IMarketItemExpanded = IMarketItem & {
-  id: string;
   itemData: IItem;
 };
 
 export interface IMarketItem {
   createdAt: Date;
+  internalId: string;
   userId: string;
   itemId: string;
   price: number;
@@ -30,6 +30,7 @@ export interface IMarketItemMeta {
 
 export interface IMarketSale {
   createdAt: Date;
+  internalId: string;
   seller: string;
   buyer: string;
   itemId: string;

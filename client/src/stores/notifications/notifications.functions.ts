@@ -51,7 +51,7 @@ export function markRead(
   ctx.setState(
     patch<INotificationsStore>({
       notifications: updateItem<INotification>(
-        (n) => n.id === id,
+        (n) => n.internalId === id,
         patch<INotification>({ read: true }),
       ),
     }),
@@ -65,7 +65,7 @@ export function clearActions(
   ctx.setState(
     patch<INotificationsStore>({
       notifications: updateItem<INotification>(
-        (n) => n.id === id,
+        (n) => n.internalId === id,
         patch<INotification>({ actions: [] }),
       ),
     }),

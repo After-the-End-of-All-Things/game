@@ -56,10 +56,10 @@ export class ActionsService {
           if (!notification) return;
 
           this.notificationService
-            .clearActions(notification.id || '')
+            .clearActions(notification.internalId || '')
             .subscribe();
           this.store.dispatch(
-            new ClearNotificationActions(notification.id || ''),
+            new ClearNotificationActions(notification.internalId || ''),
           );
         });
     }

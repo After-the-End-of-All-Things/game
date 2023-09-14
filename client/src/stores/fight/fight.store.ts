@@ -25,6 +25,6 @@ export class FightStore {
 
   @Selector()
   static fight(state: IFightStore) {
-    return state.fight.id ? state.fight : undefined;
+    return state.fight.internalId ? state.fight : undefined;
   }
 }

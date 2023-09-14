@@ -39,7 +39,7 @@ export class HeaderBarComponent implements OnInit {
   }
 
   trackBy(index: number, item: INotification) {
-    return item.id;
+    return item.internalId;
   }
 
   markAllNotificationsRead() {
@@ -50,8 +50,12 @@ export class HeaderBarComponent implements OnInit {
   markNotificationRead(notification: INotification) {
     if (notification.read) return;
 
-    this.store.dispatch(new MarkNotificationRead(notification.id || ''));
-    this.notificationService.markRead(notification.id || '').subscribe();
+    this.store.dispatch(
+      new MarkNotificationRead(notification.internalId || ''),
+    );
+    this.notificationService
+      .markRead(notification.internalId || '')
+      .subscribe();
   }
 
   unreadNotificationCount(notifications: INotification[]) {

@@ -77,7 +77,7 @@ export interface IFightCharacter {
 }
 
 export interface IFight {
-  id: string;
+  internalId: string;
   involvedPlayers: string[];
   turnOrder: string[];
   currentTurn: string;

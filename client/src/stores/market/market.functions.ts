@@ -37,7 +37,7 @@ export function removeMarketItem(
     patch({
       marketData: patch({
         results: removeItem<IMarketItemExpanded>(
-          (item) => item.id === listingId,
+          (item) => item.internalId === listingId,
         ),
       }),
     }),
@@ -52,7 +52,7 @@ export function repriceMarketItem(
     patch({
       marketData: patch({
         results: updateItem<IMarketItemExpanded>(
-          (item) => item.id === listingId,
+          (item) => item.internalId === listingId,
           patch({
             price: newPrice,
           }),
