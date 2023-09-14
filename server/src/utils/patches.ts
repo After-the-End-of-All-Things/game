@@ -11,5 +11,5 @@ export async function getPatchesAfterPropChanges<T extends object>(
   const patches = jsonpatch.generate<T>(observer);
   observer.unobserve();
 
-  return patches;
+  return patches.filter((p) => !p.path.includes('_id'));
 }
