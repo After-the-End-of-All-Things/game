@@ -43,6 +43,9 @@ export class Fight implements IFight {
   generatedElements: Record<Element, number>;
 
   @Property()
+  generatedCharge: number;
+
+  @Property()
   statusMessage: IFightStatusMessage[];
 
   constructor(
@@ -68,5 +71,6 @@ export class Fight implements IFight {
       neutral: 0,
     };
     this.statusMessage = [];
+    this.generatedCharge = 0;
   }
 }

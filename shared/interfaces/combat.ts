@@ -45,6 +45,7 @@ export interface ICombatAbility {
   requiredEquipment?: EquipmentType;
   requiredJob: string;
   requiredLevel: number;
+  specialCost: number;
   specialAction?: string;
   elements: Element[];
   generatedElements: Element[];
@@ -84,6 +85,7 @@ export interface IFight {
   defenders: IFightCharacter[];
   tiles: IFightTile[][];
   generatedElements: Partial<Record<Element, number>>;
+  generatedCharge: number;
   statusMessage: IFightStatusMessage[];
 }
 

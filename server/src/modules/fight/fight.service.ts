@@ -24,6 +24,7 @@ import {
   didAttackersWinFight,
   distBetweenTiles,
   doDamageToTargetForAbility,
+  drainFightCharge,
   getAllFightCharacters,
   getAllTilesMatchingPatternTargets,
   getCharacterFromFightForCharacterId,
@@ -594,7 +595,14 @@ export class FightService {
     }
   }
 
-  canUseAbility(character: IFightCharacter, ability: ICombatAbility): boolean {
+  canUseAbility(
+    character: IFightCharacter,
+    fight: Fight,
+    ability: ICombatAbility,
+  ): boolean {
+    if (ability.specialCost > 0 && fight.generatedCharge < ability.specialCost)
+      return false;
+
     if (!ability.requiredEquipment) return true;
 
     return Object.values(character.equipment || {}).some((item) => {
@@ -617,7 +625,7 @@ export class FightService {
       throw new BadRequestException('Ability is on cooldown');
     if (!isValidTarget(fight, character, action, targetParams))
       throw new BadRequestException('Invalid target');
-    if (!this.canUseAbility(character, action))
+    if (!this.canUseAbility(character, fight, action))
       throw new BadRequestException('Cannot use this ability');
 
     const targets = getTargetsForAbility(
@@ -675,6 +683,7 @@ export class FightService {
 
     addAbilityElementsToFight(fight, action);
     applyAbilityCooldown(character, action);
+    drainFightCharge(fight, action.specialCost);
 
     this.logger.verbose(
       `Handling ability ${action.name} for character ${character.characterId} in fight ${fight._id}`,

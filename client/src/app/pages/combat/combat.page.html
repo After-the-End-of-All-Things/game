@@ -52,6 +52,30 @@
     </ion-card-content>
   </ion-card>
 
+  <ion-card class="gauge-card">
+    <ion-card-content
+      class="gauge-bar"
+      [class.bar-10]="charge < 10"
+      [class.bar-20]="charge >= 10 && charge < 20"
+      [class.bar-30]="charge >= 20 && charge < 30"
+      [class.bar-40]="charge >= 30 && charge < 40"
+      [class.bar-50]="charge >= 40 && charge < 50"
+      [class.bar-60]="charge >= 50 && charge < 60"
+      [class.bar-70]="charge >= 60 && charge < 70"
+      [class.bar-80]="charge >= 70 && charge < 80"
+      [class.bar-90]="charge >= 80 && charge < 90"
+      [class.bar-100]="charge >= 90 && charge < 100"
+      [class.bar-max]="charge >= 100"
+    >
+      <div class="gauge-color" [style.width.%]="specialGaugeLeft"></div>
+      <app-game-icon
+        class="gauge-icon"
+        [icon]="'combat-gauge'"
+        [style.left.%]="specialIconLeft"
+      ></app-game-icon>
+    </ion-card-content>
+  </ion-card>
+
   <ion-card class="fight-card">
     <ion-card-content>
       <div class="fight">

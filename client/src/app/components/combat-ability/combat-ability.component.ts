@@ -23,11 +23,21 @@ export class CombatAbilityComponent implements OnInit {
   }
 
   public get isPhysical(): boolean {
-    return (this.ability.statScaling?.power ?? 0) > 0;
+    return (
+      (this.ability.statScaling?.power ?? 0) > 0 ||
+      (this.ability.statScaling?.toughness ?? 0) > 0
+    );
   }
 
   public get isMagical(): boolean {
-    return (this.ability.statScaling?.magic ?? 0) > 0;
+    return (
+      (this.ability.statScaling?.magic ?? 0) > 0 ||
+      (this.ability.statScaling?.resistance ?? 0) > 0
+    );
+  }
+
+  public get specialCost(): number {
+    return this.ability.specialCost ?? 0;
   }
 
   constructor() {}

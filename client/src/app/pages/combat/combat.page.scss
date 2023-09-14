@@ -109,7 +109,7 @@
       animation: glow 1s ease-in-out infinite alternate;
     }
 
-    &.glowing-less {
+    &.glowing-less:not(.glowing) {
       --glow-color-start: #458d8d;
       --glow-color-end: #44c4c4;
 
@@ -253,5 +253,211 @@
         }
       }
     }
+  }
+}
+
+.gauge-card {
+  .gauge-bar {
+    position: relative;
+
+    --color-step-1: #ff0000;
+    --color-step-2: #ff7f00;
+    --color-step-3: #ffff00;
+    --color-step-4: #7fff00;
+    --color-step-5: #00ff00;
+    --color-step-6: #00ff7f;
+    --color-step-7: #00ffff;
+    --color-step-8: #007fff;
+    --color-step-9: #0000ff;
+    --color-step-10: #7f00ff;
+    --color-step-11: #ff00ff;
+    --color-step-12: #ff007f;
+
+    &.bar-10 {
+      --bg-color: var(--color-step-1);
+      --icon-color: var(--color-step-7);
+    }
+
+    &.bar-20 {
+      --bg-color: var(--color-step-2);
+      --icon-color: var(--color-step-8);
+    }
+
+    &.bar-30 {
+      --bg-color: var(--color-step-3);
+      --icon-color: var(--color-step-12);
+    }
+
+    &.bar-40 {
+      --bg-color: var(--color-step-4);
+      --icon-color: var(--color-step-10);
+    }
+
+    &.bar-50 {
+      --bg-color: var(--color-step-5);
+      --icon-color: var(--color-step-11);
+    }
+
+    &.bar-60 {
+      --bg-color: var(--color-step-6);
+      --icon-color: var(--color-step-12);
+    }
+
+    &.bar-70 {
+      --bg-color: var(--color-step-7);
+      --icon-color: var(--color-step-1);
+    }
+
+    &.bar-80 {
+      --bg-color: var(--color-step-8);
+      --icon-color: var(--color-step-2);
+    }
+
+    &.bar-90 {
+      --bg-color: var(--color-step-9);
+      --icon-color: var(--color-step-3);
+    }
+
+    &.bar-100 {
+      --bg-color: var(--color-step-10);
+      --icon-color: var(--color-step-4);
+    }
+
+    &.bar-max {
+      --bg-color: var(--color-step-11);
+      --icon-color: var(--color-step-5);
+
+      .gauge-color {
+        animation: rainbow 5s linear infinite;
+      }
+
+      .gauge-icon {
+        animation: rainbow-icon 5s linear infinite;
+      }
+    }
+
+    .gauge-color {
+      position: absolute;
+
+      top: 0;
+      left: 0;
+
+      height: 100%;
+
+      transition: width 1s;
+      background-color: var(--bg-color);
+    }
+
+    .gauge-icon {
+      position: absolute;
+
+      top: 0;
+      left: 0;
+
+      transition: left 1s;
+      filter: drop-shadow(0px 0px 0 rgba(0, 0, 0, 1));
+    }
+  }
+}
+
+
+@keyframes rainbow {
+  100%, 0% {
+    background-color: var(--color-step-1);
+  }
+
+  8% {
+    background-color: var(--color-step-2);
+  }
+
+  16% {
+    background-color: var(--color-step-3);
+  }
+
+  25% {
+    background-color: var(--color-step-4);
+  }
+
+  33% {
+    background-color: var(--color-step-5);
+  }
+
+  41% {
+    background-color: var(--color-step-6);
+  }
+
+  50% {
+    background-color: var(--color-step-7);
+  }
+
+  58% {
+    background-color: var(--color-step-8);
+  }
+
+  66% {
+    background-color: var(--color-step-9);
+  }
+
+  75% {
+    background-color: var(--color-step-10);
+  }
+
+  83% {
+    background-color: var(--color-step-11);
+  }
+
+  91% {
+    background-color: var(--color-step-12);
+  }
+}
+
+
+@keyframes rainbow-icon {
+  100%, 0% {
+    --icon-color: var(--color-step-5);
+  }
+
+  8% {
+    --icon-color: var(--color-step-6);
+  }
+
+  16% {
+    --icon-color: var(--color-step-7);
+  }
+
+  25% {
+    --icon-color: var(--color-step-8);
+  }
+
+  33% {
+    --icon-color: var(--color-step-9);
+  }
+
+  41% {
+    --icon-color: var(--color-step-10);
+  }
+
+  50% {
+    --icon-color: var(--color-step-11);
+  }
+
+  58% {
+    --icon-color: var(--color-step-12);
+  }
+
+  66% {
+    --icon-color: var(--color-step-1);
+  }
+
+  75% {
+    --icon-color: var(--color-step-2);
+  }
+
+  83% {
+    --icon-color: var(--color-step-3);
+  }
+
+  91% {
+    --icon-color: var(--color-step-4);
   }
 }

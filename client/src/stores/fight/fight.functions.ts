@@ -14,6 +14,7 @@ export const defaultStore: () => IFightStore = () => ({
     tiles: [],
     currentTurn: '',
     generatedElements: {},
+    generatedCharge: 0,
     statusMessage: [],
   },
 });

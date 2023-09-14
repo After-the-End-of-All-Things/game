@@ -8,7 +8,7 @@ import {
   Stat,
 } from '@interfaces';
 import { Fight } from '@modules/fight/fight.schema';
-import { random, sample } from 'lodash';
+import { clamp, random, sample } from 'lodash';
 
 // calculation functions
 export function calculateAbilityDamage(
@@ -271,6 +271,18 @@ export function isFightOver(fight: Fight): boolean {
   );
 }
 
+export function boostFightCharge(fight: Fight, chargeBoost = 1) {
+  fight.generatedCharge = clamp(
+    (fight.generatedCharge ?? 0) + chargeBoost,
+    0,
+    100,
+  );
+}
+
+export function drainFightCharge(fight: Fight, chargeDrain = 1) {
+  boostFightCharge(fight, -chargeDrain);
+}
+
 export function getCharacterSide(
   fight: Fight,
   char: IFightCharacter,
@@ -477,6 +489,8 @@ export function doDamageToTargetForAbility(
   defender.health.current = Math.max(0, defender.health.current - dealtDamage);
 
   if (dealtDamage === 0) {
+    boostFightCharge(fight, 1);
+
     addStatusMessage(
       fight,
       attacker.name,
@@ -485,6 +499,8 @@ export function doDamageToTargetForAbility(
 
     return;
   }
+
+  boostFightCharge(fight, 2);
 
   addStatusMessage(
     fight,
@@ -495,6 +511,8 @@ export function doDamageToTargetForAbility(
   );
 
   if (isDead(defender)) {
+    boostFightCharge(fight, 3);
+
     addStatusMessage(
       fight,
       'Death',

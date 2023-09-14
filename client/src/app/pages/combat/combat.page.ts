@@ -25,7 +25,7 @@ import { ContentService } from '@services/content.service';
 import { FightService } from '@services/fight.service';
 import { FightStore, PlayerStore, UserStore } from '@stores';
 import { ChangePage } from '@stores/user/user.actions';
-import { mean, sum } from 'lodash';
+import { clamp, mean, sum } from 'lodash';
 import { Observable, combineLatest } from 'rxjs';
 
 @Component({
@@ -72,6 +72,18 @@ export class CombatPage implements OnInit {
     return this.fight.defenders.map((character) => {
       return this.fightCharacters[character.characterId];
     });
+  }
+
+  public get charge(): number {
+    return this.fight.generatedCharge ?? 0;
+  }
+
+  public get specialGaugeLeft(): number {
+    return clamp(this.charge, 1, 100);
+  }
+
+  public get specialIconLeft(): number {
+    return clamp(this.charge - 1, 0, 97.5);
   }
 
   constructor(
@@ -159,6 +171,9 @@ export class CombatPage implements OnInit {
   }
 
   canUseAbility(char: IFightCharacter, ability: ICombatAbility): boolean {
+    if (ability.specialCost > 0 && this.charge < ability.specialCost)
+      return false;
+
     if (!ability.requiredEquipment) return true;
 
     return Object.values(char.equipment || {}).some((item) => {
@@ -239,7 +254,10 @@ export class CombatPage implements OnInit {
 
   drawPatternAroundCenter(x: number, y: number, ability: ICombatAbility) {
     const patternTiles = this.choosePatternAroundCenter(x, y, ability.pattern);
-    this.staticSelectedTiles = { ...this.staticSelectedTiles, ...patternTiles };
+    Object.keys(patternTiles).forEach((tilekey) => {
+      if (this.staticSelectedTiles[tilekey] === 'primary') return;
+      this.staticSelectedTiles[tilekey] = patternTiles[tilekey];
+    });
 
     if (ability.restrictToUserSide) {
       for (let x = 4; x < 8; x++)

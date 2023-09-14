@@ -28,6 +28,10 @@
         Magical
       </ion-badge>
 
+      <ion-badge class="type" color="tertiary" *ngIf="specialCost as special">
+        Special {{ special }}%
+      </ion-badge>
+
       <ion-badge class="type" color="primary" *ngIf="ability.requiredEquipment">
         {{ ability.requiredEquipment | titlecase }}
       </ion-badge>
