@@ -91,6 +91,9 @@ export class TravelService {
     if (player.location.current === locationName)
       throw new ForbiddenException('You are already here!');
 
+    if (player.action?.action === 'fight')
+      throw new ForbiddenException('You cannot travel while fighting!');
+
     const discoveries = await this.discoveriesService.getDiscoveriesForUser(
       userId,
     );
@@ -131,6 +134,8 @@ export class TravelService {
           goingTo: '',
           arrivesAt: 0,
         };
+
+        this.playerService.setPlayerAction(playerRef, undefined);
       },
     );
 
