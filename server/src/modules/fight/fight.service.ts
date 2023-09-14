@@ -9,7 +9,7 @@ import {
   TrackedStat,
   UserResponse,
 } from '@interfaces';
-import { EntityManager, EntityRepository, ObjectId } from '@mikro-orm/mongodb';
+import { EntityManager, EntityRepository } from '@mikro-orm/mongodb';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { ConstantsService } from '@modules/content/constants.service';
 import { ContentService } from '@modules/content/content.service';
@@ -90,7 +90,7 @@ export class FightService {
   }
 
   public async getFightById(fightId: string): Promise<Fight | null> {
-    return this.fights.findOne({ _id: new ObjectId(fightId) });
+    return this.fights.findOne({ internalId: fightId });
   }
 
   public async getFightForUser(userId: string): Promise<Fight | null> {
@@ -124,13 +124,6 @@ export class FightService {
 
   public async removeFight(fight: Fight) {
     return this.em.remove<Fight>(fight);
-  }
-
-  public async removeFightById(fightId: string) {
-    const fight = await this.getFightById(fightId);
-    if (!fight) return;
-
-    return this.removeFight(fight);
   }
 
   private async convertPlayerToFightCharacter(
@@ -271,7 +264,7 @@ export class FightService {
   }
 
   async endFight(fight: Fight, actions: any[] = []): Promise<void> {
-    const checkFight = await this.getFightById(fight.id);
+    const checkFight = await this.getFightById(fight.internalId);
     if (!checkFight) return;
 
     this.logger.verbose(`Ending fight ${fight._id}`);
@@ -853,7 +846,7 @@ export class FightService {
   }
 
   async saveFight(fight: Fight): Promise<void> {
-    await this.em.nativeUpdate(Fight, { _id: new ObjectId(fight.id) }, fight);
+    await this.em.nativeUpdate(Fight, { internalId: fight.internalId }, fight);
     await this.em.flush();
   }
 

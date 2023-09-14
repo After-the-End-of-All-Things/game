@@ -11,7 +11,7 @@ import {
   IPagination,
   UserResponse,
 } from '@interfaces';
-import { EntityManager, EntityRepository, ObjectId } from '@mikro-orm/mongodb';
+import { EntityManager, EntityRepository } from '@mikro-orm/mongodb';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { ContentService } from '@modules/content/content.service';
 import { PlayerHelperService } from '@modules/content/playerhelper.service';
@@ -279,7 +279,7 @@ export class MarketService {
     const items = await this.marketItem.find(resultQuery, {
       limit,
       offset: page * limit,
-      fields: ['_id', 'itemId', 'price', 'quantity'],
+      fields: ['internalId', 'itemId', 'price', 'quantity'],
     });
 
     return {
@@ -335,7 +335,7 @@ export class MarketService {
 
   async buyItem(userId: string, listingId: string): Promise<UserResponse> {
     const listing = await this.marketItem.findOne({
-      _id: new ObjectId(listingId),
+      internalId: listingId,
     });
     if (!listing) throw new NotFoundException('Listing not found');
 
@@ -435,7 +435,7 @@ export class MarketService {
     if (!user) throw new NotFoundException('User not found');
 
     const listing = await this.marketItem.findOne({
-      _id: new ObjectId(listingId),
+      internalId: listingId,
     });
     if (!listing) throw new NotFoundException('Listing not found');
 
@@ -504,7 +504,7 @@ export class MarketService {
     if (!user) throw new NotFoundException('User not found');
 
     const listing = await this.marketItem.findOne({
-      _id: new ObjectId(listingId),
+      internalId: listingId,
     });
     if (!listing) throw new NotFoundException('Listing not found');
 
@@ -527,7 +527,7 @@ export class MarketService {
     }
 
     await this.em.nativeDelete<MarketItem>(MarketItem, {
-      _id: new ObjectId(listingId),
+      internalId: listingId,
     });
 
     this.logger.verbose(`User ${userId} unlisted ${listing.itemId}.`);
