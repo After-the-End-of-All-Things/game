@@ -25,6 +25,11 @@ export class ClearNotificationActionsMatchingUrl {
   constructor(public url: string) {}
 }
 
+export class ClearOldNotifications {
+  static type = '[Notifications] Clear Old';
+  constructor() {}
+}
+
 export class AddNotification {
   static type = 'AddNotification';
   constructor(public notification: INotification) {}

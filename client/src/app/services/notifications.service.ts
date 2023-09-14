@@ -1,6 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '@environment';
+import { Store } from '@ngxs/store';
+import { ClearOldNotifications } from '@stores/notifications/notifications.actions';
+import { interval } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -8,7 +11,17 @@ import { environment } from '@environment';
 export class NotificationsService {
   readonly intervalMinutes = 1;
 
-  constructor(private http: HttpClient) {}
+  constructor(private store: Store, private http: HttpClient) {
+    this.init();
+  }
+
+  init() {
+    interval(5 * 60 * 1000).subscribe(() => this.clearOldNotifications());
+  }
+
+  private clearOldNotifications() {
+    this.store.dispatch(new ClearOldNotifications());
+  }
 
   getNotifications() {
     return this.http.get(`${environment.apiUrl}/notification/mine`);

@@ -11,6 +11,7 @@ export interface INotification {
   internalId: string;
   createdAt: Date;
   liveAt: Date;
+  expiresAt: Date;
   text: string;
   read?: boolean;
   actions?: INotificationAction[];

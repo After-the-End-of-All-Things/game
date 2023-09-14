@@ -1,4 +1,7 @@
-import { isNotificationLive } from '@helpers/notifications';
+import {
+  isNotificationExpired,
+  isNotificationLive,
+} from '@helpers/notifications';
 import {
   IAttachmentHelpers,
   INotification,
@@ -102,4 +105,13 @@ export function notify(
   helpers: IAttachmentHelpers | undefined,
 ) {
   helpers?.notify.showToast(message, messageType);
+}
+
+export function removeOldNotifications(ctx: StateContext<INotificationsStore>) {
+  const currentNotifications = ctx.getState().notifications;
+  const filteredNotifications = currentNotifications.filter(
+    (n) => !isNotificationExpired(n),
+  );
+
+  ctx.patchState({ notifications: filteredNotifications });
 }

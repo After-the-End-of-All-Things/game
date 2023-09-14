@@ -3,6 +3,7 @@ import {
   AddNotification,
   ClearNotificationActions,
   ClearNotificationActionsMatchingUrl,
+  ClearOldNotifications,
   MarkAllNotificationsRead,
   MarkNotificationRead,
   Notify,
@@ -15,6 +16,7 @@ import {
   markAllRead,
   markRead,
   notify,
+  removeOldNotifications,
   setNotifications,
 } from './notifications.functions';
 
@@ -23,6 +25,7 @@ export const attachments: IAttachment[] = [
   { action: MarkNotificationRead, handler: markRead },
   { action: MarkAllNotificationsRead, handler: markAllRead },
   { action: ClearNotificationActions, handler: clearActions },
+  { action: ClearOldNotifications, handler: removeOldNotifications },
   {
     action: ClearNotificationActionsMatchingUrl,
     handler: clearActionsMatchingUrl,

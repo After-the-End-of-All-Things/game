@@ -49,7 +49,7 @@ export class Notification implements INotification {
     text: string,
     actions: INotificationAction[] = [],
     liveAt = new Date(),
-    expiresAfterHours = 24 * 7,
+    expiresAfterHours = 24,
   ) {
     this._id = new ObjectId();
     this.internalId = uuid();
