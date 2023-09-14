@@ -83,6 +83,7 @@ export class CraftingPage implements OnInit {
   updateDiscoveries() {
     this.userService.getDiscoveries().subscribe(({ discoveries }: any) => {
       this.discoveries = discoveries;
+      console.log(discoveries);
     });
   }
 
@@ -105,12 +106,14 @@ export class CraftingPage implements OnInit {
       }));
   }
 
-  isDiscovered(item: IItem) {
+  isDiscovered(item: IRecipe & { item: IItem }) {
     if (!this.discoveries) return false;
 
+    const itemId = item.item.itemId;
+
     return (
-      this.discoveries.collectibles?.[item.itemId] ||
-      this.discoveries.items?.[item.itemId]
+      this.discoveries.collectibles?.[itemId] ||
+      this.discoveries.items?.[itemId]
     );
   }
 
