@@ -6,6 +6,8 @@ import { AnnouncementService } from '@services/announcement.service';
 import { NotificationsService } from '@services/notifications.service';
 import { AuthService } from '../../services/auth.service';
 
+import { marked } from 'marked';
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
@@ -38,6 +40,10 @@ export class LoginPage implements OnInit {
   public loginError = '';
   public registerError = '';
 
+  public announcement: any;
+
+  public lastUpdate = '';
+
   constructor(
     public menu: MenuController,
     private authService: AuthService,
@@ -46,7 +52,19 @@ export class LoginPage implements OnInit {
     private router: Router,
   ) {}
 
-  ngOnInit() {}
+  async ngOnInit() {
+    this.getFormattedAnnouncement();
+  }
+
+  async getFormattedAnnouncement() {
+    this.announcement = await this.announcementService.getLatestAnnouncement();
+
+    const renderer = new marked.Renderer();
+    renderer.link = (href, title, text) =>
+      `<a href="${href}" title="${title}" target="_blank" rel="noopener noreferrer">${text}</a>`;
+
+    this.lastUpdate = marked(this.announcement.summary, { renderer });
+  }
 
   ionViewDidEnter() {
     this.menu.enable(false);

@@ -6,7 +6,22 @@ import Parser from 'rss-parser/dist/rss-parser';
   providedIn: 'root',
 })
 export class AnnouncementService {
-  public get latestAnnouncement() {
+  private allAnnouncements: any[] = [];
+
+  private async init() {
+    const parser = new Parser();
+    try {
+      const feed = await parser.parseURL('https://blog.ateoat.com/feed.xml');
+
+      this.allAnnouncements = feed.items;
+    } catch {
+      console.error('Could not fetch announcements.');
+    }
+  }
+
+  public async getLatestAnnouncement() {
+    await this.init();
+
     const announcement = this.allAnnouncements[0];
     if (!announcement) {
       return {};
@@ -18,22 +33,5 @@ export class AnnouncementService {
       author: announcement.author,
       summary: announcement.summary,
     };
-  }
-
-  private allAnnouncements: any[] = [];
-
-  constructor() {
-    this.init();
-  }
-
-  private async init() {
-    const parser = new Parser();
-    try {
-      const feed = await parser.parseURL('https://blog.ateoat.com/feed.xml');
-
-      this.allAnnouncements = feed.items;
-    } catch {
-      console.error('Could not fetch announcements.');
-    }
   }
 }

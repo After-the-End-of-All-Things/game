@@ -26,3 +26,8 @@ ion-item {
   display: flex;
   justify-content: space-between;
 }
+
+.summary {
+  max-height: 100px;
+  overflow-y: auto;
+}

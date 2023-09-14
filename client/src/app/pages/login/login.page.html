@@ -20,37 +20,6 @@
         sizeXs="12"
         sizeMd="6"
         sizeXl="6"
-        class="full-width blog-container"
-      >
-        <ion-card>
-          <ion-card-header>
-            <ion-card-title>
-              Latest Oats: {{ announcementService.latestAnnouncement.title }}
-            </ion-card-title>
-          </ion-card-header>
-
-          <ion-card-content>
-            {{ announcementService.latestAnnouncement.summary }}
-
-            <br />
-            <br />
-            <a
-              [href]="announcementService.latestAnnouncement.link"
-              target="_blank"
-            >
-              Read more...
-            </a>
-          </ion-card-content>
-        </ion-card>
-      </ion-col>
-    </ion-row>
-
-    <ion-row class="full-width">
-      <ion-col
-        sizeSm="12"
-        sizeXs="12"
-        sizeMd="6"
-        sizeXl="6"
         class="full-width auth-container"
       >
         <ion-segment [(ngModel)]="authType" color="tertiary">
@@ -173,6 +142,32 @@
                 Register
               </ion-button>
             </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+
+    <ion-row class="full-width" *ngIf="announcement">
+      <ion-col
+        sizeSm="12"
+        sizeXs="12"
+        sizeMd="6"
+        sizeXl="6"
+        class="full-width blog-container"
+      >
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>
+              Latest Oats: {{ announcement.title }}
+            </ion-card-title>
+          </ion-card-header>
+
+          <ion-card-content>
+            <div class="summary" [innerHTML]="lastUpdate"></div>
+
+            <br />
+            <br />
+            <a [href]="announcement.link" target="_blank">Read more...</a>
           </ion-card-content>
         </ion-card>
       </ion-col>
