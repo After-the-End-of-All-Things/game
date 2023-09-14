@@ -4,6 +4,7 @@ import { NotificationService } from '@modules/notification/notification.service'
 import { Player } from '@modules/player/player.schema';
 import { PlayerService } from '@modules/player/player.service';
 import { StatsService } from '@modules/stats/stats.service';
+import { WaveDBService } from '@modules/wave/wavedb.service';
 import {
   ForbiddenException,
   Injectable,
@@ -22,6 +23,7 @@ export class WaveService {
     private readonly analyticsService: AnalyticsService,
     private readonly events: EventEmitter2,
     private readonly notificationService: NotificationService,
+    private readonly waveDBService: WaveDBService,
   ) {}
 
   async waveToPlayerFromExplore(userId: string): Promise<UserResponse> {
@@ -140,6 +142,8 @@ export class WaveService {
     this.analyticsService.sendDesignEvent(userId, `Gameplay:Wave`);
 
     this.logger.verbose(`Player ${userId} waved to ${targetUserId}.`);
+
+    await this.waveDBService.addWave(userId, targetUserId);
 
     return { player: playerPatches };
   }

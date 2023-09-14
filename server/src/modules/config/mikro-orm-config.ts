@@ -11,6 +11,7 @@ import { Notification } from '@modules/notification/notification.schema';
 import { Player } from '@modules/player/player.schema';
 import { Stats } from '@modules/stats/stats.schema';
 import { User } from '@modules/user/user.schema';
+import { PlayerWave } from '@modules/wave/playerwave.schema';
 import { ConfigService } from '@nestjs/config';
 
 export const MIKRO_ORM_CONFIG = Symbol('MIKRO_ORM_CONFIG');
@@ -42,6 +43,7 @@ function mikroOrmConfigFactory(
       MarketItem,
       MarketSale,
       Fight,
+      PlayerWave,
     ],
     dbName: process.env.NODE_ENV === 'production' ? 'ateoat' : 'ateoattest',
     type: 'mongo',

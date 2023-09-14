@@ -14,6 +14,7 @@ export class ConstantsService {
   public readonly baseExploreSpeed: number = 3;
 
   public readonly wavePercentBoost: number = 0;
+  public readonly waveHourCooldown: number = 12;
   public readonly itemFindPercentBoost: number = 0;
   public readonly collectibleFindPercentBoost: number = 0;
   public readonly resourceFindPercentBoost: number = 0;
@@ -82,6 +83,10 @@ export class ConstantsService {
     this.wavePercentBoost = +this.configService.get<number>(
       'EXPLORE_EVENT_WAVE_PERCENT_BOOST',
       0,
+    );
+    this.waveHourCooldown = +this.configService.get<number>(
+      'EXPLORE_EVENT_WAVE_COOLDOWN',
+      12,
     );
     this.itemFindPercentBoost = +this.configService.get<number>(
       'EXPLORE_EVENT_ITEM_FIND_PERCENT_BOOST',

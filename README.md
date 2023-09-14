@@ -72,6 +72,7 @@ we love eating our oats
 - `EXPLORE_EVENT_WAVE_PERCENT_BOOST` - the percent boost to wave events happening (default: 0)
 - `EXPLORE_SPEED_MULTIPLIER` - the multiplier for explore speed [percent] (default: 100)
 - `EXPLORE_XP_MULTIPLIER` - the multiplier for explore XP [percent] (default: 100)
+- `EXPLORE_EVENT_WAVE_COOLDOWN` - the hour cooldown between waves (default: 12)
 
 #### Finding Items
 

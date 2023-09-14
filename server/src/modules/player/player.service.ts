@@ -18,6 +18,7 @@ import { Inventory } from '@modules/inventory/inventory.schema';
 import { InventoryService } from '@modules/inventory/inventory.service';
 import { NpcService } from '@modules/player/npc.service';
 import { Player } from '@modules/player/player.schema';
+import { WaveDBService } from '@modules/wave/wavedb.service';
 import {
   BadRequestException,
   ForbiddenException,
@@ -43,6 +44,7 @@ export class PlayerService {
     private readonly discoveriesService: DiscoveriesService,
     private readonly npcService: NpcService,
     private readonly events: EventEmitter2,
+    private readonly waveDBService: WaveDBService,
   ) {}
 
   async getPlayerForUser(userId: string): Promise<Player | undefined> {
@@ -436,6 +438,12 @@ export class PlayerService {
     );
 
     if (!randomPlayer) return;
+
+    const existingWave = await this.waveDBService.getExistingWave(
+      player.userId,
+      randomPlayer.userId,
+    );
+    if (existingWave) return;
 
     this.setPlayerAction(player, {
       text: 'Wave',

@@ -9,6 +9,7 @@ import { InventoryModule } from '@modules/inventory/inventory.module';
 import { NotificationModule } from '@modules/notification/notification.module';
 import { PlayerModule } from '@modules/player/player.module';
 import { StatsModule } from '@modules/stats/stats.module';
+import { WaveModule } from '@modules/wave/wave.module';
 import { Module } from '@nestjs/common';
 import { ItemService } from './item.service';
 import { NpcService } from './npc.service';
@@ -25,20 +26,21 @@ import { TravelService } from './travel.service';
     PlayerModule,
     CraftingModule,
     FightModule,
+    WaveModule,
   ],
   providers: [
     GameplayService,
     TravelService,
-    WaveService,
     ItemService,
     NpcService,
+    WaveService,
   ],
   exports: [
     GameplayService,
     TravelService,
-    WaveService,
     ItemService,
     NpcService,
+    WaveService,
   ],
 })
 export class GameplayModule {}
