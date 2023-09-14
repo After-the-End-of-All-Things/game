@@ -4,8 +4,9 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { environment } from '@environment';
 import { IPlayer, IUser } from '@interfaces';
 import { Select, Store } from '@ngxs/store';
+import { MarketService } from '@services/market.service';
 import { PlayerStore, UserStore } from '@stores';
-import { Observable, timer } from 'rxjs';
+import { Observable, combineLatest, timer } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
 
 interface IMenuItem {
@@ -38,20 +39,33 @@ export class AppComponent {
       title: 'Town',
       url: 'town',
       icon: 'town',
-      indicator: timer(0, 1000).pipe(
-        switchMap(() =>
-          this.store.select((state) =>
-            state.crafting.crafting.currentlyCraftingDoneAt > 0 &&
-            state.crafting.crafting.currentlyCraftingDoneAt < Date.now()
+      indicator: combineLatest([
+        this.marketService.getClaimCoins().pipe(
+          map((coins: any) =>
+            (coins as number) > 0
               ? {
                   color: 'primary',
                   icon: 'global-important',
-                  tooltip: 'Crafting complete!',
+                  tooltip: `${coins.toLocaleString()} coins to take from the market!`,
                 }
               : undefined,
           ),
         ),
-      ),
+        timer(0, 1000).pipe(
+          switchMap(() =>
+            this.store.select((state) =>
+              state.crafting.crafting.currentlyCraftingDoneAt > 0 &&
+              state.crafting.crafting.currentlyCraftingDoneAt < Date.now()
+                ? {
+                    color: 'primary',
+                    icon: 'global-important',
+                    tooltip: 'Crafting complete!',
+                  }
+                : undefined,
+            ),
+          ),
+        ),
+      ]).pipe(map(([claimCoins, crafting]) => claimCoins || crafting)),
     },
   ];
 
@@ -88,6 +102,7 @@ export class AppComponent {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private titleService: Title,
+    private marketService: MarketService,
   ) {
     this.router.events
       .pipe(
