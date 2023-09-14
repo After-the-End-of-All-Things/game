@@ -41,3 +41,7 @@ ion-menu.split-pane-side.menu-side-start {
   --side-min-width: 400px;
   --side-max-width: 400px;
 }
+
+ion-chip.readonly {
+  pointer-events: none;
+}

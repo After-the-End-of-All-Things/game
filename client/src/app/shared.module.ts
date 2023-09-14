@@ -13,7 +13,6 @@ import { HeaderBarComponent } from '@components/header-bar/header-bar.component'
 import { HeroComponent } from '@components/hero/hero.component';
 import { IconComponent } from '@components/icon/icon.component';
 import { ItemDisplayComponent } from '@components/item-display/item-display.component';
-import { ItemElementsComponent } from '@components/item-elements/item-elements.component';
 import { ItemIconComponent } from '@components/item-icon/item-icon.component';
 import { ItemRarityComponent } from '@components/item-rarity/item-rarity.component';
 import { ItemStatsComponent } from '@components/item-stats/item-stats.component';
@@ -47,7 +46,6 @@ const components = [
   MonsterIconComponent,
   ItemRarityComponent,
   ItemStatsComponent,
-  ItemElementsComponent,
   BackgroundArtComponent,
   CountdownComponent,
   RelativeTimePipe,
