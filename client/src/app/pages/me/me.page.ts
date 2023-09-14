@@ -91,7 +91,7 @@ export class MePage implements OnInit {
     modal.present();
 
     const { data } = await modal.onWillDismiss();
-    if (data >= 0) {
+    if (data >= 0 && data !== defaultPortrait) {
       this.playerService.changePortrait(data);
     }
   }
@@ -107,7 +107,9 @@ export class MePage implements OnInit {
     modal.present();
 
     const { data } = await modal.onWillDismiss();
-    this.playerService.changeBackground(data);
+    if (data >= -1) {
+      this.playerService.changeBackground(data);
+    }
   }
 
   calcStat(

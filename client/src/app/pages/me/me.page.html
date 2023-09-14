@@ -161,8 +161,7 @@
                 <app-background-art
                   slot="start"
                   class="tiny-background-art"
-                  *ngIf="data.player?.cosmetics?.background as background"
-                  [sprite]="background"
+                  [sprite]="data.player?.cosmetics?.background ?? -1"
                 ></app-background-art>
 
                 <ion-label>Change Background</ion-label>
