@@ -57,7 +57,7 @@
   let-inventory="inventory"
 >
   <ion-label slot="start" *ngIf="!inventory.equippedItems[slotKey]">
-    <em>nothing equipped in {{ slotKey }} slot</em>
+    <em>nothing equipped in {{ slotName }} slot</em>
   </ion-label>
 
   <ion-row class="full-width" *ngIf="inventory.equippedItems[slotKey] as item">
@@ -80,13 +80,16 @@
     </ion-col>
   </ion-row>
 
-  <ion-label class="slot" slot="end">
-    <em>{{ slotName }}</em>
-    <div *ngIf="inventory.equippedItems[slotKey] as item">
+  <ion-label class="itemslot" slot="end">
+    <ion-badge>
+      <em>{{ slotName }}</em>
+    </ion-badge>
+
+    <div *ngIf="inventory.equippedItems[slotKey] as item" class="unequip">
       <ion-button
         color="warning"
         size="small"
-        fill="outline"
+        fill="clear"
         (click)="unequipItem(slotKey, item.instanceId)"
       >
         Unequip

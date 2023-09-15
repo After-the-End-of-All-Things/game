@@ -7,6 +7,13 @@
   font-weight: bold;
 }
 
-.slot {
-  padding-right: 4px;
+.itemslot {
+
+  ion-badge {
+    min-width: 100px;
+  }
+
+  .unequip {
+    text-align: center;
+  }
 }
