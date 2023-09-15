@@ -51,7 +51,6 @@ export class Notification implements INotification {
     liveAt = new Date(),
     expiresAfterHours = 24,
   ) {
-    this._id = new ObjectId();
     this.internalId = uuid();
 
     this.userId = userId;
@@ -62,7 +61,7 @@ export class Notification implements INotification {
       this.actions.forEach((action) => {
         if (!action.url) return;
 
-        action.url = `${action.url}/${this.id}`;
+        action.url = `${action.url}/${this.internalId}`;
       });
     }
 
