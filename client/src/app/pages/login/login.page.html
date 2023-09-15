@@ -1,175 +1,196 @@
 <ion-content [fullscreen]="true">
   <ion-grid>
-    <ion-row class="full-width">
-      <ion-col
-        sizeSm="12"
-        sizeXs="12"
-        sizeMd="6"
-        sizeXl="6"
-        class="full-width image-container"
-      >
-        <ion-card>
-          <ion-img src="assets/bg/home.png" />
-        </ion-card>
+    <ion-row>
+      <ion-col>
+        <ion-row>
+          <ion-col class="image-container">
+            <ion-card>
+              <ion-img src="assets/bg/home.png" />
+            </ion-card>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col>
+            <ion-card>
+              <ion-card-content>
+                <ion-row>
+                  <ion-col *ngFor="let link of externalLinks">
+                    <ion-button
+                      class="social-icon"
+                      [style.--social-color]="link.color"
+                      fill="clear"
+                      expand="block"
+                      [ngxTippy]="link.name"
+                      target="_blank"
+                      [href]="link.url"
+                    >
+                      <app-game-icon
+                        slot="start"
+                        [icon]="link.icon"
+                      ></app-game-icon>
+                    </ion-button>
+                  </ion-col>
+                </ion-row>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+
+        <ion-row *ngIf="announcement">
+          <ion-col class="blog-container">
+            <ion-card>
+              <ion-card-header>
+                <ion-card-title>
+                  Latest Oats: {{ announcement.title }}
+                </ion-card-title>
+              </ion-card-header>
+
+              <ion-card-content>
+                <div class="summary" [innerHTML]="lastUpdate"></div>
+
+                <br />
+                <br />
+                <a [href]="announcement.link" target="_blank">Read more...</a>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+        </ion-row>
       </ion-col>
-    </ion-row>
 
-    <ion-row class="full-width">
-      <ion-col
-        sizeSm="12"
-        sizeXs="12"
-        sizeMd="6"
-        sizeXl="6"
-        class="full-width auth-container"
-      >
-        <ion-segment [(ngModel)]="authType" color="tertiary">
-          <ion-segment-button value="login">Login</ion-segment-button>
-          <ion-segment-button value="register">Register</ion-segment-button>
-        </ion-segment>
+      <ion-col>
+        <ion-row>
+          <ion-col>
+            <ion-card class="auth">
+              <ion-card-content>
+                <ion-segment [(ngModel)]="authType" color="tertiary">
+                  <ion-segment-button value="login">Login</ion-segment-button>
+                  <ion-segment-button value="register">
+                    Register
+                  </ion-segment-button>
+                </ion-segment>
+              </ion-card-content>
+            </ion-card>
 
-        <ion-card class="full-width auth" *ngIf="authType === 'login'">
-          <ion-card-content [formGroup]="loginForm">
-            <ion-list>
-              <ion-item>
-                <ion-input
-                  label="Email"
-                  labelPlacement="stacked"
-                  type="text"
-                  placeholder="myemail@mydomain.com"
-                  formControlName="email"
-                  errorText="Email must be valid."
-                  (keyup.enter)="login()"
-                ></ion-input>
-              </ion-item>
+            <ion-card class="auth" *ngIf="authType === 'login'">
+              <ion-card-content [formGroup]="loginForm">
+                <ion-list>
+                  <ion-item>
+                    <ion-input
+                      label="Email"
+                      labelPlacement="stacked"
+                      type="text"
+                      placeholder="myemail@mydomain.com"
+                      formControlName="email"
+                      errorText="Email must be valid."
+                      (keyup.enter)="login()"
+                    ></ion-input>
+                  </ion-item>
 
-              <ion-item>
-                <ion-input
-                  label="Password"
-                  labelPlacement="stacked"
-                  type="password"
-                  placeholder="Minimum of 8 characters"
-                  formControlName="password"
-                  errorText="Password must be at least 8 characters."
-                  (keyup.enter)="login()"
-                ></ion-input>
-              </ion-item>
+                  <ion-item>
+                    <ion-input
+                      label="Password"
+                      labelPlacement="stacked"
+                      type="password"
+                      placeholder="Minimum of 8 characters"
+                      formControlName="password"
+                      errorText="Password must be at least 8 characters."
+                      (keyup.enter)="login()"
+                    ></ion-input>
+                  </ion-item>
 
-              <ion-item>
-                <ion-text color="danger" *ngIf="loginError">
-                  {{ loginError }}
-                </ion-text>
-              </ion-item>
-            </ion-list>
+                  <ion-item>
+                    <ion-text color="danger" *ngIf="loginError">
+                      {{ loginError }}
+                    </ion-text>
+                  </ion-item>
+                </ion-list>
 
-            <div class="actions">
-              <ion-button
-                fill="clear"
-                color="warning"
-                (click)="loginForm.reset()"
-              >
-                Clear
-              </ion-button>
-              <ion-button
-                fill="clear"
-                [disabled]="!loginForm.valid"
-                (click)="login()"
-              >
-                Login
-              </ion-button>
-            </div>
-          </ion-card-content>
-        </ion-card>
+                <div class="actions">
+                  <ion-button
+                    fill="clear"
+                    color="warning"
+                    (click)="loginForm.reset()"
+                  >
+                    Clear
+                  </ion-button>
+                  <ion-button
+                    fill="clear"
+                    [disabled]="!loginForm.valid"
+                    (click)="login()"
+                  >
+                    Login
+                  </ion-button>
+                </div>
+              </ion-card-content>
+            </ion-card>
 
-        <ion-card class="full-width auth" *ngIf="authType === 'register'">
-          <ion-card-content [formGroup]="registerForm">
-            <ion-list>
-              <ion-item>
-                <ion-input
-                  label="Email"
-                  labelPlacement="stacked"
-                  type="text"
-                  placeholder="myemail@mydomain.com"
-                  formControlName="email"
-                  errorText="Email must be valid."
-                  (keyup.enter)="register()"
-                ></ion-input>
-              </ion-item>
+            <ion-card class="auth" *ngIf="authType === 'register'">
+              <ion-card-content [formGroup]="registerForm">
+                <ion-list>
+                  <ion-item>
+                    <ion-input
+                      label="Email"
+                      labelPlacement="stacked"
+                      type="text"
+                      placeholder="myemail@mydomain.com"
+                      formControlName="email"
+                      errorText="Email must be valid."
+                      (keyup.enter)="register()"
+                    ></ion-input>
+                  </ion-item>
 
-              <ion-item>
-                <ion-input
-                  label="Password"
-                  labelPlacement="stacked"
-                  type="password"
-                  placeholder="Minimum of 8 characters"
-                  formControlName="password"
-                  errorText="Password must be at least 8 characters."
-                  (keyup.enter)="register()"
-                ></ion-input>
-              </ion-item>
+                  <ion-item>
+                    <ion-input
+                      label="Password"
+                      labelPlacement="stacked"
+                      type="password"
+                      placeholder="Minimum of 8 characters"
+                      formControlName="password"
+                      errorText="Password must be at least 8 characters."
+                      (keyup.enter)="register()"
+                    ></ion-input>
+                  </ion-item>
 
-              <ion-item>
-                <ion-input
-                  label="Username"
-                  labelPlacement="stacked"
-                  type="text"
-                  placeholder="Between 2 and 20 characters"
-                  formControlName="username"
-                  errorText="Username must be between 2 and 20 characters."
-                  (keyup.enter)="register()"
-                ></ion-input>
-              </ion-item>
+                  <ion-item>
+                    <ion-input
+                      label="Username"
+                      labelPlacement="stacked"
+                      type="text"
+                      placeholder="Between 2 and 20 characters"
+                      formControlName="username"
+                      errorText="Username must be between 2 and 20 characters."
+                      (keyup.enter)="register()"
+                    ></ion-input>
+                  </ion-item>
 
-              <ion-item>
-                <ion-text color="danger" *ngIf="registerError">
-                  {{ registerError }}
-                </ion-text>
-              </ion-item>
-            </ion-list>
+                  <ion-item>
+                    <ion-text color="danger" *ngIf="registerError">
+                      {{ registerError }}
+                    </ion-text>
+                  </ion-item>
+                </ion-list>
 
-            <div class="actions">
-              <ion-button
-                fill="clear"
-                color="warning"
-                (click)="registerForm.reset()"
-              >
-                Clear
-              </ion-button>
-              <ion-button
-                fill="clear"
-                [disabled]="!registerForm.valid"
-                (click)="register()"
-              >
-                Register
-              </ion-button>
-            </div>
-          </ion-card-content>
-        </ion-card>
-      </ion-col>
-    </ion-row>
-
-    <ion-row class="full-width" *ngIf="announcement">
-      <ion-col
-        sizeSm="12"
-        sizeXs="12"
-        sizeMd="6"
-        sizeXl="6"
-        class="full-width blog-container"
-      >
-        <ion-card>
-          <ion-card-header>
-            <ion-card-title>
-              Latest Oats: {{ announcement.title }}
-            </ion-card-title>
-          </ion-card-header>
-
-          <ion-card-content>
-            <div class="summary" [innerHTML]="lastUpdate"></div>
-
-            <br />
-            <br />
-            <a [href]="announcement.link" target="_blank">Read more...</a>
-          </ion-card-content>
-        </ion-card>
+                <div class="actions">
+                  <ion-button
+                    fill="clear"
+                    color="warning"
+                    (click)="registerForm.reset()"
+                  >
+                    Clear
+                  </ion-button>
+                  <ion-button
+                    fill="clear"
+                    [disabled]="!registerForm.valid"
+                    (click)="register()"
+                  >
+                    Register
+                  </ion-button>
+                </div>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+        </ion-row>
       </ion-col>
     </ion-row>
   </ion-grid>

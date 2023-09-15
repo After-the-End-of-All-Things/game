@@ -45,3 +45,7 @@ ion-menu.split-pane-side.menu-side-start {
 ion-chip.readonly {
   pointer-events: none;
 }
+
+ion-icon {
+  transition: color 0.3s ease-in-out;
+}

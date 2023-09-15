@@ -6,6 +6,8 @@ import { IonicModule } from '@ionic/angular';
 
 import { LoginPageRoutingModule } from './login-routing.module';
 
+import { NgxTippyModule } from 'ngx-tippy-wrapper';
+import { SharedModule } from 'src/app/shared.module';
 import { LoginPage } from './login.page';
 
 @NgModule({
@@ -14,8 +16,10 @@ import { LoginPage } from './login.page';
     FormsModule,
     ReactiveFormsModule,
     IonicModule,
-    LoginPageRoutingModule
+    SharedModule,
+    NgxTippyModule,
+    LoginPageRoutingModule,
   ],
-  declarations: [LoginPage]
+  declarations: [LoginPage],
 })
 export class LoginPageModule {}

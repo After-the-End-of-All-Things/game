@@ -14,6 +14,39 @@ import { marked } from 'marked';
   styleUrls: ['./login.page.scss'],
 })
 export class LoginPage implements OnInit {
+  public readonly externalLinks = [
+    {
+      name: 'Discord',
+      icon: 'external-discord',
+      url: 'https://discord.ateoat.com',
+      color: '#5865f2',
+    },
+    {
+      name: 'ateoat Blog',
+      icon: 'external-blog',
+      url: 'https://blog.ateoat.com',
+      color: '#447d80',
+    },
+    {
+      name: 'Reddit',
+      icon: 'external-reddit',
+      url: 'https://reddit.ateoat.com',
+      color: '#fb4404',
+    },
+    {
+      name: 'Twitter',
+      icon: 'external-twitter',
+      url: 'https://twitter.ateoat.com',
+      color: '#1da1f2',
+    },
+    {
+      name: 'Facebook',
+      icon: 'external-facebook',
+      url: 'https://facebook.ateoat.com',
+      color: '#3b5998',
+    },
+  ];
+
   authType: 'login' | 'register' = 'login';
 
   loginForm = new FormGroup({
