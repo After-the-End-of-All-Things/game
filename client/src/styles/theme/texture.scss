@@ -50,7 +50,7 @@ ion-button.button-solid {
   }
 }
 
-ion-card:not(.special-display-card), ion-select, .alert-wrapper, .header {
+ion-card:not(.special-display-card), ion-list, ion-select, .alert-wrapper, .header {
   background: url('../../assets/bg/texture-bg.png'),
               linear-gradient(
                 to bottom,
