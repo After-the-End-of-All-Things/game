@@ -87,6 +87,8 @@ export class LoginPage implements OnInit {
 
   async ngOnInit() {
     this.getFormattedAnnouncement();
+
+    if (this.authService.isAuthenticated()) this.router.navigate(['/']);
   }
 
   async getFormattedAnnouncement() {
