@@ -100,3 +100,13 @@ we love eating our oats
 - Setup scripts must be non-mandatory (at this time).
 - When setting properties on a sub-object for a schema, it _will not flush_ unless you also set the object. One way to do this is: `this.prop = { ...this.prop, newProp: newPropValue }`.
 - When setting properties on a sub-object for a schema, it must not be more than one property deep where possible. This causes unknown, annoying complications with the ORM. It is fiesty.
+
+### Testing With Fake Clients
+
+If you want to populate your local market/playerbase/what-have-you; you can run the following command:
+
+```
+npm run testclient -- --clients=X
+```
+
+X can be anywhere between 1 and 33 (the number of names in the names array). This will create X fake clients and run them through the game loop. They will sell any items they find, flee any fights they encounter, and wave at everyone they find.

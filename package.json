@@ -32,7 +32,8 @@
     "push": "git push && git push --tags",
     "bump:patch": "npm version patch -m \"chore(release): Patch %s\"",
     "bump:minor": "npm version minor -m \"chore(release): Minor %s\"",
-    "bump:major": "npm version major -m \"chore(release): Major %s\""
+    "bump:major": "npm version major -m \"chore(release): Major %s\"",
+    "testclient": "ts-node ./utils/headless-runner/index"
   },
   "devDependencies": {
     "@types/node": "^20.2.5",
@@ -42,6 +43,8 @@
     "ts-node": "^10.9.1"
   },
   "dependencies": {
-    "uuid": "^9.0.0"
+    "minimist": "^1.2.8",
+    "uuid": "^9.0.0",
+    "wretch": "^2.7.0"
   }
 }
