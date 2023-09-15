@@ -1,0 +1,36 @@
+
+ion-button.button-solid {
+  &.in-toolbar {
+    --background: var(--ion-color-base);
+  }
+
+  &::part(native) {
+    background: url('../../assets/bg/texture-button.png'),
+                linear-gradient(
+                  to bottom,
+                  var(--background),
+                  var(--background)
+                );
+  }
+}
+
+ion-card:not(.special-display-card) {
+  background: url('../../assets/bg/texture-bg.png'),
+              linear-gradient(
+                to bottom,
+                var(--background),
+                var(--background)
+              );
+}
+
+ion-item {
+
+  &::part(native) {
+    background: url('../../assets/bg/texture-bg.png'),
+                linear-gradient(
+                  to bottom,
+                  var(--background),
+                  var(--background)
+                );
+  }
+}

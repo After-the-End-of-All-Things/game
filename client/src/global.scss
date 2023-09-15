@@ -26,25 +26,9 @@
 @import "@ionic/angular/css/flex-utils.css";
 
 @import "./styles/theme/index.scss";
-@import "./styles/theme/variables.scss";
 @import "./styles/components.scss";
 @import "./styles/datatable-overrides.scss";
 @import "./styles/helpers.scss";
 @import "./styles/ionic-overrides.scss";
 @import "./styles/item-rarities.scss";
 @import "./styles/global-access.scss";
-
-app-inventory {
-  .text-wrap-column {
-    white-space: normal !important;
-  }
-
-  .icon-column .icon {
-    font-size: 24px;
-  }
-
-  .center-column {
-    align-items: center;
-    justify-content: center;
-  }
-}
