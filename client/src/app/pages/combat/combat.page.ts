@@ -59,6 +59,7 @@ export class CombatPage implements OnInit {
   public selectedAbility: ICombatAbility | undefined;
   public staticSelectedTiles: Record<string, 'primary' | 'secondary'> = {};
   public locationSprite = -1;
+  public showSpecialGauge = false;
 
   public get myCharacter(): IFightCharacter {
     return this.fightCharacters[this.myCharacterId];
@@ -113,6 +114,8 @@ export class CombatPage implements OnInit {
           }
         });
 
+        this.attemptToDisplaySpecialGauge();
+
         this.myCharacterJob = player.job;
         this.myCharacterLevel = player.level;
 
@@ -120,6 +123,15 @@ export class CombatPage implements OnInit {
           this.contentService.getLocation(player.location.current)
             ?.background ?? -1;
       });
+  }
+
+  attemptToDisplaySpecialGauge() {
+    const allCharacters = [...this.fight.attackers, ...this.fight.defenders];
+    const shouldDisplay = allCharacters.some(
+      (player) => player.userId && player.level >= 10,
+    );
+
+    this.showSpecialGauge = shouldDisplay;
   }
 
   getMonster(id: string): IMonster {
