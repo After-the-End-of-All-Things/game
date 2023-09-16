@@ -68,7 +68,6 @@ export class AppComponent {
         ),
       ]).pipe(
         map(([claimCoins, didClaimCoins, crafting]) => {
-          console.log({ claimCoins, didClaimCoins, crafting });
           if (didClaimCoins) return crafting;
           return claimCoins || crafting;
         }),
