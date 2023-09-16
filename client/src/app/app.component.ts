@@ -51,6 +51,7 @@ export class AppComponent {
               : undefined,
           ),
         ),
+        this.marketService.claimedCoins$,
         timer(0, 1000).pipe(
           switchMap(() =>
             this.store.select((state) =>
@@ -65,7 +66,13 @@ export class AppComponent {
             ),
           ),
         ),
-      ]).pipe(map(([claimCoins, crafting]) => claimCoins || crafting)),
+      ]).pipe(
+        map(([claimCoins, didClaimCoins, crafting]) => {
+          console.log({ claimCoins, didClaimCoins, crafting });
+          if (didClaimCoins) return crafting;
+          return claimCoins || crafting;
+        }),
+      ),
     },
   ];
 
