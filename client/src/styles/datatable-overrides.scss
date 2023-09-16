@@ -1,5 +1,27 @@
 
 .ngx-datatable {
+
+  &, .datatable-body .datatable-body-row {
+    border: none !important;
+  }
+
+  .datatable-body, .datatable-header-cell, .datatable-body-cell {
+    background: url('../assets/bg/texture-bg.png'),
+                linear-gradient(
+                  to bottom,
+                  var(--background),
+                  var(--background)
+                ) !important;
+  }
+
+  .datatable-header {
+    height: 40px !important;
+
+    .datatable-header-cell {
+      color: #fff;
+    }
+  }
+
   .icon-col {
     .datatable-body-cell-label {
       display: flex;
@@ -9,5 +31,19 @@
 
   .ingredients-col {
     overflow-y: hidden;
+  }
+
+
+  .text-wrap-column {
+    white-space: normal !important;
+  }
+
+  .icon-column .icon {
+    font-size: 24px;
+  }
+
+  .center-column {
+    align-items: center;
+    justify-content: center;
   }
 }
