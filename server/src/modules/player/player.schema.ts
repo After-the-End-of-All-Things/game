@@ -21,9 +21,6 @@ import { ObjectId } from '@mikro-orm/mongodb';
 
 @Entity()
 export class Player implements IPlayer {
-  @PrimaryKey({ hidden: true })
-  _id!: ObjectId;
-
   @SerializedPrimaryKey({ hidden: true })
   id!: string;
 
@@ -72,6 +69,9 @@ export class Player implements IPlayer {
 
   @Property()
   cosmetics: IPlayerCosmetics;
+
+  @PrimaryKey({ hidden: true })
+  _id!: ObjectId;
 
   constructor(userId: string) {
     this.userId = userId;

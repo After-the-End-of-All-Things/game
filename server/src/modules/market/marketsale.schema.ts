@@ -11,9 +11,6 @@ import { generateUUID } from '@utils/uuid';
 
 @Entity()
 export class MarketSale implements IMarketSale {
-  @PrimaryKey({ hidden: true })
-  _id!: ObjectId;
-
   @SerializedPrimaryKey({ hidden: true })
   id!: string;
 
@@ -48,6 +45,9 @@ export class MarketSale implements IMarketSale {
   @Property()
   @Index({ options: { expireAfterSeconds: 0 } })
   expiresAt: Date;
+
+  @PrimaryKey({ hidden: true })
+  _id!: ObjectId;
 
   constructor(
     seller: string,

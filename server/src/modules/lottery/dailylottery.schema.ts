@@ -10,24 +10,19 @@ import { generateUUID } from '@utils/uuid';
 
 @Entity()
 export class DailyRandomLottery {
-  @PrimaryKey({ hidden: true })
-  _id!: ObjectId;
-
   @SerializedPrimaryKey({ hidden: true })
   id!: string;
-
   @Property()
   internalId: string;
-
   @Index()
   @Property()
   createdAt: Date;
-
   @Property()
   winnerId: string;
-
   @Property()
   claimed: boolean;
+  @PrimaryKey({ hidden: true })
+  _id!: ObjectId;
 
   constructor(winnerId: string) {
     this.createdAt = new Date();

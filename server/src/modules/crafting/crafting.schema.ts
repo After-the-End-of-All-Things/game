@@ -10,9 +10,6 @@ import { ObjectId } from '@mikro-orm/mongodb';
 
 @Entity()
 export class Crafting implements ICrafting {
-  @PrimaryKey({ hidden: true })
-  _id!: ObjectId;
-
   @SerializedPrimaryKey({ hidden: true })
   id!: string;
 
@@ -25,7 +22,6 @@ export class Crafting implements ICrafting {
 
   @Property()
   armorerXp: number;
-
   @Property()
   artisanLevel: number;
 
@@ -43,6 +39,9 @@ export class Crafting implements ICrafting {
 
   @Property()
   currentlyCraftingDoneAt: number;
+
+  @PrimaryKey({ hidden: true })
+  _id!: ObjectId;
 
   constructor(userId: string) {
     this.userId = userId;

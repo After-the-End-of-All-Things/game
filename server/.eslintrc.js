@@ -5,7 +5,7 @@ module.exports = {
     tsconfigRootDir : __dirname, 
     sourceType: 'module',
   },
-  plugins: ['@typescript-eslint/eslint-plugin'],
+  plugins: ['@typescript-eslint/eslint-plugin', 'sort-class-members'],
   extends: [
     'plugin:@typescript-eslint/recommended',
     'plugin:prettier/recommended',
@@ -23,11 +23,26 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/no-floating-promises': 'error',
     '@typescript-eslint/no-misused-promises': 'error',
-    "prettier/prettier": [
-      "error",
+    'prettier/prettier': [
+      'error',
       {
-        "endOfLine": "auto"
+        'endOfLine': 'auto'
       },
     ],
+		'sort-class-members/sort-class-members': [
+			2,
+			{
+				'order': [
+					'[static-properties]',
+					'[static-methods]',
+					'[properties]',
+					'[conventional-private-properties]',
+					'constructor',
+					'[methods]',
+					'[conventional-private-methods]'
+				],
+				'accessorPairPositioning': 'getThenSet'
+			}
+		]
   },
 };

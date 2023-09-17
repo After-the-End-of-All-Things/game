@@ -17,9 +17,6 @@ import { generateUUID } from '@utils/uuid';
 
 @Entity()
 export class Fight implements IFight {
-  @PrimaryKey({ hidden: true })
-  _id!: ObjectId;
-
   @SerializedPrimaryKey()
   id!: string;
 
@@ -53,6 +50,9 @@ export class Fight implements IFight {
 
   @Property()
   statusMessage: IFightStatusMessage[];
+
+  @PrimaryKey({ hidden: true })
+  _id!: ObjectId;
 
   constructor(
     involvedPlayers: string[],

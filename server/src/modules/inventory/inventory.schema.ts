@@ -10,24 +10,19 @@ import { ObjectId } from '@mikro-orm/mongodb';
 
 @Entity()
 export class Inventory implements IInventory {
-  @PrimaryKey({ hidden: true })
-  _id!: ObjectId;
-
   @SerializedPrimaryKey({ hidden: true })
   id!: string;
-
   @Unique()
   @Property({ hidden: true })
   userId: string;
-
   @Property()
   equippedItems: Record<ItemSlot, IEquipment | undefined>;
-
   @Property()
   otherJobEquipment: Record<string, Record<ItemSlot, IEquipment | undefined>>;
-
   @Property()
   resources: Record<string, number>;
+  @PrimaryKey({ hidden: true })
+  _id!: ObjectId;
 
   constructor(userId: string) {
     this.userId = userId;

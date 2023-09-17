@@ -11,9 +11,6 @@ import { generateUUID } from '@utils/uuid';
 
 @Entity()
 export class MarketItem implements IMarketItem {
-  @PrimaryKey({ hidden: true })
-  _id!: ObjectId;
-
   @SerializedPrimaryKey({ hidden: true })
   id!: string;
 
@@ -48,6 +45,9 @@ export class MarketItem implements IMarketItem {
 
   @Property()
   meta: IMarketItemMeta;
+
+  @PrimaryKey({ hidden: true })
+  _id!: ObjectId;
 
   constructor(
     userId: string,

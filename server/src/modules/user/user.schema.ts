@@ -13,9 +13,6 @@ export type UserId = User['_id'];
 
 @Entity()
 export class User implements IUser {
-  @PrimaryKey()
-  _id!: ObjectId;
-
   @SerializedPrimaryKey()
   id!: string;
 
@@ -37,6 +34,9 @@ export class User implements IUser {
   @Unique()
   @Property()
   email: string;
+
+  @PrimaryKey()
+  _id!: ObjectId;
 
   constructor(
     username: string,

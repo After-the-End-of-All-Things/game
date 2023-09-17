@@ -11,9 +11,6 @@ import { generateUUID } from '@utils/uuid';
 
 @Entity()
 export class Notification implements INotification {
-  @PrimaryKey({ hidden: true })
-  _id!: ObjectId;
-
   @SerializedPrimaryKey({ hidden: true })
   id!: string;
 
@@ -43,6 +40,9 @@ export class Notification implements INotification {
 
   @Property()
   actions?: INotificationAction[];
+
+  @PrimaryKey({ hidden: true })
+  _id!: ObjectId;
 
   constructor(
     userId: string,

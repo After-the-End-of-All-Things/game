@@ -24,10 +24,6 @@ censor.disableTier(2);
 
 @Injectable()
 export class ContentService {
-  public get censor(): CensorSensor {
-    return censor;
-  }
-
   public content = {
     meta: {},
     locations: {},
@@ -41,6 +37,12 @@ export class ContentService {
     formations: {},
     npcs: {},
   };
+
+  constructor(private logger: Logger) {}
+
+  public get censor(): CensorSensor {
+    return censor;
+  }
 
   private get locations(): Record<string, ILocation> {
     return this.content.locations;
@@ -81,8 +83,6 @@ export class ContentService {
   private get npcs(): Record<string, ILocationNPC> {
     return this.content.npcs;
   }
-
-  constructor(private logger: Logger) {}
 
   public async reloadContent() {
     this.logger.log('Loading game content over HTTP...');

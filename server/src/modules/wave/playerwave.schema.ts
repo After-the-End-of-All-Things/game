@@ -9,23 +9,19 @@ import { ObjectId } from '@mikro-orm/mongodb';
 
 @Entity()
 export class PlayerWave {
-  @PrimaryKey({ hidden: true })
-  _id!: ObjectId;
-
   @SerializedPrimaryKey({ hidden: true })
   id!: string;
-
   @Index()
   @Property()
   playerWaving: string;
-
   @Index()
   @Property()
   playerWavingAt: string;
-
   @Property()
   @Index({ options: { expireAfterSeconds: 0 } })
   expiresAt: Date;
+  @PrimaryKey({ hidden: true })
+  _id!: ObjectId;
 
   constructor(
     playerWaving: string,

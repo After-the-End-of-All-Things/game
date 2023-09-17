@@ -10,9 +10,6 @@ import { ObjectId } from '@mikro-orm/mongodb';
 
 @Entity()
 export class Discoveries implements IDiscoveries {
-  @PrimaryKey({ hidden: true })
-  _id!: ObjectId;
-
   @SerializedPrimaryKey({ hidden: true })
   id!: string;
 
@@ -58,6 +55,9 @@ export class Discoveries implements IDiscoveries {
 
   @Property()
   totalMonsterClaims: number;
+
+  @PrimaryKey({ hidden: true })
+  _id!: ObjectId;
 
   constructor(userId: string) {
     this.userId = userId;

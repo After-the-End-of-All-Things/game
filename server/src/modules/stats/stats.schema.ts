@@ -11,9 +11,6 @@ import { Discoveries } from '@modules/discoveries/discoveries.schema';
 
 @Entity()
 export class Stats implements IStats {
-  @PrimaryKey({ hidden: true })
-  _id!: ObjectId;
-
   @SerializedPrimaryKey({ hidden: true })
   id!: string;
 
@@ -44,6 +41,9 @@ export class Stats implements IStats {
 
   @Property()
   stats: Partial<Record<TrackedStat, number>>;
+
+  @PrimaryKey({ hidden: true })
+  _id!: ObjectId;
 
   constructor(userId: string) {
     this.userId = userId;
