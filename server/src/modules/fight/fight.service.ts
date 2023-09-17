@@ -56,10 +56,10 @@ import {
 } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { getPatchesAfterPropChanges } from '@utils/patches';
+import { generateUUID } from '@utils/uuid';
 import { Operation } from 'fast-json-patch';
 import { random, sample, sampleSize, sum } from 'lodash';
 import { Logger } from 'nestjs-pino';
-import { v4 as uuid } from 'uuid';
 
 const DELAY_BETWEEN_ROUNDS = 3000;
 const DELAY_BETWEEN_TURNS = 200;
@@ -144,7 +144,7 @@ export class FightService {
 
     return {
       userId: player.userId,
-      characterId: uuid(),
+      characterId: generateUUID(),
       name: user.username,
       sprite: player.cosmetics.portrait,
       level: player.level,
@@ -165,7 +165,7 @@ export class FightService {
   ): IFightCharacter {
     return {
       monsterId: monster.itemId,
-      characterId: uuid(),
+      characterId: generateUUID(),
       name: `${monster.name} ${String.fromCharCode(65 + indexForLetter)}`,
       sprite: monster.sprite,
       level: monster.level,

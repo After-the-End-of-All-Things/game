@@ -7,7 +7,7 @@ import {
   SerializedPrimaryKey,
 } from '@mikro-orm/core';
 import { ObjectId } from '@mikro-orm/mongodb';
-import { v4 as uuid } from 'uuid';
+import { generateUUID } from '@utils/uuid';
 
 @Entity()
 export class Notification implements INotification {
@@ -51,7 +51,7 @@ export class Notification implements INotification {
     liveAt = new Date(),
     expiresAfterHours = 24,
   ) {
-    this.internalId = uuid();
+    this.internalId = generateUUID();
 
     this.userId = userId;
     this.text = text;

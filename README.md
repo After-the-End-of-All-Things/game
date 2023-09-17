@@ -90,6 +90,11 @@ we love eating our oats
 
 - `INVENTORY_MAX_SIZE` - the maximum inventory size per player (default: 100)
 
+#### Lottery
+
+- `DAILY_LOTTERY_NUM_WINNERS` - the number of winners per daily lottery (default: 1)
+- `DAILY_LOTTERY_PICK_HOUR` - the hour of the day to pick the daily lottery winners (default: 18)
+
 #### Showcase
 
 - `SHOWCASE_COLLECTIBLE_SLOTS` - the number of collectible slots in the showcase (default: 3)

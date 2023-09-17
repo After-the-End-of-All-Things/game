@@ -1,0 +1,15 @@
+<ion-card class="text-reward-card center-title-card">
+  <ion-card-header>
+    <ion-card-title>Daily Lottery</ion-card-title>
+  </ion-card-header>
+
+  <ion-card-content>
+    <div class="text">
+      {{ didIWin ? 'Winner!' : 'Not Today' }}
+    </div>
+
+    <div class="reward-button" *ngIf="didIWin" (click)="claimDailyRewards()">
+      <ion-button color="primary">Claim</ion-button>
+    </div>
+  </ion-card-content>
+</ion-card>

@@ -13,7 +13,7 @@ import {
   SerializedPrimaryKey,
 } from '@mikro-orm/core';
 import { ObjectId } from '@mikro-orm/mongodb';
-import { v4 as uuid } from 'uuid';
+import { generateUUID } from '@utils/uuid';
 
 @Entity()
 export class Fight implements IFight {
@@ -61,7 +61,7 @@ export class Fight implements IFight {
     defenders: IFightCharacter[],
     tiles: IFightTile[][],
   ) {
-    this.internalId = uuid();
+    this.internalId = generateUUID();
     this.involvedPlayers = involvedPlayers;
     this.turnOrder = turnOrder;
     this.attackers = attackers;

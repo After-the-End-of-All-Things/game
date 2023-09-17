@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { AvatarComponent } from '@components/avatar/avatar.component';
 import { BackgroundArtComponent } from '@components/background-art/background-art.component';
+import { CardDailyLotteryComponent } from '@components/card-daily-lottery/card-daily-lottery.component';
 import { CardOnlineUsersComponent } from '@components/card-online-users/card-online-users.component';
 import { CombatAbilityComponent } from '@components/combat-ability/combat-ability.component';
 import { CountdownComponent } from '@components/countdown/countdown.component';
@@ -53,6 +54,7 @@ const components = [
   CombatAbilityComponent,
   GameIconComponent,
   ItemDisplayComponent,
+  CardDailyLotteryComponent,
 ];
 
 @NgModule({

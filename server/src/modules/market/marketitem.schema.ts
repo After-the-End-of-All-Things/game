@@ -7,7 +7,7 @@ import {
   SerializedPrimaryKey,
 } from '@mikro-orm/core';
 import { ObjectId } from '@mikro-orm/mongodb';
-import { v4 as uuid } from 'uuid';
+import { generateUUID } from '@utils/uuid';
 
 @Entity()
 export class MarketItem implements IMarketItem {
@@ -58,7 +58,7 @@ export class MarketItem implements IMarketItem {
     meta: IMarketItemMeta,
   ) {
     this.createdAt = new Date();
-    this.internalId = uuid();
+    this.internalId = generateUUID();
 
     this.userId = userId;
     this.itemId = itemId;

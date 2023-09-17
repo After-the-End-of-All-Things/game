@@ -10,8 +10,8 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { generateUUID } from '@utils/uuid';
 import { Logger } from 'nestjs-pino';
-import { v4 as uuid } from 'uuid';
 
 @Injectable()
 export class InventoryService {
@@ -117,7 +117,7 @@ export class InventoryService {
       return;
     }
 
-    const item = new InventoryItem(userId, itemId, uuid());
+    const item = new InventoryItem(userId, itemId, generateUUID());
 
     await this.inventoryItems.create(item);
     this.logger.verbose(`Acquiring item ${item.itemId} for ${userId}.`);

@@ -52,6 +52,9 @@ export class ConstantsService {
   public readonly findRateDivine: number = 2;
   public readonly findRateUnique: number = 1;
 
+  public readonly dailyLotteryNumWinners: number = 1;
+  public readonly dailyLotteryPickHour: number = 18;
+
   public readonly showcaseItemSlots: number = 3;
   public readonly showcaseCollectibleSlots: number = 3;
 
@@ -224,6 +227,16 @@ export class ConstantsService {
     this.findRateUnique = +this.configService.get<number>(
       'FIND_RATE_UNIQUE',
       1,
+    );
+
+    this.dailyLotteryNumWinners = +this.configService.get<number>(
+      'DAILY_LOTTERY_NUM_WINNERS',
+      1,
+    );
+
+    this.dailyLotteryPickHour = +this.configService.get<number>(
+      'DAILY_LOTTERY_PICK_HOUR',
+      18,
     );
 
     this.showcaseItemSlots = +this.configService.get<number>(

@@ -24,6 +24,28 @@
   }
 }
 
+.text-reward-card {
+  ion-card-content {
+    min-height: 170px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    .text {
+      font-size: 3.5em;
+      text-align: center;
+    }
+
+    .reward-action {
+      min-height: 36px;
+      display: flex;
+      align-items: center;
+    }
+  }
+}
+
 .italic-subtitle-card {
   ion-card-subtitle {
     font-style: italic;

@@ -15,4 +15,12 @@ export class UserService {
   public getDiscoveries() {
     return this.http.get(`${environment.apiUrl}/discoveries/mine`);
   }
+
+  public didIWinLotteryToday() {
+    return this.http.get(`${environment.apiUrl}/lottery/didiwintoday`);
+  }
+
+  public claimDailyRewards() {
+    return this.http.get(`${environment.apiUrl}/lottery/claimdailyrewards`);
+  }
 }
