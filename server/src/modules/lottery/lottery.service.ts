@@ -29,6 +29,17 @@ export class LotteryService implements OnModuleInit {
     }
   }
 
+  private startOfLastWeek(): Date {
+    const startOfLastWeek = new Date();
+    startOfLastWeek.setDate(startOfLastWeek.getDate() - 7);
+    startOfLastWeek.setHours(0);
+    startOfLastWeek.setMinutes(0);
+    startOfLastWeek.setSeconds(0);
+    startOfLastWeek.setMilliseconds(0);
+
+    return startOfLastWeek;
+  }
+
   public nextLotteryRecordTime(): Date {
     const nextLotteryRecordTime = new Date();
     nextLotteryRecordTime.setHours(this.constants.dailyLotteryPickHour);
@@ -78,13 +89,14 @@ export class LotteryService implements OnModuleInit {
   private async addNewPlayerLotteryRecord() {
     const emCtx = this.em.fork();
 
-    const randomPlayers = await emCtx.aggregate(Player, [
+    const randomPlayers = await emCtx.aggregate(User, [
+      { $match: { onlineUntil: { $gt: this.startOfLastWeek().getTime() } } },
       { $sample: { size: this.constants.dailyLotteryNumWinners } },
     ]);
 
     await Promise.all(
       randomPlayers.map(async (randomPlayer) => {
-        const winnerId = randomPlayer.userId;
+        const winnerId = randomPlayer._id.toString();
 
         const newRecord = new DailyRandomLottery(winnerId);
         emCtx.persist(newRecord);
@@ -115,15 +127,8 @@ export class LotteryService implements OnModuleInit {
   }
 
   public async numPlayersOnlineInLastWeek(): Promise<number> {
-    const startOfLastWeek = new Date();
-    startOfLastWeek.setDate(startOfLastWeek.getDate() - 7);
-    startOfLastWeek.setHours(0);
-    startOfLastWeek.setMinutes(0);
-    startOfLastWeek.setSeconds(0);
-    startOfLastWeek.setMilliseconds(0);
-
     return this.em.count(User, {
-      onlineUntil: { $gte: startOfLastWeek.getTime() },
+      onlineUntil: { $gte: this.startOfLastWeek().getTime() },
     });
   }
 
