@@ -23,10 +23,14 @@ export class CountdownComponent implements OnInit {
   }
 
   public get minutes() {
-    return Math.floor(this.seconds / 60);
+    return Math.floor(this.totalSeconds / 60);
   }
 
   public get seconds() {
+    return this.totalSeconds % 60;
+  }
+
+  public get totalSeconds() {
     return Math.floor(this.duration / 1000);
   }
 
