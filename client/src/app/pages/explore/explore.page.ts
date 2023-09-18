@@ -94,6 +94,5 @@ export class ExplorePage implements OnInit {
     });
 
     await alert.present();
-    console.log(action);
   }
 }
