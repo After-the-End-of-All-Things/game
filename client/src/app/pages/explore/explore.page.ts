@@ -1,6 +1,7 @@
 import { Component, DestroyRef, OnInit, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { IFight, INotificationAction, IPlayerLocation } from '@interfaces';
+import { AlertController } from '@ionic/angular';
 import { Select, Store } from '@ngxs/store';
 import { ActionsService } from '@services/actions.service';
 import { ContentService } from '@services/content.service';
@@ -31,6 +32,7 @@ export class ExplorePage implements OnInit {
 
   constructor(
     private store: Store,
+    private alertCtrl: AlertController,
     private gameplayService: GameplayService,
     private contentService: ContentService,
     public actionsService: ActionsService,
@@ -71,5 +73,27 @@ export class ExplorePage implements OnInit {
 
   getMonster(monsterId: string) {
     return this.contentService.getMonster(monsterId)!;
+  }
+
+  async confirmClassChange(action: INotificationAction) {
+    const alert = await this.alertCtrl.create({
+      header: 'Change Job',
+      message: `Are you sure you want to change your job to ${action.actionData.newJob}? Your equipment will switch to that jobs equipment and you will change your level to that jobs level (level 1 if you have not been that job).`,
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+        },
+        {
+          text: 'Yes, Change',
+          handler: async () => {
+            this.actionsService.doAction(action);
+          },
+        },
+      ],
+    });
+
+    await alert.present();
+    console.log(action);
   }
 }
