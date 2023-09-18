@@ -65,16 +65,32 @@
     </ion-row>
 
     <ion-row *ngIf="view === 'abilities'">
-      <ion-col>
+      <ion-col *ngIf="data.player && data.equipment">
         <ion-card>
           <ion-card-header>
             <ion-card-title>Basic Abilities</ion-card-title>
           </ion-card-header>
 
           <ion-card-content>
-            <ion-list *ngIf="data.player && data.equipment">
+            <ion-list>
               <ion-item
                 *ngFor="let ability of getBasicAbilities(data.player, data.equipment)"
+              >
+                <app-combat-ability [ability]="ability"></app-combat-ability>
+              </ion-item>
+            </ion-list>
+          </ion-card-content>
+        </ion-card>
+
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Weapon Abilities</ion-card-title>
+          </ion-card-header>
+
+          <ion-card-content>
+            <ion-list>
+              <ion-item
+                *ngFor="let ability of getWeaponAbilities(data.player, data.equipment)"
               >
                 <app-combat-ability [ability]="ability"></app-combat-ability>
               </ion-item>
@@ -88,7 +104,7 @@
           </ion-card-header>
 
           <ion-card-content>
-            <ion-list *ngIf="data.player && data.equipment">
+            <ion-list>
               <ion-item
                 *ngFor="let ability of getJobAbilities(data.player, data.equipment)"
               >

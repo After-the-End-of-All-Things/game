@@ -229,6 +229,18 @@ export class MePage implements OnInit {
   ): ICombatAbility[] {
     const itemAbilities = [
       this.contentService.getAbilityByName('Unarmed Attack'),
+      this.contentService.getAbilityByName('Move'),
+      this.contentService.getAbilityByName('Flee'),
+    ];
+
+    return [...itemAbilities].filter(Boolean) as ICombatAbility[];
+  }
+
+  getWeaponAbilities(
+    player: IPlayer,
+    equipment: Record<ItemSlot, IEquipment>,
+  ): ICombatAbility[] {
+    const itemAbilities = [
       ...Object.values(equipment)
         .filter(Boolean)
         .map((item) => {
