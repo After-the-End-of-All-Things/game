@@ -162,6 +162,16 @@ export class LotteryService implements OnModuleInit {
       },
     );
 
+    this.events.emit('notification.create', {
+      userId,
+      notification: {
+        liveAt: new Date(),
+        text: `You got ${coinReward.toLocaleString()} coins, ${oatReward.toLocaleString()} oats, and ${xpReward.toLocaleString()} XP from the daily lottery!`,
+        actions: [],
+      },
+      expiresAfterHours: 1,
+    });
+
     await this.claimDailyRecord(userId);
 
     return {
