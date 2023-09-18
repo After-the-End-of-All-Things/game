@@ -212,7 +212,7 @@ export class MePage implements OnInit {
         xp: player.xp,
         nextXp: this.nextLevelXp(player.level),
       },
-      ...Object.keys(player.otherJobLevels).map((job) => {
+      ...Object.keys(player.otherJobLevels || {}).map((job) => {
         return {
           name: job,
           level: player.otherJobLevels[job],
