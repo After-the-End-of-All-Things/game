@@ -9,6 +9,8 @@ import { IEquipment, IItem, Stat } from '@interfaces';
 export class ItemStatsComponent implements OnInit {
   public stats: Array<{ key: string; value: number }> = [];
 
+  @Input() useChips = true;
+  @Input() oneStatPerLine = false;
   @Input({ required: true }) item!: IItem;
 
   constructor() {}

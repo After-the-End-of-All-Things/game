@@ -1,0 +1,10 @@
+
+ion-chip, ion-text {
+  white-space: nowrap;
+}
+
+.one-per-line {
+  ion-chip, ion-text {
+    display: block;
+  }
+}

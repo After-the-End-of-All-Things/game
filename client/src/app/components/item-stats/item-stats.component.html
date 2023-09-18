@@ -1,9 +1,21 @@
-<div>
-  <ion-chip
-    class="stats readonly"
-    [color]="stat.value > 0 ? 'success' : 'danger'"
-    *ngFor="let stat of stats"
-  >
-    {{ stat.key }} +{{ stat.value }}
-  </ion-chip>
+<div [class.one-per-line]="oneStatPerLine">
+  <ng-container *ngIf="useChips">
+    <ion-chip
+      class="stats readonly"
+      [color]="stat.value > 0 ? 'success' : 'danger'"
+      *ngFor="let stat of stats"
+    >
+      {{ stat.key }} +{{ stat.value }}
+    </ion-chip>
+  </ng-container>
+
+  <ng-container *ngIf="!useChips">
+    <ion-text
+      class="stats readonly"
+      [color]="stat.value > 0 ? 'success' : 'danger'"
+      *ngFor="let stat of stats"
+    >
+      [{{ stat.key }} +{{ stat.value }}]
+    </ion-text>
+  </ng-container>
 </div>

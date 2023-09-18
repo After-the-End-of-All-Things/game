@@ -24,7 +24,7 @@
             <ngx-datatable
               class="dark"
               [rows]="items"
-              [rowHeight]="64"
+              [rowHeight]="'auto'"
               [columnMode]="'force'"
               [sorts]="[{ prop: 'name', dir: 'asc' }]"
             >
@@ -46,25 +46,40 @@
                 [cellClass]="'text-wrap-column'"
               >
                 <ng-template let-row="row" ngx-datatable-cell-template>
-                  <div><strong>{{ row.name }}</strong></div>
+                  <div>
+                    <strong>{{ row.name }}</strong>
+                    <br />
+                    Lv. {{ row.levelRequirement || 0 }}
+                  </div>
                 </ng-template>
               </ngx-datatable-column>
 
-              <ngx-datatable-column name="Rarity" [sortable]="false">
+              <ngx-datatable-column name="Item Type" [sortable]="false">
                 <ng-template let-row="row" ngx-datatable-cell-template>
                   <app-item-rarity [item]="row"></app-item-rarity>
                 </ng-template>
               </ngx-datatable-column>
 
-              <ngx-datatable-column name="Level" [prop]="'levelRequirement'">
+              <ngx-datatable-column
+                name="Value"
+                [comparator]="valueComparison"
+                [maxWidth]="70"
+              >
                 <ng-template let-row="row" ngx-datatable-cell-template>
-                  Lv. {{ row.levelRequirement || 0 }}
+                  {{ getValueForItem(row) | number }}
                 </ng-template>
               </ngx-datatable-column>
 
-              <ngx-datatable-column name="Value" [comparator]="valueComparison">
+              <ngx-datatable-column
+                name="Stats"
+                [cellClass]="'text-wrap-column'"
+              >
                 <ng-template let-row="row" ngx-datatable-cell-template>
-                  {{ getValueForItem(row) | number }}
+                  <app-item-stats
+                    [item]="row"
+                    [oneStatPerLine]="true"
+                    [useChips]="false"
+                  ></app-item-stats>
                 </ng-template>
               </ngx-datatable-column>
 
