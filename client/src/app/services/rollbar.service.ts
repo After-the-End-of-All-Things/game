@@ -44,6 +44,8 @@ export class RollbarErrorHandler implements ErrorHandler {
   }
 
   private isValidError(err: any): boolean {
+    if (!err.message) return false;
+
     if (err.message.includes('Firebase') && err.message.includes('auth/')) {
       return false;
     }
