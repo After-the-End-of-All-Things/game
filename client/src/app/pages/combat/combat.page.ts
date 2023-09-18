@@ -66,6 +66,7 @@ export class CombatPage implements OnInit {
   }
 
   public get isMyCharacterActive(): boolean {
+    if (!this.fight) return false;
     return this.fight.currentTurn === this.myCharacterId;
   }
 
