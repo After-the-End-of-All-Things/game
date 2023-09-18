@@ -30,6 +30,6 @@ export class UpdatesPage implements OnInit {
     renderer.link = (href, title, text) =>
       `<a href="${href}" title="${title}" target="_blank" rel="noopener noreferrer">${text}</a>`;
 
-    this.changelog = marked(parseString, { renderer });
+    this.changelog = marked(parseString ?? '', { renderer });
   }
 }

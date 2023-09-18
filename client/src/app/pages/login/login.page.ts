@@ -98,7 +98,7 @@ export class LoginPage implements OnInit {
     renderer.link = (href, title, text) =>
       `<a href="${href}" title="${title}" target="_blank" rel="noopener noreferrer">${text}</a>`;
 
-    this.lastUpdate = marked(this.announcement.summary, { renderer });
+    this.lastUpdate = marked(this.announcement?.summary ?? '', { renderer });
   }
 
   ionViewDidEnter() {
