@@ -176,6 +176,7 @@
     <ion-card-content>
       <div class="elements">
         <app-element-icon
+          [ngxTippy]="(element | titlecase) + ' attacks get ' + (5 * (fight.generatedElements[element] || 0)) + '% bonus damage'"
           *ngFor="let element of elements"
           [element]="element"
           [count]="fight.generatedElements[element] || 0"
