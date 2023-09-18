@@ -25,7 +25,7 @@ export class ErrorInterceptor implements HttpInterceptor {
           this.notify.error(
             'You are doing that too fast. Try again in a second.',
           );
-          return throwError(error);
+          return throwError(() => error);
         }
 
         // client side error
@@ -41,7 +41,7 @@ export class ErrorInterceptor implements HttpInterceptor {
           this.notify.error(errorMsg);
         }
 
-        return throwError(error);
+        return throwError(() => error);
       }),
     );
   }
