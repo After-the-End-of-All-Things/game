@@ -3,17 +3,18 @@ import { NotFoundError } from '@mikro-orm/core';
 import { EntityManager } from '@mikro-orm/mongodb';
 import { ConstantsService } from '@modules/content/constants.service';
 import { PlayerHelperService } from '@modules/content/playerhelper.service';
-import { DailyRandomLottery } from '@modules/lottery/dailylottery.schema';
+import { LotteryRandomDaily } from '@modules/lottery/dailylottery.schema';
 import { Player } from '@modules/player/player.schema';
 import { PlayerService } from '@modules/player/player.service';
 import { User } from '@modules/user/user.schema';
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Cron, CronExpression } from '@nestjs/schedule';
+import { endOfToday, startOfLastWeek, startOfToday } from '@utils/date';
 import { getPatchesAfterPropChanges } from '@utils/patches';
 
 @Injectable()
-export class LotteryService implements OnModuleInit {
+export class DailyLotteryService implements OnModuleInit {
   constructor(
     private readonly em: EntityManager,
     private readonly playerService: PlayerService,
@@ -23,21 +24,10 @@ export class LotteryService implements OnModuleInit {
   ) {}
 
   public async onModuleInit() {
-    const shouldAdd = await this.shouldAddNewLotteryRecord();
-    if (shouldAdd) {
+    const shouldAddDaily = await this.shouldAddNewDailyLotteryRecord();
+    if (shouldAddDaily) {
       await this.addNewPlayerLotteryRecord();
     }
-  }
-
-  private startOfLastWeek(): Date {
-    const startOfLastWeek = new Date();
-    startOfLastWeek.setDate(startOfLastWeek.getDate() - 7);
-    startOfLastWeek.setHours(0);
-    startOfLastWeek.setMinutes(0);
-    startOfLastWeek.setSeconds(0);
-    startOfLastWeek.setMilliseconds(0);
-
-    return startOfLastWeek;
   }
 
   public nextLotteryRecordTime(): Date {
@@ -52,23 +42,11 @@ export class LotteryService implements OnModuleInit {
 
   private async getLotteryRecordForToday(
     forUserId = '',
-  ): Promise<DailyRandomLottery | null> {
-    const startOfToday = new Date();
-    startOfToday.setHours(0);
-    startOfToday.setMinutes(0);
-    startOfToday.setSeconds(0);
-    startOfToday.setMilliseconds(0);
-
-    const endOfToday = new Date();
-    endOfToday.setHours(23);
-    endOfToday.setMinutes(59);
-    endOfToday.setSeconds(59);
-    endOfToday.setMilliseconds(999);
-
+  ): Promise<LotteryRandomDaily | null> {
     const query: any = {
       $and: [
-        { createdAt: { $gte: startOfToday } },
-        { createdAt: { $lte: endOfToday } },
+        { createdAt: { $gte: startOfToday() } },
+        { createdAt: { $lte: endOfToday() } },
       ],
     };
 
@@ -77,10 +55,10 @@ export class LotteryService implements OnModuleInit {
       query.claimed = { $ne: true };
     }
 
-    return this.em.fork().findOne(DailyRandomLottery, query);
+    return this.em.fork().findOne(LotteryRandomDaily, query);
   }
 
-  private async shouldAddNewLotteryRecord(): Promise<boolean> {
+  private async shouldAddNewDailyLotteryRecord(): Promise<boolean> {
     const record = await this.getLotteryRecordForToday();
     return !record;
   }
@@ -90,7 +68,7 @@ export class LotteryService implements OnModuleInit {
     const emCtx = this.em.fork();
 
     const randomPlayers = await emCtx.aggregate(User, [
-      { $match: { onlineUntil: { $gt: this.startOfLastWeek().getTime() } } },
+      { $match: { onlineUntil: { $gt: startOfLastWeek().getTime() } } },
       { $sample: { size: this.constants.dailyLotteryNumWinners } },
     ]);
 
@@ -98,7 +76,7 @@ export class LotteryService implements OnModuleInit {
       randomPlayers.map(async (randomPlayer) => {
         const winnerId = randomPlayer._id.toString();
 
-        const newRecord = new DailyRandomLottery(winnerId);
+        const newRecord = new LotteryRandomDaily(winnerId);
         emCtx.persist(newRecord);
         await emCtx.flush();
 
@@ -128,19 +106,19 @@ export class LotteryService implements OnModuleInit {
 
   public async numPlayersOnlineInLastWeek(): Promise<number> {
     return this.em.count(User, {
-      onlineUntil: { $gte: this.startOfLastWeek().getTime() },
+      onlineUntil: { $gte: startOfLastWeek().getTime() },
     });
   }
 
-  private async claimDailyRecord(userId: string): Promise<void> {
+  private async claimRecord(userId: string): Promise<void> {
     await this.em.nativeUpdate(
-      DailyRandomLottery,
+      LotteryRandomDaily,
       { winnerId: userId, claimed: { $ne: true } },
       { claimed: true },
     );
   }
 
-  public async claimDailyRewards(userId: string): Promise<UserResponse> {
+  public async claimRewards(userId: string): Promise<UserResponse> {
     const record = await this.getLotteryRecordForToday(userId);
     if (!record) throw new NotFoundError('You are not the winner for today');
 
@@ -172,7 +150,7 @@ export class LotteryService implements OnModuleInit {
       expiresAfterHours: 1,
     });
 
-    await this.claimDailyRecord(userId);
+    await this.claimRecord(userId);
 
     return {
       player: playerPatches,

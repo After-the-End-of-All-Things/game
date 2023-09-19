@@ -9,9 +9,10 @@ import { ObjectId } from '@mikro-orm/mongodb';
 import { generateUUID } from '@utils/uuid';
 
 @Entity()
-export class LotteryRandomDaily {
+export class LotteryBuyInTicket {
   @SerializedPrimaryKey({ hidden: true })
   id!: string;
+
   @Property()
   internalId: string;
 
@@ -20,19 +21,19 @@ export class LotteryRandomDaily {
   createdAt: Date;
 
   @Property()
-  winnerId: string;
+  userId: string;
 
   @Property()
-  claimed: boolean;
+  ticketNumber: string;
 
   @PrimaryKey({ hidden: true })
   _id!: ObjectId;
 
-  constructor(winnerId: string) {
+  constructor(userId: string, ticketNumber: string) {
     this.createdAt = new Date();
     this.internalId = generateUUID();
 
-    this.winnerId = winnerId;
-    this.claimed = false;
+    this.userId = userId;
+    this.ticketNumber = ticketNumber;
   }
 }

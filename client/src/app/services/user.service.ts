@@ -16,11 +16,35 @@ export class UserService {
     return this.http.get(`${environment.apiUrl}/discoveries/mine`);
   }
 
-  public didIWinLotteryToday() {
-    return this.http.get(`${environment.apiUrl}/lottery/didiwintoday`);
+  public nextLotteryDraw() {
+    return this.http.get(`${environment.apiUrl}/lottery/nextdraw`);
+  }
+
+  public didIWinDailyLotteryToday() {
+    return this.http.get(`${environment.apiUrl}/lottery/daily/didiwintoday`);
   }
 
   public claimDailyRewards() {
-    return this.http.get(`${environment.apiUrl}/lottery/claimdailyrewards`);
+    return this.http.post(`${environment.apiUrl}/lottery/daily/claim`, {});
+  }
+
+  public jackpotValue() {
+    return this.http.get(`${environment.apiUrl}/lottery/buyin/value`);
+  }
+
+  public buyinTicketNumbers() {
+    return this.http.get(`${environment.apiUrl}/lottery/buyin/tickets`);
+  }
+
+  public didIWinBuyInLotteryToday() {
+    return this.http.get(`${environment.apiUrl}/lottery/buyin/didiwintoday`);
+  }
+
+  public buyTicket() {
+    return this.http.post(`${environment.apiUrl}/lottery/buyin/tickets`, {});
+  }
+
+  public claimBuyInRewards() {
+    return this.http.post(`${environment.apiUrl}/lottery/buyin/claim`, {});
   }
 }

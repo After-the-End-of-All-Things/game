@@ -94,6 +94,8 @@ we love eating our oats
 
 - `DAILY_LOTTERY_NUM_WINNERS` - the number of winners per daily lottery (default: 1)
 - `DAILY_LOTTERY_PICK_HOUR` - the hour of the day to pick the daily lottery winners (default: 18)
+- `BUYIN_LOTTERY_TICKET_COST` - the cost of a lottery ticket (default: 100)
+- `BUYIN_LOTTERY_TICKET_MAX` - the maximum number of lottery tickets a player can buy (default: 10)
 
 #### Showcase
 

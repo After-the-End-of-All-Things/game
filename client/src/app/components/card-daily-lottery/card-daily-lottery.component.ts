@@ -10,17 +10,22 @@ import { switchMap, timer } from 'rxjs';
 })
 export class CardDailyLotteryComponent implements OnInit {
   public didIWin = false;
+  public nextDraw!: Date;
 
   constructor(private userService: UserService) {
     timer(0, 1000 * 60 * 5)
-      .pipe(switchMap(() => this.userService.didIWinLotteryToday()))
+      .pipe(switchMap(() => this.userService.didIWinDailyLotteryToday()))
       .pipe(takeUntilDestroyed())
       .subscribe((d: any) => {
         this.didIWin = d;
       });
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.userService.nextLotteryDraw().subscribe((d: any) => {
+      this.nextDraw = new Date(d);
+    });
+  }
 
   claimDailyRewards() {
     this.userService.claimDailyRewards().subscribe(() => {

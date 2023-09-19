@@ -54,6 +54,8 @@ export class ConstantsService {
 
   public readonly dailyLotteryNumWinners: number = 1;
   public readonly dailyLotteryPickHour: number = 18;
+  public readonly buyinLotteryTicketCost: number = 100;
+  public readonly buyinLotteryMaxTickets: number = 10;
 
   public readonly showcaseItemSlots: number = 3;
   public readonly showcaseCollectibleSlots: number = 3;
@@ -237,6 +239,16 @@ export class ConstantsService {
     this.dailyLotteryPickHour = +this.configService.get<number>(
       'DAILY_LOTTERY_PICK_HOUR',
       18,
+    );
+
+    this.buyinLotteryTicketCost = +this.configService.get<number>(
+      'BUYIN_LOTTERY_TICKET_COST',
+      100,
+    );
+
+    this.buyinLotteryMaxTickets = +this.configService.get<number>(
+      'BUYIN_LOTTERY_TICKET_MAX',
+      10,
     );
 
     this.showcaseItemSlots = +this.configService.get<number>(

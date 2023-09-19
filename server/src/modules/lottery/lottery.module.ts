@@ -1,18 +1,25 @@
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { ContentModule } from '@modules/content/content.module';
-import { DailyRandomLottery } from '@modules/lottery/dailylottery.schema';
+import { LotteryBuyInTicket } from '@modules/lottery/buyinlottery.schema';
+import { BuyInLotteryService } from '@modules/lottery/buyinlottery.service';
+import { LotteryBuyInDraw } from '@modules/lottery/buyinlotterydraw.schema';
+import { LotteryRandomDaily } from '@modules/lottery/dailylottery.schema';
 import { PlayerModule } from '@modules/player/player.module';
 import { Module } from '@nestjs/common';
+import { DailyLotteryService } from './dailylottery.service';
 import { LotteryController } from './lottery.controller';
-import { LotteryService } from './lottery.service';
 
 @Module({
   imports: [
-    MikroOrmModule.forFeature([DailyRandomLottery]),
+    MikroOrmModule.forFeature([
+      LotteryRandomDaily,
+      LotteryBuyInTicket,
+      LotteryBuyInDraw,
+    ]),
     PlayerModule,
     ContentModule,
   ],
-  providers: [LotteryService],
+  providers: [DailyLotteryService, BuyInLotteryService],
   controllers: [LotteryController],
 })
 export class LotteryModule {}

@@ -5,7 +5,9 @@ import { Discoveries } from '@modules/discoveries/discoveries.schema';
 import { Fight } from '@modules/fight/fight.schema';
 import { Inventory } from '@modules/inventory/inventory.schema';
 import { InventoryItem } from '@modules/inventory/inventoryitem.schema';
-import { DailyRandomLottery } from '@modules/lottery/dailylottery.schema';
+import { LotteryBuyInTicket } from '@modules/lottery/buyinlottery.schema';
+import { LotteryBuyInDraw } from '@modules/lottery/buyinlotterydraw.schema';
+import { LotteryRandomDaily } from '@modules/lottery/dailylottery.schema';
 import { MarketItem } from '@modules/market/marketitem.schema';
 import { MarketSale } from '@modules/market/marketsale.schema';
 import { Notification } from '@modules/notification/notification.schema';
@@ -45,7 +47,9 @@ function mikroOrmConfigFactory(
       MarketSale,
       Fight,
       PlayerWave,
-      DailyRandomLottery,
+      LotteryRandomDaily,
+      LotteryBuyInTicket,
+      LotteryBuyInDraw,
     ],
     dbName: process.env.NODE_ENV === 'production' ? 'ateoat' : 'ateoattest',
     type: 'mongo',

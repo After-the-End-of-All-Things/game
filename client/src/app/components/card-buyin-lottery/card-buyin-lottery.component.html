@@ -1,0 +1,47 @@
+<ion-card class="center-title-card text-reward-card">
+  <ion-card-header>
+    <ion-card-title>
+      Ticket Lottery
+
+      <span class="tooltip" [ngxTippy]="tooltip">
+        <app-game-icon icon="global-information" size="small"></app-game-icon>
+      </span>
+
+      <ng-template #tooltip>
+        <div>The jackpot is {{ jackpot | number }} gold.</div>
+        <br />
+
+        <div *ngIf="tickets.length > 0">
+          Your ticket numbers are:
+
+          <div>{{ tickets.join(', ') }}</div>
+
+          <br />
+          <div>You can buy {{ 10 - tickets.length }} more tickets today.</div>
+        </div>
+
+        <div *ngIf="tickets.length === 0">
+          You don't currently have any tickets, but you can buy some!
+        </div>
+      </ng-template>
+    </ion-card-title>
+  </ion-card-header>
+
+  <ion-card-content>
+    <div class="text">
+      {{ didIWin ? 'Winner!' : 'Not Today' }}
+    </div>
+
+    <div
+      class="action-button"
+      *ngIf="!didIWin && canBuyTickets"
+      (click)="buyTicket()"
+    >
+      <ion-button color="primary">Buy Ticket (100g)</ion-button>
+    </div>
+
+    <div class="reward-button" *ngIf="didIWin" (click)="claimBuyInRewards()">
+      <ion-button color="primary">Claim</ion-button>
+    </div>
+  </ion-card-content>
+</ion-card>

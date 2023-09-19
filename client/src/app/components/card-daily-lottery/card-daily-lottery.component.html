@@ -1,6 +1,16 @@
 <ion-card class="text-reward-card center-title-card">
   <ion-card-header>
-    <ion-card-title>Daily Lottery</ion-card-title>
+    <ion-card-title>
+      Daily Lottery
+
+      <span class="tooltip" [ngxTippy]="tooltip" *ngIf="nextDraw">
+        <app-game-icon icon="global-information" size="small"></app-game-icon>
+      </span>
+
+      <ng-template #tooltip>
+        The lottery is drawn every day at {{ nextDraw | date : 'shortTime' }}.
+      </ng-template>
+    </ion-card-title>
   </ion-card-header>
 
   <ion-card-content>

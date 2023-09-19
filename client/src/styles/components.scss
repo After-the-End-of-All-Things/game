@@ -1,5 +1,14 @@
 
-.number-card {
+ion-card-title {
+
+  .tooltip {
+    position: absolute;
+    top: 2px;
+    right: 4px;
+  }
+}
+
+.number-card, .text-reward-card, .big-text-card, .center-title-card {
   ion-card-content {
     min-height: 170px;
 
@@ -7,6 +16,11 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+  }
+}
+
+.number-card {
+  ion-card-content {
 
     .number {
       font-size: 3.5em;
@@ -26,15 +40,9 @@
 
 .text-reward-card {
   ion-card-content {
-    min-height: 170px;
-
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
 
     .text {
-      font-size: 3.5em;
+      font-size: 2.5em;
       text-align: center;
     }
 
