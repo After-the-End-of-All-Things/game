@@ -16,8 +16,8 @@ export class UserService {
     return this.http.get(`${environment.apiUrl}/discoveries/mine`);
   }
 
-  public nextLotteryDraw() {
-    return this.http.get(`${environment.apiUrl}/lottery/nextdraw`);
+  public dailyReset() {
+    return this.http.get(`${environment.apiUrl}/game/dailyreset`);
   }
 
   public didIWinDailyLotteryToday() {

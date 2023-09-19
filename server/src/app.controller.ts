@@ -2,6 +2,7 @@ import { ConstantsService } from '@modules/content/constants.service';
 import { ContentService } from '@modules/content/content.service';
 import { Controller, Get } from '@nestjs/common';
 import { ApiOperation } from '@nestjs/swagger';
+import { startOfToday } from '@utils/date';
 import { omit } from 'lodash';
 import { AppService } from './app.service';
 
@@ -29,5 +30,11 @@ export class AppController {
   @ApiOperation({ summary: 'Get all game constant values' })
   getStats() {
     return omit(this.constantsService, ['configService']);
+  }
+
+  @Get('game/dailyreset')
+  @ApiOperation({ summary: 'Get the time of daily reset' })
+  getDailyReset() {
+    return `"${startOfToday().toString()}"`;
   }
 }

@@ -8,16 +8,11 @@ import { UserService } from '@services/user.service';
 })
 export class CardDailyLotteryComponent implements OnInit {
   public didIWin = false;
-  public nextDraw!: Date;
 
   constructor(private userService: UserService) {}
 
   ngOnInit() {
     this.didIWinToday();
-
-    this.userService.nextLotteryDraw().subscribe((d: any) => {
-      this.nextDraw = new Date(d);
-    });
   }
 
   didIWinToday() {

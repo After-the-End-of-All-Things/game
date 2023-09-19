@@ -5,7 +5,6 @@ import { DailyLotteryService } from '@modules/lottery/dailylottery.service';
 import { Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { SkipThrottle } from '@nestjs/throttler';
-import { startOfToday } from '@utils/date';
 import { User } from '@utils/user.decorator';
 
 @SkipThrottle()
@@ -16,13 +15,6 @@ export class LotteryController {
     private dailyLotteryService: DailyLotteryService,
     private buyinLotteryService: BuyInLotteryService,
   ) {}
-
-  @UseGuards(JwtAuthGuard)
-  @ApiOperation({ summary: 'Get the next drawing date/time' })
-  @Get('nextdraw')
-  async nextDraw(): Promise<Date> {
-    return startOfToday();
-  }
 
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Check if I won the daily lottery today' })
@@ -39,14 +31,14 @@ export class LotteryController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @ApiOperation({ summary: 'Get my buyin tickets' })
+  @ApiOperation({ summary: 'Get my buyin tickets total value' })
   @Get('buyin/value')
   async jackpotValue(@User() user): Promise<number> {
     return this.buyinLotteryService.ticketValueSum();
   }
 
   @UseGuards(JwtAuthGuard)
-  @ApiOperation({ summary: 'Get my buyin tickets' })
+  @ApiOperation({ summary: 'Get my buyin ticket numbers' })
   @Get('buyin/tickets')
   async viewTickets(@User() user): Promise<string[]> {
     return this.buyinLotteryService.ticketNumbers(user.userId);

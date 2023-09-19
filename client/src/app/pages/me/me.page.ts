@@ -14,6 +14,7 @@ import { Select } from '@ngxs/store';
 import { AuthService } from '@services/auth.service';
 import { ContentService } from '@services/content.service';
 import { PlayerService } from '@services/player.service';
+import { UserService } from '@services/user.service';
 import { InventoryStore, PlayerStore } from '@stores';
 import { sum } from 'lodash';
 import { LocalStorage } from 'ngx-webstorage';
@@ -31,6 +32,8 @@ export class MePage implements OnInit {
   >;
 
   @LocalStorage() view!: 'stats' | 'abilities' | 'levels';
+
+  public dailyReset!: Date;
 
   public readonly stats = [
     {
@@ -73,10 +76,16 @@ export class MePage implements OnInit {
     private contentService: ContentService,
     private playerService: PlayerService,
     public authService: AuthService,
+    private userService: UserService,
   ) {}
 
   ngOnInit() {
     if (!this.view) this.view = 'stats';
+
+    this.userService.dailyReset().subscribe((reset) => {
+      this.dailyReset = new Date(reset as string);
+      this.dailyReset.setDate(this.dailyReset.getDate() + 1);
+    });
   }
 
   changeView($event: any) {

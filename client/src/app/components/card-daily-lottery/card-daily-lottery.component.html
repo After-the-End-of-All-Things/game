@@ -3,12 +3,12 @@
     <ion-card-title>
       Daily Lottery
 
-      <span class="tooltip" [ngxTippy]="tooltip" *ngIf="nextDraw">
+      <span class="tooltip" [ngxTippy]="tooltip">
         <app-game-icon icon="global-information" size="small"></app-game-icon>
       </span>
 
       <ng-template #tooltip>
-        The lottery is drawn every day at {{ nextDraw | date : 'shortTime' }}.
+        The lottery is drawn every day at daily reset.
       </ng-template>
     </ion-card-title>
   </ion-card-header>

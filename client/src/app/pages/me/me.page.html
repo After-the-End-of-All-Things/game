@@ -230,6 +230,15 @@
 
           <ion-card-content>
             <ion-list>
+              <ion-item *ngIf="dailyReset">
+                <app-game-icon
+                  slot="start"
+                  icon="options-dailyreset"
+                ></app-game-icon>
+
+                Daily reset at {{ dailyReset | date: 'short' }}
+              </ion-item>
+
               <ion-item
                 *ngIf="data.player?.userId"
                 class="cursor-pointer"
