@@ -35,6 +35,7 @@ export class CardBuyinLotteryComponent implements OnInit {
   buyTicket() {
     this.userService.buyTicket().subscribe(() => {
       this.refreshTickets();
+      this.jackpot += 100;
     });
   }
 
