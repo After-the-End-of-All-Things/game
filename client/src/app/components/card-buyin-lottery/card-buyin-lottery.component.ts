@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { UserService } from '@services/user.service';
-import { switchMap, timer } from 'rxjs';
 
 @Component({
   selector: 'app-card-buyin-lottery',
@@ -14,18 +12,18 @@ export class CardBuyinLotteryComponent implements OnInit {
   public jackpot = 0;
   public tickets: string[] = [];
 
-  constructor(private userService: UserService) {
-    timer(0, 1000 * 60 * 5)
-      .pipe(switchMap(() => this.userService.didIWinBuyInLotteryToday()))
-      .pipe(takeUntilDestroyed())
-      .subscribe((d: any) => {
-        this.didIWin = d;
-      });
-  }
+  constructor(private userService: UserService) {}
 
   ngOnInit() {
     this.refreshTickets();
     this.jackpotValue();
+    this.didIWinToday();
+  }
+
+  didIWinToday() {
+    this.userService.didIWinBuyInLotteryToday().subscribe((d: any) => {
+      this.didIWin = d;
+    });
   }
 
   jackpotValue() {
