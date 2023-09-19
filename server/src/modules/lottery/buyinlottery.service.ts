@@ -69,6 +69,28 @@ export class BuyInLotteryService implements OnModuleInit {
     const newRecord = new LotteryBuyInDraw(this.generateBuyTicketNumber());
     emCtx.persist(newRecord);
     await emCtx.flush();
+
+    const winningTicket = await this.buyinTickets.findOne({
+      ticketNumber: newRecord.ticketNumber,
+      createdAt: { $gte: startOfToday() },
+    });
+    if (!winningTicket) return;
+
+    this.events.emit('notification.create', {
+      userId: winningTicket.userId,
+      notification: {
+        liveAt: new Date(),
+        text: `You have won the ticket lottery with ticket ${winningTicket.ticketNumber}!`,
+        actions: [
+          {
+            text: 'Claim',
+            action: 'navigate',
+            actionData: { url: '/' },
+          },
+        ],
+      },
+      expiresAfterHours: 1,
+    });
   }
 
   public async buyTicket(userId: string): Promise<UserResponse> {
@@ -175,13 +197,7 @@ export class BuyInLotteryService implements OnModuleInit {
             text: `You have won the ticket lottery with ticket ${
               todayTicket.ticketNumber
             } and got ${total.toLocaleString()} coins!`,
-            actions: [
-              {
-                text: 'Claim',
-                action: 'navigate',
-                actionData: { url: '/' },
-              },
-            ],
+            actions: [],
           },
           expiresAfterHours: 1,
         });
