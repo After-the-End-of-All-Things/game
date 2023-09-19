@@ -16,6 +16,15 @@ export class ItemStatsComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {
+    this.parseStats();
+  }
+
+  ngOnChanges() {
+    this.parseStats();
+  }
+
+  private parseStats() {
+    this.stats = [];
     const stats = (this.item as IEquipment).stats || {};
 
     Object.keys(stats)
