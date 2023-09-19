@@ -90,7 +90,9 @@
             </ion-note>
           </ion-label>
 
-          <ng-container *ngIf="notification.actions?.length === 1">
+          <ng-container
+            *ngIf="notification.actions?.length === 1 && isLive(notification)"
+          >
             <ion-button
               slot="end"
               *ngIf="notification.actions?.[0] as action"

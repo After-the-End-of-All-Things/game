@@ -63,7 +63,11 @@ export class HeaderBarComponent implements OnInit {
       .length;
   }
 
+  isLive(notification: INotification) {
+    return isNotificationLive(notification);
+  }
+
   filterNotifications(notifications: INotification[]) {
-    return notifications.filter((n) => isNotificationLive(n));
+    return notifications.filter((n) => this.isLive(n));
   }
 }
