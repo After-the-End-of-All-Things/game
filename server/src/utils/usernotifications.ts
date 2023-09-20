@@ -15,17 +15,17 @@ export function userNotify(message: string, type: string): UserResponse {
 }
 
 export function userErrorObject(message: string) {
-  return this.userNotifyObject(message, 'error');
+  return userNotifyObject(message, 'danger');
 }
 
 export function userError(message: string): UserResponse {
-  return this.userNotify(message, 'error');
+  return userNotify(message, 'danger');
 }
 
 export function userSuccessObject(message: string) {
-  return this.userNotifyObject(message, 'success');
+  return userNotifyObject(message, 'success');
 }
 
 export function userSuccess(message: string): UserResponse {
-  return this.userNotify(message, 'success');
+  return userNotify(message, 'success');
 }

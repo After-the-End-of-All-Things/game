@@ -12,7 +12,7 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { endOfToday, startOfLastWeek, startOfToday } from '@utils/date';
 import { getPatchesAfterPropChanges } from '@utils/patches';
-import { userSuccessObject } from '@utils/usernotifications';
+import { userError, userSuccessObject } from '@utils/usernotifications';
 
 @Injectable()
 export class DailyLotteryService implements OnModuleInit {
@@ -121,7 +121,7 @@ export class DailyLotteryService implements OnModuleInit {
 
   public async claimRewards(userId: string): Promise<UserResponse> {
     const record = await this.getLotteryRecordForToday(userId);
-    if (!record) throw new NotFoundError('You are not the winner for today');
+    if (!record) return userError('You are not the winner for today');
 
     const player = await this.playerService.getPlayerForUser(userId);
     if (!player) throw new NotFoundError(`Player ${userId} not found`);
