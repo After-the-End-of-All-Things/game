@@ -70,7 +70,10 @@ export function getAuthToken() {
     }),
     NgxsLoggerPluginModule.forRoot({
       disabled: !isDevMode(),
-      filter: (action) => !action.constructor.name.includes('GrabData'),
+      filter: (action) =>
+        !['GrabData', '[Notifications] Clear Old'].includes(
+          action.constructor.name,
+        ),
     }),
     NgxsStoragePluginModule.forRoot({
       key: allStores,
