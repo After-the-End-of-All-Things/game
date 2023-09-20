@@ -25,7 +25,7 @@ import { ContentService } from '@services/content.service';
 import { FightService } from '@services/fight.service';
 import { FightStore, PlayerStore, UserStore } from '@stores';
 import { ChangePage } from '@stores/user/user.actions';
-import { clamp, mean, sum } from 'lodash';
+import { clamp, mean, sortBy, sum } from 'lodash';
 import { Observable, combineLatest } from 'rxjs';
 
 @Component({
@@ -166,13 +166,15 @@ export class CombatPage implements OnInit {
       },
     );
 
-    return [...itemAbilities, ...jobAbilities].filter(
-      Boolean,
-    ) as ICombatAbility[];
+    return sortBy(
+      [...itemAbilities, ...jobAbilities].filter(Boolean) as ICombatAbility[],
+      (ability) => {
+        return this.canUseAbility(this.myCharacter, ability) ? 0 : 1;
+      },
+    );
   }
 
   selectAbility(character: IFightCharacter, ability: ICombatAbility) {
-    if (character.cooldowns[ability.itemId] > 0) return;
     if (!this.canUseAbility(character, ability)) return;
 
     this.selectedAbility = ability;
@@ -184,6 +186,8 @@ export class CombatPage implements OnInit {
   }
 
   canUseAbility(char: IFightCharacter, ability: ICombatAbility): boolean {
+    if (char.cooldowns[ability.itemId] > 0) return false;
+
     if (ability.specialCost > 0 && this.charge < ability.specialCost)
       return false;
 
