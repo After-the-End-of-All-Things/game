@@ -8,12 +8,12 @@ import { InventoryService } from '@modules/inventory/inventory.service';
 import { Player } from '@modules/player/player.schema';
 import {
   BadRequestException,
-  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { getPatchesAfterPropChanges } from '@utils/patches';
+import { userError } from '@utils/usernotifications';
 import { sample, sum } from 'lodash';
 import { Logger } from 'nestjs-pino';
 
@@ -53,7 +53,9 @@ export class DiscoveriesService {
 
       // mongodb duplicate
       if (e.code === 11000) {
-        throw new BadRequestException('discoveries id already in use.');
+        throw new BadRequestException(
+          `discoveries id ${userId} already in use.`,
+        );
       }
 
       throw e;
@@ -115,19 +117,20 @@ export class DiscoveriesService {
     instanceId: string,
   ): Promise<UserResponse> {
     const discoveries = await this.getDiscoveriesForUser(userId);
-    if (!discoveries) throw new NotFoundException('User not found');
+    if (!discoveries) throw new NotFoundException(`User ${userId} not found`);
 
     const item = await this.inventoryService.getInventoryItemForUser(
       userId,
       instanceId,
     );
-    if (!item) throw new NotFoundException('Collectible item not found');
+    if (!item)
+      throw new NotFoundException(`Collectible item ${instanceId} not found`);
 
     const itemDefinition = await this.contentService.getCollectible(
       item.itemId,
     );
     if (!itemDefinition)
-      throw new NotFoundException('Item definition not found');
+      throw new NotFoundException(`Item definition ${item.itemId} not found`);
 
     await this.inventoryService.removeInventoryItemForUser(userId, instanceId);
 
@@ -169,13 +172,14 @@ export class DiscoveriesService {
     instanceId: string,
   ): Promise<UserResponse> {
     const discoveries = await this.getDiscoveriesForUser(userId);
-    if (!discoveries) throw new NotFoundException('User not found');
+    if (!discoveries) throw new NotFoundException(`User ${userId} not found`);
 
     const item = await this.inventoryService.getInventoryItemForUser(
       userId,
       instanceId,
     );
-    if (!item) throw new NotFoundException('Equipment item not found');
+    if (!item)
+      throw new NotFoundException(`Equipment item ${instanceId} not found`);
 
     const itemDefinition = await this.contentService.getEquipment(item.itemId);
     if (!itemDefinition) {
@@ -183,7 +187,9 @@ export class DiscoveriesService {
         userId,
         instanceId,
       );
-      throw new NotFoundException('Item definition not found');
+      throw new NotFoundException(
+        `Item definition ${item.itemId} not found; automatically removing item...`,
+      );
     }
 
     await this.inventoryService.removeInventoryItemForUser(userId, instanceId);
@@ -223,10 +229,10 @@ export class DiscoveriesService {
 
   async discoverMonster(userId: string, monsterId: string): Promise<void> {
     const discoveries = await this.getDiscoveriesForUser(userId);
-    if (!discoveries) throw new NotFoundException('User not found');
+    if (!discoveries) throw new NotFoundException(`User ${userId} not found`);
 
     const monster = await this.contentService.getMonster(monsterId);
-    if (!monster) throw new NotFoundException('Monster not found');
+    if (!monster) throw new NotFoundException(`Monster ${monsterId} not found`);
 
     this.logger.verbose(`Discovered monster ${monster.name} for ${userId}.`);
 
@@ -240,14 +246,15 @@ export class DiscoveriesService {
 
   async claimUniqueCollectibleReward(userId: string): Promise<UserResponse> {
     const discoveries = await this.getDiscoveriesForUser(userId);
-    if (!discoveries) throw new NotFoundException('Discoveries not found');
+    if (!discoveries)
+      throw new NotFoundException(`Discoveries ${userId} not found`);
 
     const totalTimesClaimed = discoveries.uniqueCollectibleClaims ?? 0;
     const totalCollectiblesFound = sum(Object.keys(discoveries.collectibles));
     const interval = this.constants.uniqueCollectiblesRequired;
 
     if (totalCollectiblesFound < (totalTimesClaimed + 1) * interval)
-      throw new BadRequestException('Not enough collectibles found');
+      return userError('Not enough collectibles found!');
 
     const discoveryPatches = await getPatchesAfterPropChanges<Discoveries>(
       discoveries,
@@ -282,14 +289,15 @@ export class DiscoveriesService {
 
   async claimTotalCollectibleReward(userId: string): Promise<UserResponse> {
     const discoveries = await this.getDiscoveriesForUser(userId);
-    if (!discoveries) throw new NotFoundException('Discoveries not found');
+    if (!discoveries)
+      throw new NotFoundException(`Discoveries ${userId} not found`);
 
     const totalTimesClaimed = discoveries.totalCollectibleClaims ?? 0;
     const totalCollectiblesFound = sum(Object.values(discoveries.collectibles));
     const interval = this.constants.totalCollectiblesRequired;
 
     if (totalCollectiblesFound < (totalTimesClaimed + 1) * interval)
-      throw new BadRequestException('Not enough collectibles found');
+      return userError('Not enough collectibles found!');
 
     const discoveryPatches = await getPatchesAfterPropChanges<Discoveries>(
       discoveries,
@@ -324,14 +332,15 @@ export class DiscoveriesService {
 
   async claimUniqueEquipmentReward(userId: string): Promise<UserResponse> {
     const discoveries = await this.getDiscoveriesForUser(userId);
-    if (!discoveries) throw new NotFoundException('Discoveries not found');
+    if (!discoveries)
+      throw new NotFoundException(`Discoveries ${userId} not found`);
 
     const totalTimesClaimed = discoveries.uniqueEquipmentClaims ?? 0;
     const totalItemsFound = sum(Object.keys(discoveries.items));
     const interval = this.constants.uniqueEquipmentRequired;
 
     if (totalItemsFound < (totalTimesClaimed + 1) * interval)
-      throw new BadRequestException('Not enough equipment found');
+      return userError('Not enough equipment found!');
 
     const discoveryPatches = await getPatchesAfterPropChanges<Discoveries>(
       discoveries,
@@ -366,14 +375,15 @@ export class DiscoveriesService {
 
   async claimTotalEquipmentReward(userId: string): Promise<UserResponse> {
     const discoveries = await this.getDiscoveriesForUser(userId);
-    if (!discoveries) throw new NotFoundException('Discoveries not found');
+    if (!discoveries)
+      throw new NotFoundException(`Discoveries ${userId} not found`);
 
     const totalTimesClaimed = discoveries.totalEquipmentClaims ?? 0;
     const totalItemsFound = sum(Object.values(discoveries.items));
     const interval = this.constants.totalEquipmentRequired;
 
     if (totalItemsFound < (totalTimesClaimed + 1) * interval)
-      throw new ForbiddenException('Not enough equipment found');
+      return userError('Not enough equipment found!');
 
     const discoveryPatches = await getPatchesAfterPropChanges<Discoveries>(
       discoveries,
@@ -408,14 +418,15 @@ export class DiscoveriesService {
 
   async claimUniqueMonsterReward(userId: string): Promise<UserResponse> {
     const discoveries = await this.getDiscoveriesForUser(userId);
-    if (!discoveries) throw new NotFoundException('Discoveries not found');
+    if (!discoveries)
+      throw new NotFoundException(`Discoveries ${userId} not found`);
 
     const totalTimesClaimed = discoveries.uniqueMonsterClaims ?? 0;
     const totalItemsFound = sum(Object.keys(discoveries.monsters));
     const interval = this.constants.uniqueMonstersRequired;
 
     if (totalItemsFound < (totalTimesClaimed + 1) * interval)
-      throw new BadRequestException('Not enough equipment found');
+      return userError('Not enough monsters found!');
 
     const discoveryPatches = await getPatchesAfterPropChanges<Discoveries>(
       discoveries,
@@ -450,14 +461,15 @@ export class DiscoveriesService {
 
   async claimTotalMonsterReward(userId: string): Promise<UserResponse> {
     const discoveries = await this.getDiscoveriesForUser(userId);
-    if (!discoveries) throw new NotFoundException('Discoveries not found');
+    if (!discoveries)
+      throw new NotFoundException(`Discoveries ${userId} not found`);
 
     const totalTimesClaimed = discoveries.totalMonsterClaims ?? 0;
     const totalItemsFound = sum(Object.values(discoveries.monsters));
     const interval = this.constants.totalMonstersRequired;
 
     if (totalItemsFound < (totalTimesClaimed + 1) * interval)
-      throw new ForbiddenException('Not enough equipment found');
+      return userError('Not enough monsters found!');
 
     const discoveryPatches = await getPatchesAfterPropChanges<Discoveries>(
       discoveries,

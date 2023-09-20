@@ -13,6 +13,7 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { endOfToday, startOfToday } from '@utils/date';
 import { getPatchesAfterPropChanges } from '@utils/patches';
+import { userError } from '@utils/usernotifications';
 import { random } from 'lodash';
 
 @Injectable()
@@ -95,21 +96,21 @@ export class BuyInLotteryService implements OnModuleInit {
 
   public async buyTicket(userId: string): Promise<UserResponse> {
     const todayTicket = await this.getBuyInLotteryRecordForToday();
-    if (!todayTicket) throw new NotFoundError('No ticket found for today');
+    if (!todayTicket) return userError('No ticket found for today');
 
-    if (todayTicket.claimed) throw new Error('Ticket already claimed');
+    if (todayTicket.claimed) return userError('Ticket already claimed');
 
     const player = await this.playerService.getPlayerForUser(userId);
-    if (!player) throw new NotFoundError('User not found');
+    if (!player) throw new NotFoundError(`User ${userId} not found`);
 
     if (
       !this.playerHelper.hasCoins(player, this.constants.buyinLotteryTicketCost)
     )
-      throw new Error('Not enough coins');
+      return userError('Not enough coins to purchase a ticket!');
 
     const ticketNumbers = await this.ticketNumbers(userId);
     if (ticketNumbers.length >= this.constants.buyinLotteryMaxTickets)
-      throw new Error('Max tickets reached');
+      return userError('You cannot get any more tickets today!');
 
     const newTicket = new LotteryBuyInTicket(
       userId,
@@ -167,15 +168,16 @@ export class BuyInLotteryService implements OnModuleInit {
 
   public async claimTicket(userId: string): Promise<UserResponse> {
     const isWinner = await this.isWinnerToday(userId);
-    if (!isWinner) throw new Error('Not a winner');
+    if (!isWinner) return userError('You did not win today.');
 
     const todayTicket = await this.getBuyInLotteryRecordForToday();
     if (!todayTicket) throw new NotFoundError('No ticket found for today');
 
-    if (todayTicket.claimed) throw new Error('Ticket already claimed');
+    if (todayTicket.claimed)
+      return userError('Todays ticket was already claimed.');
 
     const player = await this.playerService.getPlayerForUser(userId);
-    if (!player) throw new NotFoundError('User not found');
+    if (!player) throw new NotFoundError(`User ${userId} not found`);
 
     const total = await this.ticketValueSum();
 

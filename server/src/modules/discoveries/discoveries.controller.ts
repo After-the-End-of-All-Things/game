@@ -24,7 +24,8 @@ export class DiscoveriesController {
     const discoveries = await this.discoveriesService.getDiscoveriesForUser(
       user.userId,
     );
-    if (!discoveries) throw new NotFoundException('User not found');
+    if (!discoveries)
+      throw new NotFoundException(`User ${user.userId} not found`);
 
     return { discoveries };
   }

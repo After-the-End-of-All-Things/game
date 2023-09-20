@@ -27,7 +27,7 @@ export class UserController {
   @Get('profile/mine')
   async getMyProfile(@User() user): Promise<UserResponse> {
     const userRef = await this.userService.findUserById(user.userId);
-    if (!userRef) throw new NotFoundException('User not found');
+    if (!userRef) throw new NotFoundException(`User ${user.userId} not found`);
 
     return { user: userRef };
   }
@@ -37,7 +37,7 @@ export class UserController {
   @Get('profile/:id')
   async getProfile(@Param('id') id: string): Promise<UserResponse> {
     const userRef = await this.userService.findUserById(id);
-    if (!userRef) throw new NotFoundException('User not found');
+    if (!userRef) throw new NotFoundException(`User ${id} not found`);
 
     return { user: userRef };
   }

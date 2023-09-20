@@ -21,12 +21,12 @@ import { Player } from '@modules/player/player.schema';
 import { WaveDBService } from '@modules/wave/wavedb.service';
 import {
   BadRequestException,
-  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { getPatchesAfterPropChanges } from '@utils/patches';
+import { userError } from '@utils/usernotifications';
 import { pickWeighted } from '@utils/weighted';
 import { pick, sample } from 'lodash';
 import { Logger } from 'nestjs-pino';
@@ -66,7 +66,7 @@ export class PlayerService {
 
       // mongodb duplicate
       if (e.code === 11000) {
-        throw new BadRequestException('player id already in use.');
+        throw new BadRequestException(`player id ${userId} already in use.`);
       }
 
       throw e;
@@ -79,7 +79,7 @@ export class PlayerService {
 
   async getPlayerProfile(userId: string): Promise<Partial<Player> | undefined> {
     const player = await this.getPlayerForUser(userId);
-    if (!player) throw new NotFoundException('Player not found');
+    if (!player) throw new NotFoundException(`Player ${userId} not found`);
 
     return pick(player, [
       'userId',
@@ -97,7 +97,7 @@ export class PlayerService {
     portrait: number,
   ): Promise<UserResponse> {
     const player = await this.getPlayerForUser(userId);
-    if (!player) throw new NotFoundException('Player not found');
+    if (!player) throw new NotFoundException(`Player ${userId} not found`);
 
     const playerPatches = await getPatchesAfterPropChanges<Player>(
       player,
@@ -127,7 +127,7 @@ export class PlayerService {
     background: number,
   ): Promise<UserResponse> {
     const player = await this.getPlayerForUser(userId);
-    if (!player) throw new NotFoundException('Player not found');
+    if (!player) throw new NotFoundException(`Player ${userId} not found`);
 
     const playerPatches = await getPatchesAfterPropChanges<Player>(
       player,
@@ -157,7 +157,7 @@ export class PlayerService {
     shortBio: string,
   ): Promise<UserResponse> {
     const player = await this.getPlayerForUser(userId);
-    if (!player) throw new NotFoundException('Player not found');
+    if (!player) throw new NotFoundException(`Player ${userId} not found`);
 
     shortBio = this.contentService.censor.cleanProfanityIsh(
       shortBio.substring(0, 30).trim(),
@@ -193,7 +193,7 @@ export class PlayerService {
     longBio: string,
   ): Promise<UserResponse> {
     const player = await this.getPlayerForUser(userId);
-    if (!player) throw new NotFoundException('Player not found');
+    if (!player) throw new NotFoundException(`Player ${userId} not found`);
 
     longBio = this.contentService.censor.cleanProfanityIsh(
       longBio.substring(0, 500).trim(),
@@ -228,15 +228,16 @@ export class PlayerService {
     slot: number,
   ): Promise<UserResponse> {
     const player = await this.getPlayerForUser(userId);
-    if (!player) throw new NotFoundException('Player not found');
+    if (!player) throw new NotFoundException(`Player ${userId} not found`);
 
     const discoveries = await this.discoveriesService.getDiscoveriesForUser(
       userId,
     );
-    if (!discoveries) throw new NotFoundException('Discoveries not found');
+    if (!discoveries)
+      throw new NotFoundException(`Discoveries ${userId} not found`);
 
     if (itemId && !discoveries.collectibles[itemId])
-      throw new ForbiddenException('Collectible not discovered');
+      return userError('You have not discovered this collectible!');
 
     const validSlot = cleanNumber(slot, 0, {
       round: true,
@@ -245,7 +246,7 @@ export class PlayerService {
     });
 
     if (validSlot >= this.constants.showcaseCollectibleSlots)
-      throw new BadRequestException(
+      return userError(
         'You do not have enough space in your showcase for that. Try removing something first.',
       );
 
@@ -287,15 +288,16 @@ export class PlayerService {
     slot: number,
   ): Promise<UserResponse> {
     const player = await this.getPlayerForUser(userId);
-    if (!player) throw new NotFoundException('Player not found');
+    if (!player) throw new NotFoundException(`Player ${userId} not found`);
 
     const discoveries = await this.discoveriesService.getDiscoveriesForUser(
       userId,
     );
-    if (!discoveries) throw new NotFoundException('Discoveries not found');
+    if (!discoveries)
+      throw new NotFoundException(`Discoveries ${userId} not found`);
 
     if (itemId && !discoveries.items[itemId])
-      throw new ForbiddenException('Item not discovered');
+      return userError('You have not discovered this item!');
 
     const validSlot = cleanNumber(slot, 0, {
       round: true,
@@ -304,7 +306,7 @@ export class PlayerService {
     });
 
     if (validSlot >= this.constants.showcaseItemSlots)
-      throw new BadRequestException(
+      return userError(
         'You do not have enough space in your showcase for that. Try removing something first.',
       );
 

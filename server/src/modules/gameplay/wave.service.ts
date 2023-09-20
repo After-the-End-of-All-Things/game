@@ -28,7 +28,7 @@ export class WaveService {
 
   async waveToPlayerFromExplore(userId: string): Promise<UserResponse> {
     const player = await this.playerService.getPlayerForUser(userId);
-    if (!player) throw new NotFoundException('Player not found');
+    if (!player) throw new NotFoundException(`Player ${userId} not found`);
 
     if (!player.action) throw new ForbiddenException('Player has no action');
 
@@ -40,17 +40,20 @@ export class WaveService {
     notificationId: string,
   ): Promise<UserResponse> {
     const player = await this.playerService.getPlayerForUser(userId);
-    if (!player) throw new NotFoundException('Player not found');
+    if (!player) throw new NotFoundException(`Player ${userId} not found`);
 
     const notification = await this.notificationService.getNotificationForUser(
       userId,
       notificationId,
     );
-    if (!notification) throw new NotFoundException('Notification not found');
+    if (!notification)
+      throw new NotFoundException(`Notification ${notificationId} not found`);
 
     const notificationAction = notification.actions?.[0];
     if (!notificationAction)
-      throw new ForbiddenException('Notification has no actions');
+      throw new ForbiddenException(
+        `Notification ${notificationId} has no actions`,
+      );
 
     this.logger.verbose(
       `Player ${userId} is waving to ${notificationAction.urlData.targetUserId} from notification.`,
@@ -67,10 +70,11 @@ export class WaveService {
     const { targetUserId, isWaveBack } = action?.urlData ?? {};
 
     const otherPlayer = await this.playerService.getPlayerForUser(targetUserId);
-    if (!otherPlayer) throw new NotFoundException('Target player not found');
+    if (!otherPlayer)
+      throw new NotFoundException(`Target player ${targetUserId} not found`);
 
     const stats = await this.statsService.getStatsForUser(targetUserId);
-    if (!stats) throw new NotFoundException('Stats not found');
+    if (!stats) throw new NotFoundException(`Stats ${targetUserId} not found`);
 
     // tell the user they waved
     const playerPatches = await getPatchesAfterPropChanges<Player>(

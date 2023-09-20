@@ -13,6 +13,7 @@ import {
 } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { getPatchesAfterPropChanges } from '@utils/patches';
+import { userError } from '@utils/usernotifications';
 import { Logger } from 'nestjs-pino';
 
 @Injectable()
@@ -33,32 +34,30 @@ export class TravelService {
     locationName: string,
   ): Promise<UserResponse> {
     const player = await this.playerService.getPlayerForUser(userId);
-    if (!player) throw new NotFoundException('Player not found');
+    if (!player) throw new NotFoundException(`Player ${userId} not found`);
 
     if (player.location.goingTo === locationName)
-      throw new ForbiddenException(
-        `You are already walking to ${locationName}!`,
-      );
+      return userError(`You are already walking to ${locationName}!`);
 
     if (player.location.current === locationName)
-      throw new ForbiddenException(`You are already at ${locationName}!`);
+      return userError(`You are already at ${locationName}!`);
 
     const discoveries = await this.discoveriesService.getDiscoveriesForUser(
       userId,
     );
 
-    if (!discoveries) throw new NotFoundException('Discoveries not found');
+    if (!discoveries)
+      throw new NotFoundException(`Discoveries ${userId} not found.`);
 
     const location = this.contentService.getLocation(locationName);
-    if (!location) throw new NotFoundException('Location does not exist!');
+    if (!location)
+      throw new NotFoundException(`Location ${locationName} does not exist!`);
 
     if (player.level < location.level)
-      throw new ForbiddenException('You are not high enough level to go here!');
+      return userError('You are not high enough level to go here!');
 
     if (!discoveries.locations[locationName])
-      throw new ForbiddenException(
-        'You have not discovered this location yet!',
-      );
+      return userError('You have not discovered this location yet!');
 
     this.analyticsService.sendDesignEvent(
       userId,
@@ -86,36 +85,34 @@ export class TravelService {
     locationName: string,
   ): Promise<UserResponse> {
     const player = await this.playerService.getPlayerForUser(userId);
-    if (!player) throw new NotFoundException('Player not found');
+    if (!player) throw new NotFoundException(`Player ${userId} not found`);
 
     if (player.location.current === locationName)
-      throw new ForbiddenException('You are already here!');
+      return userError('You are already here!');
 
     if (player.action?.action === 'fight')
-      throw new ForbiddenException('You cannot travel while fighting!');
+      return userError('You cannot travel while fighting!');
 
     const discoveries = await this.discoveriesService.getDiscoveriesForUser(
       userId,
     );
-    if (!discoveries) throw new NotFoundException('Discoveries not found');
+    if (!discoveries)
+      throw new NotFoundException(`Discoveries ${userId} not found.`);
 
     const location = this.contentService.getLocation(locationName);
-    if (!location) throw new ForbiddenException('Location does not exist!');
+    if (!location)
+      throw new ForbiddenException(`Location ${locationName} does not exist!`);
 
     if (player.level < location.level)
-      throw new ForbiddenException('You are not high enough level to go here!');
+      return userError('You are not high enough level to go here!');
 
     if (!discoveries.locations[locationName])
-      throw new ForbiddenException(
-        'You have not discovered this location yet!',
-      );
+      return userError('You have not discovered this location yet!');
 
     const cost = location.cost ?? 0;
 
     if (!this.playerHelper.hasCoins(player, cost)) {
-      throw new ForbiddenException(
-        'You do not have enough coins to travel here!',
-      );
+      return userError('You do not have enough coins to travel here!');
     }
 
     this.analyticsService.sendDesignEvent(

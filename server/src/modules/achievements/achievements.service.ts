@@ -36,7 +36,9 @@ export class AchievementsService {
 
       // mongodb duplicate
       if (e.code === 11000) {
-        throw new BadRequestException('achievements id already in use.');
+        throw new BadRequestException(
+          `achievements id ${userId} already in use.`,
+        );
       }
 
       throw e;

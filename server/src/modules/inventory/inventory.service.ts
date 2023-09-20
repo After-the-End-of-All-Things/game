@@ -46,7 +46,7 @@ export class InventoryService {
 
       // mongodb duplicate
       if (e.code === 11000) {
-        throw new BadRequestException('inventory id already in use.');
+        throw new BadRequestException(`inventory id ${userId} already in use.`);
       }
 
       throw e;
@@ -86,7 +86,8 @@ export class InventoryService {
     instanceId: string,
   ): Promise<Partial<Record<Stat, number>>> {
     const item = await this.getInventoryItemForUser(userId, instanceId);
-    if (!item) throw new NotFoundException('Item not found.');
+    if (!item)
+      throw new NotFoundException(`Inventory item ${instanceId} not found.`);
 
     const itemRef = this.contentService.getEquipment(item.itemId);
     if (!itemRef) return {};
@@ -105,7 +106,7 @@ export class InventoryService {
 
   async acquireItem(userId: string, itemId: string) {
     const itemRef = this.contentService.getItem(itemId);
-    if (!itemRef) throw new NotFoundException('Item not found.');
+    if (!itemRef) throw new NotFoundException(`Item ref ${itemId} not found.`);
 
     if (itemRef.type === 'resource') {
       await this.acquireResource(userId, itemId, 1);
@@ -160,7 +161,8 @@ export class InventoryService {
     if (!inventory) return;
 
     const itemRef = this.contentService.getItem(itemId);
-    if (!itemRef) throw new BadRequestException('Item not found.');
+    if (!itemRef)
+      throw new BadRequestException(`Item ref ${itemId} not found.`);
 
     if (itemRef.type !== 'resource') {
       await this.acquireItem(userId, itemId);
@@ -204,7 +206,8 @@ export class InventoryService {
     userId: string,
   ): Promise<Record<ItemSlot, IEquipment | undefined>> {
     const inventory = await this.getInventoryForUser(userId);
-    if (!inventory) throw new NotFoundException('Inventory not found.');
+    if (!inventory)
+      throw new NotFoundException(`Inventory ${userId} not found`);
 
     return inventory.equippedItems;
   }

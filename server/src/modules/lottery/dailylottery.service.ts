@@ -123,7 +123,7 @@ export class DailyLotteryService implements OnModuleInit {
     if (!record) throw new NotFoundError('You are not the winner for today');
 
     const player = await this.playerService.getPlayerForUser(userId);
-    if (!player) throw new NotFoundError('Player not found');
+    if (!player) throw new NotFoundError(`Player ${userId} not found`);
 
     const rewardScale = await this.numPlayersOnlineInLastWeek();
 

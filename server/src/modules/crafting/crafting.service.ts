@@ -33,7 +33,7 @@ export class CraftingService {
 
       // mongodb duplicate
       if (e.code === 11000) {
-        throw new BadRequestException('crafting id already in use.');
+        throw new BadRequestException(`crafting id ${userId} already in use.`);
       }
 
       throw e;

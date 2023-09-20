@@ -43,7 +43,7 @@ export class StatsService {
 
       // mongodb duplicate
       if (e.code === 11000) {
-        throw new BadRequestException('stats id already in use.');
+        throw new BadRequestException(`stats id ${userId} already in use.`);
       }
 
       throw e;
@@ -58,7 +58,7 @@ export class StatsService {
     userId: string,
   ): Promise<Array<{ name: string; value: string }>> {
     const stats = await this.getStatsForUser(userId);
-    if (!stats) throw new NotFoundException('Stats not found');
+    if (!stats) throw new NotFoundException(`Stats ${userId} not found`);
 
     return leaderboardQueries.map((query) => ({
       name: query.singleUserName,
@@ -68,7 +68,7 @@ export class StatsService {
 
   async incrementStat(userId: string, stat: TrackedStat, byValue = 1) {
     const stats = await this.getStatsForUser(userId);
-    if (!stats) throw new NotFoundException('Stats not found');
+    if (!stats) throw new NotFoundException(`Stats ${userId} not found`);
 
     this.logger.verbose(
       `Incrementing stat ${stat} by ${byValue} for user ${userId}`,
@@ -83,10 +83,10 @@ export class StatsService {
   @OnEvent('sync.player')
   async syncPlayer(player: Player): Promise<void> {
     const stats = await this.getStatsForUser(player.userId);
-    if (!stats) throw new NotFoundException('Stats not found');
+    if (!stats) throw new NotFoundException(`Stats ${player.userId} not found`);
 
     const user = await this.userService.findUserById(player.userId);
-    if (!user) throw new NotFoundException('User not found');
+    if (!user) throw new NotFoundException(`User ${player.userId} not found`);
 
     stats.name = user.username;
     stats.discriminator = user.discriminator;
@@ -104,7 +104,8 @@ export class StatsService {
   @OnEvent('sync.discoveries')
   async syncDiscoveries(discoveries: Discoveries): Promise<void> {
     const stats = await this.getStatsForUser(discoveries.userId);
-    if (!stats) throw new NotFoundException('Stats not found');
+    if (!stats)
+      throw new NotFoundException(`Stats ${discoveries.userId} not found`);
 
     stats.discoveries = {
       locations: Object.keys(discoveries.locations || {}).length,

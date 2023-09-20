@@ -14,6 +14,7 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { User } from '@utils/user.decorator';
+import { userError } from '@utils/usernotifications';
 
 @ApiBearerAuth()
 @Controller('player')
@@ -67,12 +68,14 @@ export class PlayerController {
     );
 
     if (!discoveries) {
-      throw new NotFoundException('Discoveries not found for this user.');
+      throw new NotFoundException(
+        `Discoveries ${user.userId} not found for this user.`,
+      );
     }
 
     // Check if the portrait is unlocked
     if (!discoveries.portraits[portraitId.toString()]) {
-      throw new NotFoundException(`Portrait ${portraitId} is not unlocked.`);
+      return userError(`Portrait ${portraitId} is not unlocked.`);
     }
 
     return this.playerService.updatePortraitForPlayer(user.userId, portraitId);
@@ -93,14 +96,14 @@ export class PlayerController {
     );
 
     if (!discoveries) {
-      throw new NotFoundException('Discoveries not found for this user.');
+      throw new NotFoundException(
+        `Discoveries ${user.userId} not found for this user.`,
+      );
     }
 
     // Check if the portrait is unlocked
     if (backgroundId !== -1 && !discoveries.backgrounds[backgroundId]) {
-      throw new NotFoundException(
-        `Background ${backgroundId} is not unlocked.`,
-      );
+      return userError(`Background ${backgroundId} is not unlocked.`);
     }
 
     return this.playerService.updateBackgroundForPlayer(
