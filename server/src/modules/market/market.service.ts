@@ -28,7 +28,7 @@ import {
 } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { getPatchesAfterPropChanges } from '@utils/patches';
-import { userError } from '@utils/usernotifications';
+import { userError, userSuccessObject } from '@utils/usernotifications';
 import { Logger } from 'nestjs-pino';
 
 @Injectable()
@@ -170,13 +170,11 @@ export class MarketService {
     return {
       player: playerPatches,
       actions: [
-        {
-          type: 'Notify',
-          messageType: 'success',
-          message: `You listed ${
+        userSuccessObject(
+          `You listed ${
             itemRef.name
           } x${validQuantity.toLocaleString()} for ${validPrice.toLocaleString()} coins!`,
-        },
+        ),
         !isResource
           ? {
               type: 'RemoveInventoryItem',
@@ -330,11 +328,7 @@ export class MarketService {
     return {
       player: playerPatches,
       actions: [
-        {
-          type: 'Notify',
-          messageType: 'success',
-          message: `You claimed ${totalValue.toLocaleString()} coins!`,
-        },
+        userSuccessObject(`You claimed ${totalValue.toLocaleString()} coins!`),
       ],
     };
   }
@@ -418,13 +412,11 @@ export class MarketService {
           listingId,
         },
         { type: 'UpdateInventoryItems' },
-        {
-          type: 'Notify',
-          messageType: 'success',
-          message: `You bought ${listing.meta.name} x${
+        userSuccessObject(
+          `You bought ${listing.meta.name} x${
             listing.quantity
           } for ${listing.price.toLocaleString()} coins!`,
-        },
+        ),
       ],
     };
   }
@@ -495,13 +487,11 @@ export class MarketService {
           listingId,
           newPrice: validPrice,
         },
-        {
-          type: 'Notify',
-          messageType: 'success',
-          message: `You repriced ${
+        userSuccessObject(
+          `You repriced ${
             listing.meta.name
           } x${quantity.toLocaleString()} for ${validPrice.toLocaleString()} coins!`,
-        },
+        ),
       ],
     };
   }
@@ -550,11 +540,9 @@ export class MarketService {
           listingId,
         },
         { type: 'UpdateInventoryItems' },
-        {
-          type: 'Notify',
-          messageType: 'success',
-          message: `You unlisted ${listing.meta.name} x${listing.quantity}!`,
-        },
+        userSuccessObject(
+          `You unlisted ${listing.meta.name} x${listing.quantity}!`,
+        ),
       ],
     };
   }

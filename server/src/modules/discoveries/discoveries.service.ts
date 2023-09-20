@@ -13,7 +13,7 @@ import {
 } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { getPatchesAfterPropChanges } from '@utils/patches';
-import { userError } from '@utils/usernotifications';
+import { userError, userSuccessObject } from '@utils/usernotifications';
 import { sample, sum } from 'lodash';
 import { Logger } from 'nestjs-pino';
 
@@ -154,11 +154,7 @@ export class DiscoveriesService {
     return {
       discoveries: discoveryPatches,
       actions: [
-        {
-          type: 'Notify',
-          messageType: 'success',
-          message: `You collected ${itemDefinition.name}!`,
-        },
+        userSuccessObject(`You collected ${itemDefinition.name}!`),
         {
           type: 'RemoveInventoryItem',
           instanceId,
@@ -214,11 +210,7 @@ export class DiscoveriesService {
     return {
       discoveries: discoveryPatches,
       actions: [
-        {
-          type: 'Notify',
-          messageType: 'success',
-          message: `You collected ${itemDefinition.name}!`,
-        },
+        userSuccessObject(`You collected ${itemDefinition.name}!`),
         {
           type: 'RemoveInventoryItem',
           instanceId,
@@ -278,11 +270,9 @@ export class DiscoveriesService {
     return {
       discoveries: discoveryPatches,
       actions: [
-        {
-          type: 'Notify',
-          messageType: 'success',
-          message: `You got ${coinReward.toLocaleString()} coins and ${oatReward.toLocaleString()} oats!`,
-        },
+        userSuccessObject(
+          `You got ${coinReward.toLocaleString()} coins and ${oatReward.toLocaleString()} oats!`,
+        ),
       ],
     };
   }
@@ -321,11 +311,9 @@ export class DiscoveriesService {
     return {
       discoveries: discoveryPatches,
       actions: [
-        {
-          type: 'Notify',
-          messageType: 'success',
-          message: `You got ${coinReward.toLocaleString()} coins and ${oatReward.toLocaleString()} oats!`,
-        },
+        userSuccessObject(
+          `You got ${coinReward.toLocaleString()} coins and ${oatReward.toLocaleString()} oats!`,
+        ),
       ],
     };
   }
@@ -364,11 +352,9 @@ export class DiscoveriesService {
     return {
       discoveries: discoveryPatches,
       actions: [
-        {
-          type: 'Notify',
-          messageType: 'success',
-          message: `You got ${coinReward.toLocaleString()} coins and ${oatReward.toLocaleString()} oats!`,
-        },
+        userSuccessObject(
+          `You got ${coinReward.toLocaleString()} coins and ${oatReward.toLocaleString()} oats!`,
+        ),
       ],
     };
   }
@@ -407,11 +393,9 @@ export class DiscoveriesService {
     return {
       discoveries: discoveryPatches,
       actions: [
-        {
-          type: 'Notify',
-          messageType: 'success',
-          message: `You got ${coinReward.toLocaleString()} coins and ${oatReward.toLocaleString()} oats!`,
-        },
+        userSuccessObject(
+          `You got ${coinReward.toLocaleString()} coins and ${oatReward.toLocaleString()} oats!`,
+        ),
       ],
     };
   }
@@ -450,11 +434,9 @@ export class DiscoveriesService {
     return {
       discoveries: discoveryPatches,
       actions: [
-        {
-          type: 'Notify',
-          messageType: 'success',
-          message: `You got ${coinReward.toLocaleString()} coins and ${oatReward.toLocaleString()} oats!`,
-        },
+        userSuccessObject(
+          `You got ${coinReward.toLocaleString()} coins and ${oatReward.toLocaleString()} oats!`,
+        ),
       ],
     };
   }
@@ -493,11 +475,9 @@ export class DiscoveriesService {
     return {
       discoveries: discoveryPatches,
       actions: [
-        {
-          type: 'Notify',
-          messageType: 'success',
-          message: `You got ${coinReward.toLocaleString()} coins and ${oatReward.toLocaleString()} oats!`,
-        },
+        userSuccessObject(
+          `You got ${coinReward.toLocaleString()} coins and ${oatReward.toLocaleString()} oats!`,
+        ),
       ],
     };
   }

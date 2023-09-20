@@ -13,7 +13,7 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { endOfToday, startOfToday } from '@utils/date';
 import { getPatchesAfterPropChanges } from '@utils/patches';
-import { userError } from '@utils/usernotifications';
+import { userError, userSuccessObject } from '@utils/usernotifications';
 import { random } from 'lodash';
 
 @Injectable()
@@ -131,13 +131,11 @@ export class BuyInLotteryService implements OnModuleInit {
     return {
       player: playerPatches,
       actions: [
-        {
-          type: 'Notify',
-          messageType: 'success',
-          message: `You bought a ticket for the ticket lottery for ${this.constants.buyinLotteryTicketCost.toLocaleString()} coins. Your ticket number is ${
+        userSuccessObject(
+          `You bought a ticket for the ticket lottery for ${this.constants.buyinLotteryTicketCost.toLocaleString()} coins. Your ticket number is ${
             newTicket.ticketNumber
           }.`,
-        },
+        ),
       ],
     };
   }
@@ -211,13 +209,11 @@ export class BuyInLotteryService implements OnModuleInit {
     return {
       player: playerPatches,
       actions: [
-        {
-          type: 'Notify',
-          messageType: 'success',
-          message: `Your ticket numbered ${
+        userSuccessObject(
+          `Your ticket numbered ${
             todayTicket.ticketNumber
           } was a winner! You have been awarded ${total.toLocaleString()} coins.`,
-        },
+        ),
       ],
     };
   }

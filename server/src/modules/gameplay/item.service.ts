@@ -24,7 +24,7 @@ import { StatsService } from '@modules/stats/stats.service';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { getPatchesAfterPropChanges } from '@utils/patches';
-import { userError } from '@utils/usernotifications';
+import { userError, userSuccessObject } from '@utils/usernotifications';
 import { Logger } from 'nestjs-pino';
 
 @Injectable()
@@ -159,13 +159,9 @@ export class ItemService {
     return {
       player: playerPatches,
       actions: [
-        {
-          type: 'Notify',
-          messageType: 'success',
-          message: `You sold ${
-            item.name
-          } for ${coinsGained.toLocaleString()} coins!`,
-        },
+        userSuccessObject(
+          `You sold ${item.name} for ${coinsGained.toLocaleString()} coins!`,
+        ),
         {
           type: 'RemoveInventoryItem',
           instanceId,
@@ -250,13 +246,11 @@ export class ItemService {
     return {
       inventory: inventoryPatches,
       actions: [
-        {
-          type: 'Notify',
-          messageType: 'success',
-          message: `You equipped ${itemRef.name} Lv.${
+        userSuccessObject(
+          `You equipped ${itemRef.name} Lv.${
             (itemRef as IEquipment).levelRequirement ?? 0
           }!`,
-        },
+        ),
       ],
     };
   }
@@ -297,13 +291,7 @@ export class ItemService {
 
     return {
       inventory: inventoryPatches,
-      actions: [
-        {
-          type: 'Notify',
-          messageType: 'success',
-          message: `You unequipped ${itemRef.name}!`,
-        },
-      ],
+      actions: [userSuccessObject(`You unequipped ${itemRef.name}!`)],
     };
   }
 
@@ -473,13 +461,7 @@ export class ItemService {
     return {
       inventory: inventoryPatches,
       crafting: craftingPatches,
-      actions: [
-        {
-          type: 'Notify',
-          messageType: 'success',
-          message: `You collected ${item.name}!`,
-        },
-      ],
+      actions: [userSuccessObject(`You collected ${item.name}!`)],
     };
   }
 }

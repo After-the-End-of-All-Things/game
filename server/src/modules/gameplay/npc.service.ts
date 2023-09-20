@@ -11,7 +11,7 @@ import { PlayerService } from '@modules/player/player.service';
 import { StatsService } from '@modules/stats/stats.service';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { getPatchesAfterPropChanges } from '@utils/patches';
-import { userError } from '@utils/usernotifications';
+import { userError, userSuccessObject } from '@utils/usernotifications';
 
 @Injectable()
 export class NpcService {
@@ -70,13 +70,7 @@ export class NpcService {
     return {
       player: playerPatches,
       inventory: inventoryPatches,
-      actions: [
-        {
-          type: 'Notify',
-          messageType: 'success',
-          message: `You changed your job to ${newJob}!`,
-        },
-      ],
+      actions: [userSuccessObject(`You changed your job to ${newJob}!`)],
     };
   }
 
@@ -116,13 +110,7 @@ export class NpcService {
     return {
       player: playerPatches,
       discoveries: discoveryPatches,
-      actions: [
-        {
-          type: 'Notify',
-          messageType: 'success',
-          message: `You unlocked a new portrait!`,
-        },
-      ],
+      actions: [userSuccessObject(`You unlocked a new portrait!`)],
     };
   }
 
@@ -165,13 +153,7 @@ export class NpcService {
     return {
       player: playerPatches,
       discoveries: discoveryPatches,
-      actions: [
-        {
-          type: 'Notify',
-          messageType: 'success',
-          message: `You unlocked a new background!`,
-        },
-      ],
+      actions: [userSuccessObject(`You unlocked a new background!`)],
     };
   }
 }

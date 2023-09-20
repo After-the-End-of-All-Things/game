@@ -26,7 +26,7 @@ import {
 } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { getPatchesAfterPropChanges } from '@utils/patches';
-import { userError } from '@utils/usernotifications';
+import { userError, userSuccessObject } from '@utils/usernotifications';
 import { pickWeighted } from '@utils/weighted';
 import { pick, sample } from 'lodash';
 import { Logger } from 'nestjs-pino';
@@ -112,13 +112,7 @@ export class PlayerService {
 
     return {
       player: playerPatches,
-      actions: [
-        {
-          type: 'Notify',
-          messageType: 'success',
-          message: `Portrait updated!`,
-        },
-      ],
+      actions: [userSuccessObject(`Portrait updated!`)],
     };
   }
 
@@ -142,13 +136,7 @@ export class PlayerService {
 
     return {
       player: playerPatches,
-      actions: [
-        {
-          type: 'Notify',
-          messageType: 'success',
-          message: `Background updated!`,
-        },
-      ],
+      actions: [userSuccessObject(`Background updated!`)],
     };
   }
 
@@ -178,13 +166,7 @@ export class PlayerService {
 
     return {
       player: playerPatches,
-      actions: [
-        {
-          type: 'Notify',
-          messageType: 'success',
-          message: `Tagline updated!`,
-        },
-      ],
+      actions: [userSuccessObject(`Tagline updated!`)],
     };
   }
 
@@ -212,13 +194,7 @@ export class PlayerService {
 
     return {
       player: playerPatches,
-      actions: [
-        {
-          type: 'Notify',
-          messageType: 'success',
-          message: `Bio updated!`,
-        },
-      ],
+      actions: [userSuccessObject(`Bio updated!`)],
     };
   }
 
@@ -272,13 +248,7 @@ export class PlayerService {
 
     return {
       player: playerPatches,
-      actions: [
-        {
-          type: 'Notify',
-          messageType: 'success',
-          message: `Collectible added to showcase!`,
-        },
-      ],
+      actions: [userSuccessObject('Collectible added to showcase!')],
     };
   }
 
@@ -332,13 +302,7 @@ export class PlayerService {
 
     return {
       player: playerPatches,
-      actions: [
-        {
-          type: 'Notify',
-          messageType: 'success',
-          message: `Item added to showcase!`,
-        },
-      ],
+      actions: [userSuccessObject('Item added to showcase!')],
     };
   }
 

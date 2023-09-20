@@ -16,7 +16,7 @@ import {
 } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { getPatchesAfterPropChanges } from '@utils/patches';
-import { userError } from '@utils/usernotifications';
+import { userError, userSuccessObject } from '@utils/usernotifications';
 import { sample } from 'lodash';
 import { Logger } from 'nestjs-pino';
 
@@ -286,11 +286,7 @@ export class GameplayService {
     return {
       fight,
       actions: [
-        {
-          type: 'Notify',
-          messageType: 'success',
-          message: `You started a fight with ${formation.name}!`,
-        },
+        userSuccessObject(`You started a fight with ${formation.name}!`),
         {
           type: 'ChangePage',
           newPage: 'combat',

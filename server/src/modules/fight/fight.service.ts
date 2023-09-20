@@ -56,6 +56,7 @@ import {
 } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { getPatchesAfterPropChanges } from '@utils/patches';
+import { userSuccessObject } from '@utils/usernotifications';
 import { generateUUID } from '@utils/uuid';
 import { Operation } from 'fast-json-patch';
 import { random, sample, sampleSize, sum } from 'lodash';
@@ -865,13 +866,7 @@ export class FightService {
       }),
     );
 
-    await this.endFight(fight, [
-      {
-        type: 'Notify',
-        messageType: 'success',
-        message: `You fled from combat!`,
-      },
-    ]);
+    await this.endFight(fight, [userSuccessObject('You fled from combat!')]);
   }
 
   async saveAndUpdateFight(fight: Fight): Promise<void> {

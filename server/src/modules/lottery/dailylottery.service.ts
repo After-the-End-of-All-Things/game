@@ -12,6 +12,7 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { endOfToday, startOfLastWeek, startOfToday } from '@utils/date';
 import { getPatchesAfterPropChanges } from '@utils/patches';
+import { userSuccessObject } from '@utils/usernotifications';
 
 @Injectable()
 export class DailyLotteryService implements OnModuleInit {
@@ -155,11 +156,9 @@ export class DailyLotteryService implements OnModuleInit {
     return {
       player: playerPatches,
       actions: [
-        {
-          type: 'Notify',
-          messageType: 'success',
-          message: `You got ${coinReward.toLocaleString()} coins, ${oatReward.toLocaleString()} oats, and ${xpReward.toLocaleString()} XP!`,
-        },
+        userSuccessObject(
+          `You got ${coinReward.toLocaleString()} coins, ${oatReward.toLocaleString()} oats, and ${xpReward.toLocaleString()} XP!`,
+        ),
       ],
     };
   }
