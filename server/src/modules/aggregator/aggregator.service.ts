@@ -115,7 +115,6 @@ export class AggregatorService {
   }): Promise<void> {
     const { userId, amount } = event;
     const player = await this.playerService.getPlayerForUser(userId);
-    if (!player) return;
 
     const playerPatches = await getPatchesAfterPropChanges(
       player,
@@ -140,7 +139,6 @@ export class AggregatorService {
     const { userId, amount } = event;
 
     const player = await this.playerService.getPlayerForUser(userId);
-    if (!player) return;
 
     const playerPatches = await getPatchesAfterPropChanges(
       player,

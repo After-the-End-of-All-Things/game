@@ -27,7 +27,18 @@ export class InventoryService {
     private readonly contentService: ContentService,
   ) {}
 
-  async getInventoryForUser(userId: string): Promise<Inventory | undefined> {
+  async getInventoryForUser(userId: string): Promise<Inventory> {
+    const inventory = await this.getOrCreateInventoryForUser(userId);
+    if (!inventory) {
+      throw new BadRequestException(`inventory id ${userId} not found.`);
+    }
+
+    return inventory;
+  }
+
+  private async getOrCreateInventoryForUser(
+    userId: string,
+  ): Promise<Inventory | undefined> {
     const dbInventory = await this.inventory.findOne({ userId });
     if (!dbInventory) {
       return await this.createInventoryForUser(userId);
@@ -64,8 +75,11 @@ export class InventoryService {
   async getInventoryItemForUser(
     userId: string,
     instanceId: string,
-  ): Promise<InventoryItem | null> {
-    return this.inventoryItems.findOne({ userId, instanceId });
+  ): Promise<InventoryItem> {
+    const item = await this.inventoryItems.findOne({ userId, instanceId });
+    if (!item) throw new NotFoundException(`Item ${instanceId} not found.`);
+
+    return item;
   }
 
   async removeInventoryItemForUser(
@@ -73,7 +87,6 @@ export class InventoryService {
     instanceId: string,
   ): Promise<any> {
     const item = await this.getInventoryItemForUser(userId, instanceId);
-    if (!item) return;
 
     this.logger.verbose(
       `Removing item ${item.itemId} (${instanceId}) from ${userId}.`,
@@ -86,13 +99,9 @@ export class InventoryService {
     instanceId: string,
   ): Promise<Partial<Record<Stat, number>>> {
     const item = await this.getInventoryItemForUser(userId, instanceId);
-    if (!item)
-      throw new NotFoundException(`Inventory item ${instanceId} not found.`);
 
     const itemRef = this.contentService.getEquipment(item.itemId);
-    if (!itemRef) return {};
-
-    return itemRef.stats;
+    return itemRef.stats ?? {};
   }
 
   async isInventoryFull(userId: string): Promise<boolean> {
@@ -106,7 +115,6 @@ export class InventoryService {
 
   async acquireItem(userId: string, itemId: string) {
     const itemRef = this.contentService.getItem(itemId);
-    if (!itemRef) throw new NotFoundException(`Item ref ${itemId} not found.`);
 
     if (itemRef.type === 'resource') {
       await this.acquireResource(userId, itemId, 1);
@@ -126,14 +134,11 @@ export class InventoryService {
 
   async hasResource(userId: string, resourceId: string, amount: number) {
     const inventory = await this.getInventoryForUser(userId);
-    if (!inventory) return;
-
     return inventory.resources[resourceId] >= amount;
   }
 
   async updateEquippedItem(userId: string, slot: ItemSlot, item: IEquipment) {
     const inventory = await this.getInventoryForUser(userId);
-    if (!inventory) return;
 
     inventory.equippedItems = {
       ...inventory.equippedItems,
@@ -158,11 +163,8 @@ export class InventoryService {
 
   async acquireResource(userId: string, itemId: string, quantity = 1) {
     const inventory = await this.getInventoryForUser(userId);
-    if (!inventory) return;
 
     const itemRef = this.contentService.getItem(itemId);
-    if (!itemRef)
-      throw new BadRequestException(`Item ref ${itemId} not found.`);
 
     if (itemRef.type !== 'resource') {
       await this.acquireItem(userId, itemId);
@@ -194,7 +196,6 @@ export class InventoryService {
 
   async removeResource(userId: string, itemId: string, quantity = 1) {
     const inventory = await this.getInventoryForUser(userId);
-    if (!inventory) return;
 
     this.logger.verbose(
       `Removing resource x${quantity} ${itemId} for ${userId}.`,
@@ -206,8 +207,6 @@ export class InventoryService {
     userId: string,
   ): Promise<Record<ItemSlot, IEquipment | undefined>> {
     const inventory = await this.getInventoryForUser(userId);
-    if (!inventory)
-      throw new NotFoundException(`Inventory ${userId} not found`);
 
     return inventory.equippedItems;
   }

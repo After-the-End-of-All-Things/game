@@ -33,7 +33,7 @@ export class LotteryController {
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Get my buyin tickets total value' })
   @Get('buyin/value')
-  async jackpotValue(@User() user): Promise<number> {
+  async jackpotValue(): Promise<number> {
     return this.buyinLotteryService.ticketValueSum();
   }
 

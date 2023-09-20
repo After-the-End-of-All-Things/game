@@ -24,7 +24,18 @@ export class StatsService {
     private readonly userService: UserService,
   ) {}
 
-  async getStatsForUser(userId: string): Promise<Stats | undefined> {
+  async getStatsForUser(userId: string): Promise<Stats> {
+    const stats = await this.getOrCreateStatsForUser(userId);
+    if (!stats) {
+      throw new BadRequestException(`stats id ${userId} not found.`);
+    }
+
+    return stats;
+  }
+
+  private async getOrCreateStatsForUser(
+    userId: string,
+  ): Promise<Stats | undefined> {
     const dbStats = await this.stats.findOne({ userId });
     if (!dbStats) {
       return await this.createStatsForUser(userId);
@@ -58,7 +69,6 @@ export class StatsService {
     userId: string,
   ): Promise<Array<{ name: string; value: string }>> {
     const stats = await this.getStatsForUser(userId);
-    if (!stats) throw new NotFoundException(`Stats ${userId} not found`);
 
     return leaderboardQueries.map((query) => ({
       name: query.singleUserName,
@@ -68,7 +78,6 @@ export class StatsService {
 
   async incrementStat(userId: string, stat: TrackedStat, byValue = 1) {
     const stats = await this.getStatsForUser(userId);
-    if (!stats) throw new NotFoundException(`Stats ${userId} not found`);
 
     this.logger.verbose(
       `Incrementing stat ${stat} by ${byValue} for user ${userId}`,
@@ -83,7 +92,6 @@ export class StatsService {
   @OnEvent('sync.player')
   async syncPlayer(player: Player): Promise<void> {
     const stats = await this.getStatsForUser(player.userId);
-    if (!stats) throw new NotFoundException(`Stats ${player.userId} not found`);
 
     const user = await this.userService.findUserById(player.userId);
     if (!user) throw new NotFoundException(`User ${player.userId} not found`);
@@ -104,8 +112,6 @@ export class StatsService {
   @OnEvent('sync.discoveries')
   async syncDiscoveries(discoveries: Discoveries): Promise<void> {
     const stats = await this.getStatsForUser(discoveries.userId);
-    if (!stats)
-      throw new NotFoundException(`Stats ${discoveries.userId} not found`);
 
     stats.discoveries = {
       locations: Object.keys(discoveries.locations || {}).length,

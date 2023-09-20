@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
 import {
   ICollectible,
@@ -112,78 +112,115 @@ export class ContentService {
   }
 
   public allLocations(): ILocation[] {
-    return Object.values(this.locations);
+    return Object.values(this.locations ?? {});
   }
 
-  public getLocation(location: string): ILocation | undefined {
-    return this.locations[location];
+  public getLocation(location: string): ILocation {
+    const locationRef = this.locations[location];
+    if (!location)
+      throw new NotFoundException(`Location ${location} not found!`);
+
+    return locationRef;
   }
 
   public allJobs(): IJob[] {
-    return Object.values(this.jobs);
+    return Object.values(this.jobs ?? {});
   }
 
-  public getJob(job: string): IJob | undefined {
-    return this.jobs[job];
+  public getJob(job: string): IJob {
+    const jobRef = this.jobs[job];
+    if (!jobRef) throw new NotFoundException(`Job ${job} not found!`);
+
+    return jobRef;
   }
 
   public allCollectibles(): ICollectible[] {
-    return Object.values(this.collectibles);
+    return Object.values(this.collectibles ?? {});
   }
 
   public allResources(): IResource[] {
-    return Object.values(this.resources);
+    return Object.values(this.resources ?? {});
   }
 
-  public getResource(resourceId: string): IResource | undefined {
-    return this.resources[resourceId];
+  public getResource(resourceId: string): IResource {
+    const resourceRef = this.resources[resourceId];
+    if (!resourceRef)
+      throw new NotFoundException(`Resource ${resourceId} not found!`);
+
+    return resourceRef;
   }
 
-  public getCollectible(collectibleId: string): ICollectible | undefined {
-    return this.collectibles[collectibleId];
+  public getCollectible(collectibleId: string): ICollectible {
+    const collectibleRef = this.collectibles[collectibleId];
+    if (!collectibleRef)
+      throw new NotFoundException(`Collectible ${collectibleId} not found!`);
+
+    return collectibleRef;
   }
 
   public allEquipment(): IEquipment[] {
-    return Object.values(this.equipment);
+    return Object.values(this.equipment ?? {});
   }
 
-  public getEquipment(equipmentId: string): IEquipment | undefined {
-    return this.equipment[equipmentId];
+  public getEquipment(equipmentId: string): IEquipment {
+    const equipmentRef = this.equipment[equipmentId];
+    if (!equipmentRef)
+      throw new NotFoundException(`Equipment ${equipmentId} not found!`);
+
+    return equipmentRef;
   }
 
-  public getItem(item: string): IItem | undefined {
+  public getItem(item: string): IItem {
     return this.equipment[item] || this.collectibles[item];
   }
 
-  public getRecipe(item: string): IRecipe | undefined {
-    return this.recipes[item];
+  public getRecipe(item: string): IRecipe {
+    const recipeRef = this.recipes[item];
+    if (!recipeRef) throw new NotFoundException(`Recipe ${item} not found!`);
+
+    return recipeRef;
   }
 
   public allFormations(): IMonsterFormation[] {
-    return Object.values(this.formations);
+    return Object.values(this.formations ?? {});
   }
 
-  public getFormation(formation: string): IMonsterFormation | undefined {
-    return this.formations[formation];
+  public getFormation(formation: string): IMonsterFormation {
+    const formationRef = this.formations[formation];
+    if (!formationRef)
+      throw new NotFoundException(`Formation ${formation} not found!`);
+
+    return formationRef;
   }
 
-  public getMonster(monster: string): IMonster | undefined {
-    return this.monsters[monster];
+  public getMonster(monster: string): IMonster {
+    const monsterRef = this.monsters[monster];
+    if (!monsterRef)
+      throw new NotFoundException(`Monster ${monster} not found!`);
+
+    return monsterRef;
   }
 
   public allAbilities(): ICombatAbility[] {
-    return Object.values(this.abilities);
+    return Object.values(this.abilities ?? {});
   }
 
-  public getAbility(ability: string): ICombatAbility | undefined {
-    return this.abilities[ability];
+  public getAbility(ability: string): ICombatAbility {
+    const abilityRef = this.abilities[ability];
+    if (!abilityRef)
+      throw new NotFoundException(`Ability ${ability} not found!`);
+
+    return abilityRef;
   }
 
   public allNPCs(): ILocationNPC[] {
-    return Object.values(this.npcs);
+    return Object.values(this.npcs ?? {});
   }
 
-  public getNPC(npc: string): ILocationNPC | undefined {
-    return this.npcs[npc];
+  public getNPC(npc: string): ILocationNPC {
+    const npcRef = this.npcs[npc];
+    if (!npcRef) throw new NotFoundException(`NPC ${npc} not found!`);
+
+    return npcRef;
   }
 }

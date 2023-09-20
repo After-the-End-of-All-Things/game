@@ -6,11 +6,7 @@ import { DiscoveriesService } from '@modules/discoveries/discoveries.service';
 import { Player } from '@modules/player/player.schema';
 import { PlayerService } from '@modules/player/player.service';
 import { StatsService } from '@modules/stats/stats.service';
-import {
-  ForbiddenException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { getPatchesAfterPropChanges } from '@utils/patches';
 import { userError } from '@utils/usernotifications';
@@ -34,7 +30,6 @@ export class TravelService {
     locationName: string,
   ): Promise<UserResponse> {
     const player = await this.playerService.getPlayerForUser(userId);
-    if (!player) throw new NotFoundException(`Player ${userId} not found`);
 
     if (player.location.goingTo === locationName)
       return userError(`You are already walking to ${locationName}!`);
@@ -46,12 +41,7 @@ export class TravelService {
       userId,
     );
 
-    if (!discoveries)
-      throw new NotFoundException(`Discoveries ${userId} not found.`);
-
     const location = this.contentService.getLocation(locationName);
-    if (!location)
-      throw new NotFoundException(`Location ${locationName} does not exist!`);
 
     if (player.level < location.level)
       return userError('You are not high enough level to go here!');
@@ -85,7 +75,6 @@ export class TravelService {
     locationName: string,
   ): Promise<UserResponse> {
     const player = await this.playerService.getPlayerForUser(userId);
-    if (!player) throw new NotFoundException(`Player ${userId} not found`);
 
     if (player.location.current === locationName)
       return userError('You are already here!');
@@ -96,12 +85,8 @@ export class TravelService {
     const discoveries = await this.discoveriesService.getDiscoveriesForUser(
       userId,
     );
-    if (!discoveries)
-      throw new NotFoundException(`Discoveries ${userId} not found.`);
 
     const location = this.contentService.getLocation(locationName);
-    if (!location)
-      throw new ForbiddenException(`Location ${locationName} does not exist!`);
 
     if (player.level < location.level)
       return userError('You are not high enough level to go here!');

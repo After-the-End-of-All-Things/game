@@ -39,7 +39,7 @@ export class NpcService {
     const discoveries = await this.discoveriesService.getDiscoveriesForUser(
       player.userId,
     );
-    if (!discoveries) return undefined;
+
     if (discoveries.portraits[npc.properties.unlockSprite]) return undefined;
 
     return {
@@ -61,7 +61,7 @@ export class NpcService {
     const discoveries = await this.discoveriesService.getDiscoveriesForUser(
       player.userId,
     );
-    if (!discoveries) return undefined;
+
     if (discoveries.backgrounds[npc.properties.unlockBackground])
       return undefined;
 

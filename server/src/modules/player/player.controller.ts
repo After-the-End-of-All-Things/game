@@ -3,15 +3,7 @@ import { JwtAuthGuard } from '@modules/auth/jwt.guard';
 import { DiscoveriesService } from '@modules/discoveries/discoveries.service';
 import { Player } from '@modules/player/player.schema';
 import { PlayerService } from '@modules/player/player.service';
-import {
-  Body,
-  Controller,
-  Get,
-  NotFoundException,
-  Param,
-  Patch,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { User } from '@utils/user.decorator';
 import { userError } from '@utils/usernotifications';
@@ -67,12 +59,6 @@ export class PlayerController {
       user.userId,
     );
 
-    if (!discoveries) {
-      throw new NotFoundException(
-        `Discoveries ${user.userId} not found for this user.`,
-      );
-    }
-
     // Check if the portrait is unlocked
     if (!discoveries.portraits[portraitId.toString()]) {
       return userError(`Portrait ${portraitId} is not unlocked.`);
@@ -94,12 +80,6 @@ export class PlayerController {
     const discoveries = await this.discoveriesService.getDiscoveriesForUser(
       user.userId,
     );
-
-    if (!discoveries) {
-      throw new NotFoundException(
-        `Discoveries ${user.userId} not found for this user.`,
-      );
-    }
 
     // Check if the portrait is unlocked
     if (backgroundId !== -1 && !discoveries.backgrounds[backgroundId]) {

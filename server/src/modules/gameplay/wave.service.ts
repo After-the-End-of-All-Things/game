@@ -28,7 +28,6 @@ export class WaveService {
 
   async waveToPlayerFromExplore(userId: string): Promise<UserResponse> {
     const player = await this.playerService.getPlayerForUser(userId);
-    if (!player) throw new NotFoundException(`Player ${userId} not found`);
 
     if (!player.action) throw new ForbiddenException('Player has no action');
 
@@ -40,7 +39,6 @@ export class WaveService {
     notificationId: string,
   ): Promise<UserResponse> {
     const player = await this.playerService.getPlayerForUser(userId);
-    if (!player) throw new NotFoundException(`Player ${userId} not found`);
 
     const notification = await this.notificationService.getNotificationForUser(
       userId,
@@ -70,11 +68,6 @@ export class WaveService {
     const { targetUserId, isWaveBack } = action?.urlData ?? {};
 
     const otherPlayer = await this.playerService.getPlayerForUser(targetUserId);
-    if (!otherPlayer)
-      throw new NotFoundException(`Target player ${targetUserId} not found`);
-
-    const stats = await this.statsService.getStatsForUser(targetUserId);
-    if (!stats) throw new NotFoundException(`Stats ${targetUserId} not found`);
 
     // tell the user they waved
     const playerPatches = await getPatchesAfterPropChanges<Player>(

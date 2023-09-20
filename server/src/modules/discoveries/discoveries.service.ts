@@ -30,7 +30,16 @@ export class DiscoveriesService {
     private readonly events: EventEmitter2,
   ) {}
 
-  async getDiscoveriesForUser(
+  async getDiscoveriesForUser(userId: string): Promise<Discoveries> {
+    const discoveries = await this.getOrCreateDiscoveriesForUser(userId);
+    if (!discoveries) {
+      throw new BadRequestException(`discoveries id ${userId} not found.`);
+    }
+
+    return discoveries;
+  }
+
+  private async getOrCreateDiscoveriesForUser(
     userId: string,
   ): Promise<Discoveries | undefined> {
     const dbDiscoveries = await this.discoveries.findOne({ userId });
@@ -117,20 +126,13 @@ export class DiscoveriesService {
     instanceId: string,
   ): Promise<UserResponse> {
     const discoveries = await this.getDiscoveriesForUser(userId);
-    if (!discoveries) throw new NotFoundException(`User ${userId} not found`);
 
     const item = await this.inventoryService.getInventoryItemForUser(
       userId,
       instanceId,
     );
-    if (!item)
-      throw new NotFoundException(`Collectible item ${instanceId} not found`);
 
-    const itemDefinition = await this.contentService.getCollectible(
-      item.itemId,
-    );
-    if (!itemDefinition)
-      throw new NotFoundException(`Item definition ${item.itemId} not found`);
+    const itemDefinition = this.contentService.getCollectible(item.itemId);
 
     await this.inventoryService.removeInventoryItemForUser(userId, instanceId);
 
@@ -168,16 +170,13 @@ export class DiscoveriesService {
     instanceId: string,
   ): Promise<UserResponse> {
     const discoveries = await this.getDiscoveriesForUser(userId);
-    if (!discoveries) throw new NotFoundException(`User ${userId} not found`);
 
     const item = await this.inventoryService.getInventoryItemForUser(
       userId,
       instanceId,
     );
-    if (!item)
-      throw new NotFoundException(`Equipment item ${instanceId} not found`);
 
-    const itemDefinition = await this.contentService.getEquipment(item.itemId);
+    const itemDefinition = this.contentService.getEquipment(item.itemId);
     if (!itemDefinition) {
       await this.inventoryService.removeInventoryItemForUser(
         userId,
@@ -221,10 +220,8 @@ export class DiscoveriesService {
 
   async discoverMonster(userId: string, monsterId: string): Promise<void> {
     const discoveries = await this.getDiscoveriesForUser(userId);
-    if (!discoveries) throw new NotFoundException(`User ${userId} not found`);
 
-    const monster = await this.contentService.getMonster(monsterId);
-    if (!monster) throw new NotFoundException(`Monster ${monsterId} not found`);
+    const monster = this.contentService.getMonster(monsterId);
 
     this.logger.verbose(`Discovered monster ${monster.name} for ${userId}.`);
 
@@ -238,8 +235,6 @@ export class DiscoveriesService {
 
   async claimUniqueCollectibleReward(userId: string): Promise<UserResponse> {
     const discoveries = await this.getDiscoveriesForUser(userId);
-    if (!discoveries)
-      throw new NotFoundException(`Discoveries ${userId} not found`);
 
     const totalTimesClaimed = discoveries.uniqueCollectibleClaims ?? 0;
     const totalCollectiblesFound = sum(Object.keys(discoveries.collectibles));
@@ -279,8 +274,6 @@ export class DiscoveriesService {
 
   async claimTotalCollectibleReward(userId: string): Promise<UserResponse> {
     const discoveries = await this.getDiscoveriesForUser(userId);
-    if (!discoveries)
-      throw new NotFoundException(`Discoveries ${userId} not found`);
 
     const totalTimesClaimed = discoveries.totalCollectibleClaims ?? 0;
     const totalCollectiblesFound = sum(Object.values(discoveries.collectibles));
@@ -320,8 +313,6 @@ export class DiscoveriesService {
 
   async claimUniqueEquipmentReward(userId: string): Promise<UserResponse> {
     const discoveries = await this.getDiscoveriesForUser(userId);
-    if (!discoveries)
-      throw new NotFoundException(`Discoveries ${userId} not found`);
 
     const totalTimesClaimed = discoveries.uniqueEquipmentClaims ?? 0;
     const totalItemsFound = sum(Object.keys(discoveries.items));
@@ -361,8 +352,6 @@ export class DiscoveriesService {
 
   async claimTotalEquipmentReward(userId: string): Promise<UserResponse> {
     const discoveries = await this.getDiscoveriesForUser(userId);
-    if (!discoveries)
-      throw new NotFoundException(`Discoveries ${userId} not found`);
 
     const totalTimesClaimed = discoveries.totalEquipmentClaims ?? 0;
     const totalItemsFound = sum(Object.values(discoveries.items));
@@ -402,8 +391,6 @@ export class DiscoveriesService {
 
   async claimUniqueMonsterReward(userId: string): Promise<UserResponse> {
     const discoveries = await this.getDiscoveriesForUser(userId);
-    if (!discoveries)
-      throw new NotFoundException(`Discoveries ${userId} not found`);
 
     const totalTimesClaimed = discoveries.uniqueMonsterClaims ?? 0;
     const totalItemsFound = sum(Object.keys(discoveries.monsters));
@@ -443,8 +430,6 @@ export class DiscoveriesService {
 
   async claimTotalMonsterReward(userId: string): Promise<UserResponse> {
     const discoveries = await this.getDiscoveriesForUser(userId);
-    if (!discoveries)
-      throw new NotFoundException(`Discoveries ${userId} not found`);
 
     const totalTimesClaimed = discoveries.totalMonsterClaims ?? 0;
     const totalItemsFound = sum(Object.values(discoveries.monsters));

@@ -9,11 +9,7 @@ import { FightService } from '@modules/fight/fight.service';
 import { Player } from '@modules/player/player.schema';
 import { PlayerService } from '@modules/player/player.service';
 import { StatsService } from '@modules/stats/stats.service';
-import {
-  ForbiddenException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { getPatchesAfterPropChanges } from '@utils/patches';
 import { userError, userSuccessObject } from '@utils/usernotifications';
@@ -50,7 +46,6 @@ export class GameplayService {
 
   async explore(userId: string): Promise<UserResponse> {
     const player = await this.playerService.getPlayerForUser(userId);
-    if (!player) throw new NotFoundException(`Player ${userId} not found`);
 
     const fight = await this.fights.getFightForUser(userId);
     if (fight) return userError('You cannot explore while in a fight!');
@@ -66,16 +61,9 @@ export class GameplayService {
       userId,
     );
 
-    if (!discoveries)
-      throw new NotFoundException(`Discoveries ${userId} not found`);
-
-    let foundLocation: ILocation | undefined;
-
-    foundLocation = this.contentService.getLocation(player.location.current);
-
-    if (!foundLocation) {
-      foundLocation = this.contentService.getLocation('Mork');
-    }
+    const foundLocation: ILocation = this.contentService.getLocation(
+      player.location.current,
+    );
 
     if (!foundLocation) return { player: [], discoveries: [] };
 
@@ -262,21 +250,17 @@ export class GameplayService {
 
   async startFight(userId: string): Promise<UserResponse> {
     const player = await this.playerService.getPlayerForUser(userId);
-    if (!player) throw new NotFoundException(`Player ${userId} not found`);
 
     const existingFight = await this.fights.getFightForUser(userId);
     if (existingFight) return userError('You are already in a fight!');
 
     const formationId = player.action?.actionData.formation.itemId;
     const formation = this.contentService.getFormation(formationId);
-    if (!formation)
-      throw new NotFoundException(`Formation ${formationId} not found`);
 
     const fight = await this.fights.createPvEFightForSinglePlayer(
       player,
       formation,
     );
-    if (!fight) throw new ForbiddenException('Fight not created');
 
     this.analyticsService.sendDesignEvent(
       userId,

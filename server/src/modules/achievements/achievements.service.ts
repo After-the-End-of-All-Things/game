@@ -13,7 +13,16 @@ export class AchievementsService {
     private readonly achievements: EntityRepository<Achievements>,
   ) {}
 
-  async getAchievementsForUser(
+  async getAchievementsForUser(userId: string): Promise<Achievements> {
+    const achievements = await this.getOrCreateAchievementsForUser(userId);
+    if (!achievements) {
+      throw new BadRequestException(`achievements id ${userId} not found.`);
+    }
+
+    return achievements;
+  }
+
+  private async getOrCreateAchievementsForUser(
     userId: string,
   ): Promise<Achievements | undefined> {
     const dbAchievements = await this.achievements.findOne({ userId });

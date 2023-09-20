@@ -101,7 +101,6 @@ export class BuyInLotteryService implements OnModuleInit {
     if (todayTicket.claimed) return userError('Ticket already claimed');
 
     const player = await this.playerService.getPlayerForUser(userId);
-    if (!player) throw new NotFoundError(`User ${userId} not found`);
 
     if (
       !this.playerHelper.hasCoins(player, this.constants.buyinLotteryTicketCost)
@@ -175,7 +174,6 @@ export class BuyInLotteryService implements OnModuleInit {
       return userError('Todays ticket was already claimed.');
 
     const player = await this.playerService.getPlayerForUser(userId);
-    if (!player) throw new NotFoundError(`User ${userId} not found`);
 
     const total = await this.ticketValueSum();
 

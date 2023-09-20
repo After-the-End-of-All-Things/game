@@ -19,11 +19,7 @@ import { InventoryService } from '@modules/inventory/inventory.service';
 import { NpcService } from '@modules/player/npc.service';
 import { Player } from '@modules/player/player.schema';
 import { WaveDBService } from '@modules/wave/wavedb.service';
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { getPatchesAfterPropChanges } from '@utils/patches';
 import { userError, userSuccessObject } from '@utils/usernotifications';
@@ -47,7 +43,18 @@ export class PlayerService {
     private readonly waveDBService: WaveDBService,
   ) {}
 
-  async getPlayerForUser(userId: string): Promise<Player | undefined> {
+  async getPlayerForUser(userId: string): Promise<Player> {
+    const player = await this.getOrCreatePlayerForUser(userId);
+    if (!player) {
+      throw new BadRequestException(`player id ${userId} not found.`);
+    }
+
+    return player;
+  }
+
+  private async getOrCreatePlayerForUser(
+    userId: string,
+  ): Promise<Player | undefined> {
     const dbPlayer = await this.players.findOne({ userId });
     if (!dbPlayer) {
       return await this.createPlayerForUser(userId);
@@ -79,7 +86,6 @@ export class PlayerService {
 
   async getPlayerProfile(userId: string): Promise<Partial<Player> | undefined> {
     const player = await this.getPlayerForUser(userId);
-    if (!player) throw new NotFoundException(`Player ${userId} not found`);
 
     return pick(player, [
       'userId',
@@ -97,7 +103,6 @@ export class PlayerService {
     portrait: number,
   ): Promise<UserResponse> {
     const player = await this.getPlayerForUser(userId);
-    if (!player) throw new NotFoundException(`Player ${userId} not found`);
 
     const playerPatches = await getPatchesAfterPropChanges<Player>(
       player,
@@ -121,7 +126,6 @@ export class PlayerService {
     background: number,
   ): Promise<UserResponse> {
     const player = await this.getPlayerForUser(userId);
-    if (!player) throw new NotFoundException(`Player ${userId} not found`);
 
     const playerPatches = await getPatchesAfterPropChanges<Player>(
       player,
@@ -145,7 +149,6 @@ export class PlayerService {
     shortBio: string,
   ): Promise<UserResponse> {
     const player = await this.getPlayerForUser(userId);
-    if (!player) throw new NotFoundException(`Player ${userId} not found`);
 
     shortBio = this.contentService.censor.cleanProfanityIsh(
       shortBio.substring(0, 30).trim(),
@@ -175,7 +178,6 @@ export class PlayerService {
     longBio: string,
   ): Promise<UserResponse> {
     const player = await this.getPlayerForUser(userId);
-    if (!player) throw new NotFoundException(`Player ${userId} not found`);
 
     longBio = this.contentService.censor.cleanProfanityIsh(
       longBio.substring(0, 500).trim(),
@@ -204,13 +206,10 @@ export class PlayerService {
     slot: number,
   ): Promise<UserResponse> {
     const player = await this.getPlayerForUser(userId);
-    if (!player) throw new NotFoundException(`Player ${userId} not found`);
 
     const discoveries = await this.discoveriesService.getDiscoveriesForUser(
       userId,
     );
-    if (!discoveries)
-      throw new NotFoundException(`Discoveries ${userId} not found`);
 
     if (itemId && !discoveries.collectibles[itemId])
       return userError('You have not discovered this collectible!');
@@ -258,13 +257,10 @@ export class PlayerService {
     slot: number,
   ): Promise<UserResponse> {
     const player = await this.getPlayerForUser(userId);
-    if (!player) throw new NotFoundException(`Player ${userId} not found`);
 
     const discoveries = await this.discoveriesService.getDiscoveriesForUser(
       userId,
     );
-    if (!discoveries)
-      throw new NotFoundException(`Discoveries ${userId} not found`);
 
     if (itemId && !discoveries.items[itemId])
       return userError('You have not discovered this item!');
@@ -530,7 +526,6 @@ export class PlayerService {
 
     // get job stats
     const job = this.contentService.getJob(player.job);
-    if (!job) return base;
 
     Object.keys(job.statGainsPerLevel).forEach((stat) => {
       base[stat as Stat] += job.statGainsPerLevel[stat as Stat] * player.level;
@@ -579,7 +574,6 @@ export class PlayerService {
     if (!randomNPCForLocation) return;
 
     const npcData = this.contentService.getNPC(randomNPCForLocation.name);
-    if (!npcData) return;
 
     const action = await this.npcService.getActionForNPC(
       player,

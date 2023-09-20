@@ -27,13 +27,10 @@ export class NpcService {
 
   async changeClass(userId: string): Promise<UserResponse> {
     const player = await this.playerService.getPlayerForUser(userId);
-    if (!player) throw new NotFoundException(`Player ${userId} not found`);
 
     const inventory = await this.inventoryService.getInventoryForUser(
       player.userId,
     );
-    if (!inventory)
-      throw new NotFoundException(`Inventory ${userId} not found`);
 
     const newJob = player.action?.actionData.newJob;
     if (!newJob) throw new NotFoundException(`New job ${newJob} not found.`);
@@ -76,7 +73,6 @@ export class NpcService {
 
   async buyPortrait(userId: string): Promise<UserResponse> {
     const player = await this.playerService.getPlayerForUser(userId);
-    if (!player) throw new NotFoundException(`Player ${userId} not found`);
 
     const { unlockSprite, unlockCost } =
       player.action?.actionData.npc.properties;
@@ -87,8 +83,6 @@ export class NpcService {
     const discoveries = await this.discoveriesService.getDiscoveriesForUser(
       userId,
     );
-    if (!discoveries)
-      throw new NotFoundException(`Discoveries ${userId} not found.`);
 
     const playerPatches = await getPatchesAfterPropChanges<Player>(
       player,
@@ -116,7 +110,6 @@ export class NpcService {
 
   async buyBackground(userId: string): Promise<UserResponse> {
     const player = await this.playerService.getPlayerForUser(userId);
-    if (!player) throw new NotFoundException(`Player ${userId} not found`);
 
     const { unlockBackground, unlockCost } =
       player.action?.actionData.npc.properties;
@@ -127,8 +120,6 @@ export class NpcService {
     const discoveries = await this.discoveriesService.getDiscoveriesForUser(
       userId,
     );
-    if (!discoveries)
-      throw new NotFoundException(`Discoveries ${userId} not found.`);
 
     const playerPatches = await getPatchesAfterPropChanges<Player>(
       player,

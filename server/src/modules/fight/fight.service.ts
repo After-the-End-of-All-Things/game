@@ -136,8 +136,6 @@ export class FightService {
     const inventory = await this.inventoryService.getInventoryForUser(
       player.userId,
     );
-    if (!inventory)
-      throw new NotFoundException(`Inventory ${player.userId} not found`);
 
     const totalStats = await this.playerService.getTotalStats(player);
     const totalResistances = await this.playerService.getTotalResistances(
@@ -276,8 +274,6 @@ export class FightService {
     await Promise.all(
       fight.involvedPlayers.map(async (playerId) => {
         const player = await this.playerService.getPlayerForUser(playerId);
-        if (!player)
-          throw new NotFoundException(`Player ${playerId} not found`);
 
         if (player.action?.action === 'fight') {
           this.playerService.setPlayerAction(player, undefined);
@@ -360,9 +356,7 @@ export class FightService {
       random(0, 100) <= randomDropPossibility.chance
     ) {
       randomDrop = this.contentService.getItem(randomDropPossibility.item);
-      if (randomDrop) {
-        addStatusMessage(fight, 'Fight', `You found "${randomDrop.name}"!`);
-      }
+      addStatusMessage(fight, 'Fight', `You found "${randomDrop.name}"!`);
     }
 
     if (isWin && fight.defenders.length > 0) {
@@ -381,14 +375,10 @@ export class FightService {
     await Promise.all(
       fight.involvedPlayers.map(async (playerId) => {
         const player = await this.playerService.getPlayerForUser(playerId);
-        if (!player)
-          throw new NotFoundException(`Player ${playerId} not found`);
 
         const discoveries = await this.discoveriesService.getDiscoveriesForUser(
           player.userId,
         );
-        if (!discoveries)
-          throw new NotFoundException(`Discoveries ${playerId} not found`);
 
         if (fight.defenders.length > 0 && fight.attackers.length > 0) {
           await this.statsService.incrementStat(
@@ -563,7 +553,6 @@ export class FightService {
       throw new BadRequestException('It is not your turn.');
 
     const action = this.contentService.getAbility(actionId);
-    if (!action) throw new NotFoundException(`Action ${actionId} not found`);
 
     const character = getCharacterFromFightForUserId(fight, userId);
     if (!character)
@@ -720,7 +709,6 @@ export class FightService {
       return this.setAndTakeNextTurn(fight);
 
     const monsterRef = this.contentService.getMonster(characterRef.monsterId);
-    if (!monsterRef) return this.setAndTakeNextTurn(fight);
 
     const abilities = monsterRef.abilities;
     if (abilities.length === 0) {
@@ -741,7 +729,6 @@ export class FightService {
     if (!ability) return this.setAndTakeNextTurn(fight);
 
     const abilityRef = this.contentService.getAbility(ability.ability);
-    if (!abilityRef) return this.setAndTakeNextTurn(fight);
 
     const targetParams = getTargetsForAIAbility(
       fight,
@@ -883,8 +870,6 @@ export class FightService {
     await Promise.all(
       fight.involvedPlayers.map(async (playerId) => {
         const player = await this.playerService.getPlayerForUser(playerId);
-        if (!player)
-          throw new NotFoundException(`Player ${playerId} not found`);
 
         this.emit(playerId, {
           fight,

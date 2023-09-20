@@ -1,13 +1,6 @@
 import { UserResponse } from '@interfaces';
 import { DiscoveriesService } from '@modules/discoveries/discoveries.service';
-import {
-  Body,
-  Controller,
-  Get,
-  NotFoundException,
-  Post,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { User } from '../../utils/user.decorator';
 import { JwtAuthGuard } from '../auth/jwt.guard';
@@ -24,8 +17,6 @@ export class DiscoveriesController {
     const discoveries = await this.discoveriesService.getDiscoveriesForUser(
       user.userId,
     );
-    if (!discoveries)
-      throw new NotFoundException(`User ${user.userId} not found`);
 
     return { discoveries };
   }

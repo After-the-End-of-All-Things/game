@@ -1,5 +1,4 @@
 import { UserResponse } from '@interfaces';
-import { NotFoundError } from '@mikro-orm/core';
 import { EntityManager } from '@mikro-orm/mongodb';
 import { ConstantsService } from '@modules/content/constants.service';
 import { PlayerHelperService } from '@modules/content/playerhelper.service';
@@ -124,7 +123,6 @@ export class DailyLotteryService implements OnModuleInit {
     if (!record) return userError('You are not the winner for today');
 
     const player = await this.playerService.getPlayerForUser(userId);
-    if (!player) throw new NotFoundError(`Player ${userId} not found`);
 
     const rewardScale = await this.numPlayersOnlineInLastWeek();
 

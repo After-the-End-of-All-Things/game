@@ -14,7 +14,18 @@ export class CraftingService {
     private readonly crafting: EntityRepository<Crafting>,
   ) {}
 
-  async getCraftingForUser(userId: string): Promise<Crafting | undefined> {
+  async getCraftingForUser(userId: string): Promise<Crafting> {
+    const crafting = await this.getOrCreateCraftingForUser(userId);
+    if (!crafting) {
+      throw new BadRequestException(`crafting id ${userId} not found.`);
+    }
+
+    return crafting;
+  }
+
+  private async getOrCreateCraftingForUser(
+    userId: string,
+  ): Promise<Crafting | undefined> {
     const dbCrafting = await this.crafting.findOne({ userId });
     if (!dbCrafting) {
       return await this.createCraftingForUser(userId);

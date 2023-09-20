@@ -55,7 +55,6 @@ export class MarketService {
     quantity = 1,
   ): Promise<UserResponse> {
     const player = await this.playerService.getPlayerForUser(userId);
-    if (!player) throw new NotFoundException(`Player ${userId} not found`);
 
     const user = await this.userService.findUserById(userId);
     if (!user) throw new NotFoundException(`User ${userId} not found`);
@@ -73,8 +72,6 @@ export class MarketService {
         instanceId,
       );
 
-      if (!inventoryItem)
-        throw new NotFoundException(`Inventory item ${instanceId} not found.`);
       if (inventoryItem.isInUse)
         throw new BadRequestException(`Item ${instanceId} is in use already`);
 
@@ -111,10 +108,6 @@ export class MarketService {
     const playerLocation = this.contentService.getLocation(
       player.location.current,
     );
-    if (!playerLocation)
-      throw new NotFoundException(
-        `Location ${player.location.current} not found`,
-      );
 
     const taxRate = playerLocation.baseStats.taxRate ?? 5;
     const tax = Math.floor(validPrice * (taxRate / 100));
@@ -309,7 +302,6 @@ export class MarketService {
       return userError('The market currently owes you no coins.');
 
     const player = await this.playerService.getPlayerForUser(userId);
-    if (!player) throw new NotFoundException(`Player ${userId} not found`);
 
     const playerPatches = await getPatchesAfterPropChanges<Player>(
       player,
@@ -345,20 +337,11 @@ export class MarketService {
     if (listing.isSold) return userError(`That item has already sold!`);
 
     const player = await this.playerService.getPlayerForUser(userId);
-    if (!player) throw new NotFoundException(`Player ${userId} not found`);
 
     const user = await this.userService.findUserById(userId);
     if (!user) throw new NotFoundException(`User ${userId} not found`);
 
     const isResource = this.contentService.getResource(listing.itemId);
-
-    const itemRef = this.contentService.getItem(listing.itemId);
-    if (!itemRef && !isResource)
-      throw new NotFoundException(`Item ref ${listing.itemId} not found`);
-
-    const inventory = await this.inventoryService.getInventoryForUser(userId);
-    if (!inventory)
-      throw new NotFoundException(`Inventory ${userId} not found`);
 
     if (!this.playerHelper.hasCoins(player, listing.price))
       return userError('Not enough coins');
@@ -427,7 +410,6 @@ export class MarketService {
     price: number,
   ): Promise<UserResponse> {
     const player = await this.playerService.getPlayerForUser(userId);
-    if (!player) throw new NotFoundException(`Player ${userId} not found`);
 
     const user = await this.userService.findUserById(userId);
     if (!user) throw new NotFoundException(`User ${userId} not found`);
@@ -455,10 +437,6 @@ export class MarketService {
     const playerLocation = this.contentService.getLocation(
       player.location.current,
     );
-    if (!playerLocation)
-      throw new NotFoundException(
-        `Location ${player.location.current} not found`,
-      );
 
     const taxRate = playerLocation.baseStats.taxRate ?? 5;
     const tax = Math.max(1, Math.floor(validPrice * (taxRate / 100)));
@@ -497,9 +475,6 @@ export class MarketService {
   }
 
   async unlistItem(userId: string, listingId: string): Promise<UserResponse> {
-    const player = await this.playerService.getPlayerForUser(userId);
-    if (!player) throw new NotFoundException(`Player ${userId} not found`);
-
     const user = await this.userService.findUserById(userId);
     if (!user) throw new NotFoundException(`User ${userId} not found`);
 
