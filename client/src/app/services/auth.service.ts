@@ -2,6 +2,10 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { Store } from '@ngxs/store';
+import { MarketService } from '@services/market.service';
+import { NotificationsService } from '@services/notifications.service';
+import { SetClaimCoins } from '@stores/market/market.actions';
 import { interval, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
 
@@ -10,9 +14,12 @@ import { environment } from '../../environments/environment';
 })
 export class AuthService {
   constructor(
+    private store: Store,
     private router: Router,
     private http: HttpClient,
     private jwtHelper: JwtHelperService,
+    private notificationService: NotificationsService,
+    private marketService: MarketService,
   ) {}
 
   public init() {
@@ -32,6 +39,7 @@ export class AuthService {
 
     this.login(lastEmail, lastPassword).subscribe(() => {
       this.updateToken();
+      this.postLoginActionsAlways();
     });
   }
 
@@ -77,5 +85,19 @@ export class AuthService {
     localStorage.removeItem('token');
 
     this.router.navigate(['/login']);
+  }
+
+  public postLoginActions() {
+    this.router.navigate(['/']);
+
+    this.postLoginActionsAlways();
+  }
+
+  private postLoginActionsAlways() {
+    this.notificationService.getNotifications();
+
+    this.marketService.getClaimCoins().subscribe((coins) => {
+      this.store.dispatch(new SetClaimCoins(coins as number));
+    });
   }
 }

@@ -49,3 +49,7 @@ ion-chip.readonly {
 ion-icon {
   transition: color 0.3s ease-in-out;
 }
+
+ion-card ion-list {
+  width: 100%;
+}

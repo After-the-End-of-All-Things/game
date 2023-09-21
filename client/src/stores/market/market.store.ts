@@ -24,6 +24,11 @@ export class MarketStore {
   }
 
   @Selector()
+  static claimCoins(state: IMarketStore) {
+    return state.claimCoins ?? 0;
+  }
+
+  @Selector()
   static marketData(state: IMarketStore) {
     return state.marketData;
   }

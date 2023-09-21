@@ -3,7 +3,6 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MenuController } from '@ionic/angular';
 import { AnnouncementService } from '@services/announcement.service';
-import { NotificationsService } from '@services/notifications.service';
 import { AuthService } from '../../services/auth.service';
 
 import { marked } from 'marked';
@@ -80,7 +79,6 @@ export class LoginPage implements OnInit {
   constructor(
     public menu: MenuController,
     private authService: AuthService,
-    private notificationService: NotificationsService,
     public announcementService: AnnouncementService,
     private router: Router,
   ) {}
@@ -129,8 +127,7 @@ export class LoginPage implements OnInit {
             return;
           }
 
-          this.router.navigate(['/']);
-          this.notificationService.getNotifications();
+          this.authService.postLoginActions();
         },
         error: () => {
           this.loginError = 'Invalid email or password.';
@@ -179,8 +176,7 @@ export class LoginPage implements OnInit {
                   return;
                 }
 
-                this.router.navigate(['/']);
-                this.notificationService.getNotifications();
+                this.authService.postLoginActions();
               },
               error: (err) => {
                 this.registerError = err.error.message;

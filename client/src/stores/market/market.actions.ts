@@ -14,3 +14,8 @@ export class RepriceMarketItem {
   static type = 'RepriceMarketItem';
   constructor(public listingId: string, public newPrice: number) {}
 }
+
+export class SetClaimCoins {
+  static type = '[Market] Set Claim Coins';
+  constructor(public coins: number) {}
+}

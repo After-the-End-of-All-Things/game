@@ -40,15 +40,17 @@ export class AppComponent {
       url: 'town',
       icon: 'town',
       indicator: combineLatest([
-        this.marketService.getClaimCoins().pipe(
-          map((coins: any) =>
-            (coins as number) > 0
-              ? {
-                  color: 'primary',
-                  icon: 'global-important',
-                  tooltip: `${coins.toLocaleString()} coins to take from the market!`,
-                }
-              : undefined,
+        timer(0, 1000).pipe(
+          switchMap(() =>
+            this.store.select((state) =>
+              state.market.claimCoins > 0
+                ? {
+                    color: 'primary',
+                    icon: 'global-important',
+                    tooltip: 'Crafting complete!',
+                  }
+                : undefined,
+            ),
           ),
         ),
         this.marketService.claimedCoins$,

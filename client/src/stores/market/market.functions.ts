@@ -4,11 +4,13 @@ import { patch, removeItem, updateItem } from '@ngxs/store/operators';
 import {
   RemoveMarketItem,
   RepriceMarketItem,
+  SetClaimCoins,
   SetMarketItems,
 } from './market.actions';
 
 export const defaultStore: () => IMarketStore = () => ({
   version: 0,
+  claimCoins: 0,
   marketData: {
     lastPage: 0,
     page: 0,
@@ -58,6 +60,17 @@ export function repriceMarketItem(
           }),
         ),
       }),
+    }),
+  );
+}
+
+export function setClaimCoins(
+  ctx: StateContext<IMarketStore>,
+  { coins }: SetClaimCoins,
+) {
+  ctx.setState(
+    patch({
+      claimCoins: coins,
     }),
   );
 }
