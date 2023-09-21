@@ -1,3 +1,3 @@
-export function percentNumberAsMultiplier(num: number, startAt = 1): number {
-  return startAt + num / 100;
+export function percentNumberAsMultiplier(num: number): number {
+  return num / 100;
 }

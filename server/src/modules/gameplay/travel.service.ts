@@ -64,7 +64,7 @@ export class TravelService {
         if (this.playerHelper.isDeityTravelSpeedBuffActive(playerRef)) {
           steps -= Math.floor(
             steps *
-              percentNumberAsMultiplier(this.constants.worshipTravelBoost, 0),
+              percentNumberAsMultiplier(this.constants.worshipTravelBoost),
           );
         }
 

@@ -50,7 +50,7 @@ export class WorshipPage implements OnInit {
       buff: OOCBuff.Offense,
       color: '#ef0107',
       description:
-        'Pray to a powerful deity to gain a 15% attack boost for 1 hour.',
+        'Pray to a powerful deity to gain a 15% offense boost for 1 hour.',
     },
     {
       name: 'Spoodles',

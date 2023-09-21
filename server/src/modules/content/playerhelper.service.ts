@@ -38,7 +38,7 @@ export class PlayerHelperService {
   gainXp(player: Player, xp = 1) {
     if (this.isDeityXpBuffActive(player) && xp > 0) {
       xp = Math.floor(
-        xp * percentNumberAsMultiplier(this.constants.worshipXpBoost),
+        xp + xp * percentNumberAsMultiplier(this.constants.worshipXpBoost),
       );
     }
 
@@ -57,7 +57,8 @@ export class PlayerHelperService {
   gainCoins(player: Player, amount = 1) {
     if (this.isDeityCoinsBuffActive(player) && amount > 0) {
       amount = Math.floor(
-        amount * percentNumberAsMultiplier(this.constants.worshipCoinBoost),
+        amount +
+          amount * percentNumberAsMultiplier(this.constants.worshipCoinBoost),
       );
     }
 
