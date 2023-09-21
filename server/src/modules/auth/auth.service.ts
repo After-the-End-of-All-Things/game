@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { sample } from 'lodash';
@@ -28,11 +24,9 @@ export class AuthService {
     username: string,
     password: string,
     email: string,
-  ): Promise<IFullUser> {
+  ): Promise<IFullUser | { error: string }> {
     if (this.contentService.censor.isProfaneIsh(username))
-      throw new BadRequestException(
-        'Username is somewhat profane. Please choose again.',
-      );
+      return { error: 'Username is somewhat profane. Please choose again.' };
 
     const usersWithUsername = await this.userService.getAllUsersWithUsername(
       username,
@@ -42,7 +36,7 @@ export class AuthService {
     );
 
     if (usersWithUsername.length > 9998) {
-      throw new BadRequestException('Username is not available.');
+      return { error: `Username ${username} is not available.` };
     } else if (usersWithUsername.length >= 1) {
       const usedDiscriminators = new Set(
         usersWithUsername.map((user) => user.discriminator),
@@ -53,7 +47,7 @@ export class AuthService {
     }
 
     const discriminator = sample(availableDiscriminators);
-    if (!discriminator) throw new BadRequestException('Failed to create user.');
+    if (!discriminator) return { error: 'Failed to create user.' };
 
     const hash = await bcrypt.hash(password, 10);
     const newUser = new User(username, discriminator, hash, email);
@@ -62,12 +56,12 @@ export class AuthService {
     try {
       createdUser = await this.userService.createUser(newUser);
     } catch (err) {
-      throw new BadRequestException(
-        'Failed to create user. This email might already be in use.',
-      );
+      return {
+        error: 'Failed to create user. This email might already be in use.',
+      };
     }
 
-    if (!createdUser) throw new BadRequestException('Failed to create user.');
+    if (!createdUser) return { error: 'Failed to create user.' };
 
     this.logger.verbose(
       `Registered new user: ${createdUser.username}#${createdUser.discriminator}`,
@@ -81,15 +75,15 @@ export class AuthService {
   async signIn(
     username: string,
     password: string,
-  ): Promise<IFullUser | IHasAccessToken> {
+  ): Promise<IFullUser | IHasAccessToken | { error: string }> {
     const user = await this.userService.findUserByEmail(username);
     if (!user) {
-      throw new UnauthorizedException();
+      return { error: 'Unable to sign in.' };
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      throw new UnauthorizedException();
+      return { error: 'Unable to sign in.' };
     }
 
     await this.userService.updateUserOnlineTimeById(user._id.toString());

@@ -27,17 +27,13 @@ export class AuthController {
   @Post('register')
   signUp(@Body() signInDto: Record<string, any>) {
     if (!signInDto.username || !signInDto.password || !signInDto.email)
-      throw new BadRequestException('Missing username, password or email');
+      return { error: 'Missing username, password or email' };
 
     if (signInDto.username.length < 2 || signInDto.username.length > 20)
-      throw new BadRequestException(
-        'Username must be between 2 and 20 characters long',
-      );
+      return { error: 'Username must be between 2 and 20 characters long' };
 
     if (signInDto.password.length < 8)
-      throw new BadRequestException(
-        'Password must be at least 8 characters long',
-      );
+      return { error: 'Password must be at least 8 characters long' };
 
     return this.authService.signUp(
       signInDto.username,

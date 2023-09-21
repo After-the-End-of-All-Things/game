@@ -83,7 +83,6 @@ export class CraftingPage implements OnInit {
   updateDiscoveries() {
     this.userService.getDiscoveries().subscribe(({ discoveries }: any) => {
       this.discoveries = discoveries;
-      console.log(discoveries);
     });
   }
 

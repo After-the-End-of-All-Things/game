@@ -123,7 +123,12 @@ export class LoginPage implements OnInit {
     this.authService
       .login(this.loginForm.value.email, this.loginForm.value.password)
       .subscribe({
-        next: () => {
+        next: (res: any) => {
+          if (res.error) {
+            this.loginError = res.error;
+            return;
+          }
+
           this.router.navigate(['/']);
           this.notificationService.getNotifications();
         },
@@ -150,7 +155,12 @@ export class LoginPage implements OnInit {
         this.registerForm.value.username,
       )
       .subscribe({
-        next: () => {
+        next: (res: any) => {
+          if (res.error) {
+            this.registerError = res.error;
+            return;
+          }
+
           if (
             !this.registerForm.value.email ||
             !this.registerForm.value.password
@@ -163,7 +173,12 @@ export class LoginPage implements OnInit {
               this.registerForm.value.password,
             )
             .subscribe({
-              next: () => {
+              next: (res: any) => {
+                if (res.error) {
+                  this.registerError = res.error;
+                  return;
+                }
+
                 this.router.navigate(['/']);
                 this.notificationService.getNotifications();
               },

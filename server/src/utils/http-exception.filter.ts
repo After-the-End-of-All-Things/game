@@ -11,6 +11,7 @@ import * as Rollbar from 'rollbar';
 
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter {
+  private readonly ignoredCodes = [401];
   private rollbar: Rollbar;
 
   constructor(@Inject(ROLLBAR_CONFIG) private rollbarConfig) {
@@ -23,7 +24,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const request = ctx.getRequest<Request>();
     const status = exception.getStatus();
 
-    if (this.rollbar) {
+    if (this.rollbar && !this.ignoredCodes.includes(status)) {
       this.rollbar.error(exception);
     }
 
