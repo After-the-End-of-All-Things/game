@@ -550,20 +550,24 @@ export class PlayerService {
       });
 
     if (this.playerHelper.isDeityDefenseBuffActive(player)) {
-      base.toughness *= percentNumberAsMultiplier(
+      base.toughness += base.toughness * percentNumberAsMultiplier(
         this.constants.worshipDefenseBoost,
+        0,
       );
-      base.resistance *= percentNumberAsMultiplier(
+      base.resistance += base.resistance * percentNumberAsMultiplier(
         this.constants.worshipDefenseBoost,
+        0,
       );
     }
 
     if (this.playerHelper.isDeityOffenseBuffActive(player)) {
-      base.power *= percentNumberAsMultiplier(
+      base.power += base.power * percentNumberAsMultiplier(
         this.constants.worshipOffenseBoost,
+        0,
       );
-      base.magic *= percentNumberAsMultiplier(
+      base.magic += base.magic * percentNumberAsMultiplier(
         this.constants.worshipOffenseBoost,
+        0,
       );
     }
 
