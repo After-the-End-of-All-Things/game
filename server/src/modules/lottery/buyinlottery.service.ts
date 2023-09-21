@@ -71,7 +71,7 @@ export class BuyInLotteryService implements OnModuleInit {
     emCtx.persist(newRecord);
     await emCtx.flush();
 
-    const winningTicket = await this.buyinTickets.findOne({
+    const winningTicket = await emCtx.findOne(LotteryBuyInTicket, {
       ticketNumber: newRecord.ticketNumber,
       createdAt: { $gte: startOfToday() },
     });
