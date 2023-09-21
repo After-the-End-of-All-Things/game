@@ -484,7 +484,7 @@ export class PlayerService {
         .allEquipment()
         .filter(
           (item) =>
-            !this.contentService.getRecipe(item.itemId) &&
+            !this.contentService.hasRecipe(item.itemId) &&
             item.levelRequirement <= location.level &&
             item.levelRequirement >= location.itemLevel,
         ),

@@ -174,6 +174,10 @@ export class ContentService {
     return this.equipment[item] || this.collectibles[item];
   }
 
+  public hasRecipe(item: string): boolean {
+    return !!this.recipes[item];
+  }
+
   public getRecipe(item: string): IRecipe {
     const recipeRef = this.recipes[item];
     if (!recipeRef) throw new NotFoundException(`Recipe ${item} not found!`);
