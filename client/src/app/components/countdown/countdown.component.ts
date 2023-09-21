@@ -18,12 +18,16 @@ export class CountdownComponent implements OnInit {
     return Math.max(0, this.endsAt - this.currentTimer);
   }
 
+  public get days() {
+    return Math.floor(this.totalSeconds / 60 / 60 / 24);
+  }
+
   public get hours() {
-    return Math.floor(this.minutes / 60);
+    return Math.floor(this.totalSeconds / 60 / 60) % 24;
   }
 
   public get minutes() {
-    return Math.floor(this.totalSeconds / 60);
+    return Math.floor(this.totalSeconds / 60) % 60;
   }
 
   public get seconds() {

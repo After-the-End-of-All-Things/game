@@ -1,0 +1,66 @@
+<ion-header [translucent]="true">
+  <app-header-bar></app-header-bar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <app-header-bar></app-header-bar>
+  </ion-header>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Worship</ion-card-title>
+          </ion-card-header>
+
+          <ion-card-content *ngIf="playerWorship$ | async as worship">
+            <ion-text *ngIf="isTimeActive(worship.cooldown)">
+              You can't worship again for
+              <app-countdown [endsAt]="worship.cooldown"></app-countdown>
+            </ion-text>
+
+            <ion-list>
+              <ion-item *ngFor="let deity of deities">
+                <div class="deity-info" slot="start">
+                  <app-game-icon
+                    [icon]="'town-worship-deity-' + deity.buff"
+                    size="large"
+                    [cssColor]="isTimeActive(worship.buffs[deity.buff]) ? deity.color : ''"
+                  ></app-game-icon>
+
+                  <div
+                    class="worship"
+                    *ngIf="isTimeActive(worship.buffs[deity.buff])"
+                  >
+                    <ion-badge color="secondary">
+                      <app-countdown
+                        [endsAt]="worship.buffs[deity.buff]"
+                      ></app-countdown>
+                    </ion-badge>
+                  </div>
+                </div>
+
+                <ion-label class="ion-text-wrap">
+                  <h2>{{ deity.name }}</h2>
+
+                  <p>{{ deity.description }}</p>
+                </ion-label>
+
+                <ion-button
+                  slot="end"
+                  color="primary"
+                  *ngIf="!isTimeActive(worship.cooldown)"
+                  (click)="worshipDeity(deity.buff)"
+                >
+                  Worship
+                </ion-button>
+              </ion-item>
+            </ion-list>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

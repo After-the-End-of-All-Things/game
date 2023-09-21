@@ -62,4 +62,12 @@ export class PlayerStore {
   static exploreCooldown(state: IPlayerStore) {
     return state.player.location.cooldown;
   }
+
+  @Selector()
+  static playerWorship(state: IPlayerStore) {
+    return {
+      cooldown: state.player.deityPrayerCooldown ?? 0,
+      buffs: state.player.deityBuffs ?? {},
+    };
+  }
 }

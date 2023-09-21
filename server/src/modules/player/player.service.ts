@@ -13,6 +13,7 @@ import { EntityManager, EntityRepository } from '@mikro-orm/mongodb';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { ConstantsService } from '@modules/content/constants.service';
 import { ContentService } from '@modules/content/content.service';
+import { PlayerHelperService } from '@modules/content/playerhelper.service';
 import { DiscoveriesService } from '@modules/discoveries/discoveries.service';
 import { Inventory } from '@modules/inventory/inventory.schema';
 import { InventoryService } from '@modules/inventory/inventory.service';
@@ -21,6 +22,7 @@ import { Player } from '@modules/player/player.schema';
 import { WaveDBService } from '@modules/wave/wavedb.service';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import { percentNumberAsMultiplier } from '@utils/number';
 import { getPatchesAfterPropChanges } from '@utils/patches';
 import { userError, userSuccessObject } from '@utils/usernotifications';
 import { pickWeighted } from '@utils/weighted';
@@ -41,6 +43,7 @@ export class PlayerService {
     private readonly npcService: NpcService,
     private readonly events: EventEmitter2,
     private readonly waveDBService: WaveDBService,
+    private readonly playerHelper: PlayerHelperService,
   ) {}
 
   async getPlayerForUser(userId: string): Promise<Player> {
@@ -545,6 +548,24 @@ export class PlayerService {
           base[stat as Stat] += value;
         });
       });
+
+    if (this.playerHelper.isDeityDefenseBuffActive(player)) {
+      base.toughness *= percentNumberAsMultiplier(
+        this.constants.worshipDefenseBoost,
+      );
+      base.resistance *= percentNumberAsMultiplier(
+        this.constants.worshipDefenseBoost,
+      );
+    }
+
+    if (this.playerHelper.isDeityOffenseBuffActive(player)) {
+      base.power *= percentNumberAsMultiplier(
+        this.constants.worshipOffenseBoost,
+      );
+      base.magic *= percentNumberAsMultiplier(
+        this.constants.worshipOffenseBoost,
+      );
+    }
 
     return base;
   }

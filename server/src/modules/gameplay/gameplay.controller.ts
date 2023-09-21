@@ -5,6 +5,7 @@ import { ItemService } from '@modules/gameplay/item.service';
 import { NpcService } from '@modules/gameplay/npc.service';
 import { TravelService } from '@modules/gameplay/travel.service';
 import { WaveService } from '@modules/gameplay/wave.service';
+import { WorshipService } from '@modules/gameplay/worship.service';
 import {
   Body,
   Controller,
@@ -29,6 +30,7 @@ export class GameplayController {
     private waveService: WaveService,
     private itemService: ItemService,
     private npcService: NpcService,
+    private worshipService: WorshipService,
   ) {}
 
   @UseGuards(JwtAuthGuard)
@@ -90,6 +92,16 @@ export class GameplayController {
   @Post('fight')
   async fight(@User() user): Promise<UserResponse> {
     return this.gameplayService.startFight(user.userId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Worship a deity' })
+  @Post('worship')
+  async worshipDeity(
+    @User() user,
+    @Body('deity') deity: string,
+  ): Promise<UserResponse> {
+    return this.worshipService.worship(user.userId, deity);
   }
 
   @UseGuards(JwtAuthGuard)

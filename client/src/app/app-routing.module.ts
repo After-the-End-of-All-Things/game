@@ -125,6 +125,13 @@ const routes: Routes = [
     loadChildren: () =>
       import('./pages/profile/profile.module').then((m) => m.ProfilePageModule),
   },
+  {
+    path: 'worship',
+    canActivate: [AuthGuard],
+    data: { title: 'Worship' },
+    loadChildren: () =>
+      import('./pages/worship/worship.module').then((m) => m.WorshipPageModule),
+  },
 
   {
     path: '**',

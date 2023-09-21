@@ -102,6 +102,16 @@ we love eating our oats
 - `SHOWCASE_COLLECTIBLE_SLOTS` - the number of collectible slots in the showcase (default: 3)
 - `SHOWCASE_ITEM_SLOTS` - the number of item slots in the showcase (default: 3)
 
+#### Worship
+
+- `WORSHIP_COOLDOWN` - the number of hours between worships (default: 24)
+- `WORSHIP_DURATION` - the number of hours worship buffs last (default: 1)
+- `WORSHIP_COIN_BOOST` - the percent boost to coins gained from worshipping (default: 15)
+- `WORSHIP_DEFENSE_BOOST` - the percent boost to defense gained from worshipping (default: 15)
+- `WORSHIP_OFFENSE_BOOST` - the percent boost to offense gained from worshipping (default: 15)
+- `WORSHIP_TRAVEL_BOOST` - the percent boost to travel speed gained from worshipping (default: 20)
+- `WORSHIP_XP_BOOST` - the percent boost to XP gained from worshipping (default: 15)
+
 ### Notes
 
 - Setup scripts must be non-mandatory (at this time).

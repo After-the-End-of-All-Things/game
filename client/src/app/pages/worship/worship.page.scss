@@ -1,0 +1,19 @@
+
+.deity-info {
+  position: relative;
+
+  .worship {
+    position: absolute;
+    bottom: -17px;
+    left: -19px;
+    right: 0;
+    width: 75px;
+
+    display: flex;
+    justify-content: center;
+
+    ion-badge {
+      width: 75px;
+    }
+  }
+}

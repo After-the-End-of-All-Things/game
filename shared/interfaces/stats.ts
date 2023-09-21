@@ -18,6 +18,13 @@ export enum TrackedStat {
   CombatLosses = 'combatLosses',
   CombatFlees = 'combatFlees',
   ClassChanges = 'classChanges',
+  Worships = 'worships',
+  WorshipTravel = 'worshipTravel',
+  WorshipExperience = 'worshipXp',
+  WorshipCoins = 'worshipCoins',
+  WorshipOffense = 'worshipOffense',
+  WorshipDefense = 'worshipDefense',
+  WorshipMysterious = 'worshipNothing',
 }
 
 export interface IStats {

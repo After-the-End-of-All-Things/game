@@ -5,6 +5,7 @@ import { FightModule } from '@modules/fight/fight.module';
 import { GameplayController } from '@modules/gameplay/gameplay.controller';
 import { GameplayService } from '@modules/gameplay/gameplay.service';
 import { WaveService } from '@modules/gameplay/wave.service';
+import { WorshipService } from '@modules/gameplay/worship.service';
 import { InventoryModule } from '@modules/inventory/inventory.module';
 import { NotificationModule } from '@modules/notification/notification.module';
 import { PlayerModule } from '@modules/player/player.module';
@@ -34,6 +35,7 @@ import { TravelService } from './travel.service';
     ItemService,
     NpcService,
     WaveService,
+    WorshipService,
   ],
   exports: [
     GameplayService,
@@ -41,6 +43,7 @@ import { TravelService } from './travel.service';
     ItemService,
     NpcService,
     WaveService,
+    WorshipService,
   ],
 })
 export class GameplayModule {}

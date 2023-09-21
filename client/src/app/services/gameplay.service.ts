@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '@environment';
-import { ItemSlot } from '@interfaces';
+import { ItemSlot, OOCBuff } from '@interfaces';
 
 @Injectable({
   providedIn: 'root',
@@ -119,5 +119,11 @@ export class GameplayService {
 
   takeCraftedItem() {
     return this.http.post(`${environment.apiUrl}/gameplay/item/craft/take`, {});
+  }
+
+  worship(deity: OOCBuff) {
+    return this.http.post(`${environment.apiUrl}/gameplay/worship`, {
+      deity,
+    });
   }
 }

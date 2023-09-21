@@ -60,6 +60,14 @@ export class ConstantsService {
   public readonly showcaseItemSlots: number = 3;
   public readonly showcaseCollectibleSlots: number = 3;
 
+  public readonly worshipCooldown: number = 24;
+  public readonly worshipDuration: number = 1;
+  public readonly worshipCoinBoost: number = 15;
+  public readonly worshipXpBoost: number = 15;
+  public readonly worshipTravelBoost: number = 20;
+  public readonly worshipDefenseBoost: number = 15;
+  public readonly worshipOffenseBoost: number = 15;
+
   constructor(private readonly configService: ConfigService) {
     this.exploreSpeedMultiplier = +this.configService.get<number>(
       'EXPLORE_SPEED_MULTIPLIER',
@@ -259,6 +267,41 @@ export class ConstantsService {
     this.showcaseCollectibleSlots = +this.configService.get<number>(
       'SHOWCASE_COLLECTIBLE_SLOTS',
       3,
+    );
+
+    this.worshipCooldown = +this.configService.get<number>(
+      'WORSHIP_COOLDOWN',
+      24,
+    );
+
+    this.worshipDuration = +this.configService.get<number>(
+      'WORSHIP_DURATION',
+      24,
+    );
+
+    this.worshipCoinBoost = +this.configService.get<number>(
+      'WORSHIP_COIN_BOOST',
+      15,
+    );
+
+    this.worshipXpBoost = +this.configService.get<number>(
+      'WORSHIP_XP_BOOST',
+      15,
+    );
+
+    this.worshipTravelBoost = +this.configService.get<number>(
+      'WORSHIP_TRAVEL_BOOST',
+      20,
+    );
+
+    this.worshipDefenseBoost = +this.configService.get<number>(
+      'WORSHIP_DEFENSE_BOOST',
+      15,
+    );
+
+    this.worshipOffenseBoost = +this.configService.get<number>(
+      'WORSHIP_OFFENSE_BOOST',
+      15,
     );
   }
 }

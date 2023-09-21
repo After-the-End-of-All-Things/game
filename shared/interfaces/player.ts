@@ -10,6 +10,15 @@ export enum Currency {
   Oats = 'oats',
 }
 
+export enum OOCBuff {
+  TravelSpeed = 'travel',
+  XP = 'xp',
+  Coins = 'coins',
+  Offense = 'offense',
+  Defense = 'defense',
+  Nothing = 'nothing',
+}
+
 export interface IPlayerLocation {
   current: string;
   goingTo: string;
@@ -56,4 +65,7 @@ export interface IPlayer {
   cosmetics: IPlayerCosmetics;
 
   action?: INotificationAction;
+
+  deityPrayerCooldown: number;
+  deityBuffs: Record<OOCBuff, number>;
 }

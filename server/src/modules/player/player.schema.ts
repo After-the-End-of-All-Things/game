@@ -5,6 +5,7 @@ import {
   IPlayerCosmetics,
   IPlayerLocation,
   IPlayerProfile,
+  OOCBuff,
   RechargeableStat,
   Stat,
 } from '@interfaces';
@@ -70,6 +71,12 @@ export class Player implements IPlayer {
   @Property()
   cosmetics: IPlayerCosmetics;
 
+  @Property()
+  deityPrayerCooldown: number;
+
+  @Property()
+  deityBuffs: Record<OOCBuff, number>;
+
   @PrimaryKey({ hidden: true })
   _id!: ObjectId;
 
@@ -132,5 +139,15 @@ export class Player implements IPlayer {
 
     this.attackElements = [];
     this.defenseElements = [];
+
+    this.deityPrayerCooldown = 0;
+    this.deityBuffs = {
+      coins: 0,
+      xp: 0,
+      travel: 0,
+      offense: 0,
+      defense: 0,
+      nothing: 0,
+    };
   }
 }

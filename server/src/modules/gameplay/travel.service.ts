@@ -1,5 +1,6 @@
 import { TrackedStat, UserResponse } from '@interfaces';
 import { AnalyticsService } from '@modules/content/analytics.service';
+import { ConstantsService } from '@modules/content/constants.service';
 import { ContentService } from '@modules/content/content.service';
 import { PlayerHelperService } from '@modules/content/playerhelper.service';
 import { DiscoveriesService } from '@modules/discoveries/discoveries.service';
@@ -8,6 +9,7 @@ import { PlayerService } from '@modules/player/player.service';
 import { StatsService } from '@modules/stats/stats.service';
 import { Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import { percentNumberAsMultiplier } from '@utils/number';
 import { getPatchesAfterPropChanges } from '@utils/patches';
 import { userError } from '@utils/usernotifications';
 import { Logger } from 'nestjs-pino';
@@ -23,6 +25,7 @@ export class TravelService {
     private readonly analyticsService: AnalyticsService,
     private readonly events: EventEmitter2,
     private readonly playerHelper: PlayerHelperService,
+    private readonly constants: ConstantsService,
   ) {}
 
   async walkToLocation(
@@ -57,10 +60,18 @@ export class TravelService {
     const playerPatches = await getPatchesAfterPropChanges<Player>(
       player,
       async (playerRef) => {
+        let steps = location.steps;
+        if (this.playerHelper.isDeityTravelSpeedBuffActive(playerRef)) {
+          steps -= Math.floor(
+            steps *
+              percentNumberAsMultiplier(this.constants.worshipTravelBoost, 0),
+          );
+        }
+
         playerRef.location = {
           ...playerRef.location,
           goingTo: location.name,
-          arrivesAt: location.steps,
+          arrivesAt: steps,
         };
       },
     );

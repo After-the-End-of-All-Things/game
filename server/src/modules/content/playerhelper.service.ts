@@ -1,18 +1,47 @@
 import { xpForLevel } from '@helpers/xp';
 import { Currency, ICombatAbility } from '@interfaces';
+import { ConstantsService } from '@modules/content/constants.service';
 import { ContentService } from '@modules/content/content.service';
 import { Player } from '@modules/player/player.schema';
 import { Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import { percentNumberAsMultiplier } from '@utils/number';
 
 @Injectable()
 export class PlayerHelperService {
   constructor(
+    private constants: ConstantsService,
     private contentService: ContentService,
     private events: EventEmitter2,
   ) {}
 
+  public isDeityTravelSpeedBuffActive(player: Player): boolean {
+    return (player.deityBuffs?.travel ?? 0) > Date.now();
+  }
+
+  public isDeityXpBuffActive(player: Player): boolean {
+    return (player.deityBuffs?.xp ?? 0) > Date.now();
+  }
+
+  public isDeityCoinsBuffActive(player: Player): boolean {
+    return (player.deityBuffs?.coins ?? 0) > Date.now();
+  }
+
+  public isDeityOffenseBuffActive(player: Player): boolean {
+    return (player.deityBuffs?.offense ?? 0) > Date.now();
+  }
+
+  public isDeityDefenseBuffActive(player: Player): boolean {
+    return (player.deityBuffs?.defense ?? 0) > Date.now();
+  }
+
   gainXp(player: Player, xp = 1) {
+    if (this.isDeityXpBuffActive(player) && xp > 0) {
+      xp = Math.floor(
+        xp * percentNumberAsMultiplier(this.constants.worshipXpBoost),
+      );
+    }
+
     player.xp = Math.max(0, player.xp + xp);
     this.attemptLevelUpForPlayer(player);
   }
@@ -26,6 +55,12 @@ export class PlayerHelperService {
   }
 
   gainCoins(player: Player, amount = 1) {
+    if (this.isDeityCoinsBuffActive(player) && amount > 0) {
+      amount = Math.floor(
+        amount * percentNumberAsMultiplier(this.constants.worshipCoinBoost),
+      );
+    }
+
     this.gainCurrency(player, amount, 'coins' as Currency);
   }
 

@@ -3,6 +3,7 @@ import {
   Currency,
   IAttachmentHelpers,
   IPlayerStore,
+  OOCBuff,
   RechargeableStat,
   Stat,
 } from '@interfaces';
@@ -59,6 +60,16 @@ export const defaultStore: () => IPlayerStore = () => ({
 
     recharges: {
       [RechargeableStat.Health]: 0,
+    },
+
+    deityPrayerCooldown: 0,
+    deityBuffs: {
+      [OOCBuff.Coins]: 0,
+      [OOCBuff.Defense]: 0,
+      [OOCBuff.Nothing]: 0,
+      [OOCBuff.Offense]: 0,
+      [OOCBuff.TravelSpeed]: 0,
+      [OOCBuff.XP]: 0,
     },
   },
 });
