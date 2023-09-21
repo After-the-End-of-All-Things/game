@@ -276,7 +276,7 @@ export class ConstantsService {
 
     this.worshipDuration = +this.configService.get<number>(
       'WORSHIP_DURATION',
-      24,
+      1,
     );
 
     this.worshipCoinBoost = +this.configService.get<number>(

@@ -54,7 +54,7 @@ export class WorshipService {
 
     await this.statsService.incrementStat(userId, 'worships' as TrackedStat, 1);
     await this.statsService.incrementStat(
-      deity,
+      userId,
       `worship${capitalize(deity)}` as TrackedStat,
       1,
     );

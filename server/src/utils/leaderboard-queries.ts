@@ -102,4 +102,53 @@ export const leaderboardQueries = [
       };
     },
   })),
+  ...[
+    {
+      name: 'Worship: Most Faithful',
+      singleUserName: 'Total Worships',
+      stat: 'worships',
+    },
+    {
+      name: 'Worship: Most Buibui Worships',
+      singleUserName: 'Buibui Worships',
+      stat: 'worshipCoins',
+    },
+    {
+      name: 'Worship: Most Eindew Worships',
+      singleUserName: 'Eindew Worships',
+      stat: 'worshipXp',
+    },
+    {
+      name: `Worship: Most Gra'Chl Worships`,
+      singleUserName: `Gra'Chl Worships`,
+      stat: 'worshipDefense',
+    },
+    {
+      name: 'Worship: Most Parthe Worships',
+      singleUserName: 'Parthe Worships',
+      stat: 'worshipTravel',
+    },
+    {
+      name: 'Worship: Most Ruspoo Worships',
+      singleUserName: 'Ruspoo Worships',
+      stat: 'worshipOffense',
+    },
+    {
+      name: 'Worship: Most Spoodles Worships',
+      singleUserName: 'Spoodles Worships',
+      stat: 'worshipNothing',
+    },
+  ].map(({ name, singleUserName, stat }) => ({
+    name,
+    singleUserName,
+    query: { [`stats.${stat}`]: { $gt: 0 } },
+    fields: { ...alwaysFields, [`stats.${stat}`]: 1 },
+    params: { sort: { [`stats.${stat}`]: -1 }, limit: numPlayersPerCategory },
+    formatter: (data) => {
+      return {
+        ...alwaysData(data),
+        value: data.stats?.[stat]?.toLocaleString() ?? '0',
+      };
+    },
+  })),
 ];

@@ -16,6 +16,7 @@ import {
   sellRandomItem,
   sellRandomResource,
 } from './market';
+import { canWorship, worshipRandomDeity } from './worship';
 
 export async function gameloop(playerApi: PlayerApi) {
   try {
@@ -26,6 +27,10 @@ export async function gameloop(playerApi: PlayerApi) {
     playerApi.items = items.items;
   } catch (e) {
     console.error('Error... server down? Skipping action...');
+  }
+
+  if (canWorship(playerApi)) {
+    await worshipRandomDeity(playerApi);
   }
 
   if (hasResources(playerApi) && hasEnoughCoins(playerApi)) {

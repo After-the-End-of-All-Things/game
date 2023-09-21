@@ -59,13 +59,14 @@ export class MarketService {
     const user = await this.userService.findUserById(userId);
     if (!user) throw new NotFoundException(`User ${userId} not found`);
 
-    const isResource = this.contentService.getResource(instanceId);
+    const isResource = this.contentService.isResource(instanceId);
     let itemRef: IItem | undefined;
     let itemId = '';
 
     if (isResource) {
-      itemRef = isResource;
-      itemId = isResource.itemId;
+      const resourceRef = this.contentService.getResource(instanceId);
+      itemRef = resourceRef;
+      itemId = resourceRef.itemId;
     } else {
       const inventoryItem = await this.inventoryService.getInventoryItemForUser(
         userId,
@@ -341,7 +342,7 @@ export class MarketService {
     const user = await this.userService.findUserById(userId);
     if (!user) throw new NotFoundException(`User ${userId} not found`);
 
-    const isResource = this.contentService.getResource(listing.itemId);
+    const isResource = this.contentService.isResource(listing.itemId);
 
     if (!this.playerHelper.hasCoins(player, listing.price))
       return userError('Not enough coins');
@@ -487,7 +488,7 @@ export class MarketService {
     if (listing.userId !== userId)
       throw new BadRequestException('You cannot remove this listing');
 
-    const isResource = this.contentService.getResource(listing.itemId);
+    const isResource = this.contentService.isResource(listing.itemId);
     const isInventoryFull = await this.inventoryService.isInventoryFull(userId);
     if (!isResource && isInventoryFull)
       return userError('Your inventory is full!');

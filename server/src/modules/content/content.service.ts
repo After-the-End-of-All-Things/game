@@ -142,6 +142,10 @@ export class ContentService {
     return Object.values(this.resources ?? {});
   }
 
+  public isResource(resourceId: string): boolean {
+    return !!this.resources[resourceId];
+  }
+
   public getResource(resourceId: string): IResource {
     const resourceRef = this.resources[resourceId];
     if (!resourceRef)
