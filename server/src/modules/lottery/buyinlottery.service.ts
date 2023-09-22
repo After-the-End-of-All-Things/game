@@ -95,11 +95,6 @@ export class BuyInLotteryService implements OnModuleInit {
   }
 
   public async buyTicket(userId: string): Promise<UserResponse> {
-    const todayTicket = await this.getBuyInLotteryRecordForToday();
-    if (!todayTicket) return userError('No ticket found for today');
-
-    if (todayTicket.claimed) return userError('Ticket already claimed');
-
     const player = await this.playerService.getPlayerForUser(userId);
 
     if (
