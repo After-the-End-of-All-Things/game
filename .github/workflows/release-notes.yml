@@ -1,7 +1,6 @@
 name: Release New Tags
 
 on:
-  workflow_dispatch:
   push:
     tags:
       - 'v*' # Any pushed tag
