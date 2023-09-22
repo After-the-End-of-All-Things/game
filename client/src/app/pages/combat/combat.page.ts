@@ -71,13 +71,15 @@ export class CombatPage implements OnInit {
   }
 
   public get defenders(): IFightCharacter[] {
+    if (!this.fight) return [];
+
     return this.fight.defenders.map((character) => {
       return this.fightCharacters[character.characterId];
     });
   }
 
   public get charge(): number {
-    return this.fight.generatedCharge ?? 0;
+    return this.fight?.generatedCharge ?? 0;
   }
 
   public get specialGaugeLeft(): number {
@@ -199,6 +201,8 @@ export class CombatPage implements OnInit {
   }
 
   findTileWithCharacter(characterId: string): [number, number] | undefined {
+    if (!this.fight) return [-1, -1];
+
     let foundTile: [number, number] | undefined;
 
     this.fight.tiles.forEach((row, y) => {
