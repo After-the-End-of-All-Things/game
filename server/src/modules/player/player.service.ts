@@ -19,6 +19,8 @@ import { Inventory } from '@modules/inventory/inventory.schema';
 import { InventoryService } from '@modules/inventory/inventory.service';
 import { NpcService } from '@modules/player/npc.service';
 import { Player } from '@modules/player/player.schema';
+import { User } from '@modules/user/user.schema';
+import { UserService } from '@modules/user/user.service';
 import { WaveDBService } from '@modules/wave/wavedb.service';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
@@ -44,6 +46,7 @@ export class PlayerService {
     private readonly events: EventEmitter2,
     private readonly waveDBService: WaveDBService,
     private readonly playerHelper: PlayerHelperService,
+    private readonly userService: UserService,
   ) {}
 
   async getPlayerForUser(userId: string): Promise<Player> {
@@ -87,18 +90,24 @@ export class PlayerService {
     return player;
   }
 
-  async getPlayerProfile(userId: string): Promise<Partial<Player> | undefined> {
+  async getPlayerProfile(
+    userId: string,
+  ): Promise<(Partial<Player> & Partial<User>) | undefined> {
+    const user = await this.userService.findUserById(userId);
     const player = await this.getPlayerForUser(userId);
 
-    return pick(player, [
-      'userId',
-      'level',
-      'job',
-      'location',
-      'profile',
-      'cosmetics',
-      'otherJobLevels',
-    ]);
+    return {
+      ...pick(user, ['emailVerified']),
+      ...pick(player, [
+        'userId',
+        'level',
+        'job',
+        'location',
+        'profile',
+        'cosmetics',
+        'otherJobLevels',
+      ]),
+    };
   }
 
   async updatePortraitForPlayer(

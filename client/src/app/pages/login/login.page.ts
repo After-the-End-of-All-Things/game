@@ -46,7 +46,7 @@ export class LoginPage implements OnInit {
     },
   ];
 
-  authType: 'login' | 'register' = 'login';
+  authType: 'login' | 'register' | 'forgot' = 'login';
 
   loginForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
@@ -54,6 +54,10 @@ export class LoginPage implements OnInit {
       Validators.required,
       Validators.minLength(8),
     ]),
+  });
+
+  forgotForm = new FormGroup({
+    email: new FormControl('', [Validators.required, Validators.email]),
   });
 
   registerForm = new FormGroup({
@@ -71,6 +75,7 @@ export class LoginPage implements OnInit {
 
   public loginError = '';
   public registerError = '';
+  public forgotError = '';
 
   public announcement: any;
 
@@ -182,6 +187,28 @@ export class LoginPage implements OnInit {
                 this.registerError = err.error.message;
               },
             });
+        },
+        error: (err) => {
+          this.registerError = err.error.message;
+        },
+      });
+  }
+
+  forgot() {
+    if (!this.forgotForm.value.email || !this.forgotForm.valid) return;
+
+    this.registerError = '';
+
+    this.authService
+      .requestTemporaryPassword(this.forgotForm.value.email)
+      .subscribe({
+        next: (res: any) => {
+          if (res.error) {
+            this.registerError = res.error;
+            return;
+          }
+
+          this.authType = 'login';
         },
         error: (err) => {
           this.registerError = err.error.message;

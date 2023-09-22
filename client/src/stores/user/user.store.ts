@@ -27,4 +27,14 @@ export class UserStore {
   static user(state: IUserStore) {
     return state.user;
   }
+
+  @Selector()
+  static email(state: IUserStore) {
+    return state.user.email;
+  }
+
+  @Selector()
+  static emailVerified(state: IUserStore) {
+    return state.user.emailVerified;
+  }
 }

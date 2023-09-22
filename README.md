@@ -31,6 +31,10 @@ we love eating our oats
 - `GAMEANALYTICS_SECRET` - the secret key for GameAnalytics
 - `ROLLBAR_TOKEN` - the token for Rollbar
 - `LOG_LEVEL` - the log level to use for the server (default: `trace`)
+- `SMTP_SERVICE` - the SMTP service to use for sending emails (default: `gmail`)
+- `SMTP_EMAIL` - the SMTP user to use for sending emails
+- `SMTP_PASSWORD` - the SMTP password to use for sending emails
+- `SMTP_AUTH_VERIFY_HOUR_LIMIT` - the number of hours an email auth code is valid (default: 1)
 
 ### Optional Game Setting Server Environment Variables
 

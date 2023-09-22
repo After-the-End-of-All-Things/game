@@ -36,6 +36,10 @@ export const defaultStore: () => IUserStore = () => ({
     discriminator: '',
     email: '',
     username: '',
+    emailVerified: false,
+    temporaryPassword: '',
+    verificationCode: '',
+    verificationExpiration: 0,
   },
 });
 

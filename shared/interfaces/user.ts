@@ -4,4 +4,6 @@ export interface IUser {
   discriminator: string;
   email: string;
   username: string;
+
+  emailVerified: boolean;
 }

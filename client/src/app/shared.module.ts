@@ -3,6 +3,8 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { AvatarComponent } from '@components/avatar/avatar.component';
+import { AwardListComponent } from '@components/award-list/award-list.component';
+import { AwardComponent } from '@components/award/award.component';
 import { BackgroundArtComponent } from '@components/background-art/background-art.component';
 import { CardBuyinLotteryComponent } from '@components/card-buyin-lottery/card-buyin-lottery.component';
 import { CardDailyLotteryComponent } from '@components/card-daily-lottery/card-daily-lottery.component';
@@ -57,6 +59,8 @@ const components = [
   ItemDisplayComponent,
   CardDailyLotteryComponent,
   CardBuyinLotteryComponent,
+  AwardListComponent,
+  AwardComponent,
 ];
 
 @NgModule({

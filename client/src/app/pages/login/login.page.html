@@ -65,8 +65,13 @@
               <ion-card-content>
                 <ion-segment [(ngModel)]="authType" color="tertiary">
                   <ion-segment-button value="login">Login</ion-segment-button>
+
                   <ion-segment-button value="register">
                     Register
+                  </ion-segment-button>
+
+                  <ion-segment-button value="forgot">
+                    Forgot Password
                   </ion-segment-button>
                 </ion-segment>
               </ion-card-content>
@@ -185,6 +190,47 @@
                     (click)="register()"
                   >
                     Register
+                  </ion-button>
+                </div>
+              </ion-card-content>
+            </ion-card>
+
+            <ion-card class="auth" *ngIf="authType === 'forgot'">
+              <ion-card-content [formGroup]="forgotForm">
+                <ion-list>
+                  <ion-item>
+                    <ion-input
+                      label="Email"
+                      labelPlacement="stacked"
+                      type="text"
+                      placeholder="myemail@mydomain.com"
+                      formControlName="email"
+                      errorText="Email must be valid."
+                      (keyup.enter)="forgot()"
+                    ></ion-input>
+                  </ion-item>
+
+                  <ion-item>
+                    <ion-text color="danger" *ngIf="forgotError">
+                      {{ forgotError }}
+                    </ion-text>
+                  </ion-item>
+                </ion-list>
+
+                <div class="actions">
+                  <ion-button
+                    fill="clear"
+                    color="warning"
+                    (click)="forgotForm.reset()"
+                  >
+                    Clear
+                  </ion-button>
+                  <ion-button
+                    fill="clear"
+                    [disabled]="!forgotForm.valid"
+                    (click)="forgot()"
+                  >
+                    Send Temporary Password
                   </ion-button>
                 </div>
               </ion-card-content>

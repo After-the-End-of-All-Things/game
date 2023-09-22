@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { IPlayer } from '@interfaces';
+import { IPlayer, IUser } from '@interfaces';
 import { PlayerService } from '@services/player.service';
 import { forkJoin } from 'rxjs';
 
@@ -15,7 +15,7 @@ export class ProfilePage implements OnInit {
   public isLoading = false;
   public isError = false;
 
-  public player: IPlayer = {
+  private player: Partial<IPlayer> & Partial<IUser> = {
     cosmetics: {
       background: -1,
       portrait: 0,
@@ -30,7 +30,16 @@ export class ProfilePage implements OnInit {
       longBio: '',
       shortBio: '',
     },
-  } as unknown as IPlayer;
+    emailVerified: false,
+  };
+
+  public get playerRef(): IPlayer {
+    return this.player as IPlayer;
+  }
+
+  public get userRef(): IUser {
+    return this.player as IUser;
+  }
 
   public stats: Array<{ name: string; value: string }> = [];
 

@@ -19,6 +19,9 @@ export class User implements IUser {
   @Property({ hidden: true })
   password: string;
 
+  @Property({ hidden: true })
+  temporaryPassword: string;
+
   @Property()
   createdAt: Date;
 
@@ -35,6 +38,9 @@ export class User implements IUser {
   @Property()
   email: string;
 
+  @Property()
+  emailVerified: boolean;
+
   @PrimaryKey()
   _id!: ObjectId;
 
@@ -50,5 +56,8 @@ export class User implements IUser {
     this.email = email;
     this.createdAt = new Date();
     this.onlineUntil = onlineUntilExpiration();
+
+    this.emailVerified = false;
+    this.temporaryPassword = '';
   }
 }

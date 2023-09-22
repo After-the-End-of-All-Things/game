@@ -15,7 +15,7 @@ import { AuthService } from '@services/auth.service';
 import { ContentService } from '@services/content.service';
 import { PlayerService } from '@services/player.service';
 import { UserService } from '@services/user.service';
-import { InventoryStore, PlayerStore } from '@stores';
+import { InventoryStore, PlayerStore, UserStore } from '@stores';
 import { sum } from 'lodash';
 import { LocalStorage } from 'ngx-webstorage';
 import { Observable } from 'rxjs';
@@ -26,6 +26,8 @@ import { Observable } from 'rxjs';
   styleUrls: ['./me.page.scss'],
 })
 export class MePage implements OnInit {
+  @Select(UserStore.email) email$!: Observable<string>;
+  @Select(UserStore.emailVerified) emailVerified$!: Observable<boolean>;
   @Select(PlayerStore.player) player$!: Observable<IPlayer>;
   @Select(InventoryStore.equipped) equipment$!: Observable<
     Record<ItemSlot, IEquipment>
@@ -285,5 +287,97 @@ export class MePage implements OnInit {
 
   trackBy(index: number) {
     return index;
+  }
+
+  async requestVerificationCode() {
+    this.authService.requestVerificationCode().subscribe();
+
+    const alert = await this.alert.create({
+      header: 'Enter Verification Code',
+      message: `Please enter your verification code.`,
+      inputs: [
+        {
+          name: 'code',
+          type: 'text',
+          placeholder: 'Code',
+        },
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+        },
+        {
+          text: 'Submit Code',
+          handler: async ({ code }) => {
+            if (!code) return;
+
+            this.authService.verifyVerificationCode(code).subscribe();
+          },
+        },
+      ],
+    });
+
+    await alert.present();
+  }
+
+  async changePassword() {
+    const alert = await this.alert.create({
+      header: 'Enter New Password',
+      message: `Please enter your new password.`,
+      inputs: [
+        {
+          name: 'password',
+          type: 'password',
+          placeholder: 'Password',
+        },
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+        },
+        {
+          text: 'Submit Password',
+          handler: async ({ password }) => {
+            if (!password) return;
+
+            this.authService.changePassword(password).subscribe();
+          },
+        },
+      ],
+    });
+
+    await alert.present();
+  }
+
+  async changeEmail() {
+    const alert = await this.alert.create({
+      header: 'Enter New Email',
+      message: `Please enter your new email address. This will remove your verified status and require you to verify your email again.`,
+      inputs: [
+        {
+          name: 'email',
+          type: 'email',
+          placeholder: 'Email Address',
+        },
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+        },
+        {
+          text: 'Submit Email',
+          handler: async ({ email }) => {
+            if (!email) return;
+
+            this.authService.changeEmail(email).subscribe();
+          },
+        },
+      ],
+    });
+
+    await alert.present();
   }
 }

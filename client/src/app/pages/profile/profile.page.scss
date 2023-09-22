@@ -33,3 +33,14 @@ app-hero {
     width: 100px;
   }
 }
+
+.hero-container {
+  position: relative;
+
+  app-award-list {
+    z-index: 20;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+  }
+}

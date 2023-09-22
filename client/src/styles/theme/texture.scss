@@ -1,9 +1,6 @@
 
-ion-button.button-solid {
-  &.in-toolbar {
-    --background: var(--ion-color-base);
-  }
 
+ion-button, ion-item {
   &.ion-color-primary {
     --background: var(--ion-color-primary);
   }
@@ -38,6 +35,12 @@ ion-button.button-solid {
 
   &.ion-color-light {
     --background: var(--ion-color-light);
+  }
+}
+
+ion-button.button-solid {
+  &.in-toolbar {
+    --background: var(--ion-color-base);
   }
 
   &::part(native) {

@@ -6,6 +6,7 @@ import { NpcService } from '@modules/player/npc.service';
 import { PlayerController } from '@modules/player/player.controller';
 import { Player } from '@modules/player/player.schema';
 import { PlayerService } from '@modules/player/player.service';
+import { UserModule } from '@modules/user/user.module';
 import { WaveModule } from '@modules/wave/wave.module';
 import { Module } from '@nestjs/common';
 
@@ -17,6 +18,7 @@ import { Module } from '@nestjs/common';
     InventoryModule,
     DiscoveriesModule,
     WaveModule,
+    UserModule,
   ],
   providers: [PlayerService, NpcService],
   exports: [PlayerService],

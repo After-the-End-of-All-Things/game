@@ -4,7 +4,7 @@
 
 <ion-content
   [fullscreen]="true"
-  [style.--bg-image]="player.cosmetics.background.toString().padStart(4, '0')"
+  [style.--bg-image]="playerRef.cosmetics.background.toString().padStart(4, '0')"
 >
   <ion-header collapse="condense">
     <app-header-bar></app-header-bar>
@@ -18,24 +18,28 @@
     </ion-card>
   </ng-container>
 
-  <ng-container *ngIf="!isError && !isLoading && player; else loadingSpinner">
-    <ion-card>
+  <ng-container
+    *ngIf="!isError && !isLoading && playerRef; else loadingSpinner"
+  >
+    <ion-card class="hero-container">
+      <app-award-list [user]="userRef" [player]="playerRef"></app-award-list>
+
       <app-hero
-        [background]="player.cosmetics.background"
-        [portrait]="player.cosmetics.portrait"
-        [level]="player.level"
-        [job]="player.job"
-        [username]="player.profile.displayName"
-        [discriminator]="player.profile.discriminator"
-        [tagline]="player.profile.shortBio"
+        [background]="playerRef.cosmetics.background"
+        [portrait]="playerRef.cosmetics.portrait"
+        [level]="playerRef.level"
+        [job]="playerRef.job"
+        [username]="playerRef.profile.displayName"
+        [discriminator]="playerRef.profile.discriminator"
+        [tagline]="playerRef.profile.shortBio"
       ></app-hero>
     </ion-card>
 
-    <ion-card *ngIf="player.profile.longBio">
+    <ion-card *ngIf="playerRef.profile.longBio as longBio">
       <ion-card-header>
         <ion-card-title>About</ion-card-title>
       </ion-card-header>
-      <ion-card-content>{{ player.profile.longBio }}</ion-card-content>
+      <ion-card-content>{{ longBio }}</ion-card-content>
     </ion-card>
 
     <ion-row>
@@ -47,7 +51,7 @@
 
           <ion-card-content>
             <ion-list>
-              <ion-item *ngFor="let job of jobLevels(player)">
+              <ion-item *ngFor="let job of jobLevels(playerRef)">
                 <ion-label>{{ job.name }}</ion-label>
                 <ion-label slot="end">Lv. {{ job.level }}</ion-label>
               </ion-item>
@@ -55,37 +59,34 @@
           </ion-card-content>
         </ion-card>
 
-        <ion-card
-          *ngIf="(player.cosmetics.showcase.collectibles?.length ?? 0) > 0"
-        >
-          <ion-card-header>
-            <ion-card-title>Collectible Showcase</ion-card-title>
-          </ion-card-header>
+        <ng-container *ngIf="playerRef.cosmetics.showcase as showcase">
+          <ion-card *ngIf="(showcase.collectibles?.length ?? 0) > 0">
+            <ion-card-header>
+              <ion-card-title>Collectible Showcase</ion-card-title>
+            </ion-card-header>
 
-          <ion-card-content>
-            <div
-              class="showcase-item"
-              *ngFor="let id of player.cosmetics.showcase.collectibles"
-            >
-              <app-item-display [itemId]="id"></app-item-display>
-            </div>
-          </ion-card-content>
-        </ion-card>
+            <ion-card-content>
+              <div
+                class="showcase-item"
+                *ngFor="let id of showcase.collectibles"
+              >
+                <app-item-display [itemId]="id"></app-item-display>
+              </div>
+            </ion-card-content>
+          </ion-card>
 
-        <ion-card *ngIf="(player.cosmetics.showcase.items?.length ?? 0) > 0">
-          <ion-card-header>
-            <ion-card-title>Equipment Showcase</ion-card-title>
-          </ion-card-header>
+          <ion-card *ngIf="(showcase.items?.length ?? 0) > 0">
+            <ion-card-header>
+              <ion-card-title>Equipment Showcase</ion-card-title>
+            </ion-card-header>
 
-          <ion-card-content>
-            <div
-              class="showcase-item"
-              *ngFor="let id of player.cosmetics.showcase.items"
-            >
-              <app-item-display [itemId]="id"></app-item-display>
-            </div>
-          </ion-card-content>
-        </ion-card>
+            <ion-card-content>
+              <div class="showcase-item" *ngFor="let id of showcase.items">
+                <app-item-display [itemId]="id"></app-item-display>
+              </div>
+            </ion-card-content>
+          </ion-card>
+        </ng-container>
       </ion-col>
 
       <ion-col *ngIf="stats.length > 0">

@@ -26,13 +26,14 @@ import { HttpExceptionFilter } from '@utils/http-exception.filter';
 import { isProduction } from '@utils/isprod';
 import { AggregatorModule } from './modules/aggregator/aggregator.module';
 import { CraftingModule } from './modules/crafting/crafting.module';
+import { EmailModule } from './modules/email/email.module';
 import { EventsModule } from './modules/events/events.module';
 import { GameplayModule } from './modules/gameplay/gameplay.module';
 import { LeaderboardModule } from './modules/leaderboard/leaderboard.module';
-import { MarketModule } from './modules/market/market.module';
-import { UpdateAuthTimeInterceptor } from './utils/updatetime.interceptor';
-import { WaveModule } from './modules/wave/wave.module';
 import { LotteryModule } from './modules/lottery/lottery.module';
+import { MarketModule } from './modules/market/market.module';
+import { WaveModule } from './modules/wave/wave.module';
+import { UpdateAuthTimeInterceptor } from './utils/updatetime.interceptor';
 
 const logLevel = process.env.LOG_LEVEL || 'trace';
 
@@ -101,6 +102,7 @@ const logLevel = process.env.LOG_LEVEL || 'trace';
     LeaderboardModule,
     WaveModule,
     LotteryModule,
+    EmailModule,
   ],
   controllers: [AppController, GameplayController],
   providers: [

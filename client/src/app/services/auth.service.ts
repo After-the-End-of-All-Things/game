@@ -100,4 +100,42 @@ export class AuthService {
       this.store.dispatch(new SetClaimCoins(coins as number));
     });
   }
+
+  public requestVerificationCode() {
+    return this.http.post(`${environment.apiUrl}/auth/verify/request`, {});
+  }
+
+  public verifyVerificationCode(code: string) {
+    return this.http.post(`${environment.apiUrl}/auth/verify/validate`, {
+      code,
+    });
+  }
+
+  public requestTemporaryPassword(email: string) {
+    return this.http.post(`${environment.apiUrl}/auth/forgot`, { email });
+  }
+
+  public changeEmail(newEmail: string) {
+    return this.http
+      .put(`${environment.apiUrl}/auth/email`, {
+        newEmail,
+      })
+      .pipe(
+        tap(() => {
+          localStorage.setItem('lastEmail', newEmail);
+        }),
+      );
+  }
+
+  public changePassword(newPassword: string) {
+    return this.http
+      .put(`${environment.apiUrl}/auth/password`, {
+        newPassword,
+      })
+      .pipe(
+        tap(() => {
+          localStorage.setItem('lastPassword', newPassword);
+        }),
+      );
+  }
 }
