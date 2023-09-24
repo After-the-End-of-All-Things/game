@@ -121,6 +121,12 @@ export class DiscoveriesService {
     return true;
   }
 
+  undiscoverLocation(discoveries: Discoveries, locationName: string): boolean {
+    discoveries.locations = { ...discoveries.locations, [locationName]: false };
+    this.syncDiscoveriesForLeaderboard(discoveries);
+    return true;
+  }
+
   async discoverCollectible(
     userId: string,
     instanceId: string,

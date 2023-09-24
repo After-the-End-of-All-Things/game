@@ -38,6 +38,10 @@ export interface ILocationConnection {
   name: string;
 }
 
+export interface ILocationLimitedAccess {
+  activeMonth: number;
+}
+
 export interface ILocation {
   name: string;
   description: string;
@@ -49,6 +53,7 @@ export interface ILocation {
   baseStats: Record<LocationStat, number>;
   connections: ILocationConnection[];
   npcs: Array<{ name: string }>;
+  limited?: ILocationLimitedAccess;
 }
 
 export interface ILocationNPC {

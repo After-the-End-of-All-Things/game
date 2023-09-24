@@ -106,6 +106,48 @@ export class AggregatorService {
         }
       }),
     );
+
+    this.assessLocations(user);
+  }
+
+  private assessLocations(user: IFullUser): void {
+    const allLocations = this.contentService.allLocations();
+    allLocations.forEach((location) => {
+      if (!location.limited) return;
+
+      const { activeMonth } = location.limited;
+
+      const currentMonth = new Date().getMonth() + 1;
+
+      let shouldDiscover = false;
+
+      if (activeMonth) {
+        shouldDiscover = activeMonth === currentMonth;
+      }
+
+      if (shouldDiscover) {
+        this.discoveriesService.discoverLocation(
+          user.discoveries,
+          location.name,
+        );
+      }
+
+      if (!shouldDiscover) {
+        if (user.player.location.current === location.name) {
+          user.player.location = {
+            ...user.player.location,
+            current: 'Mork',
+            goingTo: '',
+            arrivesAt: 0,
+          };
+        }
+
+        this.discoveriesService.undiscoverLocation(
+          user.discoveries,
+          location.name,
+        );
+      }
+    });
   }
 
   @OnEvent('player.gaincoins')
