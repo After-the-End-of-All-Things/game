@@ -4,6 +4,7 @@ import {
   ICombatTargetParams,
   IFightCharacter,
   IFightTile,
+  IItem,
   IMonster,
   IMonsterFormation,
   TrackedStat,
@@ -349,14 +350,16 @@ export class FightService {
         .filter(Boolean),
     );
 
-    let randomDrop;
+    let randomDrop: IItem | undefined;
 
     if (
       randomDropPossibility &&
       random(0, 100) <= randomDropPossibility.chance
     ) {
       randomDrop = this.contentService.getItem(randomDropPossibility.item);
-      addStatusMessage(fight, 'Fight', `You found "${randomDrop.name}"!`);
+      if (randomDrop) {
+        addStatusMessage(fight, 'Fight', `You found "${randomDrop.name}"!`);
+      }
     }
 
     if (isWin && fight.defenders.length > 0) {
@@ -368,7 +371,7 @@ export class FightService {
       `Fight ${
         fight.internalId
       } rewarded ${xpDelta} XP and ${coinDelta} coins and ${
-        randomDrop?.item ?? 'no'
+        randomDrop?.name ?? 'no'
       } item drop.`,
     );
 
