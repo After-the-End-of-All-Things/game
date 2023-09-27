@@ -167,9 +167,12 @@ export class GameplayService {
         );
 
         // put explore on cooldown
+        const now = Date.now();
+
         playerRef.location = {
           ...playerRef.location,
-          cooldown: Date.now() + secondsAddedToCooldown,
+          cooldownStart: now,
+          cooldown: now + secondsAddedToCooldown,
         };
 
         // travel via walk if the flags are set

@@ -112,6 +112,7 @@ export class Player implements IPlayer {
       current: 'Mork',
       goingTo: '',
       arrivesAt: 0,
+      cooldownStart: 0,
       cooldown: 0,
     };
 

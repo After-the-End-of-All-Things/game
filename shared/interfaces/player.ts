@@ -23,6 +23,7 @@ export interface IPlayerLocation {
   current: string;
   goingTo: string;
   arrivesAt: number;
+  cooldownStart: number;
   cooldown: number;
 }
 

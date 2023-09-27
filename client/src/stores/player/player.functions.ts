@@ -25,6 +25,7 @@ export const defaultStore: () => IPlayerStore = () => ({
       current: '',
       goingTo: '',
       arrivesAt: Date.now(),
+      cooldownStart: 0,
       cooldown: 0,
     },
 

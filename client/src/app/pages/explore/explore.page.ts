@@ -9,7 +9,7 @@ import { GameplayService } from '@services/gameplay.service';
 import { VisualService } from '@services/visual.service';
 import { FightStore, PlayerStore } from '@stores';
 import { ChangePage } from '@stores/user/user.actions';
-import { Observable, combineLatest, timer } from 'rxjs';
+import { Observable, first, timer } from 'rxjs';
 
 @Component({
   selector: 'app-explore',
@@ -22,6 +22,7 @@ export class ExplorePage implements OnInit {
   public canExplore = false;
   public firstPositiveNumber = 0;
   public nextExploreTime = 0;
+  public exploreResponseTime = 0;
 
   @Select(PlayerStore.exploreCooldown) exploreCooldown$!: Observable<number>;
   @Select(PlayerStore.playerLocation)
@@ -46,29 +47,42 @@ export class ExplorePage implements OnInit {
       this.store.dispatch(new ChangePage('combat'));
     });
 
-    combineLatest([timer(0, 500), this.exploreCooldown$])
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(([_, cooldown]) => {
-        this.canExplore = Date.now() > cooldown;
+    this.playerLocation$.pipe(first()).subscribe((location) => {
+      this.canExplore = location.cooldown < Date.now();
+    });
+  }
 
-        if (!this.canExplore) {
-          if (!this.firstPositiveNumber) {
-            this.firstPositiveNumber = (cooldown - Date.now()) / 1000;
-          }
+  private startExploreLoop(start: number, end: number) {
+    const numSeconds = end - start;
 
-          this.nextExploreTime =
-            1 - (cooldown - Date.now()) / 1000 / this.firstPositiveNumber;
-        }
+    const timer$ = timer(0, 100).subscribe((iter) => {
+      const timeElapsed = iter * 100;
+      this.nextExploreTime = timeElapsed / numSeconds;
 
-        if (this.canExplore) {
-          this.firstPositiveNumber = 0;
-        }
-      });
+      if (timeElapsed >= numSeconds) {
+        timer$.unsubscribe();
+        this.canExplore = true;
+      }
+    });
   }
 
   explore() {
     this.canExplore = false;
-    this.gameplayService.explore().subscribe();
+
+    this.gameplayService.explore().subscribe((data) => {
+      const cooldownStartPatch = (data as any).player.find(
+        (patch: any) => patch.path === '/location/cooldownStart',
+      );
+      const cooldownPatch = (data as any).player.find(
+        (patch: any) => patch.path === '/location/cooldown',
+      );
+      if (!cooldownStartPatch || !cooldownPatch) return;
+
+      const cooldownStart = cooldownStartPatch.value;
+      const cooldown = cooldownPatch.value;
+
+      this.startExploreLoop(cooldownStart, cooldown);
+    });
   }
 
   getMonster(monsterId: string) {
